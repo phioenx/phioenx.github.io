@@ -175,14 +175,37 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>​    <font color="black" size = "5">对于一个由N个样本（N张图像）构成的集合 $x^{(1)},x^{(2)},…,x^{(N)}$ 假设它们是彼此独立且都采样来源于未知概率分布 $q(x)$。对此，首先需要构建生成模型 $p_θ(x)$,其中θ为模型的学习参数，然后通过N个样本来学习到最好的参数$θ^*$,当学习足够充分时应有</font></p>
-<center><font color="black" size = "5"> $p_{θ^{*}}≈q(x)$</font></center>
+<center><font color="black" size = "5">  $ p_{θ^{*}}≈q(x) $  </font> </center>
 
 <p><font color="black" size = "5">那么此时在已知分布$p_{θ^*}$中采样则可以产生”相似“的样本。此时就可以延申出两个问题，这也是构建生成模型的核心步骤：</font></p>
 <p><font color="black" size = "5"> <strong>1）如何设计好的建模方式 $ p_{θ^{*}}$</strong> </font></p>
 <p><font color="black" size = "5"> <strong>2）如何根据样本从而训练估计模型中的参数θ</strong> </font></p>
 <p><font color="black" size = "5">而扩散模型创造性地通过扩散过程构建了一个精巧的建模方式，利用U-Net网络去估计模型中的参数θ，下面就让我们从DDPM开始了解扩散模型的基本原理，然后手动编写代码进入项目，全面的了解扩散模型的奇妙之处叭！</font></p>
-<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202305231300176.jpg" alt="11"></p>
-
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202305231331893.gif" alt="53B4311C166246F3AB5998A98BFD3482"></p>
+<h1 id="二、DDPM基本工作原理介绍"><a href="#二、DDPM基本工作原理介绍" class="headerlink" title="二、DDPM基本工作原理介绍"></a>二、DDPM基本工作原理介绍</h1><p><font color="black" size = "5">扩散模型分为两个过程：<strong>扩散过程、逆扩散过程</strong></font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202305231411494.png" alt="img"></p>
+<p><font color="black" size = "5">如上图所示,扩散过程为从右向左（$x_0$-&gt;$x_T$）,表示对图片逐渐加载处理，而逆扩散过程从左往右（$x_T$-&gt;$x_0$）,表示从噪声当中逐渐复原出图片。下面讲逐个展开：到底真实图像样本是如何一步步加噪成噪声的？以及我们又如何从噪声当中如何生成出图片。</font></p>
+<h2 id="1、扩散过程"><a href="#1、扩散过程" class="headerlink" title="1、扩散过程"></a><strong>1、扩散过程</strong></h2><p><font color="black" size = "5">DDPM在扩散过程中，通过对任意的初始样本$x_0$ 连续地添加T次高斯噪声，可获得一条样本轨迹为$x_0-&gt;x_1-&gt;…-&gt;x_T$ ,并且当T趋于无穷时，原始样本$x_0$的特征完全消失，成为标准高斯分布。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202305231411610.jpg" alt="v2-82d53a48507b3ee52d3ddc2187fcddb8_r"></p>
+<p><font color="black" size = "5">从概率分布的角度而言，如果定义初始样本（训练样本）的概率分布为$q(x_0)$,则通过无限次地扩散动作，实现了从初始样本分布到标准高斯分布的映射，即$q(x_T) &#x3D; N(0,I)$。</font></p>
+<p><font color="black" size = "5">当然,扩散过程连续添加的高斯噪声并不是任意的，其具体的规定为：</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font><font color="black" size = "5">-式1</font></p>
+<p><font color="black" size = "5">其中，$β_t$满足$β_1&lt;β_2&lt;….&lt;β_T$,在一个设计好的variance schedule下，如果扩散步数T足够大，那么最终得到的x_T就完全丢失了原始数据而变成了一个随机噪音。扩散过程的每一步都生成一个带噪音的数据$x_t$，而$x_{t+1}$是在$x_t$上加噪得到的，其只受$x_t$的影响，因此整个扩散过程也就是一个马尔卡夫链。</font></p>
+<p><font color="black" size = "5">让我们回到式1：</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font><font color="black" size = "5">-式1</font></p>
+<p><font color="black" size = "5">上式表明，在给定t−1时刻样本$x_{t−1}$的条件下，t时刻样本$x_t$的分布为高斯分布，其均值为$\sqrt{1−β_t}x_{t−1}$,方差为$β_tI$。由此看出，该条件高斯分布的均值参数只与$x_{t−1}$有关，与$x_{t−2}，x_{t−3}，….，$无关，因此随机过程{$X_t$}是一个马尔可夫过程。</font></p>
+<p><font color="black" size = "5">利用重参数技巧（</font><font color="red" size = "5">假设从一个均值为$μ$,标准差为$σ$的高斯分布中采样一个向量x，则可以将采样过程表示为：$x&#x3D;μ+σϵ$,其中$ϵ$<del>$N(0,I)$</font><font color="black" size = "5">）,并且令$a_t &#x3D; 1 - β_t$,$z_t$</del>$N(0,I)$,对于t时刻的样本$x_t$，就理论而言应该是分布在$N(\sqrt{a_t}x_{t−1},(1−a_t)I)$中采样获得的。即：</font></p>
+<p><font color="blue" size = "5">$x_t &#x3D;\sqrt{a_t}x_{t−1}+ \sqrt{1-a_t}z_{t-1}$</font><font color="black" size = "5">-式2</font></p>
+<p><font color="black" size = "5">将$x_{t-1} &#x3D; \sqrt{a_{t-1}}x_{t−2} + \sqrt{1-a_{t-1}}z_{t-2} $代入到式2，我们可以得到：</font></p>
+<p><font color="blue" size = "5">$x_t&#x3D;\sqrt{a_t}\sqrt{a_{t-1}}x_{t−2} +\sqrt{a_t}\sqrt{1-a_{t-1}}z_{t-2}+\sqrt{1-a_t}z_{t-1}$</font></p>
+<p><font color="black" size = "5">由于两个正态分布$x$$\backsim$ $N(μ_1,σ_1)$和$y$$\backsim$$N(μ_2,σ_2)$，叠加后的分布ax+by的均值为$aμ_1+bμ_2$,方差为$a^2σ_1^2+b^2σ_2^2$，我们可以得到：</font></p>
+<p><font color="blue" size = "5">$x_t&#x3D;\sqrt{a_ta_{t-1}}x_{t−2} +\sqrt{1-a_ta_{t-1}}\bar{z}_{t-2} $</font></p>
+<p><font color="black" size = "5">由此类推，我们再依次代入$x_{t-2},…,x_0$我们可以得到下式：</font></p>
+<p><font color="blue" size = "5">$x_t&#x3D;\sqrt{\bar{a}_t}x_0 + \sqrt{1-\bar{a}_t}\bar{z}_0 $ </font><font color="black" size = "5">-式3</font></p>
+<p><font color="black" size = "5">此时我们可以发现，任意时刻的$q(x_t)$的推导也可以完全基于$x_0$和$β_t$来计算出来，并不需要做迭代。</font></p>
+<p><font color="black" size = "5">最后，当我们给定$x_0$，随机变量$x_t$的概率分布为：</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_0)&#x3D;N(x_t;\sqrt{\bar{a}_t}x_0,1-\bar{a}_tI)$</font><font color="black" size = "5">-式4</font></p>
+<h2 id="2、逆扩散过程"><a href="#2、逆扩散过程" class="headerlink" title="2、逆扩散过程"></a><strong>2、逆扩散过程</strong></h2>
       
 
       
