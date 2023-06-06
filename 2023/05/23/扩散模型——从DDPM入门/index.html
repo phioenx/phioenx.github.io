@@ -18,8 +18,15 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202305231331893.gif">
 <meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202305231411494.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202305231411610.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306011922163.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306061532386.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306061550061.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306061551018.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306052108660.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202306052220730.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94%E4%BB%8EDDPM%E5%85%A5%E9%97%A8\1685975427872-1685975547128-6.png">
 <meta property="article:published_time" content="2023-05-23T02:25:41.000Z">
-<meta property="article:modified_time" content="2023-05-25T15:06:05.379Z">
+<meta property="article:modified_time" content="2023-06-06T07:52:52.910Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/phioenx/img/main/img/202305231331893.gif">
@@ -192,31 +199,109 @@
 <h2 id="1、扩散过程"><a href="#1、扩散过程" class="headerlink" title="1、扩散过程"></a><strong>1、扩散过程</strong></h2><p><font color="black" size = "5">DDPM在扩散过程中，通过对任意的初始样本$x_0$ 连续地添加T次高斯噪声，可获得一条样本轨迹为$x_0-&gt;x_1-&gt;…-&gt;x_T$ ,并且当T趋于无穷时，原始样本$x_0$的特征完全消失，成为标准高斯分布。</font></p>
 <p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202305231411610.jpg" alt="v2-82d53a48507b3ee52d3ddc2187fcddb8_r"></p>
 <p><font color="black" size = "5">从概率分布的角度而言，如果定义初始样本（训练样本）的概率分布为$q(x_0)$,则通过无限次地扩散动作，实现了从初始样本分布到标准高斯分布的映射，即$q(x_T) &#x3D; N(0,I)$。</font></p>
+<p><font color="blue" size = "5">$q(x_{1:T})&#x3D;\prod_{t&#x3D;1}^Tq(x_t|x_{t-1})$</font><font color="black" size = "5">-式1</font></p>
 <p><font color="black" size = "5">当然,扩散过程连续添加的高斯噪声并不是任意的，其具体的规定为：</font></p>
-<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font><font color="black" size = "5">-式1</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font><font color="black" size = "5">-式2</font></p>
 <p><font color="black" size = "5">其中，$β_t$满足$β_1&lt;β_2&lt;….&lt;β_T$,在一个设计好的variance schedule下，如果扩散步数T足够大，那么最终得到的$x_T$就完全丢失了原始数据而变成了一个随机噪音。扩散过程的每一步都生成一个带噪音的数据$x_t$，而$x_{t+1}$是在$x_t$上加噪得到的，其只受$x_t$的影响，因此整个扩散过程也就是一个马尔卡夫链。</font></p>
 <p><font color="black" size = "5">让我们回到式1：</font></p>
-<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font><font color="black" size = "5">-式1</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_{t-1})&#x3D;N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)$</font></p>
 <p><font color="black" size = "5">上式表明，在给定t−1时刻样本$x_{t−1}$的条件下，t时刻样本$x_t$的分布为高斯分布，其均值为$\sqrt{1−β_t}x_{t−1}$,方差为$β_tI$。由此看出，该条件高斯分布的均值参数只与$x_{t−1}$有关，与$x_{t−2}，x_{t−3}，….，$无关，因此随机过程{$X_t$}是一个马尔可夫过程。</font></p>
 <p><font color="black" size = "5">利用重参数技巧（</font><font color="red" size = "5">假设从一个均值为$μ$,标准差为$σ$的高斯分布中采样一个向量x，则可以将采样过程表示为：$x&#x3D;μ+σϵ$,其中$ϵ$<del>$N(0,I)$</font><font color="black" size = "5">）,并且令$a_t &#x3D; 1 - β_t$,$z_t$</del>$N(0,I)$,对于t时刻的样本$x_t$，就理论而言应该是分布在$N(\sqrt{a_t}x_{t−1},(1−a_t)I)$中采样获得的。即：</font></p>
-<p><font color="blue" size = "5">$x_t &#x3D;\sqrt{a_t}x_{t−1}+ \sqrt{1-a_t}z_{t-1}$</font><font color="black" size = "5">-式2</font></p>
+<p><font color="blue" size = "5">$x_t &#x3D;\sqrt{a_t}x_{t−1}+ \sqrt{1-a_t}z_{t-1}$</font><font color="black" size = "5">-式3</font></p>
 <p><font color="black" size = "5">将$x_{t-1} &#x3D; \sqrt{a_{t-1}}x_{t−2} + \sqrt{1-a_{t-1}}z_{t-2} $代入到式2，我们可以得到：</font></p>
 <p><font color="blue" size = "5">$x_t&#x3D;\sqrt{a_t}\sqrt{a_{t-1}}x_{t−2} +\sqrt{a_t}\sqrt{1-a_{t-1}}z_{t-2}+\sqrt{1-a_t}z_{t-1}$</font></p>
 <p><font color="black" size = "5">由于两个正态分布$x$$\backsim$ $N(μ_1,σ_1)$和$y$$\backsim$$N(μ_2,σ_2)$，叠加后的分布ax+by的均值为$aμ_1+bμ_2$,方差为$a^2σ_1^2+b^2σ_2^2$，我们可以得到：</font></p>
 <p><font color="blue" size = "5">$x_t&#x3D;\sqrt{a_ta_{t-1}}x_{t−2} +\sqrt{1-a_ta_{t-1}}\bar{z}_{t-2} $</font></p>
 <p><font color="black" size = "5">由此类推，我们再依次代入$x_{t-2},…,x_0$我们可以得到下式：</font></p>
-<p><font color="blue" size = "5">$x_t&#x3D;\sqrt{\bar{a}_t}x_0 + \sqrt{1-\bar{a}_t}\bar{z}_0 $ </font><font color="black" size = "5">-式3</font></p>
+<p><font color="blue" size = "5">$x_t&#x3D;\sqrt{\bar{a}_t}x_0 + \sqrt{1-\bar{a}_t}\bar{z}_0 $ </font><font color="black" size = "5">-式4</font></p>
 <p><font color="black" size = "5">此时我们可以发现，任意时刻的$q(x_t)$的推导也可以完全基于$x_0$和$β_t$来计算出来，并不需要做迭代。</font></p>
 <p><font color="black" size = "5">最后，当我们给定$x_0$，随机变量$x_t$的概率分布为：</font></p>
-<p><font color="blue" size = "5">$q(x_t|x_0)&#x3D;N(x_t;\sqrt{\bar{a}_t}x_0,1-\bar{a}_tI)$</font><font color="black" size = "5">-式4</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_0)&#x3D;N(x_t;\sqrt{\bar{a}_t}x_0,1-\bar{a}_tI)$</font><font color="black" size = "5">-式5</font></p>
 <h2 id="2、逆扩散过程"><a href="#2、逆扩散过程" class="headerlink" title="2、逆扩散过程"></a><strong>2、逆扩散过程</strong></h2><p><font color="black" size = "5">扩散模型的性质表明，从$q(x_t)&#x3D;N(0,I)$到$q(x_0)$的逆过程是马尔可夫过程，并且有$q(x_{t-1}|x_t)&#x3D;N(\tilde{\mu}(x_t),\tilde{\Sigma}(x_t))$,假如我们能够在给定$x_t$条件下知道$x_{t-1}$的分布，即如果我们知道$q(x_{t-1}|x_t)$,那么就能够在任意一张噪声图片当中经过一次次的采样得到一张图片而达成图片生成的目的。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306011922163.png" alt="img"></p>
 <p><font color="black" size = "5"> 若$q(x_{t-1}|x_t)$的均值$\tilde{\mu}(x_t)$和方差参数$\tilde{\Sigma}(x_t)$为已知量，则能从$x_T$的分布$N(0,I)$开始依次采样获得$x_t$，然后在$q(x_{t-1}|x_t)$中采样获得$x_{t-1}$，….，迭代此过程直至获得样本$x_0$。但在逆扩散过程中，$q(x_{t-1}|x_t)$的均值$\tilde{\mu}(x_t)$和方差参数$\tilde{\Sigma}(x_t)$是没有解析形式的，因而需要学习每个时刻t的均值和方差参数。</font></p>
 <p><font color="black" size = "5">而我们可以构建生成模型$P_\theta(x_{0:T})$：</font></p>
-<p><font color="blue" size = "5">$P_\theta(x_{0:T})&#x3D;P(x_T)\prod_{t&#x3D;1}^TP_\theta(x_{t-1}|x_t)$</font></p>
+<p><font color="blue" size = "5">$P_\theta(x_{0:T})&#x3D;P_\theta(x_T)\prod_{t&#x3D;1}^TP_\theta(x_{t-1}|x_t)$</font><font color="black" size = "5">-式6</font></p>
 <p><font color="blue" size = "5">$P_\theta(x_{t-1}|x_t)&#x3D;N(x_{t-1};\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))$</font></p>
 <p><font color="black" size = "5"> 其中，$P(x_T)&#x3D;N(0,I)$</font></p>
 <p><font color="black" size = "5">这样，我们就可以利用$P_\theta(x_{t-1}|x_t)$去近似$q(x_{t-1}|x_t)$，通过深度学习模型去预测这样的一个逆向分布$P_\theta(x_{t-1}|x_t)$，然而在论文中，作者把条件概率$P_\theta(x_{t-1}|x_t)$的方差直接取了$\beta_t$ ，而不是上面说的需要网络去估计的$\Sigma_\theta(x_t,t)$，所以说实际上只有均值需要网络去估计。</font></p>
-<p><font color="black" size = "5">虽然我们无法得到逆扩散过程的概率分布$q(x_{t-1}|x_t)$,但是如果我们知道$x_0$,那么$q(x_{t-1}|x_t,x_0)$我们就可以写出来，至于为什么，下面会做推理，但是在此之前，你肯定也会有疑问为什么要这么做呢，我个人觉得的是可能我们需要知道$\tilde{\mu}(x_t)$才能够与我们需要估计的$\mu_\theta(x_t,t)$去比较，做损失，从而指导$P_\theta(x_{t-1}|x_t)$进行训练。</font></p>
+<p><font color="black" size = "5">虽然我们无法得到逆扩散过程的概率分布$q(x_{t-1}|x_t)$,但是如果我们知道$x_0$,那么$q(x_{t-1}|x_t,x_0)$我们就可以写出来，至于为什么，下面会做推理，但是在此之前，你肯定也会有疑问为什么要这么做呢，我个人觉得的是可能我们需要知道$\tilde{\mu}(x_t)$才能够推算出我们需要估计的$\mu_\theta(x_t,t)$从而指导$P_\theta(x_{t-1}|x_t)$进行训练。</font></p>
+<p><font color="black" size = "5">通过贝叶斯公式，我们可以对$q(x_{t-1}|x_t,x_0)$进行推导：</font></p>
+<p><font color="blue" size = "5">$q(x_{t-1}|x_t,x_0) &#x3D; \frac{q(x_{t-1}x_tx_0)}{q(x_0x_t)}&#x3D;\frac{q(x_{t-1}x_tx_0)}{q(x_0x_{t-1})} * \frac{q(x_0x_{t-1})}{q(x_0x_t)}&#x3D;q(x_t|x_{t-1},x_0) * \frac{q(x_{t-1}|x_0)}{q(x_t|x_0)}$</font><font color="black" size = "5">-式7</font></p>
+<p><font color="black" size = "5">根据高斯分布的概率密度函数：$f(x)&#x3D;\frac{1}{\sqrt{2\pi}\sigma} e^\frac{-(x-\mu)^2}{2\sigma^2}$以及式4-$x_t &#x3D; \sqrt{\bar{a}_t}x_0 + \sqrt{1-\bar{a}_t}z_t$上式右边三个q都可以推得：</font></p>
+<p><font color="blue" size = "5">$q(x_{t-1}|x_0)&#x3D;N(x_{t-1};\sqrt{\bar{a}<em>{t-1}}x_0,(1-\bar{a}</em>{t-1})I)&#x3D;\frac{1}{\sqrt{2\pi(1-\bar{a}<em>{t-1}})}exp(-\frac{1}{2}\frac{(x</em>{t-1}-\sqrt{\bar{a}<em>{t-1}}x_0)^2}{1-\bar{a}</em>{t-1}})$</font></p>
+<p><font color="blue" size = "5">$q(x_{t-1}|x_0)&#x3D;N(x_{t-1};\sqrt{\bar{\alpha}<em>{t-1}} x_0, (1-{\bar{\alpha}</em>{t-1}})$</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_0)&#x3D;N(x_t;\sqrt{\bar{a}_t}x_0,(1-\bar{a}_t)I)&#x3D;\frac{1}{\sqrt{2\pi(1-\bar{a}_t})} exp(-\frac{1}{2}\frac{(x_t-\sqrt{\bar{a}_t}x_0)^2}{1-\bar{a}_t})$</font></p>
+<p><font color="blue" size = "5">$q(x_t|x_{t-1},x_0)&#x3D;N(x_t;\sqrt{a_t}x_{t-1},(1-a_t)I)&#x3D;\frac{1}{\sqrt{2\pi(1-a_t})} exp(-\frac{1}{2}\frac{(x_t-\sqrt{a_t}x_{t-1})^2}{1-a_t})$</font></p>
+<p><font color="black" size = "5">由于它们均满足正态分布，把上式代入到式7当中，我们就能得到下式：</font></p>
+<p><font color="blue" size = "5">$q(x_{t-1}|x_t,x_0)&#x3D;\alpha*exp(-\frac{1}{2}(\frac{(x_t-\sqrt{a_t}x_{t-1})^2}{1-a_t}+\frac{(x_{t-1}-\sqrt{\bar{a}<em>{t-1}}x_0)^2}{1-\bar{a}</em>{t-1}}-\frac{(x_t-\sqrt{\bar{a}_t}x_0)^2}{1-\bar{a}_t}))$</font></p>
+<p><font color="black" size = "5">其中$\alpha$是系数，作者这里是直接忽略，然后进一步化成下面一步,由于中间展开化简过程较多,没有什么概念知识，就是各种初等变换所以直接列出最终结果：</font></p>
+<p><font color="blue" size = "5">$exp(-\frac{1}{2}((\frac{a_t}{\beta_t}+\frac{1}{1-\bar{a}<em>{t-1}})x^2</em>{t-1}-(\frac{2\sqrt{a_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{a}<em>{t-1}}}{1-\bar{a}</em>{t-1}}x_0)x_{t-1}+C(x_t,x_0)))$</font></p>
+<p><font color="black" size = "5">由正态分布满足公式：$exp(-\frac{(x-\mu)^2}{2\sigma^2})&#x3D;exp(-\frac{1}{2}(\frac{1}{\sigma^2}x^2-\frac{2\mu}{\sigma^2}x+\frac{\mu^2}{\sigma^2}))$,我们的目的是找到相乘相除后新的分布$q(x_{t-1}|x_t,x_0)$的均值$\tilde{\mu}_t$和方差,所以我们通过找到这两个式子的对应关系（因为两个正态分布相乘或相除后的变换仍然是正态分布，所以形式应该是一致的，既然形式一致，只需要把每个部分对应上）。首先两个公式方差形式是等价的：</font></p>
+<p><font color="blue" size = "5">$\frac{1}{\sigma^2}:&#x3D; \frac{a_t}{\beta_t} + \frac{1}{1-\bar{a}_{t-1}}$</font></p>
+<p><font color="black" size = "5">接下来，通过观察第二部分去求得均值$\tilde{\mu}_t$，如下：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306061532386.png" alt="img"></p>
+<p><font color="black" size = "5">此时我们观察这个式子，其中$x_t$是我们已经需要进行降噪的图像，其中$x_0$是未知的，因为在逆扩散过程中$x_0$就是我们需要通过一步步降噪生成出来的图像。但是$x_0$在前面的公式推导中，已经求得了$x_t$关于$x_0$的表达式式4，反过来转化一下，即可得:</font></p>
+<p><font color="blue" size = "5">$x_0 &#x3D; \frac{1}{\sqrt{\bar{a}_t}}(x_t - \sqrt{1-\bar{a}_t})\epsilon$</font><font color="black" size = "5">-式8</font></p>
+<p><font color="black" size = "5">最后一步，把$x_0$表达式代入，再进行一系列计算，最后$\tilde{\mu}_t$的表达式为：</font></p>
+<p><font color="blue" size = "5">$\tilde{\mu}_t &#x3D; \frac{1}{\sqrt{a_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{a}_t}}\epsilon)$</font><font color="black" size = "5">-式9</font></p>
+<p><font color="black" size = "5">这里的$\epsilon$对应正向过程中的$z_t$，虽然在函数形式上我们可以通过移项得到式8,但是根据正态分布采样的$z_t$的实际值我们并不知道，所以我们把$z_t$换成$\epsilon$的写法。</font></p>
+<p><font color="black" size = "5">至此,我们得到了$q(x_{t-1}|x_t,x_0)$分布的均值和方差，分别是：</font></p>
+<p><font color="blue" size = "5">$\tilde{\mu}_t &#x3D; \frac{1}{\sqrt{a_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{a}_t}}\epsilon)$</font></p>
+<p><font color="blue" size = "5">$\tilde{\beta}<em>{t} &#x3D; \frac{1-\bar{a}</em>{t-1}}{1-\bar{a}_t}\beta$</font></p>
+<p><font color="black" size = "5">而如果我们用神经网络去预测这个$\epsilon$,就能够预测出所对应的均值,在论文当中这个$\epsilon_\theta(x_t,t)$正是我们所需要学习的$\epsilon$,其中$\theta$是学习的参数，原文当中是使用了U-Net结构去学习。</font></p>
+<p><font color="black" size = "5">因为$\mu_t$的构成所有都已知了,$x_t$是我们输入的原始噪声，$\epsilon$是经过学习过后的网络返回的噪声，$\beta$和$a_t$，$\bar{a}<em>t$是我们设定的常数，所以$\mu_t$可知，所以$x</em>{t-1}$可以求得。</font></p>
+<p><font color="black" size = "5">当我们把$\epsilon$替换成可以预测的噪声$\epsilon_\theta(x_t,t)$,那么均值也会变成：</font></p>
+<p><font color="blue" size = "5">$\mu_\theta(x_t,t) &#x3D; \frac{1}{\sqrt{a_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{a}_t}}\epsilon_\theta(x_t,t))$</font><font color="black" size = "5">-式10</font></p>
+<p><font color="black" size = "5">这就是DDPM的一个特点，输入$x_t$到网络当中去训练网络去预测的不是$x_0$,而是噪声$\epsilon$,那么你可能就会想我们是否可以一次性预测好$\epsilon$再根据式8不就能直接得到$x_0$,为什么还有采样得到$x_{t-1}$,再预测下一步的噪声再一步步去噪到$x_0$呢？这是因为由于我们的扩散过程的式3是通过马尔可夫性得到的，如果我们直接从$x_t$推出$x_0$是不符合马尔可夫性的，所以我们只能把得到的式8当中的$x_0$当作零件去计算下一步时刻的均值</font></p>
+<h2 id="3、目标函数"><a href="#3、目标函数" class="headerlink" title="3、目标函数"></a>3、目标函数</h2><p><font color="black" size = "5">明确要训练$P_\theta(x_{t-1}|x_t)$，那要怎么确定目标函数呢？扩散模型直接使用极大似然法来训练模型，即对于任意训练样本$x_0$,均使其对数似然函数最大化：</font></p>
+<p><font color="blue" size = "5">$\max\limits_\theta logP_\theta(x_0)$</font></p>
+<p><font color="black" size = "5">从Loss下降的角度就是最小化似然函数：</font></p>
+<p><font color="blue" size = "5">$L &#x3D;E_q [- logP_\theta(x_0)]$</font></p>
+<p><font color="black" size = "5">考虑到$P_\theta(x_0)&#x3D;\int_{x_{1:T}}P_\theta(x_{0:T})dx_{1: T}$,我们无法直接处理$P_\theta(x_0)$的解析形式，因而扩散模型没有选择直接优化似然函数，而是采用了近似推断的技术来优化负对数似然：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306061550061.png" alt="img"></p>
+<p><font color="blue" size = "5">$L_{VLB} &#x3D;E_{q(x_{0:T})}[log(\frac{q(x_{1:T}|x_0)}{P_\theta(x_{0:T})})]\geqslant -E_{q(x_0)} logP_\theta(x_0)$ </font></p>
+<p><font color="black" size = "5">相信这一系列下来你或许有不少问号，博主刚看的时候也是一样的，接下来由我们一步步到来：</font></p>
+<p><font color="black" size = "5">第一步：通过近似推断的技术，就是用q分布去近似p分布，KL散度具有非负性，用于衡量两个分布的相似程度。因此加上一个非负数那么肯定是大于等于的；</font></p>
+<p><font color="black" size = "5">第二步：KL散度是衡量两个概率分布差异的一种方法。对于两个概率分布P和q,KL散度可以定义为：$D_{KL}(P(x)||q(x))&#x3D;\int_{-\infty}^\infty P(x)log(\frac{P(x)}{q(X)}dx) &#x3D; E_{x\sim P}[log(\frac{P(x)}{q(x)})]$，再根据贝叶斯公式我们可以得到：$P_\theta(x_{1:T}|x_0)&#x3D;\frac{P_\theta(x_{1:T},x_0)}{P_\theta(x_0)}$；</font></p>
+<p><font color="black" size = "5">第三步：一个对数的运算公式以及$P_\theta(x_{1:T},x_0)&#x3D;P_\theta(x_{0:T})$；</font></p>
+<p><font color="black" size = "5">第四步：$log(P_\theta(x_0))$拿到期望外面去与前项抵消掉。</font></p>
+<p><font color="black" size = "5">进一步可以写出交叉熵的上界，进一步对其上界进行简化:</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306061551018.png" alt="~KCL26}8%JBI}E05O~NS6Y1"></p>
+<p><font color="black" size = "5">简化后，最终整理成了三项，我们进行一步步分析：</font></p>
+<p><font color="black" size = "5">第一项：是两个分布的KL散度，由于前向过程 q 没有可学习参数，而 $x_T$ 则是纯高斯噪声，因此这一项和我们最优化无关， $L_T$ 可以当做常量忽略;</font></p>
+<p><font color="black" size = "5">第二项：是正向过程的后验条件概率和逆向过程的转移分布的一个KL散度。第一个分布$q(x_{t-1}|x_t,x_0)$,是一个高斯分布，我们已经在逆扩散过程当中推导出来其解析形式：</font></p>
+<p><font color="blue" size = "5">$q(x_{t-1}|x_T,x_0)&#x3D;N(x_{t-1};\tilde{\mu_t},\tilde{\beta_t}I)$</font></p>
+<p><font color="blue" size = "5">$\tilde{\mu}_t &#x3D; \frac{1}{\sqrt{a_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{a}_t}}\epsilon)$</font></p>
+<p><font color="blue" size = "5">${\tilde{\beta}<em>t} &#x3D; \frac{1-\bar{a}</em>{t-1}}{1-\bar{a}_t}\beta$</font></p>
+<p><font color="black" size = "5">第二个分布$P_\theta(x_{t-1}|x_t )$是我们网络期望拟合的目标分布，也是一个高斯分布，均值用网络估计，方差被设置为了一个和 $β_t$ 有关的常数。</font></p>
+<p><font color="blue" size = "5">$P_\theta(x_{t-1}|x_t)&#x3D;N(x_{t-1};\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))$</font></p>
+<p><font color="black" size = "5">在两个分布q,P都是高斯分布，则它们的KL散度为：$KL(P,q)&#x3D;log\frac{\sigma_2}{\sigma_1}+\frac{\sigma_1^2+(\mu_1-\mu_2)^2}{2\sigma_2^2}-\frac{1}{2}$</font></p>
+<p><font color="black" size = "5">然后因为这两个分布的方差全是常数，和优化无关，所以其实优化目标就是两个分布均值的二范数。</font></p>
+<p><font color="blue" size = "5">$L_t&#x3D;E_q[||\tilde{\mu}_t(x_t,x_0)-\mu_\theta(x_t,t)||^2]$</font></p>
+<p><font color="black" size = "5">由此，我们可以看出来其优化目标变成了后面逆向过程的均值$\mu_\theta$尽量去逼近前面的正向过程的后验分布的均值$\tilde{\mu}_t$,也就是说可以用网络直接预测$\mu_\theta$,再计算$\tilde{\mu}_t$和$\mu_\theta$的损失去优化。</font></p>
+<p><font color="black" size = "5">但如果我们将式8、式9和式10代入此式，我们还能够进一步扩展,其中式8的$\epsilon\sim N(0,I)$：</font></p>
+<p><font color="blue" size = "5">$L_t&#x3D;E_{x_0,\epsilon}[||\frac{1}{\sqrt{\alpha_t}}(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)-\frac{1}{\sqrt{\alpha_t}}(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,t))||^2]$</font></p>
+<p><font color="black" size = "5">然后，去括号之后化简，再把系数给忽略掉，作者说这样比较好训练，采样质量也有所提高，我们可以得到下式：</font></p>
+<p><font color="blue" size = "5">$L_t &#x3D;E_{x_0,\epsilon}[||\epsilon_t-\epsilon_\theta(\sqrt{\bar{a}_t}x_0+\sqrt{1-\bar{a}_t}\epsilon_t,t)||^2] ,\epsilon \sim N(0,I)$</font></p>
+<p><font color="black" size = "5">其中$\epsilon_\theta(x_t,t)$是由神经网络训练预测出来的值，$\epsilon_t$就是当前时刻的噪声随机量。至此，我们的损失函数最终化简成上面这个式子，我们从预测图片到预测均值再到我们只需要预测噪声即可。</font></p>
+<h2 id="4、训练和采样算法"><a href="#4、训练和采样算法" class="headerlink" title="4、训练和采样算法"></a>4、训练和采样算法</h2><p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306052108660.png" alt="a661bec4f5ef404086223e49cc9487b0"></p>
+<h3 id="1）训练过程："><a href="#1）训练过程：" class="headerlink" title="1）训练过程："></a>1）训练过程：</h3><p><font color="black" size = "5">1.随机选择一个训练样本$x_0$；</font></p>
+<p><font color="black" size = "5">2.从${1…T}$随机抽样一个t；</font></p>
+<p><font color="black" size = "5">3.随机产生噪音$\epsilon \sim N(0,I)$;</font></p>
+<p><font color="black" size = "5">4.计算当前所产生的带噪声数据$x_t$;</font></p>
+<p><font color="black" size = "5">5.输入$x_t$到网络当中去预测噪声$\epsilon_\theta(x_t,t)$</font></p>
+<p><font color="black" size = "5">6.计算所产生的噪音和预测的噪音的L2损失</font></p>
+<p><font color="black" size = "5">7.计算梯度，更新网络</font></p>
+<p><font color="black" size = "5">8.重复此过程</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/img/main/img/202306052220730.png" alt="1685973948377"></p>
+<h2 id="2）采样过程："><a href="#2）采样过程：" class="headerlink" title="2）采样过程："></a>2）采样过程：</h2><p><font color="black" size = "5">1.从一个随机噪声开始$x_T \sim N(0,I)$；</font></p>
+<p><font color="black" size = "5">2.用训练好的网络预测噪音$\epsilon_\theta(x_t,t)$；</font></p>
+<p><font color="black" size = "5">3.然后计算$\mu_\theta(x_t,t)$;</font></p>
+<p><font color="black" size = "5">4.然后计算$x_{t-1} &#x3D; \frac{1}{\sqrt{a_t}}(x_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,t))+\sigma_tz$;</font></p>
+<p><font color="black" size = "5">5.逆向迭代T步，直到t&#x3D;0完成新样本的生成。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——从DDPM入门\1685975427872-1685975547128-6.png" alt="1685975427872"></p>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p><font color="black" size = "5">总的来说，扩散过程是个固定过程，逐渐向图像添加高斯噪声，直到最终得到纯噪声，而逆向过程通过一个可学习的$P_\theta$逐步降噪恢复得到图像，训练过程中随机取来自真实未知且可能复杂的数据分布。正向和逆向两个过程都是马尔可夫链，其中正向过程是确定性可控的，通过不断调整系数$\beta_t$逐步添加噪声，转移分布是高斯的，逆向过程虽然复杂，但是转移分布$P_\theta(x_{t-1}|x_t)$也可以假设为高斯，用神经网络来逼近求解。</font></p>
 
       
 
