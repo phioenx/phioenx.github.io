@@ -19,22 +19,20 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="摘要 扩散模型最近被证明可以生成高质量的合成图像，尤其是当与引导（guidance）技术结合使用以牺牲多样性来换取保真度时。 本文探索了文本条件图像合成问题的扩散模型，并比较了两种不同的指导策略：CLIP 指导和无分类器指导。作者发现后者在真实感和字幕相似性方面更受人类评估者的青睐，并且通常会产生逼真的样本。来自使用无分类器指导的 35 亿参数文本条件扩散模型的样本比 DALL-E 的样">
-<meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型--GLIDE">
-<meta property="og:url" content="http://example.com/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/index.html">
+    <meta name="description" content="PhoenixPeng">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PhoenixPeng的领域">
+<meta property="og:url" content="http://example.com/archives/page/2/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="摘要 扩散模型最近被证明可以生成高质量的合成图像，尤其是当与引导（guidance）技术结合使用以牺牲多样性来换取保真度时。 本文探索了文本条件图像合成问题的扩散模型，并比较了两种不同的指导策略：CLIP 指导和无分类器指导。作者发现后者在真实感和字幕相似性方面更受人类评估者的青睐，并且通常会产生逼真的样本。来自使用无分类器指导的 35 亿参数文本条件扩散模型的样本比 DALL-E 的样">
+<meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-18T08:36:43.000Z">
-<meta property="article:modified_time" content="2023-08-18T08:51:42.029Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型--GLIDE · PhoenxiPeng&#39;s blog</title>
+    <title>PhoenxiPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -222,8 +220,6 @@
         }
     </script>
     
-        <body class="post-body">
-    
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -253,17 +249,6 @@
     </div>
     <!-- toggle banner for post layout -->
     
-        
-            <div class="banner">
-        
-            <div class="blog-title header-element">
-                <a href="/">PhoenxiPeng&#39;s blog.</a>
-            </div>
-            <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型--GLIDE</a>
-            </div>
-        </div>
-    
 </header>
 
         <!-- fixed footer -->
@@ -290,74 +275,24 @@
 
 
 
-    height:50vh;
-
 ">
     
     <!-- 主页  -->
     
-        
-    <!-- 404页  -->
-    
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-                扩散模型--GLIDE
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-                
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页 meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-    
-</div>
-
-                
-                <!-- 文章字数统计 -->
-                
-                <div class="post-intro-meta">
-                    <!-- 撰写日期 -->
-                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/08/18</span>
-                    <!-- busuanzi -->
-                    
-                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
-                            <span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    
-                    <!-- 文章分享 -->
-                    <span class="share-wrapper">
-                        <span class="iconfont-archer share-icon">&#xe71d;</span>
-                        <span class="share-text">Share</span>
-                        <ul class="share-list">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -487,200 +422,41 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="摘要"><strong>摘要</strong></h2>
-<p>扩散模型最近被证明可以生成高质量的合成图像，尤其是当与引导（guidance）技术结合使用以牺牲多样性来换取保真度时。
-本文探索了文本条件图像合成问题的扩散模型，并比较了两种不同的指导策略：<strong>CLIP
-指导</strong>和<strong>无分类器指导</strong>。作者发现后者在真实感和字幕相似性方面更受人类评估者的青睐，并且通常会产生逼真的样本。来自使用无分类器指导的
-35 亿参数<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=文本条件扩散模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">文本条件扩散模型</a>的样本比
-DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLIP
-重新排序也是如此。
-此外，该模型可以进行微调以执行图像修复，从而实现强大的文本驱动图像编辑。</p>
-<blockquote>
-<p>作者在一个经过过滤的数据集上训练了一个较小的模型，并在Github上发布了代码和权重，有兴趣的同学可以赶紧去尝尝鲜。</p>
-</blockquote>
-<h2 id="引言"><strong>引言</strong></h2>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-5bf4872b88906cf250abcd29d074b9e8_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<p>插图、绘画和照片等图像通常可以很容易地用文字描述，但可能需要专门的技能和大量的劳动来创建。因此，一种能够从自然语言生成逼真图像的工具可以使人类以前所未有的轻松方式创建丰富多样的视觉内容。使用自然语言编辑图像的能力进一步允许迭代细化和细粒度控制，这两者对于现实世界的应用程序都是至关重要的。</p>
-<p>最近的文本条件<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=图像模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">图像模型</a>能够从自由形式的文本提示中合成图像，并且能够以语义上合理的方式组合不相关的对象。然而，他们还不能生成真实感图像来捕获相应文本提示的所有方面。</p>
-<p>另一方面，无条件图像模型可以合成逼真的图像，有时具有足够的保真度，以至于人类无法将它们与真实图像区分开来。
-在这一系列研究中，扩散模型已成为一个有前途的生成模型家族，在许多图像生成中实现了最先进的样本质量和基准。</p>
-<p>为了在类条件设置中实现照片级真实感，Dhariwal 和 Nichol
-使用分类器引导增强了扩散模型，这是一种允许扩散模型以分类器标签为条件的技术。分类器首先在噪声图像上进行训练，在扩散采样过程中，来自分类器的梯度用于将样本引导至标签。
-Ho &amp; Salimans 等人则通过使用<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=无分类器&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">无分类器</a>指导在没有单独训练的分类器的情况下取得了类似的结果，无分类器指导是一种在有标签和无标签的扩散模型的预测之间进行插值的指导形式。</p>
-<p>受引导扩散模型生成逼真样本的能力和文本到图像模型处理自由形式提示的能力的启发，本文作者将引导扩散应用于文本条件图像合成问题。首先，训练了一个
-35
-亿参数扩散模型，该模型使用文本编码器以自然语言描述为条件。接下来，比较了两种将扩散模型引导至文本提示的技术：CLIP
-引导和无分类器引导。
-使用人工和自动评估，作者发现<strong>无分类器指导可产生更高质量的图像</strong>。</p>
-<p>虽然本文模型可以<strong>零样本</strong>渲染各种<strong>文本提示</strong>，但它可能难以为复杂的提示生成逼真的图像。因此，除了零样本生成之外，作者还为此模型提供了编辑功能，这允许人类迭代地改进模型样本，直到它们匹配更复杂的提示。具体来说，你可以微调该模型以执行图像修复，发现它能够使用自然语言提示对现有图像进行逼真的编辑。模型产生的编辑与周围环境的风格和照明相匹配，包括令人信服的阴影和反射。这些模型的未来应用可能会帮助人类以前所未有的速度和轻松创建引人注目的自定义图像。</p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-4fcdc4e13adea13d6e0bfdc02564a35b_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<p>可以观察到，该生成模型可以显着减少产生令人信服的虚假信息或 Deepfakes
-所需的工作量。为了在帮助未来研究的同时防范这些用例，作者发布了一个较小的扩散模型和一个在过滤数据集上训练的噪声
-CLIP 模型。 该系统称为 GLIDE，它代表 <strong>G</strong>uided
-<strong>L</strong>anguage to <strong>I</strong>mage
-<strong>D</strong>iffusion for Generation and
-<strong>E</strong>diting。</p>
-<h2 id="方法"><strong>方法</strong></h2>
-<p>本文作者以 64 × 64 分辨率训练了一个 35
-亿参数文本条件扩散模型，以及另一个 15
-亿参数文本条件上采样扩散模型以将分辨率提高到 256 × 256。对于 CLIP
-指导，额外还训练了一个 64 × 64 ViT-L CLIP <a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=噪声模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">噪声模型</a>。</p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-94482dff9a6ecb60c63d401077319056_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<h3 id="文本条件扩散模型"><strong>文本条件扩散模型</strong></h3>
-<p>本文方法是基于 <code>ADM</code>
-模型架构，在此基础上增加了<strong>文本条件信息</strong>。即对于每个噪声图像
-xtx_{t}x_{t} 和相应的文本说明 ccc，该模型会预测条件概率
-p(xt−1|xt,c)p(x_{t−1}|x_{t}, c)p(x_{t−1}|x_{t},
-c)。为了以文本为条件，该模型首先将其编码为 KKK
-个标记序列，并将这些标记输入到 Transformer
-模型中。该转换器的输出有两种使用方式：首先，使用最终标记嵌入代替 ADM
-模型中的类嵌入；其次，将最后一层标记嵌入（一系列 K 个<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=特征向量&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">特征向量</a>）分别投影到整个
-ADM 模型中每个注意力层的维度，然后连接到每一层的注意力上下文。</p>
-<p>本文采用与 DALL-E 相同的数据集上训练模型。同时使用与 <strong>&lt;
-Diffusion models beat gans on image synthesis &gt;</strong> 所使用的的
-ImageNet 64 × 64 模型相同的模型架构，但将模型宽度缩放到 512
-个通道，从而为模型的视觉部分产生大约 23 亿个参数。对于文本编码
-Transformer，作者使用 24 个宽度为 2048 的残差块，产生大约 12
-亿个参数。</p>
-<p>此外，作者还额外训练了一个 15 亿参数的<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=上采样扩散模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">上采样扩散模型</a>，以从
-64 × 64 分辨率变为 256 × 256
-分辨率。该模型以与基本模型相同的方式以文本为条件，但使用宽度为 1024
-而不是 2048 的较小文本编码器。否则，该架构与上面提到的的 ImageNet
-上采样器相匹配，只是这里将基本的通道数增加到 384。</p>
-<p>本模型在批量大小为 2048 时训练基本模型进行 2.5M 迭代。在批量大小为
-512 时训练上采样模型进行 1.6M 迭代。最终发现这些模型以 16
-位精度和传统损失缩放稳定训练，整体的训练计算量大致与 DALL-E 相当。</p>
-<h3 id="无分类器指导的微调"><strong>无分类器指导的微调</strong></h3>
-<p>在初始训练运行后，作者微调了其基础模型以支持无条件图像生成。这个训练过程与预训练完全一样，除了
-20%
-的文本标记序列被替换为空序列。这样，模型保留了生成文本条件输出的能力，但也可以无条件地生成图像。</p>
-<h3 id="图像绘画"><strong><a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=图像绘画&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">图像绘画</a></strong></h3>
-<p>大多数使用扩散模型进行修复的先前工作都没有针对此任务明确训练扩散模型。特别地，扩散模型修复可以像往常一样通过从扩散模型中采样来执行，但是在每个采样步骤之后用来自
-q(xt|x0)q(x_{t}|x_{0})q(x_{t}|x_{0})
-的样本替换图像的已知区域。这样做的缺点是模型在采样过程中无法看到整个上下文（只有噪声版本），在作者的早期实验中偶尔会导致不希望出现的<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=边缘伪影&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">边缘伪影</a>。</p>
-<p>为了获得更好的结果，作者明确地微调他们的模型以执行修复。在微调过程中，训练样例的随机区域被擦除，其余部分作为附加条件信息与掩码通道一起馈入模型。通过修改模型架构以具有四个额外的输入通道：第二组
-RGB 通道和一个 mask 通道。
-在微调之前，作者将这些新通道的相应输入权重初始化为零。对于<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=上采样模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">上采样模型</a>，其总是提供完整的低分辨率图像，但只提供高分辨率图像的未遮挡区域。</p>
-<h3 id="带噪-clip-模型"><strong>带噪 CLIP 模型</strong></h3>
-<p>为了更好地匹配前面提到的<a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=分类器引导&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">分类器引导</a>技术，作者使用图像编码器
-f(xt,t)f(x_{t}, t)f(x_{t}, t) 训练噪声 CLIP
-模型，该图像编码器接收噪声图像 xtx{t}x{t}，并且以与原始 CLIP
-模型相同的目标进行训练。最终以 64 × 64
-分辨率训练这些模型，使用与基本模型相同的噪声采样表。</p>
-<h2 id="结果"><strong>结果</strong></h2>
-<p>先看下其它模型的表现：</p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-ccae4742268ac701bdfa3452dbefabb8_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<p>再来看先本文方法的表现：</p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-275c3ab52b1c6f27ecaabffcb742e3e1_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<p>以上结果是来自 MS-COCO 提示上的随机图像样本。对于 <a
-target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=DALL-E&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2829764157%7D">DALL-E</a>，是在
-0.85 temperature 下生成样本，并使用 CLIP 重新排序从 256
-个样本中选择最佳样本。而对于 GLIDE，则使用尺度为 2.0 的 CLIP
-指导和尺度为 3.0 的无分类器指导。注意，这里并没有为 GLIDE 执行任何 CLIP
-重新排序或挑选。</p>
-<p>当然，GLIDE 也有它本身的一些局限性，例如下面这个示例：</p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型-GLIDE\v2-3174e05b3c2d054aa5eb060229fd77bc_720w.webp"
-alt="img" />
-<figcaption aria-hidden="true">img</figcaption>
-</figure>
-<p>可以看出，虽然该模型通常可以以复杂的方式组合不同的概念，但它有时无法捕获描述非常不寻常的对象或场景的某些提示。在上图中，作者提供了这些失败案例的一些示例。作者强调，若未经优化的模型需要
-15 秒才能在单个 A100 GPU 上对一张图像进行采样。这比相关 GAN
-方法的采样要慢得多，后者在单个前向传递中生成图像，因此更适合用于实时应用程序。当然，这其实也是现阶段绝大多数扩散模型的通病，采样太耗时了。</p>
-
-    </article>
-    <!-- license -->
+                <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">http://example.com/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/</a>
-            <p>发表日期：<a href="http://example.com/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">August 18th 2023, 4:36:43 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">August 18th 2023, 4:51:42 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
-        </div>
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+                
+                <span class="abstract-title-text">扩散模型——1.从DDPM入门</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要介绍扩散模型的框架原理以及生成过程，是以DDPM为主进行介绍，让你对扩散模型有初步的了解。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/23</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
     
-    <!-- paginator -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/" title="扩散模型——3.Improved DDPM">
-                    <div class="prevTitle">扩散模型——3.Improved DDPM</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- comment -->
+    <!-- paginator  -->
     
-        <div class="post-comment">
-            <!-- 来必力 City 版安装代码 -->
-
-
-            
-
-            
-
-            
-
-            <!-- utteranc评论 -->
-
-
-            <!-- partial('_partial/comment/changyan') -->
-            <!--PC版-->
-
-
-            
-            
-
-            
-
-        </div>
-    
-    <!-- timeliness note -->
-    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
-    
-    <!-- Mathjax -->
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+        </nav>
     
 </main>
 
@@ -771,23 +547,6 @@ alt="img" />
 
         </div>
         <!-- toc -->
-        
-            <div class="toc-wrapper toc-wrapper-loding" style=
-
-
-
-
-
-
-
-    top:50vh;
-
->
-                <div class="toc-catalog">
-                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-                </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text">文本条件扩散模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BC%E7%9A%84%E5%BE%AE%E8%B0%83"><span class="toc-number">3.2.</span> <span class="toc-text">无分类器指导的微调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%BB%98%E7%94%BB"><span class="toc-number">3.3.</span> <span class="toc-text">图像绘画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E5%99%AA-clip-%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.4.</span> <span class="toc-text">带噪 CLIP 模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">结果</span></a></li></ol>
-            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1068,8 +827,6 @@ alt="img" />
         <!-- CNZZ -->
         
         <!-- async load share.js -->
-        
-            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         
