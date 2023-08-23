@@ -19,19 +19,19 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》 如何评价生成模型的质量：1）真实性 ，2）多样性。 图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比 li">
+    <meta name="description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》   如何评价生成模型的质量：1）真实性 ，2）多样性。 图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比">
 <meta property="og:type" content="article">
 <meta property="og:title" content="条件扩散模式-Classifier guidance">
 <meta property="og:url" content="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》 如何评价生成模型的质量：1）真实性 ，2）多样性。 图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比 li">
+<meta property="og:description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》   如何评价生成模型的质量：1）真实性 ，2）多样性。 图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source\_posts\%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E6%A8%A1%E5%BC%8F-Classifier-guidance\03485970dad46aa5df8e05031ee781a5.jpeg">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230903347.jpeg">
 <meta property="article:published_time" content="2023-08-10T01:50:00.000Z">
-<meta property="article:modified_time" content="2023-08-18T09:18:53.353Z">
+<meta property="article:modified_time" content="2023-08-23T01:14:21.303Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:\Users\PhoenixPeng\blog\source\_posts\%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E6%A8%A1%E5%BC%8F-Classifier-guidance\03485970dad46aa5df8e05031ee781a5.jpeg">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230903347.jpeg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
@@ -492,10 +492,10 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h1 id="一前言">一、前言</h1>
-<p>本文章出自《<a
+<p><font color="black" size = "5">本文章出自《<a
 href="%5B%5B2105.05233%5D%20Diffusion%20Models%20Beat%20GANs%20on%20Image%20Synthesis%20(arxiv.org)%5D(https://arxiv.org/abs/2105.05233)">Diffusion
-Models Beat GANs on Image Synthesis</a>》</p>
-<p><font color="black" size = "5">如何评价生成模型的质量：<strong>1）真实性</strong>
+Models Beat GANs on Image Synthesis</a>》</font></p>
+<p><font color="black" size = "5">  如何评价生成模型的质量：<strong>1）真实性</strong>
 ，<strong>2）多样性</strong>。</font></p>
 <p><font color="black" size = "5">图像质量的衡量指标通常为
 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs
@@ -503,127 +503,107 @@ FID，Inception Score 和 Precision，然而这些指标无法体现多样性。
 likelihood-based models 弱，另外
 GANs通常比较难训练，如果没有选择合适的超参或正则很容易 collapsing
 。</font></p>
-<p><font color="black" size = "5">基于GANs的缺陷，有很多的工作在改进
+<p><font color="black" size = "5">  基于GANs的缺陷，有很多的工作在改进
 likelihood-based models ，希望提高图像生成质量，然而和 GANs
 相比仍有差距，另外生成样本的速度比较慢。</font></p>
-<p><font color="black" size = "5">Diffusions models 属于
+<p><font color="black" size = "5">  Diffusions models 属于
 likelihood-based
 models，其具有分布覆盖广，使用静态训练目标和易于扩展的优点，并且能够生成相当高质量图像，当前已在
 CIFAR-10 上取得了 SOTA 成绩，然而在 LSUN 和 ImageNet 数据集上与 GANs
 相比仍有差距。通过IDDPM的改进，扩散模型虽然已经可以在ImageNet数据集256×256
 数据集上也可以生成高质量的样本。但是在FID分数上仍然比不上BigGAN-deep。</font></p>
-<p><font color="black" size = "5">文章认为造成上述差距的原因为：</font></p>
+<p><font color="black" size = "5">  文章认为造成上述差距的原因为：</font></p>
 <ul>
-<li><font color="black" size = "5">GANs
+<li><font color="black" size = "5">  GANs
 的网络架构已经十分完善了；</font></li>
-<li><font color="black" size = "5">GANs
+<li><font color="black" size = "5">  GANs
 可以在多样性和逼真度方面取得平衡，虽可以产生高质量图像，但是不能覆盖整个分布。</font></li>
 </ul>
-<p><font color="black" size = "5">基于此，本文想要改进现有 diffusion
+<p><font color="black" size = "5">  基于此，本文想要改进现有 diffusion
 模型架构，同时提出了可以平衡图像生成多样性和逼真度的方案。</font></p>
-<h2 id="评判生成样本的质量指标">1、评判生成样本的质量指标</h2>
-<h3 id="is指标">1）IS指标</h3>
-<p>Inception Score (IS) 是衡量模型捕获完整 ImageNet
-类分布的程度，同时仍然生成作为单个类的令人信服的示例的单个样本。<strong>IS</strong>是直接对生成图像进行评估，指标值越大越好。实际上其实就是算生成分布与真实发布的KL散度。</p>
-<h3 id="fid指标">2）FID指标</h3>
-<p><strong><font color="black" size = "5">FID
+<h2
+id="评判生成样本的质量指标"><font color="black" size = "5">1、评判生成样本的质量指标</font></h2>
+<h3 id="is指标"><font color="black" size = "5">1）IS指标</font></h3>
+<p><font color="black" size = "5">  Inception Score (IS)
+是衡量模型捕获完整 ImageNet
+类分布的程度，同时仍然生成作为单个类的令人信服的示例的单个样本。<strong>IS</strong>是直接对生成图像进行评估，指标值越大越好。实际上其实就是算生成分布与真实发布的KL散度。</font></p>
+<h3 id="fid指标"><font color="black" size = "5">2）FID指标</font></h3>
+<p><strong><font color="black" size = "5">  FID
 提供了Inception-V3用于潜在空间中生成样本分布和真实数据分布之间距离的差异。</font></strong></p>
-<p><font color="black" size = "5">在计算FID指标时，首先从真实数据分布和生成样本分布中抽取一组样本，然后使用预训练的Inception网络从这些样本中提取特征向量。接下来计算两个分布的均值和协方差矩阵，并计算它们之间的Frechet距离，得到FID值，该值越小表明生成样本分布越接近真实数据分布。</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692169399362.png"
-alt="1692169399362" />
-<figcaption aria-hidden="true">1692169399362</figcaption>
-</figure>
-<h3 id="improved-precision-and-召回率">3) Improved Precision and
-召回率</h3>
-<p><font color="black" size = "5"><strong>改进的精度(Precision):</strong>测量样本保真度作为模型生成的样本落入数据流形（数据分布）的比例（精度）。<strong>召回率：</strong>测量多样性作为数据样本落入样本流形（生成分布）的比例（召回率）。</font></p>
-<p><font color="black" size = "5"><strong>关于流形的解释：</strong>流形是几何中的一个概念，我们观察到的数据是三维的，但其本质是一个二维流形，流形能够刻画数据的本质。高维数据其实是由低维流形生成的。如果我们能模拟这个生成过程，再通过对低维流形的微调，应该能得到对应的“有意义且有道理”的高维数据。</font></p>
-<p><img src="C:\Users\PhoenixPeng\blog\source\_posts\条件扩散模式-Classifier-guidance\03485970dad46aa5df8e05031ee781a5.jpeg" alt="img" style="zoom:80%;" /></p>
-<p><font color="black" size = "5">本篇论文的作者使用 FID
+<p><font color="black" size = "5">  在计算FID指标时，首先从真实数据分布和生成样本分布中抽取一组样本，然后使用预训练的Inception网络从这些样本中提取特征向量。接下来计算两个分布的均值和协方差矩阵，并计算它们之间的Frechet距离，得到FID值，该值越小表明生成样本分布越接近真实数据分布。</font></p>
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230902701.png" /></p>
+<h3 id="improved-precision-and-召回率"><font color="black" size = "5">3)
+Improved Precision and 召回率</font></h3>
+<p><font color="black" size = "5"><strong>  改进的精度(Precision):</strong>测量样本保真度作为模型生成的样本落入数据流形（数据分布）的比例（精度）。<strong>召回率：</strong>测量多样性作为数据样本落入样本流形（生成分布）的比例（召回率）。</font></p>
+<p><font color="black" size = "5">  <strong>关于流形的解释：</strong>流形是几何中的一个概念，我们观察到的数据是三维的，但其本质是一个二维流形，流形能够刻画数据的本质。高维数据其实是由低维流形生成的。如果我们能模拟这个生成过程，再通过对低维流形的微调，应该能得到对应的“有意义且有道理”的高维数据。</font></p>
+<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230903347.jpeg" alt="img" style="zoom:80%;" /></p>
+<p><font color="black" size = "5">  本篇论文的作者使用 FID
 作为比较整体样本质量的默认指标，因为它是多样性和保真度的权衡，使用
 Precision 或 IS 来衡量保真度，并使用 Recall
 来衡量多样性或分布覆盖范围。</font></p>
 <h1 id="二改进架构">二、改进架构</h1>
-<p><font color="black" size = "5">原扩散模型DDPM中使用的是UNet架构作为去噪网络，而作者想要根据一下几点的架构改进，做消融实验，看是否能够提高图像生成质量。</font></p>
+<p><font color="black" size = "5">  原扩散模型DDPM中使用的是UNet架构作为去噪网络，而作者想要根据一下几点的架构改进，做消融实验，看是否能够提高图像生成质量。</font></p>
 <ul>
-<li><p><font color="black" size = "5">增加深度（神经网络层数）并减小宽度（通道数），但保持模型尺寸相对恒定。</font></p></li>
-<li><p><font color="black" size = "5">增加注意力头的数量。</font></p></li>
-<li><p><font color="black" size = "5">在 32×32、16×16 和 8×8
+<li><p><font color="black" size = "5">  增加深度（神经网络层数）并减小宽度（通道数），但保持模型尺寸相对恒定。</font></p></li>
+<li><p><font color="black" size = "5">  增加注意力头的数量。</font></p></li>
+<li><p><font color="black" size = "5">  在 32×32、16×16 和 8×8
 分辨率下使用注意力，而不仅仅是在 16×16 下。</font></p></li>
-<li><p><font color="black" size = "5">使用 BigGAN
+<li><p><font color="black" size = "5">  使用 BigGAN
 的残差块进行上采样和下采样。</font></p></li>
-<li><p><font color="black" size = "5">对残差连接使用<span
+<li><p><font color="black" size = "5">  对残差连接使用<span
 class="math inline">\(1/\sqrt{2}\)</span>因子缩放。</font></p></li>
 </ul>
-<p><font color="black" size = "5">上述改进的比较是基于在ImageNet
+<p><font color="black" size = "5">  上述改进的比较是基于在ImageNet
 128×128上训练模型，批量大小（batch_size）为 256，并使用 250
 个采样步骤（timesteps）进行采样,使用FID指标进行比较。如表1所示：</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692172848730.png"
-alt="1692172848730" />
-<figcaption aria-hidden="true">1692172848730</figcaption>
-</figure>
-<p><font color="black" size = "5">在图 2
+<p><img
+src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692172848730.png" /></p>
+<p><font color="black" size = "5">  在图 2
 中观察到，虽然增加的深度有助于提高性能，但它会增加训练时间，并且需要更长的时间才能达到与更广泛的模型相同的性能。</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692173225716.png"
-alt="1692173225716" />
-<figcaption aria-hidden="true">1692173225716</figcaption>
-</figure>
-<p><font color="black" size = "5">作者还研究了其他更适合 Transformer
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230904105.png" /></p>
+<p><font color="black" size = "5">  作者还研究了其他更适合 Transformer
 架构的注意力配置。为此，他们尝试使用更多的 heads 或者每个 head
 使用更少的 channels。对于架构的其余部分，作者使用 128
 个基本通道、每个分辨率 2 个残差块、多分辨率（multi-resolution）注意力和
 BigGAN 上/下采样，并训练模型进行 700K 次迭代。表 2
 显示了我们的结果，表明每个头使用更少的通道可以改善 FID。</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692174031536.png"
-alt="1692174031536" />
-<figcaption aria-hidden="true">1692174031536</figcaption>
-</figure>
-<p><font color="black" size = "5">根据图2右图，可以看出当我们每个头使用64通道时更有助于节省训练时间。</font></p>
-<p><font color="black" size = "5">最后总结出作者采用的Unet架构为 128
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230904939.png" /></p>
+<p><font color="black" size = "5">  根据图2右图，可以看出当我们每个头使用64通道时更有助于节省训练时间。</font></p>
+<p><font color="black" size = "5">  最后总结出作者采用的Unet架构为 128
 个channels、每个分辨率下2个残差块、多分辨率（multi-resolution）注意力和
 BigGAN 上/下采样，每个注意力头采用64通道。</font></p>
-<h2 id="自适应归一化">1、自适应归一化</h2>
-<p><font color="black" size = "5">AdaGN，它在组标准化（GN）操作之后将时间步长t和类嵌入合并到每个残差块中，简单来说就是将组归一化后的值和条件做一个反射变换。</font></p>
-<p><font color="black" size = "5"><span
-class="math inline">\(AdaGN(h,y)=y_sGrounpNorm(h)+y_b\)</span></font></p>
-<p><font color="black" size = "5">其中，h是第一个卷积后的残差块的激活函数，<span
+<h2
+id="自适应归一化"><font color="black" size = "5">1、自适应归一化</font></h2>
+<p><font color="black" size = "5">  AdaGN，它在组标准化（GN）操作之后将时间步长t和类嵌入合并到每个残差块中，简单来说就是将组归一化后的值和条件做一个反射变换。</font></p>
+<p><span class="math display">\[\huge
+AdaGN(h,y)=y_sGrounpNorm(h)+y_b\]</span></p>
+<p><font color="black" size = "5">  其中，h是第一个卷积后的残差块的激活函数，<span
 class="math inline">\(y = [y_s, y_b]\)</span>是从timesteps和class
 embedding的线性投影获得的。</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692231141276.png"
-alt="1692231141276" />
-<figcaption aria-hidden="true">1692231141276</figcaption>
-</figure>
-<p><font color="black" size = "5">其中，Addition+GroupNorm指的是将h和<span
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230906117.png" /></p>
+<p><font color="black" size = "5">  其中，Addition+GroupNorm指的是将h和<span
 class="math inline">\(y_s,y_b\)</span>加起来后再做GroupNorm。</font></p>
 <h1
 id="三分类器指导classifier-guidance">三、分类器指导（classifier-guidance）</h1>
-<p><font color="black" size = "5">在上面，就是已经将条件加入到组归一化当中了，但是作者为了能够让扩散模型更好的利用到类标签的特性以及生成的质量，使用分类器的梯度来调节预训练的扩散模型。作者在噪声图像<span
-class="math inline">\(xt\)</span>上训练分类器 <span
+<p><font color="black" size = "5">  给定了一个训练好的无条件扩散模型，再进行条件控制输出，使用分类器的梯度来调节预训练的扩散模型。作者在噪声图像<span
+class="math inline">\(x_t\)</span>上训练分类器 <span
 class="math inline">\(p_\phi(y|x_t, t)\)</span>，然后使用梯度
-$∇<em>{x_t} log p</em>(y|x_t, t) $引导扩散采样过程朝向任意类标签
+$∇<em>{x_t} p</em>(y|x_t, t) $引导扩散采样过程朝向任意类标签
 y。如下，将进一步介绍这个是如何去实现的：</font></p>
 <blockquote>
 <p><font color="red" size = "5">注：不管是无条件的扩散模型还是有条件的扩散模型，都可以使用分类器指导</font></p>
 </blockquote>
-<h2 id="条件扩散过程">1、条件扩散过程</h2>
-<p><font color="black" size = "5">首先作者定义了一个条件扩散过程<span
+<h2
+id="条件扩散过程"><font color="black" size = "5">1、条件扩散过程</font></h2>
+<p><font color="black" size = "5">  首先作者定义了一个条件扩散过程<span
 class="math inline">\(\hat{q}(x_0)\)</span>并假设$(y|x_0)
 $是每个样本的已知且容易获得的标签分布。就是默认了我们输入的每一张图片都已经标好了他属于哪个类别，我们的训练样本是有标签的。</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\条件扩散模式-Classifier-guidance\1692233101200.png"
-alt="1692233101200" />
-<figcaption aria-hidden="true">1692233101200</figcaption>
-</figure>
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230914180.png" /></p>
 <p><font color="black" size = "5">有了上述的定义，为了证明<span
 class="math inline">\(\hat{q}(x_0)\)</span>加噪过程与q一致，分别证明了<span
 class="math inline">\(\hat{q}\)</span>的边缘分布、条件分布以及联合分布在不加条件y的情况下，和q的表现一致，进一步证明了逆扩散过程的分布也相同：</font></p>
@@ -893,8 +873,8 @@ guidance只针对有标签的数据，没有提供有效的策略来权衡未标
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/</a>
-            <p>发表日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">August 10th 2023, 9:50:00 am</a>
-            <p>更新日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">August 18th 2023, 5:18:53 pm</a>
+            <p>发表日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">八月 10日 2023, 9:50:00 上午</a>
+            <p>更新日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">August 23rd 2023, 9:14:21 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1067,8 +1047,8 @@ guidance只针对有标签的数据，没有提供有效的策略来权衡未标
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E5%88%A4%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">1、评判生成样本的质量指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#is%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">1）IS指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fid%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">2）FID指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#improved-precision-and-%E5%8F%AC%E5%9B%9E%E7%8E%87"><span class="toc-number">1.1.3.</span> <span class="toc-text">3) Improved Precision and
-召回率</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%94%B9%E8%BF%9B%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">二、改进架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">1、自适应归一化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BCclassifier-guidance"><span class="toc-number">3.</span> <span class="toc-text">三、分类器指导（classifier-guidance）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">1、条件扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2、条件逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8ddim%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6%E9%87%87%E6%A0%B7"><span class="toc-number">3.3.</span> <span class="toc-text">2、在DDIM中的条件采样</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%A9%E6%94%BEscale%E5%88%86%E7%B1%BB%E5%99%A8%E6%A2%AF%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text">3 、缩放（scale）分类器梯度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">四、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E4%B8%8A%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="toc-number">4.1.</span> <span class="toc-text">2、与上采样方法进行比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E5%88%A4%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">1、评判生成样本的质量指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#is%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">1）IS指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fid%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">2）FID指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#improved-precision-and-%E5%8F%AC%E5%9B%9E%E7%8E%87"><span class="toc-number">1.1.3.</span> <span class="toc-text">3)
+Improved Precision and 召回率</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%94%B9%E8%BF%9B%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">二、改进架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">1、自适应归一化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BCclassifier-guidance"><span class="toc-number">3.</span> <span class="toc-text">三、分类器指导（classifier-guidance）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">1、条件扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2、条件逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8ddim%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6%E9%87%87%E6%A0%B7"><span class="toc-number">3.3.</span> <span class="toc-text">2、在DDIM中的条件采样</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%A9%E6%94%BEscale%E5%88%86%E7%B1%BB%E5%99%A8%E6%A2%AF%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text">3 、缩放（scale）分类器梯度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">四、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E4%B8%8A%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="toc-number">4.1.</span> <span class="toc-text">2、与上采样方法进行比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1143,6 +1123,8 @@ guidance只针对有标签的数据，没有提供有效的策略来权衡未标
         
         
     
+        
+        
         
         
         

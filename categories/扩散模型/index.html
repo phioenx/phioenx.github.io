@@ -431,6 +431,37 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+                
+                <span class="abstract-title-text">扩散模型——4.分数模型</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
+1.什么是分数？
+  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
+R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/21</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
                 
                 <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
@@ -501,7 +532,7 @@
                 一、前言
 本文章出自《Diffusion
 Models Beat GANs on Image Synthesis》
-如何评价生成模型的质量：1）真实性
+  如何评价生成模型的质量：1）真实性
 ，2）多样性。
 图像质量的衡量指标通常为
 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs
@@ -509,14 +540,13 @@ FID，Inception Score 和 Precision，然而这些指标无法体现多样性。
 likelihood-based models 弱，另外
 GANs通常比较难训练，如果没有选择合适的超参或正则很容易 collapsing
 。
-基于GANs的缺陷，有很多的工作在改进
-lik...
+  基于GANs的缺陷，有很多的工作在改进...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/18">
+                <div class="abstract-date" title="Last updated: 2023/08/23">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
                 </div>
                 <!-- tags -->
@@ -779,6 +809,8 @@ lik...
         
         
     
+        
+        
         
         
         
