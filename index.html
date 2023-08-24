@@ -552,14 +552,20 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
             </a>
             <div class="abstract-content">
                 一、前言
-既然对数似然性看似ch
+  在之前Classifier
+Guidance的博客当中提到了关于Classifier Guidance的几个问题：
 
+仅针对带标签的数据集；
+需要额外训练一个噪声版本的图像分类器,那么该分类器的质量会影响按类别生成的效果;
+输入\(x_t\)中的大多数信息与预测标签y无关，因此，采用分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）的方向。
+
+  为了解决这些问题，本篇作者提出了无分类器指导，该指导方法完全避免任何分类器，直接训练带类别信息的噪声预测模型来实现特定类别图片的生成，即\(\epsilon_\theta(x_t,t)\rightarro...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/23">
+                <div class="abstract-date" title="Last updated: 2023/08/24">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
                 </div>
                 <!-- tags -->
@@ -587,7 +593,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/23">
+                <div class="abstract-date" title="Last updated: 2023/08/24">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
                 </div>
                 <!-- tags -->
@@ -882,6 +888,8 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         
     
+        
+        
         
         
         
