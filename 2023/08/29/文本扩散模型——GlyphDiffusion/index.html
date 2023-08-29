@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、前言   扩散模型作为目前引领AI潮流的AIGC的一类模型，实现了各种文生图、文生视频、图生图等生成任务（主要以text-guided为主），但在文生文方面仍然比不过目前的大语言模型。因为文本固有的离散性质，使其如何采样出效果质量好的文本仍然是一个挑战。   针对目前文生文扩散模型的两个主流方向（离散以及连续）去讨论，现有的离散扩散模型：通过在标记之间引入转换矩阵来破坏和恢复文本，这个方法">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-29T01:52:55.000Z">
-<meta property="article:modified_time" content="2023-08-29T03:28:21.416Z">
+<meta property="article:modified_time" content="2023-08-29T07:51:56.033Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -506,7 +506,7 @@ AR 和 NAR 模型相比，GlyphDiffusion 在 BLEU 和 ROUGE-L 等指标上获得
 1 所示。</font></p>
 <p><img
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308290954290.png" /></p>
-<h2 id="文本任务">1、文本任务</h2>
+<h2 id="文本任务"><font color="black" size = "5">1、文本任务</font></h2>
 <p><font color="black" size = "5">  给定输入文本(条件c)，生成期望得到的输出目标文本
 <span class="math inline">\(\textcolor{blue}{w = {w_1, ...,
 w_n}}\)</span>。该方法使用了两阶段生成方法：第一阶段使用文本引导加噪后的字形图像去生成目标字形图像w，第二阶段将生成的目标字形图像转换成对应的单词序列。其中两个阶段分别由文本引导图像扩散模型<span
@@ -519,12 +519,64 @@ class="math inline">\(\textcolor{blue}{\hat{w}}\)</span>。</font></p>
 <h2
 id="文本渲染text-render"><font color="black" size = "5">2、文本渲染（Text
 Render）</font></h2>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
+<p><font color="black" size = "5">  为了训练text-guided的扩散模型<span
+class="math inline">\(\textcolor{blue}{f(·)}\)</span>，需要准备条件图像对<span
+class="math inline">\(\textcolor{blue}{&lt;c,x&gt;}\)</span>来替换条件文本对
+<span class="math inline">\(\textcolor{blue}{&lt;c,
+w&gt;}\)</span>。因此作者借助了一种文本渲染器，可以将一段或多段文本（生成数据集中的目标文本）转换为
+RGB 图像<span
+class="math inline">\(\textcolor{blue}{x∈R^{H×W×C}}\)</span>（作为扩散模型的目标输出）。设置为高度
+H = 16，宽度 W = 8464，并选择 C = 3 个 RGB
+输入通道。在此设置下，渲染的字形图像等于大小为 16 × 16 像素的 529
+个图像块的序列，并且可以同等地转换为分辨率为 368 × 368
+的方形图像（参见图 1 的文本渲染示例） 。使用黑色 16 × 16
+块作为分隔符和序列结束 (EOS) 标记。序列结束标记后的空白（白色）补丁被
+PIXEL
+视为填充，其中不计算注意力分数或损失。对于那些长于最大长度的文本，我们将按照离散情况将其截断。通过这种方式可以轻松地转换现有的文本生成数据集以适应我们的设置。借助PangoCairo或者Pygame进行渲染</font></p>
+<h2
+id="文本条件输入"><font color="black" size = "5">3、文本条件输入</font></h2>
+<p><font color="black" size = "5">  在一般的文生图的扩散模型中，输入文本由text
+encoder进行编码，text
+encoder可以在特定数据集上进行训练或在大规模图像文本对数据集上进行预训练。由于他们考虑生成自然图像，因此文本编码器的目标是从输入文本中编码视觉上有意义且相关的语义。相比之下，在我们的方法中，要生成的图像是仅包含字形特征的渲染图像。因此，在不考虑视觉特征的情况下，我们采用预训练的文本语言模型（例如
+BERT和 T5）作为文本编码器来捕获条件中的语义。</font></p>
+<p><font color="black" size = "5">  与图像文本预训练模型相比，语言模型是在文本语料库上进行预训练的，该文本语料库通常比图像文本配对数据大得多，因此能够学习到非常丰富和多样化的文本分布，并且具有较强的文本理解能力。在本文中，作者探索
+T5-Base
+模型作为输入文本编码器，它在实验中获得了不错的性能。由于文本编码器的主要目的是注入文本语义，根据之前的工作（Saharia
+et al., 2022; Ramesh et al.,
+2022），我们在训练期间冻结文本编码器的参数。</font></p>
+<h2
+id="文本引导字形图像扩散"><font color="black" size = "5">4、文本引导字形图像扩散</font></h2>
+<p><font color="black" size = "5">  由于作者认为字形图像专门捕获语言内容，因此该方法中使用通用的文本到图像模型（如GILDE）用于文本生成是不可行的。为了生成包含清晰字形的高保真图像，作者采用级联架构（CDM）来模拟字形图像扩散的逆过程<span
+class="math inline">\(\textcolor{blue}{p_θ(x_{t−1}|x_t,
+c)}\)</span>。</font></p>
+<h3
+id="级联扩散架构"><font color="black" size = "5">1）级联扩散架构</font></h3>
+<p><font color="black" size = "5">  作者利用基本 64 × 64
+模型和超分辨率模型的管道，将 64 × 64 生成的基本图像上采样为 368 × 368
+图像（第 3.1
+节中的文本渲染器渲染的目标图像）。对于基础模型和超分辨率模型，我们采用
+U-Net
+模型，这是当前图像扩散模型的最佳架构，但将注意力层更改为使用多头注意力。为了使
+U-Net 适应文本引导的字形图像扩散，我们将输入文本嵌入（由第 3.2.1
+节中的文本条件编码器编码）作为输入。 U-Net
+网络的每一步都可以通过多头交叉注意力来关注词嵌入序列。具体来说，条件编码器
+<span class="math inline">\(\textcolor{blue}{τ_θ}\)</span> 将输入文本 c
+投影到嵌入序列<span class="math inline">\(\textcolor{blue}{τ_θ(c) ∈
+R^{m×d_τ}}\)</span> ，其中 m 是标记数量，$d_τ
+$是嵌入维度。文本条件交叉注意力层的实现如下：</font></p>
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308291543241.png" /></p>
+<p><font color="black" size = "5">  其中<span
+class="math inline">\(\textcolor{blue}{ψ_i(x_t)}\)</span>表示 U-Net
+模型在第 i 层的展平表示,<span
+class="math inline">\(\textcolor{blue}{W^{(i)}_Q∈R^{d×d_ψ}}\)</span>、<span
+class="math inline">\(\textcolor{blue}{W^{(i)}_K∈R^{d×d_τ}}\)</span>和
+<span
+class="math inline">\(\textcolor{blue}{W^{(i)}_V∈R^{d×d_τ}}\)</span>是可学习的投影矩阵。对于超分辨率模型（64×64→368×368），采用Saharia等人的Efficient
+U-Net模型。
+提高内存效率、推理时间和收敛速度。改进后的模型对原始架构进行了几处关键修改，例如颠倒下采样和上采样路径的顺序，以加速U-Net的前向传递。</font></p>
+<h3
+id="加强文本引导"><font color="black" size = "5">2）加强文本引导</font></h3>
 <p><font color="black" size = "5">  </font></p>
 <p><font color="black" size = "5">  </font></p>
 <p><font color="black" size = "5">  </font></p>
@@ -542,7 +594,7 @@ Render）</font></h2>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">http://example.com/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/</a>
             <p>发表日期：<a href="http://example.com/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">August 29th 2023, 9:52:55 am</a>
-            <p>更新日期：<a href="http://example.com/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">August 29th 2023, 11:28:21 am</a>
+            <p>更新日期：<a href="http://example.com/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">August 29th 2023, 3:51:56 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -711,7 +763,7 @@ Render）</font></h2>
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
                 <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">二、框架介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.1.</span> <span class="toc-text">1、文本任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E6%B8%B2%E6%9F%93text-render"><span class="toc-number">2.2.</span> <span class="toc-text">2、文本渲染（Text
-Render）</span></a></li></ol></li></ol>
+Render）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E6%9D%A1%E4%BB%B6%E8%BE%93%E5%85%A5"><span class="toc-number">2.3.</span> <span class="toc-text">3、文本条件输入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%BC%95%E5%AF%BC%E5%AD%97%E5%BD%A2%E5%9B%BE%E5%83%8F%E6%89%A9%E6%95%A3"><span class="toc-number">2.4.</span> <span class="toc-text">4、文本引导字形图像扩散</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A7%E8%81%94%E6%89%A9%E6%95%A3%E6%9E%B6%E6%9E%84"><span class="toc-number">2.4.1.</span> <span class="toc-text">1）级联扩散架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%BC%BA%E6%96%87%E6%9C%AC%E5%BC%95%E5%AF%BC"><span class="toc-number">2.4.2.</span> <span class="toc-text">2）加强文本引导</span></a></li></ol></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
