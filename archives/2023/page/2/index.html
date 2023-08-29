@@ -431,7 +431,40 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+                
+                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+  对于DDPM一个最大的缺点：需要设置较长的扩散步数T才能得到比较好多效果，生成过程可能有数千步骤，这导致了生成样本的速度较慢。我们可以把问题关注到两个问题方面，第一点就是DDPM为什么一定要这么多次采样，是否能减小T？第二点为什么非要一步步降噪，跳步行不行？
+  1)
+是否能减小T?
+  回到DDPM的扩散过程公式：\(x_t=\sqrt{\bar{a}_t}x_0 +
+\sqrt{1-\bar{a}_t}\epsilon-(1)\)。其中\(\bar{\alpha}_T =
+\prod_{i=1}^T\alpha_i\)，我们希望在T时刻，\(x_T\)尽量服...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
                 
                 <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
             </a>
@@ -656,7 +689,18 @@ p(c|w)\)
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
         
         
         
@@ -725,7 +769,7 @@ p(c|w)\)
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -741,6 +785,12 @@ p(c|w)\)
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">文本扩散模型——GlyphDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">08/21</span>
             <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
@@ -749,12 +799,6 @@ p(c|w)\)
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">扩散模型--GLIDE</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -790,7 +834,13 @@ p(c|w)\)
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -802,7 +852,7 @@ p(c|w)\)
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
+            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         

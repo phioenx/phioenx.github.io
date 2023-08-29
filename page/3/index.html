@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E6%96%87%E6%9C%AC/index.html">
+<meta property="og:url" content="http://example.com/page/3/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -220,8 +220,10 @@
         }
     </script>
     
+        <body class="home-body">
+    
         <!-- header -->
-        <header class="header header-mobile">
+        <header class="header header-mobile index-header">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -252,7 +254,7 @@
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed">
+        <footer class="footer-fixed index-footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -275,21 +277,34 @@
 
 
 
+    height:50vh;
+
 ">
     
     <!-- 主页  -->
     
+        
+    <!-- 文章页  -->
+    
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
+                PhoenxiPeng's blog.
+            <!-- 文章页  -->
+            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
+            
+                
+                    it's better to burn out than to fade away
+                
+            <!-- 文章页  -->
             
         </p>
         <!-- 文章页 meta -->
@@ -429,121 +444,22 @@
         
         
             
+            
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">
+            <a class="abstract-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
                 
-                <span class="abstract-title-text">文本扩散模型——GlyphDiffusion</span>
+                <span class="abstract-title-text">扩散模型——1.从DDPM入门</span>
             </a>
             <div class="abstract-content">
-                一、前言
-  扩散模型作为目前引领AI潮流的AIGC的一类模型，实现了各种文生图、文生视频、图生图等生成任务（主要以text-guided为主），但在文生文方面仍然比不过目前的大语言模型。因为文本固有的离散性质，使其如何采样出效果质量好的文本仍然是一个挑战。
-  针对目前文生文扩散模型的两个主流方向（离散以及连续）去讨论，现有的离散扩散模型：通过在标记之间引入转换矩阵来破坏和恢复文本，这个方法是在离散空间中进行，我们无法引入连续空间上的扩散模型的改进方法去改进这些模型，只能通过增加预训练方法等。而现有的连续扩散模型（针对文本）：将离散文本转化为连续文本表示（例如，词嵌入或隐藏状态）视...
+                本篇文章主要介绍扩散模型的框架原理以及生成过程，是以DDPM为主进行介绍，让你对扩散模型有初步的了解。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/29</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/07/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E6%95%B4%E7%90%86/">
-                
-                <span class="abstract-title-text">文本扩散模型-整理.md</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、NAR模型
-自回归模型(AR):现有的文本生成方法大多数采用逐个生成输出的自回归方式（AR）。这种方式虽然能够捕捉到token之间的有序依赖关系（\(y_1,y_2,...,y_t\)），但因为参考了\(y_1, y_2, ...,
-y_t\)的目标序列“上下文”，所以解码速度是和目标序列的长度相关的，生成长文本是费时的。
-非自回归模型(NAR):该方法并行生成索引token，并且极大地降低推理延迟，但代价是牺牲了文本的生成质量，原因是没有考虑\(y_1,y_2,...,y_t\)这个“上下文”来生成\(y_{t+1}\)。
-NAR当中传统的提升生成质量的方法有：...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/07</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型——4.DiffuSeq</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-基于上文的Diffusiom-LM,它是在连续空间对文本进行建模（添加了EMB和Rounding方法），并建立一个分类器来引导文本生成。但是对于Seq2Seq问题而言，我们给出的分类器的条件也是一个单词序列，产生的也是一个单词序列，我们无法训练无数个分类器来建模条件和生成的语义之间的关系。
-Seq2Seq文本生成是自然语言处理当中一个重要的话题，涵盖了许多重要的任务，比如开放式文本生成，对话，机器翻译以及文本风格迁移。在本文当中提出的DiffuSeq，是一种支持Seq2Seq文本生成的无分类器扩散模型。相较于Diffusion-LM来说，DiffuSeq的一个优点在于，其不...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、问题定义
-文本生成：
-文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w=[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。
-可控文本生成：
-可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成：
-\(p(w|c)\propto p_{lm}(w)\cdot
-p(c|w)\)
-其中\(p_{lm}(w)\)保证流畅性，\(p(c|w)\)完成属性控制。
-2、背景
-传统的自回归语言模型可以生成高质量文本，但是生成的结...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/24</span>
+                <div class="abstract-date" title="Last updated: 2023/08/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/23</span>
                 </div>
                 <!-- tags -->
                 
@@ -553,9 +469,98 @@ p(c|w)\)
     
     <!-- paginator  -->
     
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/page/2/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+        </nav>
+    
 </main>
 
                 <!-- profile -->
+                
+                    <div class="profile">
+    <img class="profile-avatar" alt="avatar" src= /avatar/Misaka.jpg />
+    <div class="profile-name">PhoenixPeng</div>
+    
+        <div class="profile-signature">
+            witness me
+        </div>
+    
+    
+        <div class="profile-social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    
+    
+        <div class="profile-link-item">
+            <a href="/about" class="about-me">
+                
+                ABOUT ME
+            </a>
+        </div>
+    
+    
+    
+</div>
+
                 
             </div>
             <footer class="footer footer-unloaded">

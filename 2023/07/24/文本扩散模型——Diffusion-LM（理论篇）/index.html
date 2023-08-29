@@ -22,7 +22,7 @@
     <meta name="description" content="一、前言 1、问题定义 文本生成： 文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w&#x3D;[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。 可控文本生成： 可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成： \(p(w|c)\propto p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型--Diffusion-LM">
-<meta property="og:url" content="http://example.com/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:url" content="http://example.com/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="一、前言 1、问题定义 文本生成： 文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w&#x3D;[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。 可控文本生成： 可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成： \(p(w|c)\propto p">
 <meta property="og:locale" content="zh_CN">
@@ -695,9 +695,9 @@ s}\)</span></font></p>
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">http://example.com/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/</a>
-            <p>发表日期：<a href="http://example.com/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">July 24th 2023, 10:37:14 am</a>
-            <p>更新日期：<a href="http://example.com/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">August 16th 2023, 11:33:51 am</a>
+            <p>原文链接：<a href="http://example.com/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">http://example.com/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/</a>
+            <p>发表日期：<a href="http://example.com/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">July 24th 2023, 10:37:14 am</a>
+            <p>更新日期：<a href="http://example.com/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">August 16th 2023, 11:33:51 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -944,7 +944,18 @@ s}\)</span></font></p>
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1013,7 +1024,7 @@ s}\)</span></font></p>
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -1029,6 +1040,12 @@ s}\)</span></font></p>
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">文本扩散模型——GlyphDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">08/21</span>
             <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
@@ -1037,12 +1054,6 @@ s}\)</span></font></p>
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">扩散模型--GLIDE</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -1078,7 +1089,13 @@ s}\)</span></font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -1090,7 +1107,7 @@ s}\)</span></font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
+            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         

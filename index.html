@@ -446,6 +446,35 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">
+                
+                <span class="abstract-title-text">文本扩散模型——GlyphDiffusion</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+  扩散模型作为目前引领AI潮流的AIGC的一类模型，实现了各种文生图、文生视频、图生图等生成任务（主要以text-guided为主），但在文生文方面仍然比不过目前的大语言模型。因为文本固有的离散性质，使其如何采样出效果质量好的文本仍然是一个挑战。
+  针对目前文生文扩散模型的两个主流方向（离散以及连续）去讨论，现有的离散扩散模型：通过在标记之间引入转换矩阵来破坏和恢复文本，这个方法是在离散空间中进行，我们无法引入连续空间上的扩散模型的改进方法去改进这些模型，只能通过增加预训练方法等。而现有的连续扩散模型（针对文本）：将离散文本转化为连续文本表示（例如，词嵌入或隐藏状态）视...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/29</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
                 
                 <span class="abstract-title-text">扩散模型——4.分数模型</span>
@@ -499,39 +528,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/08/18">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/18</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
-                
-                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-本文提出了DDPM的几点缺陷：
-1.DDPM在CIFAR-10和LSUN数据集上表现出比较好的结果，但是并不清楚在具有更高多样性的数据集（如imageNet）表现效果，实际上是不如BigGAN。
-2.尚未证明 DDPM
-可以实现与其他基于似然的模型竞争的对数似然性。对数似然性是生成建模中广泛使用的度量指标，一般认为优化对数似然会迫使生成模型捕获数据分布的所有模式。并且对数似然性的微小改进可以对样本质量和学习的特征表示产生显著的影响。所以不证明DDPM的对数似然性的后果就是，不知道DDPM是否能够捕获分布的所有模式。
-基于这些特性，本文提出了如下几点改进工作：
-1.该...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
                 </div>
                 <!-- tags -->
                 
@@ -631,7 +627,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
+            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -880,7 +876,18 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
         
         
         
@@ -949,7 +956,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -965,6 +972,12 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94GlyphDiffusion/">文本扩散模型——GlyphDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">08/21</span>
             <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
@@ -973,12 +986,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">扩散模型--GLIDE</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -1014,7 +1021,13 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
         </li>
     
         
@@ -1026,7 +1039,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
+            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         
