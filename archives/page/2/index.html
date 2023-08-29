@@ -431,6 +431,39 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
+                
+                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+本文提出了DDPM的几点缺陷：
+1.DDPM在CIFAR-10和LSUN数据集上表现出比较好的结果，但是并不清楚在具有更高多样性的数据集（如imageNet）表现效果，实际上是不如BigGAN。
+2.尚未证明 DDPM
+可以实现与其他基于似然的模型竞争的对数似然性。对数似然性是生成建模中广泛使用的度量指标，一般认为优化对数似然会迫使生成模型捕获数据分布的所有模式。并且对数似然性的微小改进可以对样本质量和学习的特征表示产生显著的影响。所以不证明DDPM的对数似然性的后果就是，不知道DDPM是否能够捕获分布的所有模式。
+基于这些特性，本文提出了如下几点改进工作：
+1.该...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
                 
                 <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
@@ -450,43 +483,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/08/23">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、问题定义
-文本生成：
-文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w=[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。
-可控文本生成：
-可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成：
-\(p(w|c)\propto p_{lm}(w)\cdot
-p(c|w)\)
-其中\(p_{lm}(w)\)保证流畅性，\(p(c|w)\)完成属性控制。
-2、背景
-传统的自回归语言模型可以生成高质量文本，但是生成的结...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/24</span>
                 </div>
                 <!-- tags -->
                 
@@ -761,10 +757,6 @@ p(c|w)\)
         
         
         
-        
-        
-        
-        
     
     
     
@@ -793,8 +785,14 @@ p(c|w)\)
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span>
-            <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
+            <span class="archive-post-date">08/26</span>
+            <a class="archive-post-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         
@@ -836,7 +834,7 @@ p(c|w)\)
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
     
         
@@ -849,12 +847,6 @@ p(c|w)\)
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
             <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         

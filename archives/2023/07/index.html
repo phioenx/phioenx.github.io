@@ -460,20 +460,22 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+            <a class="abstract-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
                 
-                <span class="abstract-title-text">扩散模型——4.DiffuSeq</span>
+                <span class="abstract-title-text">扩散模型——4.分数模型</span>
             </a>
             <div class="abstract-content">
                 一、前言
-基于上文的Diffusiom-LM,它是在连续空间对文本进行建模（添加了EMB和Rounding方法），并建立一个分类器来引导文本生成。但是对于Seq2Seq问题而言，我们给出的分类器的条件也是一个单词序列，产生的也是一个单词序列，我们无法训练无数个分类器来建模条件和生成的语义之间的关系。
-Seq2Seq文本生成是自然语言处理当中一个重要的话题，涵盖了许多重要的任务，比如开放式文本生成，对话，机器翻译以及文本风格迁移。在本文当中提出的DiffuSeq，是一种支持Seq2Seq文本生成的无分类器扩散模型。相较于Diffusion-LM来说，DiffuSeq的一个优点在于，其不...
+  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
+1.什么是分数？
+  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
+R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
+                <div class="abstract-date" title="Last updated: 2023/08/29">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
                 </div>
                 <!-- tags -->
@@ -541,43 +543,6 @@ Seq2Seq文本生成是自然语言处理当中一个重要的话题，涵盖了�
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/08/23">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、问题定义
-文本生成：
-文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w=[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。
-可控文本生成：
-可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成：
-\(p(w|c)\propto p_{lm}(w)\cdot
-p(c|w)\)
-其中\(p_{lm}(w)\)保证流畅性，\(p(c|w)\)完成属性控制。
-2、背景
-传统的自回归语言模型可以生成高质量文本，但是生成的结...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/24</span>
                 </div>
                 <!-- tags -->
                 
@@ -820,10 +785,6 @@ p(c|w)\)
         
         
         
-        
-        
-        
-        
     
     
     
@@ -852,8 +813,14 @@ p(c|w)\)
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span>
-            <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
+            <span class="archive-post-date">08/26</span>
+            <a class="archive-post-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         
@@ -895,7 +862,7 @@ p(c|w)\)
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
     
         
@@ -908,12 +875,6 @@ p(c|w)\)
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
             <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         

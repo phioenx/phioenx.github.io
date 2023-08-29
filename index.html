@@ -475,23 +475,58 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+            <a class="abstract-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
                 
-                <span class="abstract-title-text">扩散模型——4.分数模型</span>
+                <span class="abstract-title-text">扩散模型——4.DiffuSeq</span>
             </a>
             <div class="abstract-content">
                 一、前言
-  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
-1.什么是分数？
-  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
-R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
+基于上文的Diffusiom-LM,它是在连续空间对文本进行建模（添加了EMB和Rounding方法），并建立一个分类器来引导文本生成。但是对于Seq2Seq问题而言，我们给出的分类器的条件也是一个单词序列，产生的也是一个单词序列，我们无法训练无数个分类器来建模条件和生成的语义之间的关系。
+Seq2Seq文本生成是自然语言处理当中一个重要的话题，涵盖了许多重要的任务，比如开放式文本生成，对话，机器翻译以及文本风格迁移。在本文当中提出的DiffuSeq，是一种支持Seq2Seq文本生成的无分类器扩散模型。相较于Diffusion-LM来说，DiffuSeq的一个优点在于，其不...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/21</span>
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/26</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+                
+                <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+1、问题定义
+文本生成：
+文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w=[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。
+可控文本生成：
+可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成：
+\(p(w|c)\propto p_{lm}(w)\cdot
+p(c|w)\)
+其中\(p_{lm}(w)\)保证流畅性，\(p(c|w)\)完成属性控制。
+2、背景
+传统的自回归语言模型可以生成高质量文本，但是生成的结...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/24</span>
                 </div>
                 <!-- tags -->
                 
@@ -584,39 +619,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/08/25">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/09/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">
-                
-                <span class="abstract-title-text">PITI:图像翻译任务+预训练扩散模型</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-图像到图像翻译问题归根结底就是说：使用生成模型去学习给定输入图像的条件分布。但现有的图像到图像翻译方法通常需要专门的架构设计并从头开始训练单独的翻译模型，尤其是在配对训练数据不丰富的情况下。Palette展示了使用扩散模型进行图像到图像转换的潜力，但它们是在有配对训练数据集下表现出来的结果，例如图像着色。因此作者将每个图像到图像的翻译问题视为下游任务，并介绍了一个简单而通用的框架，该框架采用预训练的扩散模型来适应各种类型的图像到图像的翻译。作者还提出对抗性训练来增强扩散模型训练中的纹理合成，并结合归一化引导采样来提高生成质量。
-
-
-1691652550354
-
-二、...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/09</span>
                 </div>
                 <!-- tags -->
                 
@@ -948,10 +950,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         
         
-        
-        
-        
-        
     
     
     
@@ -980,8 +978,14 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span>
-            <a class="archive-post-title" href="/2023/08/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
+            <span class="archive-post-date">08/26</span>
+            <a class="archive-post-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         
@@ -1023,7 +1027,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/26</span>
-            <a class="archive-post-title" href="/2023/07/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型</a>
         </li>
     
         
@@ -1036,12 +1040,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
             <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/24</span>
-            <a class="archive-post-title" href="/2023/07/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
         </li>
     
         
