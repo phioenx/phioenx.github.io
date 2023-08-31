@@ -431,6 +431,37 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+                
+                <span class="abstract-title-text">扩散模型——4.分数模型</span>
+            </a>
+            <div class="abstract-content">
+                一、前言
+  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
+1.什么是分数？
+  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
+R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
                 
                 <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
@@ -690,7 +721,20 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -763,7 +807,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 13
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -777,6 +821,18 @@
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/29</span>
@@ -804,19 +860,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
             <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
         </li>
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span>
-            <a class="archive-post-title" href="/2023/08/09/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
         </li>
     
         
@@ -860,6 +910,11 @@
 
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
         
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
