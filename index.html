@@ -446,6 +446,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">
+                
+                <span class="abstract-title-text">Medical diffusion model——1.Medfusion</span>
+            </a>
+            <div class="abstract-content">
+                一、介绍
+  本文所介绍的内容是来自《Diffusion Probabilistic Models
+beat GANs on Medical Images》。
+  
+  
+  
+二、模型架构以及训练细节
+  Medfusion是基于stable
+diffusion模型，由两部分组成：
+  1.Autoencoder：将图像空间进行编码作为压缩的潜在空间。
+  2.DDPM
+
+  因此，训练部分也分成了两个阶段分别训练Autoencoder和DDPM。
+  第一个训练阶段：训练自动编码器，解码器将图像空间编码为
+8 倍压缩的潜在空间，比如将大小分别为 256x2...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/09/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
                 
                 <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
@@ -460,18 +501,10 @@ A100 GPU 上生成 50k 样本大约需要 5
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/31">
+                <div class="abstract-date" title="Last updated: 2023/09/06">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
                 </div>
                 <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -593,42 +626,6 @@ p(c|w)\)
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/08/29">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/24</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-GLIDE/">
-                
-                <span class="abstract-title-text">扩散模型--GLIDE</span>
-            </a>
-            <div class="abstract-content">
-                摘要
-扩散模型最近被证明可以生成高质量的合成图像，尤其是当与引导（guidance）技术结合使用以牺牲多样性来换取保真度时。
-本文探索了文本条件图像合成问题的扩散模型，并比较了两种不同的指导策略：CLIP
-指导和无分类器指导。作者发现后者在真实感和字幕相似性方面更受人类评估者的青睐，并且通常会产生逼真的样本。来自使用无分类器指导的
-35 亿参数文本条件扩散模型的样本比
-DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLIP
-重新排序也是如此。
-此外，该模型可以进行微调以执行图像修复，从而实现强大的文本驱动图像编辑。
-
-作者在一个经过过滤的数据集上训练了一...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/18</span>
                 </div>
                 <!-- tags -->
                 
@@ -898,7 +895,24 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -977,7 +991,7 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -991,6 +1005,12 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/31</span>
@@ -1081,11 +1101,6 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="扩散模型">
-                <span class="iconfont-archer">&#xe606;</span>
-                扩散模型
-            </span>
-        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1096,6 +1111,11 @@ DALL-E 的样本更受人类评估者的青睐，即使后者使用昂贵的 CLI
 
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>

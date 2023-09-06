@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91/index.html">
+<meta property="og:url" content="http://example.com/archives/2023/09/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -429,22 +429,35 @@
         
         
             
-            
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">
+            <a class="abstract-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">
                 
-                <span class="abstract-title-text">PITI:图像翻译任务+预训练扩散模型</span>
+                <span class="abstract-title-text">Medical diffusion model——1.Medfusion</span>
             </a>
             <div class="abstract-content">
-                本篇文章主要是对《Pretraining is All You Need for Image-to-Image Translation》文章的介绍以及笔记总结，介绍了一个简单而通用的框架，将预训练的力量带到了各种图像到图像的翻译任务中。通过对抗性扩散上采样器和归一化无分类器指导等技术的增强，完整模型 PITI 显着提高了最先进的合成质量，尤其是在具有挑战性的场景中。
+                一、介绍
+  本文所介绍的内容是来自《Diffusion Probabilistic Models
+beat GANs on Medical Images》。
+  
+  
+  
+二、模型架构以及训练细节
+  Medfusion是基于stable
+diffusion模型，由两部分组成：
+  1.Autoencoder：将图像空间进行编码作为压缩的潜在空间。
+  2.DDPM
+
+  因此，训练部分也分成了两个阶段分别训练Autoencoder和DDPM。
+  第一个训练阶段：训练自动编码器，解码器将图像空间编码为
+8 倍压缩的潜在空间，比如将大小分别为 256x2...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/29</span>
+                <div class="abstract-date" title="Last updated: 2023/09/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
                 </div>
                 <!-- tags -->
                 

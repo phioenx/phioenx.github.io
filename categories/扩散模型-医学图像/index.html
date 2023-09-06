@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -431,32 +431,35 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
+            <a class="abstract-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">
                 
-                <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
+                <span class="abstract-title-text">Medical diffusion model——1.Medfusion</span>
             </a>
             <div class="abstract-content">
-                一、前言
-  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但由于是在像素空间（高维）上进行训练的。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，可能需要上百个GPUs。假设你有这么强大的硬件设备足以训练出一个强大的扩散模型，但是你想要生成高分辨率且效果很好的样本，可能还需要花费数天。因为对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个
-A100 GPU 上生成 50k 样本大约需要 5
-天。基于上述的扩散模型的计算量大的问题，本...
+                一、介绍
+  本文所介绍的内容是来自《Diffusion Probabilistic Models
+beat GANs on Medical Images》。
+  
+  
+  
+二、模型架构以及训练细节
+  Medfusion是基于stable
+diffusion模型，由两部分组成：
+  1.Autoencoder：将图像空间进行编码作为压缩的潜在空间。
+  2.DDPM
+
+  因此，训练部分也分成了两个阶段分别训练Autoencoder和DDPM。
+  第一个训练阶段：训练自动编码器，解码器将图像空间编码为
+8 倍压缩的潜在空间，比如将大小分别为 256x2...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
+                <div class="abstract-date" title="Last updated: 2023/09/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
                 </div>
                 <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -635,7 +638,24 @@ A100 GPU 上生成 50k 样本大约需要 5
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -714,7 +734,7 @@ A100 GPU 上生成 50k 样本大约需要 5
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -728,6 +748,12 @@ A100 GPU 上生成 50k 样本大约需要 5
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/31</span>
@@ -818,11 +844,6 @@ A100 GPU 上生成 50k 样本大约需要 5
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="扩散模型">
-                <span class="iconfont-archer">&#xe606;</span>
-                扩散模型
-            </span>
-        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -833,6 +854,11 @@ A100 GPU 上生成 50k 样本大约需要 5
 
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>

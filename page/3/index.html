@@ -446,24 +446,52 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
                 
-                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
+                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
             </a>
             <div class="abstract-content">
                 一、前言
-  对于DDPM一个最大的缺点：需要设置较长的扩散步数T才能得到比较好多效果，生成过程可能有数千步骤，这导致了生成样本的速度较慢。我们可以把问题关注到两个问题方面，第一点就是DDPM为什么一定要这么多次采样，是否能减小T？第二点为什么非要一步步降噪，跳步行不行？
-  1)
-是否能减小T?
-  回到DDPM的扩散过程公式：\(x_t=\sqrt{\bar{a}_t}x_0 +
-\sqrt{1-\bar{a}_t}\epsilon-(1)\)。其中\(\bar{\alpha}_T =
-\prod_{i=1}^T\alpha_i\)，我们希望在T时刻，\(x_T\)尽量服...
+本文提出了DDPM的几点缺陷：
+1.DDPM在CIFAR-10和LSUN数据集上表现出比较好的结果，但是并不清楚在具有更高多样性的数据集（如imageNet）表现效果，实际上是不如BigGAN。
+2.尚未证明 DDPM
+可以实现与其他基于似然的模型竞争的对数似然性。对数似然性是生成建模中广泛使用的度量指标，一般认为优化对数似然会迫使生成模型捕获数据分布的所有模式。并且对数似然性的微小改进可以对样本质量和学习的特征表示产生显著的影响。所以不证明DDPM的对数似然性的后果就是，不知道DDPM是否能够捕获分布的所有模式。
+基于这些特性，本文提出了如下几点改进工作：
+1.该...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/23">
+                <div class="abstract-date" title="Last updated: 2023/08/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+                
+                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要介绍扩散模型的加速采样的思想DDIM，本文依据《Denoising Diffusion Implicit Models》的公式推导，方法原理以及实验结论进行笔记以及总结。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/09/06">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
                 </div>
                 <!-- tags -->
@@ -762,7 +790,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -841,7 +886,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -855,6 +900,12 @@
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/31</span>
@@ -945,11 +996,6 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
-            <span class="sidebar-tag-name" data-tags="扩散模型">
-                <span class="iconfont-archer">&#xe606;</span>
-                扩散模型
-            </span>
-        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -960,6 +1006,11 @@
 
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
