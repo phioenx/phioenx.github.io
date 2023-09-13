@@ -456,7 +456,7 @@ diffusion模型，由两部分组成：
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/05">
+                <div class="abstract-date" title="Last updated: 2023/09/08">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
                 </div>
                 <!-- tags -->
@@ -478,15 +478,18 @@ diffusion模型，由两部分组成：
             </a>
             <div class="abstract-content">
                 一、前言
-  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但由于是在像素空间（高维）上进行训练的。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，可能需要上百个GPUs。假设你有这么强大的硬件设备足以训练出一个强大的扩散模型，但是你想要生成高分辨率且效果很好的样本，可能还需要花费数天。因为对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个
+  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本。加上对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个
 A100 GPU 上生成 50k 样本大约需要 5
-天。基于上述的扩散模型的计算量大的问题，本...
+天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练
+DM 模型，同时保持其效果。
+  作者认为Diffusion
+mode...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/06">
+                <div class="abstract-date" title="Last updated: 2023/09/13">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
                 </div>
                 <!-- tags -->
@@ -925,6 +928,10 @@ NAR当中传统的提升生成质量的方法有：...
         
         
     
+        
+        
+        
+        
         
         
         
