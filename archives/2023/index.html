@@ -429,6 +429,7 @@
         
         
             
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">
@@ -436,27 +437,13 @@
                 <span class="abstract-title-text">Medical diffusion model——1.Medfusion</span>
             </a>
             <div class="abstract-content">
-                一、介绍
-  本文所介绍的内容是来自《Diffusion Probabilistic Models
-beat GANs on Medical Images》。
-  
-  
-  
-二、模型架构以及训练细节
-  Medfusion是基于stable
-diffusion模型，由两部分组成：
-  1.Autoencoder：将图像空间进行编码作为压缩的潜在空间。
-  2.DDPM
-
-  因此，训练部分也分成了两个阶段分别训练Autoencoder和DDPM。
-  第一个训练阶段：训练自动编码器，解码器将图像空间编码为
-8 倍压缩的潜在空间，比如将大小分别为 256x2...
+                在本文中，作者提出了 Medfusion，一种用于医学图像的条件潜在 DDPM。通过使用来自眼科、放射学和组织病理学的图像，将基于 DDPM 的模型与基于 GAN 的模型进行比较，并证明 DDPM 在所有相关指标上都击败了GAN。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/08">
+                <div class="abstract-date" title="Last updated: 2023/09/14">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
                 </div>
                 <!-- tags -->
@@ -1012,10 +999,6 @@ NAR当中传统的提升生成质量的方法有：...
         
         
         
-        
-        
-        
-        
     
     
     
@@ -1148,14 +1131,14 @@ NAR当中传统的提升生成质量的方法有：...
             扩散模型-医学图像
         </span>
     
-        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-文本">
