@@ -19,15 +19,15 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言   之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本。加上对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个 A100 GPU 上生">
+    <meta name="description" content="一、前言   之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，功能强大的diffusion models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——7.Latent diffusion model">
 <meta property="og:url" content="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言   之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本。加上对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个 A100 GPU 上生">
+<meta property="og:description" content="一、前言   之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，功能强大的diffusion models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-31T01:26:34.000Z">
-<meta property="article:modified_time" content="2023-09-13T07:26:34.542Z">
+<meta property="article:modified_time" content="2023-09-15T07:58:23.183Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -490,7 +490,8 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h1 id="一前言">一、前言</h1>
-<p><font color="black" size = "5">  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本。加上对像素空间的噪声进行重复评估其梯度（Classifier-Guidance）也会导致推理成本高昂，ADM在单个
+<p><font color="black" size = "5">  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，功能强大的diffusion
+models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个
 A100 GPU 上生成 50k 样本大约需要 5
 天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练
 DM 模型，同时保持其效果。</font></p>
@@ -553,20 +554,30 @@ class="math inline">\(\textcolor{blue}{\tilde{x}=\mathcal{D}(z)=\mathcal{D}(\var
 class="math inline">\(\textcolor{blue}{f=\frac{H}{h}=\frac{W}{w}}\)</span>对图像进行下采样，作者研究了不同这个下采样因子，最后选择<span
 class="math inline">\(\textcolor{blue}{f=2^m,m \in
 N}\)</span>。</font></p>
-<blockquote>
-<p><font color="black" size = "5">引入感知损失和patch-based对抗损失是为了确保通过强制局部真实性将重建限制在图像流形内，并避免仅依赖像素空间损失（例如
-L2 或 L1 目标）而引入的模糊。</font></p>
-</blockquote>
 <p><img
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308311605857.png" /></p>
-<p><font color="black" size = "5">  此外，文章中对训练的autoencoder的潜在空间进行了约束，其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者对比了两者不同的正则化方法：</font></p>
-<ul>
-<li><font color="black" size = "5"><strong>KL-reg:</strong>对学习的潜在空间标准的KL惩罚，类似于VAE（使得潜在空间为正态化）；</font></li>
-<li><font color="black" size = "5"><strong>VQ-reg</strong>:在解码器内使用矢量量化层（使得空间为离散的）</font></li>
-</ul>
-<p><font color="black" size = "5">  两者的效果，我们可以通过实验可以看出：</font></p>
+<p><font color="black" size = "5">  其目标函数为，主要由三部分所组成：</font></p>
 <p><img
-src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309131112707.png" /></p>
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309150929369.png" /></p>
+<ul>
+<li><font color="black" size = "5">第一部分（紫色块）就是<strong>感知损失（<span
+class="math inline">\(L_{rec}\)</span>）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground
+Truth）、网络生成结果（Prediciton）作为其输入，得到对应的输出特征：feature_gt、feature_pre，然后使用feature_gt与feature_pre构造损失（通常为L2损失），目的就是最小化feature_gt、feature_pre之间的差异，逼近真实图像与网络生成结果之间的深层信息，也就是感知信息，相比普通的L2损失而言，可以增强输出特征的细节信息。</font></li>
+<li><font color="black" size = "5">第二部分（绿色块）就是<strong>基于patch的对抗损失（<span
+class="math inline">\(L_{adv}\)</span>）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，旨在区分真实图像和重建图像。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，下式是来自VQGAN当中的对抗损失）。</font></li>
+</ul>
+<p><img
+src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309151055166.png" /></p>
+<blockquote>
+<p><font color="black" size = "5">引入感知损失和patch-based对抗损失是为了确保通过局部真实性将重建图像限制在真实图像流形内，并避免仅依赖像素空间损失（例如
+L2 或 L1 目标）而引入的模糊。</font></p>
+</blockquote>
+<ul>
+<li><font color="black" size = "5">第三部分（黄色块）是<strong>正则化损失项（<span
+class="math inline">\(L_{reg}\)</span></strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者对比了两者不同的正则化方法：</font></li>
+</ul>
+<p><font color="black" size = "5"><strong>1)KL-reg:</strong>对学习的潜在空间标准的KL惩罚，类似于VAE（使得潜在空间为正态化）；</font></p>
+<p><font color="black" size = "5"><strong>2)VQ-reg</strong>:在解码器内使用矢量量化层（使得空间为离散的）,通过学习|Z|个不同典范的codebook，用矢量量化层正则化潜在空间。（参考VQGAN）；</font></p>
 <h2
 id="潜在扩散模型"><font color="black" size = "5">2.潜在扩散模型</font></h2>
 <p><font color="black" size = "5">  普通扩散模型的目标函数如下：</font></p>
@@ -574,11 +585,11 @@ id="潜在扩散模型"><font color="black" size = "5">2.潜在扩散模型</fon
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309010803135.png" /></p>
 <p><font color="black" size = "5">  通过前面<span
 class="math inline">\(\textcolor{blue}{\varepsilon}\)</span>和<span
-class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>组成的预训练的感知压缩模型，此时我们获得了一个低维的潜在空间，其中原空间中的高频、不可察觉的细节被抽象出来。与高维像素空间相比，这个潜在空间更适合基于似然的生成模型，因为它们现在可以：<strong>(1)关注数据中重要的语义位;
+class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>组成的预训练的感知压缩模型，此时我们获得了一个低维的潜在空间，其中原空间中的高频、不可察觉的细节被抽象出来。与高维像素空间相比，这个潜在空间更适合基于似然的生成模型，因为它们现在可以：<strong>(1)关注数据中重要的语义信息;
 (2)在一个低维的、计算上更有效的空间中进行训练。</strong></font></p>
 <p><font color="black" size = "5">  与以前的工作不同的是，在这个高度压缩的离散隐空间中，依赖于attention-based
 transformer
-models（基于attention的transformer模型），我们可以利用我们的模型提供的图像特定的归纳偏置。这包括主要从二维卷积层建立底层UNet的能力，以及使用重新加权的约束将目标进一步集中在感知上最相关的位上，现在我们在潜在空间进行训练的目标函数变为：</font></p>
+models（基于attention的transformer模型），可以利用模型提供的图像特定的归纳偏置。这包括主要从二维卷积层建立底层UNet的能力，以及使用重新加权的约束将目标进一步集中在感知上最相关的位上，现在我们在潜在空间进行训练的目标函数变为：</font></p>
 <p><img
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308311637738.png" /></p>
 <h2 id="条件机制"><font color="black" size = "5">3.条件机制</font></h2>
@@ -607,12 +618,11 @@ V}\]</span></p>
 class="math inline">\(\textcolor{blue}{ φ_i(z_t)\in R^N \times
 d^i_\epsilon}\)</span>表示 U-Net 实现<span
 class="math inline">\(\textcolor{blue}{\epsilon_{\theta}}\)</span>的
-flattened 中间层表示</font></p>
+flattened 中间层表示。</font></p>
 <p><img
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308311719121.png" /></p>
 <blockquote>
-<p><font color="black" size = "5">这里的 <strong>条件编码器</strong>
-要说一下，此时针对y的条件编码器还是随着LDM一起，从随机初始化开始逐步训练的。后来的知名作品
+<p><font color="black" size = "5">这里的<strong>条件编码器</strong>要说一下，此时针对y的条件编码器还是随着LDM一起，从随机初始化开始逐步训练的。后来的知名作品
 Stable Diffusion、Dalle2、Imagen
 等等，都把这个条件编码器直接换成了CLIP模型里的文本Encoder。</font></p>
 </blockquote>
@@ -689,25 +699,9 @@ ADM，同时显着降低了计算要求和参数数量 。</font></p>
 <p><img
 src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309131525888.png" /></p>
 <p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size = "5">  Latent Diffusion
+Models通过在一个潜在表示空间中迭代“去噪”数据来生成图像，然后将表示结果解码为完整的图像，让文图生成能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文图生成领域的大火。</font></p>
 <p><font color="black" size = "5">  </font></p>
 
     </article>
@@ -717,7 +711,7 @@ src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309131525888.png
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/</a>
             <p>发表日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">August 31st 2023, 9:26:34 am</a>
-            <p>更新日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">September 13th 2023, 3:26:34 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">September 15th 2023, 3:58:23 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -890,7 +884,7 @@ src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309131525888.png
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.1.</span> <span class="toc-text">1.感知图像压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.潜在扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3.条件机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%84%9F%E7%9F%A5%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">3.1.</span> <span class="toc-text">1.关于感知压缩的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.对比生成图像质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3"><span class="toc-number">3.3.</span> <span class="toc-text">3.条件潜在扩散</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9"><span class="toc-number">2.1.</span> <span class="toc-text">1.感知图像压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.潜在扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3.条件机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%84%9F%E7%9F%A5%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">3.1.</span> <span class="toc-text">1.关于感知压缩的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.对比生成图像质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3"><span class="toc-number">3.3.</span> <span class="toc-text">3.条件潜在扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1196,14 +1190,14 @@ src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202309131525888.png
             扩散模型-医学图像
         </span>
     
-        <span class="sidebar-category-name" data-categories="扩散模型">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-文本">
