@@ -457,6 +457,7 @@
         
         
             
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
@@ -464,19 +465,13 @@
                 <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
             </a>
             <div class="abstract-content">
-                一、前言
-  之前介绍到的扩散模型像ADM,Classifier-free虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味我们想要训练一个强大的扩散模型去生成高分辩图像，可能导致巨大的参数量和高昂的训练成本，功能强大的diffusion
-models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个
-A100 GPU 上生成 50k 样本大约需要 5
-天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练
-DM 模型，同时保持其效果。
-  作者认为D...
+                本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，Latent Diffusion Models通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/15">
+                <div class="abstract-date" title="Last updated: 2023/09/16">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
                 </div>
                 <!-- tags -->
@@ -997,10 +992,6 @@ NAR当中传统的提升生成质量的方法有：...
         
         
         
-        
-        
-        
-        
     
     
     
@@ -1128,14 +1119,14 @@ NAR当中传统的提升生成质量的方法有：...
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
