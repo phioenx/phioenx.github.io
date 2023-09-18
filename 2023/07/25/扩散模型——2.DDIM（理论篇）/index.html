@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、前言   对于DDPM一个最大的缺点：需要设置较长的扩散步数T才能得到比较好多效果，生成过程可能有数千步骤，这导致了生成样本的速度较慢。我们可以把问题关注到两个问题方面，第一点就是DDPM为什么一定要这么多次采样，是否能减小T？第二点为什么非要一步步降噪，跳步行不行？   1) 是否能减小T?   回到DDPM的扩散过程公式：\(x_t&#x3D;\sqrt{\bar{a}_t}x_0 + \">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-25T01:18:39.000Z">
-<meta property="article:modified_time" content="2023-09-18T03:01:36.789Z">
+<meta property="article:modified_time" content="2023-09-18T07:28:58.581Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -538,14 +538,14 @@ id="ddim是如何去掉马尔可夫化的"><font color="black" size = "5">1、DD
 \textcolor{blue}{q(x_{t-1}|x_t,x_0) = q(x_t|x_{t-1}) *
 \frac{q(x_{t-1}|x_0)}{q(x_t|x_0)}}\]</span></p>
 <p><font color="black" size = "5">  如果我们想要去马尔可夫化，则代表<span
-class="math inline">\(q(x_t|x_{t-1},x_0)
-\neq q(x_t|x_{t-1})\)</span>,我们可以回顾在DDPM当中的<span
-class="math inline">\(q(x_t|x_{t-1},x_0) =
-q(x_t|x_{t-1})=\mathcal{N}(x_t;\sqrt{\alpha_t}x_{t-1},(1-\alpha_t)I)\)</span>去发现一个细节，就是其实在DDPM中没有直接用到<span
-class="math inline">\(q(x_t|x_{t-1})\)</span>,而是用边缘分布<span
-class="math inline">\(q(x_t|x_0)\)</span>一步到位的，所以作者这里提出了很大胆的假设：就是其实前向过程<span
-class="math inline">\(q(x_t|x_{t-1},x_0)\)</span>长什么样并不重要，我们只要设法推出<span
-class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>就可以了，当然，这个分布也不能随便设，必须要满足一定条件，而这个条件<strong>就是我们必须让（1）式依然成立。</strong>因为我们的前向训练过程是用到了（1）式的，所以为了让前向过程不变，我们要确保（1）式依然成立。</font></p>
+class="math inline">\(\textcolor{blue}{q(x_t|x_{t-1},x_0)
+\neq q(x_t|x_{t-1})}\)</span>,我们可以回顾在DDPM当中的<span
+class="math inline">\(\textcolor{blue}{q(x_t|x_{t-1},x_0) =
+q(x_t|x_{t-1})=\mathcal{N}(x_t;\sqrt{\alpha_t}x_{t-1},(1-\alpha_t)I)}\)</span>去发现一个细节，就是其实在DDPM中没有直接用到<span
+class="math inline">\(\textcolor{blue}{q(x_t|x_{t-1})}\)</span>,而是用边缘分布<span
+class="math inline">\(\textcolor{blue}{q(x_t|x_0)}\)</span>一步到位的，所以作者这里提出了很大胆的假设：就是其实前向过程<span
+class="math inline">\(\textcolor{blue}{q(x_t|x_{t-1},x_0)}\)</span>长什么样并不重要，我们只要设法推出<span
+class="math inline">\(\textcolor{blue}{q(x_{t-1}|x_t,x_0)}\)</span>就可以了，当然，这个分布也不能随便设，必须要满足一定条件，而这个条件<strong>就是我们必须让（1）式依然成立。</strong>因为我们的前向训练过程是用到了（1）式的，所以为了让前向过程不变，我们要确保（1）式依然成立。</font></p>
 <p><font color="black" size = "5">  那么问题就简化了，我们可以用待定系数法求解，假设：</font></p>
 <p><span class="math display">\[\huge
 \textcolor{blue}{q(x_{t-1}|x_t,x_0)=\mathcal{N}(kx_0+mx_t,\sigma^2I)-(4)}\]</span></p>
@@ -696,11 +696,12 @@ class="math inline">\(\textcolor{blue}{\gamma_t=1}\)</span>得到的简化目标
 class="math inline">\(\textcolor{blue}{\mathcal{L}_1(\epsilon_\theta)}\)</span>所训练出来模型是对于任意<span
 class="math inline">\(\textcolor{blue}{\sigma}\)</span>通用的！因此我们可以用DDPM论文中训练的模型结合DDIM的采样方式进行采样，并且可以尝试选取不同的<span
 class="math inline">\(\textcolor{blue}{\sigma}\)</span>（这代表不同的过程，但都满足DDIM的框架)。</font></p>
-<h2 id="与ddpm的关系">4、与DDPM的关系</h2>
+<h2
+id="与ddpm的关系"><font color="black" size = "5">4、与DDPM的关系</font></h2>
 <p><font color="black" size = "5">  其实我们从目标函数的推导中可以看出，DDPM和DDIM的训练目标其实都是让预测的分布<span
-class="math inline">\(p_\theta(x_{t-1}|x_t)\)</span>尽可能与分布<span
-class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)\)</span>接近。我们比较在DDPM的markov链建模以及DDIM的非markov链建模下的<span
-class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)\)</span>：</font></p>
+class="math inline">\(\textcolor{blue}{p_\theta(x_{t-1}|x_t)}\)</span>尽可能与分布<span
+class="math inline">\(\textcolor{blue}{q_\sigma(x_{t-1}|x_t,x_0)}\)</span>接近。我们比较在DDPM的markov链建模以及DDIM的非markov链建模下的<span
+class="math inline">\(\textcolor{blue}{q_\sigma(x_{t-1}|x_t,x_0)}\)</span>：</font></p>
 <p><font color="blue" size = "5">DDPM:<span
 class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)=\mathcal{N}(\frac{\sqrt{\alpha_t}(1-\bar{\alpha}_{t-1})}{1-\bar{\alpha}_t}x_t
 +
@@ -711,85 +712,67 @@ class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)=\mathcal{N}(\sqrt{\bar{\alpha}_{
 +
 \sqrt{1-\bar{\alpha}_{t-1}-\sigma^2}\frac{x_t-\sqrt{\bar{\alpha}_t}x_0}{\sqrt{1-\bar{\alpha}_t}},\sigma_t^2I)\)</span></font></p>
 <p><font color="black" size = "5">  如果我们取<span
-class="math inline">\(\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}\)</span>的话，我们就可以发现两者的<span
-class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)\)</span>变成一样的了：</font></p>
-<p><font color="blue" size = "5"><span class="math inline">\(\sigma_t^2
-= \frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t\)</span></font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——3.DDIM（理论篇）\95af28f67ddfc78c15d4b040a9e7579.jpg"
-alt="95af28f67ddfc78c15d4b040a9e7579" />
-<figcaption
-aria-hidden="true">95af28f67ddfc78c15d4b040a9e7579</figcaption>
-</figure>
+class="math inline">\(\textcolor{blue}{\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}}\)</span>的话，我们就可以发现两者的<span
+class="math inline">\(\textcolor{blue}{q_\sigma(x_{t-1}|x_t,x_0)}\)</span>变成一样的了：</font></p>
+<p><span class="math display">\[\Large \textcolor{blue}{\sigma_t^2
+= \frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}\]</span></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181502740.jpg" /></p>
 <p><font color="black" size = "5">  理所当然地，生成过程每步更新的方程也会一致。通过以上证明其实DDPM只是DDIM在取<span
-class="math inline">\(\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}\)</span>时得到的特例。</font></p>
-<h2 id="加速采样过程">5、加速采样过程</h2>
-<p><font color="black" size = "5">之前的分析告诉我们，只要我们选定一种满足DDIM定义的过程，在T固定的情况下，训练的过程是一致的，模型可以在不同过程间复用而不用重新训练。我们更希望使用同样的模型在更小的T下进行生成，而这其实也是可行的，我们只需要定义一个步数小于T的过程，并且保证边际分布仍然与原来相同即可。例如我们考虑原本生成序列的一个子序列<span
-class="math inline">\((x_{\tau_{1}},x_{\tau_{2}},...,x_{\tau_{S}})\)</span>，其中{<span
+class="math inline">\(\textcolor{blue}{\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}}\)</span>时得到的特例。</font></p>
+<h2
+id="加速采样过程"><font color="black" size = "5">5、加速采样过程</font></h2>
+<p><font color="black" size = "5">  之前的分析告诉我们，只要我们选定一种满足DDIM定义的过程，在T固定的情况下，训练的过程是一致的，模型可以在不同过程间复用而不用重新训练。我们更希望使用同样的模型在更小的T下进行生成，而这其实也是可行的，我们只需要定义一个步数小于T的过程，并且保证边际分布仍然与原来相同即可。例如我们考虑原本生成序列的一个子序列<span
+class="math inline">\(\textcolor{blue}{(x_{\tau_{1}},x_{\tau_{2}},...,x_{\tau_{S}})}\)</span>，其中{<span
 class="math inline">\(\tau_i\)</span>}是长度为S的[1,...,T]的升序子序列。我们可以找到特殊的<span
-class="math inline">\(\sigma \in R_{\geq
-0}^T\)</span>来定义一个过程，使得<span
-class="math inline">\(q(x_{\tau_i}|x_0)=\mathcal{N}(\sqrt{\bar{\alpha}_{\tau_i}}x_0,(1-\bar{\alpha}_{\tau_i})I)\)</span>此时我们仍可以使用总步长为T下训练的模型来进行生成，因为新的过程的训练目标其实是原始的<span
-class="math inline">\(\mathcal{L}_1\)</span>求和中对应的S项的和，而每一项之间又是参数独立、互不影响的，因此训练完步长为T的模型其实包含了步长为S的模型。例如文中就取了原始T=1000的DDPM模型，测试了S∈{10,20,50,10}的结果，并且比对了选取不同的<span
-class="math inline">\(\sigma\)</span>时的结果。为了方便，文中固定<span
-class="math inline">\(\sigma\)</span>的形式为<span
-class="math inline">\(\eta\sqrt{\beta_{\tau_i}(1-\bar{\alpha}_{\tau_{i-1}})/(1-\bar{\alpha}_{\tau_i})}\)</span>，通过调节<span
-class="math inline">\(\eta\)</span>的值来调整<span
-class="math inline">\(sigma\)</span>（即调整模型的随机性），当<span
-class="math inline">\(\eta\)</span>=0时为确定性的DDIM，当<span
-class="math inline">\(\eta\)</span>=1.0是为DDPM，<span
-class="math inline">\(\hat{\sigma}\)</span>是DDPM论文中调参得出的超参。实验的结果在下表中：</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——3.DDIM（理论篇）\1690858249870.png"
-alt="1690858249870" />
-<figcaption aria-hidden="true">1690858249870</figcaption>
-</figure>
-<p><font color="black" size = "5">可以看到的是在减小S大小，即加速生成时，生成的质量都在下降，只是DDPM的下降速度会快很多，而DDIM则下降慢很多。这个实验其实告诉我们DDIM可以通过调控采样步数S来权衡采样的速度和质量，且随机性<span
+class="math inline">\(\textcolor{blue}{\sigma \in R_{\geq
+0}^T}\)</span>来定义一个过程，使得<span
+class="math inline">\(\textcolor{blue}{q(x_{\tau_i}|x_0)=\mathcal{N}(\sqrt{\bar{\alpha}_{\tau_i}}x_0,(1-\bar{\alpha}_{\tau_i})I)}\)</span>此时我们仍可以使用总步长为T下训练的模型来进行生成，因为新的过程的训练目标其实是原始的<span
+class="math inline">\(\textcolor{blue}{\mathcal{L}_1}\)</span>求和中对应的S项的和，而每一项之间又是参数独立、互不影响的，因此训练完步长为T的模型其实包含了步长为S的模型。例如文中就取了原始T=1000的DDPM模型，测试了S∈{10,20,50,10}的结果，并且比对了选取不同的<span
+class="math inline">\(\textcolor{blue}{\sigma}\)</span>时的结果。为了方便，文中固定<span
+class="math inline">\(\textcolor{blue}{\sigma}\)</span>的形式为<span
+class="math inline">\(\textcolor{blue}{\eta\sqrt{\beta_{\tau_i}(1-\bar{\alpha}_{\tau_{i-1}})/(1-\bar{\alpha}_{\tau_i})}}\)</span>，通过调节<span
+class="math inline">\(\textcolor{blue}{\eta}\)</span>的值来调整<span
+class="math inline">\(\textcolor{blue}{\sigma}\)</span>（即调整模型的随机性），当<span
+class="math inline">\(\textcolor{blue}{\eta=0}\)</span>时为确定性的DDIM，当<span
+class="math inline">\(\textcolor{blue}{\eta=1.0}\)</span>是为DDPM，<span
+class="math inline">\(\textcolor{blue}{\hat{\sigma}}\)</span>是DDPM论文中调参得出的超参。实验的结果在下表中：</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181510924.png" /></p>
+<p><font color="black" size = "5">  可以看到的是在减小S大小，即加速生成时，生成的质量都在下降，只是DDPM的下降速度会快很多，而DDIM则下降慢很多。这个实验其实告诉我们DDIM可以通过调控采样步数S来权衡采样的速度和质量，且随机性<span
 class="math inline">\(\sigma\)</span>会对这个权衡造成影响，确定性的DDIM看起来是最好的，DDPM在这个权衡下则是最差的。</font></p>
-<h2 id="采样的一致性与插值">6、采样的一致性与插值</h2>
-<p><font color="black" size = "5">前面也提到，在DDIM的架构中，<span
-class="math inline">\(\sigma\)</span>的大小其实代表的是整个过程的随机性。当<span
-class="math inline">\(\sigma=0\)</span>时，整个过程完全没有随机性，为Implicit
+<h2
+id="采样的一致性与插值"><font color="black" size = "5">6、采样的一致性与插值</font></h2>
+<p><font color="black" size = "5">  前面也提到，在DDIM的架构中，<span
+class="math inline">\(\textcolor{blue}{\sigma}\)</span>的大小其实代表的是整个过程的随机性。当<span
+class="math inline">\(\textcolor{blue}{\sigma=0}\)</span>时，整个过程完全没有随机性，为Implicit
 probabilistic model，即同样的<span
-class="math inline">\(x_t\)</span>只能解码出同样的<span
-class="math inline">\(x_0\)</span>。而<span
-class="math inline">\(\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}\)</span>时，为DDPM，从实验结果来看是随机性非常大的，同样的<span
-class="math inline">\(x_T\)</span>几乎每次解码的结果都大相径庭。对于<span
-class="math inline">\(\sigma=0\)</span>的情况，即使我们取不同的解码路径{<span
+class="math inline">\(\textcolor{blue}{x_t}\)</span>只能解码出同样的<span
+class="math inline">\(\textcolor{blue}{x_0}\)</span>。而<span
+class="math inline">\(\textcolor{blue}{\sigma_t=\sqrt{\frac{1-\bar{a}_{t-1}}{1-\bar{a}_t}\beta_t}}\)</span>时，为DDPM，从实验结果来看是随机性非常大的，同样的<span
+class="math inline">\(\textcolor{blue}{x_T}\)</span>几乎每次解码的结果都大相径庭。对于<span
+class="math inline">\(\textcolor{blue}{\sigma=0}\)</span>的情况，即使我们取不同的解码路径{<span
 class="math inline">\(\tau_i\)</span>}，按理说同一<span
-class="math inline">\(x_T\)</span>解码出的<span
-class="math inline">\(x_0\)</span>仍然会有一定的一致性（相似性），从而说明<span
-class="math inline">\(x_T\)</span>对应的隐空间具有了语义信息。文中就对这一推论进行了验证，通过编码教堂的图片得到的<span
-class="math inline">\(x_T\)</span>进行多次解码（选取不同的{<span
+class="math inline">\(\textcolor{blue}{x_T}\)</span>解码出的<span
+class="math inline">\(\textcolor{blue}{x_0}\)</span>仍然会有一定的一致性（相似性），从而说明<span
+class="math inline">\(\textcolor{blue}{x_T}\)</span>对应的隐空间具有了语义信息。文中就对这一推论进行了验证，通过编码教堂的图片得到的<span
+class="math inline">\(\textcolor{blue}{x_T}\)</span>进行多次解码（选取不同的{<span
 class="math inline">\(\tau_i\)</span>}），得到的图片基本都是教堂，在high-level的特征上是非常相似的：</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——3.DDIM（理论篇）\1690859196194.png"
-alt="1690859196194" />
-<figcaption aria-hidden="true">1690859196194</figcaption>
-</figure>
-<p><font color="black" size = "5">当隐空间具有语义之后，就可以进行图片的插值，对于DDIM，两个不同的随机噪音会产生不同的图像，但是如果我们对这两个随机噪音进行插值生成新的<span
-class="math inline">\(x_T\)</span>，那么将生成融合的图像。这里采用的插值方法是<strong>球面线性插值</strong>（
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181515478.png" /></p>
+<p><font color="black" size = "5">  当隐空间具有语义之后，就可以进行图片的插值，对于DDIM，两个不同的随机噪音会产生不同的图像，但是如果我们对这两个随机噪音进行插值生成新的<span
+class="math inline">\(\textcolor{blue}{x_T}\)</span>，那么将生成融合的图像。这里采用的插值方法是<strong>球面线性插值</strong>（
 spherical linear interpolation)：</font></p>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——3.DDIM（理论篇）\1690859249604.png"
-alt="1690859249604" />
-<figcaption aria-hidden="true">1690859249604</figcaption>
-</figure>
-<figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——3.DDIM（理论篇）\1690859277722.png"
-alt="1690859277722" />
-<figcaption aria-hidden="true">1690859277722</figcaption>
-</figure>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181516179.png" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181515881.png" /></p>
 <h1 id="三总结">三、总结</h1>
-<p><font color="black" size = "5">由于DDPM是基于马尔可夫链建立起来的前向/逆向过程，因此不能“跳步”生成图像，且为了保证
-<span class="math inline">\(x_T\)</span>∼N(0,1) ，
+<p><font color="black" size = "5">  由于DDPM是基于马尔可夫链建立起来的前向/逆向过程，因此不能“跳步”生成图像，且为了保证
+<span class="math inline">\(\textcolor{blue}{x_T \sim
+\mathcal{N}(0,1)}\)</span>，
 T不能过小，因此自然会导致采样慢、出图效率低的缺点。而DDIM这篇文章介绍的方法，巧妙地通过自行设计优化目标<span
-class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)\)</span>，将马尔可夫的限制取消，在不影响DDPM中的边界分布的情况下大大缩短了采样步数。这样做的好处是，<strong>训练好的DDPM可以直接拿来通过DDIM的采样方法进行采样，不需要再去训练一次。</strong></font></p>
+class="math inline">\(\textcolor{blue}{q_\sigma(x_{t-1}|x_t,x_0)}\)</span>，将马尔可夫的限制取消，在不影响DDPM中的边界分布的情况下大大缩短了采样步数。这样做的好处是，<strong>训练好的DDPM可以直接拿来通过DDIM的采样方法进行采样，不需要再去训练一次。</strong></font></p>
 
     </article>
     <!-- license -->
@@ -798,7 +781,7 @@ class="math inline">\(q_\sigma(x_{t-1}|x_t,x_0)\)</span>，将马尔可夫的限
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/</a>
             <p>发表日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">July 25th 2023, 9:18:39 am</a>
-            <p>更新日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">September 18th 2023, 11:01:36 am</a>
+            <p>更新日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">September 18th 2023, 3:28:58 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
