@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E6%96%87%E6%9C%AC/index.html">
+<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-AI%E7%BB%98%E7%94%BB/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -429,92 +429,22 @@
         
         
             
+            
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+            <a class="abstract-title" href="/2023/09/27/%E7%8E%A9%E8%BD%ACStable-diffusion%E7%AF%87%EF%BC%881%EF%BC%89%E2%80%94%E2%80%94%E5%AE%89%E8%A3%85stable-diffusion-web%20ui/">
                 
-                <span class="abstract-title-text">扩散模型——4.DiffuSeq</span>
+                <span class="abstract-title-text">玩转Stable diffusion篇（1）——安装stable diffusion web ui</span>
             </a>
             <div class="abstract-content">
-                一、前言
-基于上文的Diffusiom-LM,它是在连续空间对文本进行建模（添加了EMB和Rounding方法），并建立一个分类器来引导文本生成。但是对于Seq2Seq问题而言，我们给出的分类器的条件也是一个单词序列，产生的也是一个单词序列，我们无法训练无数个分类器来建模条件和生成的语义之间的关系。
-Seq2Seq文本生成是自然语言处理当中一个重要的话题，涵盖了许多重要的任务，比如开放式文本生成，对话，机器翻译以及文本风格迁移。在本文当中提出的DiffuSeq，是一种支持Seq2Seq文本生成的无分类器扩散模型。相较于Diffusion-LM来说，DiffuSeq的一个优点在于，其不...
+                本文从如何安装stable diffusion web ui出发，一步步实现
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型--Diffusion-LM</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、问题定义
-文本生成：
-文本生成就是从语言模型\(p_{lm}(w)\)中采样，其中\(w=[w_1...w_n]\)是一系列的词\(p_{lm}(w)\)是关于词序列的分布。
-可控文本生成：
-可控生成就是从条件分布\(p(w|c)\)中采样，其中c代表是控制属性（句法控制中表示为语法解析树或者情感控制中的期望情感），即插即用的可控生成：
-\(p(w|c)\propto p_{lm}(w)\cdot
-p(c|w)\)
-其中\(p_{lm}(w)\)保证流畅性，\(p(c|w)\)完成属性控制。
-2、背景
-传统的自回归语言模型可以生成高质量文本，但是生成的结...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/24</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/07/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E6%95%B4%E7%90%86/">
-                
-                <span class="abstract-title-text">文本扩散模型-整理.md</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-1、NAR模型
-自回归模型(AR):现有的文本生成方法大多数采用逐个生成输出的自回归方式（AR）。这种方式虽然能够捕捉到token之间的有序依赖关系（\(y_1,y_2,...,y_t\)），但因为参考了\(y_1, y_2, ...,
-y_t\)的目标序列“上下文”，所以解码速度是和目标序列的长度相关的，生成长文本是费时的。
-非自回归模型(NAR):该方法并行生成索引token，并且极大地降低推理延迟，但代价是牺牲了文本的生成质量，原因是没有考虑\(y_1,y_2,...,y_t\)这个“上下文”来生成\(y_{t+1}\)。
-NAR当中传统的提升生成质量的方法有：...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/07</span>
+                <div class="abstract-date" title="Last updated: 2023/09/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/27</span>
                 </div>
                 <!-- tags -->
                 
@@ -680,46 +610,7 @@ NAR当中传统的提升生成质量的方法有：...
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -778,7 +669,7 @@ NAR当中传统的提升生成质量的方法有：...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 11
         </div>
         <!-- search  -->
         
@@ -792,6 +683,12 @@ NAR当中传统的提升生成质量的方法有：...
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span>
+            <a class="archive-post-title" href="/2023/09/27/%E7%8E%A9%E8%BD%ACStable-diffusion%E7%AF%87%EF%BC%881%EF%BC%89%E2%80%94%E2%80%94%E5%AE%89%E8%A3%85stable-diffusion-web%20ui/">玩转Stable diffusion篇（1）——安装stable diffusion web ui</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
@@ -818,18 +715,6 @@ NAR当中传统的提升生成质量的方法有：...
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span>
-            <a class="archive-post-title" href="/2023/08/26/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94DiffuSeq%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——4.DiffuSeq</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span>
-            <a class="archive-post-title" href="/2023/08/24/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%94Diffusion-LM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型--Diffusion-LM</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
             <span class="archive-post-date">08/10</span>
             <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
         </li>
@@ -838,18 +723,6 @@ NAR当中传统的提升生成质量的方法有：...
         <li class="archive-post-item">
             <span class="archive-post-date">08/10</span>
             <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/07</span>
-            <a class="archive-post-title" href="/2023/08/07/%E6%96%87%E6%9C%AC%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-%E6%95%B4%E7%90%86/">文本扩散模型-整理.md</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1</a>
         </li>
     
         
@@ -898,19 +771,19 @@ NAR当中传统的提升生成质量的方法有：...
             扩散模型-医学图像
         </span>
     
-        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
         </span>
     
-        <span class="sidebar-category-name" data-categories="扩散模型-文本">
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-文本
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-AI绘画">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-AI绘画
         </span>
     
     </div>
