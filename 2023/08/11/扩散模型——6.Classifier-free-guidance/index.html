@@ -22,12 +22,12 @@
     <meta name="description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——6.Classifier-free guidance">
-<meta property="og:url" content="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/index.html">
+<meta property="og:url" content="http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-10T01:51:16.000Z">
-<meta property="article:modified_time" content="2023-09-27T00:19:38.884Z">
+<meta property="article:published_time" content="2023-08-11T01:51:16.000Z">
+<meta property="article:modified_time" content="2023-10-07T03:46:31.878Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -334,7 +334,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/08/10</span>
+                    <span class="post-intro-time">2023/08/11</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -690,9 +690,9 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819412.png"
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/</a>
-            <p>发表日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">August 10th 2023, 9:51:16 am</a>
-            <p>更新日期：<a href="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">September 27th 2023, 8:19:38 am</a>
+            <p>原文链接：<a href="http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/</a>
+            <p>发表日期：<a href="http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">August 11th 2023, 9:51:16 am</a>
+            <p>更新日期：<a href="http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">October 7th 2023, 11:46:31 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -945,7 +945,20 @@ guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item 
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -996,7 +1009,7 @@ guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item 
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 10
+        Total : 11
         </div>
         <!-- search  -->
         
@@ -1010,6 +1023,12 @@ guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item 
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
@@ -1036,14 +1055,14 @@ guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item 
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/10</span>
-            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
         </li>
     
         

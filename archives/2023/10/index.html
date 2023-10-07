@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/categories/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:url" content="http://example.com/archives/2023/10/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -432,190 +432,19 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
+            <a class="abstract-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">
                 
-                <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
+                <span class="abstract-title-text">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</span>
             </a>
             <div class="abstract-content">
-                本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，Latent Diffusion Models通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">
-                
-                <span class="abstract-title-text">扩散模型——6.Classifier-free guidance</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要是对《Classifier-free diffusion guidance》文章的介绍以及笔记总结，介绍了Classifier-free针对Classifier Guidance遇到的问题提出了一个无需分类器就能使得FID与IS到达权衡的一个思想。并与其进行对比，再针对饱和度问题进行探讨。
+                本文主要是用于探究扩散模型是否能够用于生成医学3D图像。作者提出了一种适用于潜在空间的扩散模型的新架构，并在四个公开可用的数据集上对其进行训练，这些数据集包含来自广泛解剖范围的数据：脑 MRI、胸部 CT、乳腺 MRI 和膝部 MRI。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/10/07">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/11</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">
-                
-                <span class="abstract-title-text">扩散模型——5.Classifier guidance</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要是对《Diffusion Models Beat GANs on Image Synthesis》文章的介绍以及笔记总结，另外介绍了该文章所改进的架构，使用了分类器指导思想以及上采样提高图像生成的分辨率。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
-                
-                <span class="abstract-title-text">扩散模型——4.分数模型</span>
-            </a>
-            <div class="abstract-content">
-                一、前言
-  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
-1.什么是分数？
-  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
-R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
-                
-                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
-            </a>
-            <div class="abstract-content">
-                本文依据《Improved Denoising Diffusion Probabilistic Models》的方法原理以及实验结论进行笔记以及总结。本篇文章证明了通过一些修改，DDPM可以更快地采样并实现更好的对数似然，而对样本质量的影响很小。此外，作者还研究了 DDPM 如何随着可用训练计算量的变化而扩展，并发现更多的训练计算会带来更好的样本质量和对数似然。这些结果的结合使DDPM成为生成建模的一个有吸引力的选择，因为它们将良好的对数似然、高质量样本和相当快的采样与基础良好的固定训练目标结合起来，该目标可以通过训练计算轻松扩展。这些结果表明DDPMs是未来研究的一个有希望的方向。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要介绍扩散模型的加速采样的思想DDIM，本文依据《Denoising Diffusion Implicit Models》的公式推导，方法原理以及实验结论进行笔记以及总结。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型——1.从DDPM入门</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要介绍扩散模型的框架原理以及生成过程，是以DDPM为主进行介绍，让你对扩散模型有初步的了解。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/23</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/07</span>
                 </div>
                 <!-- tags -->
                 
