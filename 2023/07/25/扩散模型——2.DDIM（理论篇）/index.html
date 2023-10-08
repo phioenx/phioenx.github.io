@@ -16,7 +16,7 @@
     <meta name="renderer" content="webkit">
     <meta name="copyright" content="PhoenixPeng">
     
-        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
     <meta name="description" content="一、前言   对于DDPM一个最大的缺点：需要设置较长的扩散步数T才能得到比较好多效果，生成过程可能有数千步骤，这导致了生成样本的速度较慢。我们可以把问题关注到两个问题方面，第一点就是DDPM为什么一定要这么多次采样，是否能减小T？第二点为什么非要一步步降噪，跳步行不行？   1) 是否能减小T?   回到DDPM的扩散过程公式：\(x_t&#x3D;\sqrt{\bar{a}_t}x_0 + \">
@@ -1044,8 +1044,6 @@ class="math inline">\(\textcolor{blue}{q_\sigma(x_{t-1}|x_t,x_0)}\)</span>，将
         
         
     
-        
-        
         
         
         
