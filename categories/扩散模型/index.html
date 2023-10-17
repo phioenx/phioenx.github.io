@@ -522,8 +522,9 @@
             <div class="abstract-content">
                 一、前言
   有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
-¶1.什么是分数？
-  当我们能够从未知数据分布$p_{data}(x)$中采样出独立同分布的样本$\lbrace x_i\in RD\rbraceN_{i=1}$，我们定义分数为概率密度函数$p(x)$的对数似然关于x的梯度，即$\textcolor{red}{\nabla_x \log ...
+1.什么是分数？
+  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
+R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\n...
             </div>
             <!-- read more -->
             
@@ -870,6 +871,8 @@
         
         
         
+        
+        
     
     
     
@@ -991,14 +994,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">

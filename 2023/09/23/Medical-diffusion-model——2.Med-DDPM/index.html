@@ -19,29 +19,17 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm 。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成">
+    <meta name="description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Medical diffusion model——2.Med-DDPM">
 <meta property="og:url" content="http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm 。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成">
+<meta property="og:description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251105510.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027183.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027464.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251552238.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251536087.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251540029.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543920.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543906.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251614874.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251634626.png">
 <meta property="article:published_time" content="2023-09-23T02:42:01.000Z">
 <meta property="article:modified_time" content="2023-10-07T00:53:54.945Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
@@ -501,54 +489,152 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><font color="black" size = "5">  本文所介绍的内容是来自<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.18453.pdf">《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》</a>。</font></p>
-<p><font color="black" size = "5">  本文代码已开源：<a target="_blank" rel="noopener" href="https://github.com/mobaidoctor/med-ddpm/">med-ddpm </a>。</font></p>
-<h1>一、介绍</h1>
-<p><font color="black" size = "5">  本文使用了扩散模型做语义3D医学图像生成，命名为<strong>Med-DDPM</strong>。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成过程，它有助于创建逼真的医学图像。实证评估强调了 Med-DDPM 在准确性、稳定性和多功能性等指标方面优于 GAN 技术。此外，Med-DDPM 在提高分割模型的准确性方面优于传统增强技术和合成 GAN 图像。它解决了数据集不足、注释数据缺乏和类别不平衡等挑战。</font></p>
-<h1>二、方法原理</h1>
+        <p><font color="black" size = "5">  本文所介绍的内容是来自<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.18453.pdf">《Med-DDPM: Conditional
+Diffusion Models for Semantic 3D Medical Image
+Synthesis》</a>。</font></p>
+<p><font color="black" size = "5">  本文代码已开源：<a
+target="_blank" rel="noopener" href="https://github.com/mobaidoctor/med-ddpm/">med-ddpm</a>。</font></p>
+<h1 id="一介绍">一、介绍</h1>
+<p><font color="black" size = "5">  本文使用了扩散模型做语义3D医学图像生成，命名为<strong>Med-DDPM</strong>。
+本文的创新点是它在 3D
+图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成过程，它有助于创建逼真的医学图像。实证评估强调了
+Med-DDPM 在准确性、稳定性和多功能性等指标方面优于 GAN
+技术。此外，Med-DDPM 在提高分割模型的准确性方面优于传统增强技术和合成
+GAN
+图像。它解决了数据集不足、注释数据缺乏和类别不平衡等挑战。</font></p>
+<h1 id="二方法原理">二、方法原理</h1>
 <p><font color="black" size = "5">  在原始DDPM的基础上，作者做出了如下的改进：</font></p>
-<p><font color="black" size = "5">  1）将线性噪声序列改成余弦噪声序列（详细可参考第三篇Improved DDPM）；</font></p>
+<p><font color="black" size = "5">  1）将线性噪声序列改成余弦噪声序列（详细可参考第三篇Improved
+DDPM）；</font></p>
 <p><font color="black" size = "5">  2）在原始的U-Net架构中，将所有2D操作（如层、噪声输入）替换成3d项；</font></p>
-<p><font color="black" size = "5">  3）<strong>通过将加噪后的图像$x_t$的通道与分割掩模的通道进行级联，从而修改U-Net模型的输入图像 $x_t$</strong> ，该掩模指导生成过程，从而能够合成有意义的图像，例如精确定位肿瘤的大脑病理 MRI。</font></p>
+<p><font color="black" size = "5">  3）<strong>通过将加噪后的图像<span
+class="math inline">\(x_t\)</span>的通道与分割掩模的通道进行级联，从而修改U-Net模型的输入图像
+<span
+class="math inline">\(x_t\)</span></strong> ，该掩模指导生成过程，从而能够合成有意义的图像，例如精确定位肿瘤的大脑病理
+MRI。</font></p>
 <p><font color="black" size = "5">  4）将原始DDPM的L2损失改为L1损失：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png" alt=""></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png" /></p>
 <p><font color="black" size = "5">  由于本文的创新点以及模型改进主要集中在第三点以及第四点上，所以下面逐步展开细说第三点以及第四点的改进：</font></p>
-<p><font color="black" size = "5">  本文使用的训练图像和分割掩模是具有三个维度的单通道体积图像：宽度（w）、高度（h）和深度（d）。而文中所使用的是原始临床脑部 MRI 数据集，该数据集的分割掩模由三个类别标签组成：0代表背景，1对应大脑区域，2代表肿瘤区域。为了将掩模图像与类标签对齐，作者执行了 one-hot 编码操作，排除背景类标签 0，因为它不相关。该操作产生了具有两个通道的掩模图像，其中通道 0 代表大脑区域，通道 1 代表肿瘤区域。<strong>然后应用通道级联来组合图像和掩模，从而产生具有三个通道的级联图像，表示为：</strong></font></p>
-<p>$$\huge \textcolor{blue}{\tilde{x}_t<sup>{(3,w,h,d)}:=x_t</sup>{(1,w,h,d)} \bigoplus c^{(2,w,h,d)}}$$</p>
-<p><font color="black" size = "5">  在作者的研究当中， L2 损失函数由于计算的是估计值和目标值之间的平方差，因此对异常值很敏感。另一方面，L1损失计算估计值与目标值之间的绝对差，使其对异常值的敏感度相对较低。因此，在本文的主要实验中，将利用 L1 损失代替原本L2损失：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251105510.png" alt=""></p>
+<p><font color="black" size = "5">  本文使用的训练图像和分割掩模是具有三个维度的单通道体积图像：宽度（w）、高度（h）和深度（d）。而文中所使用的是原始临床脑部
+MRI
+数据集，该数据集的分割掩模由三个类别标签组成：0代表背景，1对应大脑区域，2代表肿瘤区域。为了将掩模图像与类标签对齐，作者执行了
+one-hot 编码操作，排除背景类标签
+0，因为它不相关。该操作产生了具有两个通道的掩模图像，其中通道 0
+代表大脑区域，通道 1
+代表肿瘤区域。<strong>然后应用通道级联来组合图像和掩模，从而产生具有三个通道的级联图像，表示为：</strong></font></p>
+<p><span class="math display">\[\huge
+\textcolor{blue}{\tilde{x}_t^{(3,w,h,d)}:=x_t^{(1,w,h,d)} \bigoplus
+c^{(2,w,h,d)}}\]</span></p>
+<p><font color="black" size = "5">  在作者的研究当中， L2
+损失函数由于计算的是估计值和目标值之间的平方差，因此对异常值很敏感。另一方面，L1损失计算估计值与目标值之间的绝对差，使其对异常值的敏感度相对较低。因此，在本文的主要实验中，将利用
+L1 损失代替原本L2损失：</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251105510.png" /></p>
 <p><font color="black" size = "5">  最后，Med-DDPM的训练以及采样分别如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027183.png" alt=""></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027464.png" alt=""></p>
-<h1>三、实验</h1>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027183.png" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027464.png" /></p>
+<h1 id="三实验">三、实验</h1>
 <p><font color="black" size = "5">  本文进行实验的目的如下：</font></p>
-<p><font color="black" size = "5">  1）证明Med-DDPM 在准确性、稳定性和多功能性等指标方面优于 GAN 。</font></p>
-<p><font color="black" size = "5">  2）证明 Med-DDPM 在增强分割模型性能和作为数据增强替代方案方面的功效。</font></p>
-<p><font color="black" size = "5">  为了验证实验想要达到的预期效果，作者从主数据集创建了两个子数据集。第一种模式涉及 1292 个图像的训练集和 208 个图像的测试集。在第二种模式中，随机选择 100 张图像进行训练，100 张图像进行验证，100 张图像进行测试，创建一个小型数据集（<strong>创建小型数据集的原因，是为了挑战扩散模型在数据稀缺情况下所展现的潜力</strong>）。并且选择 Pix2Pix GAN和 DiscoGAN 作为基线模型，并将其架构调整为 3D 模型。</font></p>
-<h2 id="font-color-black-size-5-1-Med-DDPM合成的质量评估-font"><a class="header-anchor" href="#font-color-black-size-5-1-Med-DDPM合成的质量评估-font">¶</a><font color="black" size = "5">1.Med-DDPM合成的质量评估</font></h2>
-<p><font color="black" size = "5">  在第一种模式中，作者使用 1292 个图像训练Med-DDPM和基线 GAN 模型，历时 100,000 个epoch，batch-size为 1（称为主模型）,然后在 208 张测试图像上评估了这些模型。本文采用定量和定性措施来评估合成图像。</font></p>
-<p><font color="black" size = "5">  **定量结果：**下表展示了MedDDPM 与基线 DiscoGAN 和 Pix2Pix 相比的性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251552238.png" alt=""></p>
-<p><font color="black" size = "5">  结果证明了 Med-DDPM 的优越性能。它实现了 0.0548 的最低 MSE，表明其在输出中保留更精细细节和结构的强大能力。此外，Med-DDPM 在 MMD 方面表现优于 GAN，值为 4.1909，表明其匹配目标域分布的能力很强。而Med-DDPM模型在的3D-FID指标显示得分明显较低，值为249.713，这一结果表明 Med-DDPM 在生成逼真且高质量 3D 结构方面的熟练程度。尽管模型的 MS-SSIM 得分 (0.4358) 与真实数据的 MS-SSIM 得分 (0.4728) 不太接近，但与 Pix2Pix 相比，它使模型更接近真实数据。</font></p>
-<p><font color="black" size = "5">  下图展示的是真实图像的冠状面、矢状面和轴向切片以及Med-DDPM和基线 GAN 模型生成的样本。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251536087.png" alt=""></p>
-<p><font color="black" size = "5">  从图中可以观察到，Pix2Pix 模型生成的图像较模糊。与 Pix2Pix 模型相比，DiscoGAN 模型表现更好，生成更真实的图像，肿瘤区域清晰。然而，值得注意的是，DiscoGAN 生成的图像未能清楚地描绘大脑的独特特征。此外，它们会产生粗糙的脑回和脑沟，这看起来不自然。相比之下，本文所提出的 Med-DDPM 模型生成高度逼真和高质量的图像，显示出大脑特征和肿瘤区域的清晰可见性。</font></p>
+<p><font color="black" size = "5">  1）证明Med-DDPM
+在准确性、稳定性和多功能性等指标方面优于 GAN 。</font></p>
+<p><font color="black" size = "5">  2）证明 Med-DDPM
+在增强分割模型性能和作为数据增强替代方案方面的功效。</font></p>
+<p><font color="black" size = "5">  为了验证实验想要达到的预期效果，作者从主数据集创建了两个子数据集。第一种模式涉及
+1292 个图像的训练集和 208 个图像的测试集。在第二种模式中，随机选择 100
+张图像进行训练，100 张图像进行验证，100
+张图像进行测试，创建一个小型数据集（<strong>创建小型数据集的原因，是为了挑战扩散模型在数据稀缺情况下所展现的潜力</strong>）。并且选择
+Pix2Pix GAN和 DiscoGAN 作为基线模型，并将其架构调整为 3D
+模型。</font></p>
+<h2
+id="med-ddpm合成的质量评估"><font color="black" size = "5">1.Med-DDPM合成的质量评估</font></h2>
+<p><font color="black" size = "5">  在第一种模式中，作者使用 1292
+个图像训练Med-DDPM和基线 GAN 模型，历时 100,000 个epoch，batch-size为
+1（称为主模型）,然后在 208
+张测试图像上评估了这些模型。本文采用定量和定性措施来评估合成图像。</font></p>
+<p><font color="black" size = "5">  <strong>定量结果：</strong>下表展示了MedDDPM
+与基线 DiscoGAN 和 Pix2Pix 相比的性能。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251552238.png" /></p>
+<p><font color="black" size = "5">  结果证明了 Med-DDPM
+的优越性能。它实现了 0.0548 的最低
+MSE，表明其在输出中保留更精细细节和结构的强大能力。此外，Med-DDPM 在 MMD
+方面表现优于 GAN，值为
+4.1909，表明其匹配目标域分布的能力很强。而Med-DDPM模型在的3D-FID指标显示得分明显较低，值为249.713，这一结果表明
+Med-DDPM 在生成逼真且高质量 3D 结构方面的熟练程度。尽管模型的 MS-SSIM
+得分 (0.4358) 与真实数据的 MS-SSIM 得分 (0.4728) 不太接近，但与 Pix2Pix
+相比，它使模型更接近真实数据。</font></p>
+<p><font color="black" size = "5">  下图展示的是真实图像的冠状面、矢状面和轴向切片以及Med-DDPM和基线
+GAN 模型生成的样本。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251536087.png" /></p>
+<p><font color="black" size = "5">  从图中可以观察到，Pix2Pix
+模型生成的图像较模糊。与 Pix2Pix 模型相比，DiscoGAN
+模型表现更好，生成更真实的图像，肿瘤区域清晰。然而，值得注意的是，DiscoGAN
+生成的图像未能清楚地描绘大脑的独特特征。此外，它们会产生粗糙的脑回和脑沟，这看起来不自然。相比之下，本文所提出的
+Med-DDPM
+模型生成高度逼真和高质量的图像，显示出大脑特征和肿瘤区域的清晰可见性。</font></p>
 <p><font color="black" size = "5">  下图展示的是真实图像和合成图像的轴向平面中肿瘤区域的放大图像。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251540029.png" alt=""></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251540029.png" /></p>
 <p><font color="black" size = "5">  下图展示了使用操纵掩模生成的合成图像</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543920.png" alt=""></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543920.png" /></p>
 <p><font color="black" size = "5">  下图展示了为单个输入掩模生成的合成图像的多样性。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543906.png" alt=""></p>
-<h2 id="font-color-black-size-5-2-在合成图像上训练的分割模型的比较-font"><a class="header-anchor" href="#font-color-black-size-5-2-在合成图像上训练的分割模型的比较-font">¶</a><font color="black" size = "5">2.在合成图像上训练的分割模型的比较</font></h2>
-<p><font color="black" size = "5">  在第二种模式中，使用小型数据集从头开始训练所有模型，历时 50,000 个epoch，batch-size为 1（称为玩具模型）。此外，作者使用该小型数据集和玩具模型生成的合成图像去训练了 3D U-Net 分割模型。为了评估合成图像作为数据增强替代方案的性能，作者还使用各种训练数据组合来训练 U-Net 模型，包括中当前最先进的医学图像增强。分割模型使用 BCE 损失进行 100 个时期的训练，批量大小为 4。使用 Dice 系数和 IoU 分数评估模型性能。</font></p>
-<p><font color="black" size = "5">  下表展示了各种数据样本组合进行训练的 3D U-Net 在玩具数据集上进行肿瘤分割的实验结果，这些数据样本**包括真实图像、增强图像以及由Med-DDPM 玩具模型和在同一数据集上训练的基线模型生成的合成图像。**其中，真实图像是指来自玩具数据集的 100 张训练图像。增强图像通过应用最先进的 nnU-Net 增强来操作玩具数据集中的训练图像来创建。下表的评估分数代表分割模型在测试集上的性能，测试集由玩具数据集中的 100 张图像组成。 Syn 1000、Syn 2000 和 Syn 5000 表示用于训练分割模型的合成图像的数量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251614874.png" alt=""></p>
-<p><font color="black" size = "5">  首先，我们可以看到使用合成图像进行训练（Pix2Pix 模型除外）的分割模型，其性能始终优于使用真实图像进行训练。另外，使用最先进的增强生成的图像始终能够实现最高的性能。对于 1000、2000 和 5000 张图像，Dice 分数分别增加到 0.4442、0.4688 和 0.4704。这种提高可能是由于增强图像源自对真实训练图像的操作，捕获了真实肿瘤图像的复杂且相关的特征，同时增加了训练数据的多样性。</font></p>
-<p><font color="black" size = "5">   Med-DDPM 相对于基线和其他 GAN 模型提供了显着的改进，1000、2000 和 5000 个图像集的 Dice 分数分别为 0.3593、0.3746 和 0.3563,如下图所示。这一改进意味着 Med-DDPM 方法比其他 GAN 模型更好地捕捉了分割任务的复杂性，并且更接近最先进的增强技术所实现的性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251634626.png" alt=""></p>
-<p><font color="black" size = "5">  当 Med-DDPM 与 DiscoGAN 和 Pix2Pix 结合时（<strong>具体如何结合，本文没有明说</strong>），结果变得更加有希望，这表明这些方法在生成用于肿瘤分割的有效合成图像方面相辅相成。特别是在 5000 张合成图像的实验中，Med-DDPM 与 DiscoGAN 和 Pix2Pix 相结合，获得了 0.4443 的 Dice 分数和 0.3511 的 IoU，几乎与最先进的增强技术一样好。<strong>总的来说，这些结果说明了使用合成图像训练 U-Net 进行肿瘤分割的有效性，以及所提出的方法 Med-DDPM，特别是与 DiscoGAN 和 Pix2Pix 结合使用时，展示了与最先进的增强技术相比的竞争性能</strong>。</font></p>
-<h1>四、总结</h1>
-<p><font color="black" size = "5">  在本文中，我们提出了 Med-DDPM，这是一种利用条件去噪扩散概率模型生成高质量、多样化 3D 医学图像的新方法。我们在训练和采样阶段都将条件掩模图像作为先验。我们的结果证实了 Med-DDPM 生成 3D 医学图像的能力，这些图像不仅具有卓越的质量，而且还包含广泛的可变性。使用在 Med-DDPM 生成的合成图像上训练的分割模型进行的实验证明了分割性能的显着提高。这一成功凸显了 Med-DDPM 作为医学成像数据增强的强大工具以及医学成像领域先进数据匿名化工具的潜力。另外，本文使用的是最原始DDPM的框架进行实验，作者提出未来的工作可以通过潜在扩散模型的集成来增强其图像生成能力。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543906.png" /></p>
+<h2
+id="在合成图像上训练的分割模型的比较"><font color="black" size = "5">2.在合成图像上训练的分割模型的比较</font></h2>
+<p><font color="black" size = "5">  在第二种模式中，使用小型数据集从头开始训练所有模型，历时
+50,000 个epoch，batch-size为
+1（称为玩具模型）。此外，作者使用该小型数据集和玩具模型生成的合成图像去训练了
+3D U-Net
+分割模型。为了评估合成图像作为数据增强替代方案的性能，作者还使用各种训练数据组合来训练
+U-Net 模型，包括中当前最先进的医学图像增强。分割模型使用 BCE 损失进行
+100 个时期的训练，批量大小为 4。使用 Dice 系数和 IoU
+分数评估模型性能。</font></p>
+<p><font color="black" size = "5">  下表展示了各种数据样本组合进行训练的
+3D U-Net
+在玩具数据集上进行肿瘤分割的实验结果，这些数据样本<strong>包括真实图像、增强图像以及由Med-DDPM
+玩具模型和在同一数据集上训练的基线模型生成的合成图像。</strong>其中，真实图像是指来自玩具数据集的
+100 张训练图像。增强图像通过应用最先进的 nnU-Net
+增强来操作玩具数据集中的训练图像来创建。下表的评估分数代表分割模型在测试集上的性能，测试集由玩具数据集中的
+100 张图像组成。 Syn 1000、Syn 2000 和 Syn 5000
+表示用于训练分割模型的合成图像的数量。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251614874.png" /></p>
+<p><font color="black" size = "5">  首先，我们可以看到使用合成图像进行训练（Pix2Pix
+模型除外）的分割模型，其性能始终优于使用真实图像进行训练。另外，使用最先进的增强生成的图像始终能够实现最高的性能。对于
+1000、2000 和 5000 张图像，Dice 分数分别增加到 0.4442、0.4688 和
+0.4704。这种提高可能是由于增强图像源自对真实训练图像的操作，捕获了真实肿瘤图像的复杂且相关的特征，同时增加了训练数据的多样性。</font></p>
+<p><font color="black" size = "5">   Med-DDPM 相对于基线和其他 GAN
+模型提供了显着的改进，1000、2000 和 5000 个图像集的 Dice 分数分别为
+0.3593、0.3746 和 0.3563,如下图所示。这一改进意味着 Med-DDPM 方法比其他
+GAN
+模型更好地捕捉了分割任务的复杂性，并且更接近最先进的增强技术所实现的性能。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251634626.png" /></p>
+<p><font color="black" size = "5">  当 Med-DDPM 与 DiscoGAN 和 Pix2Pix
+结合时（<strong>具体如何结合，本文没有明说</strong>），结果变得更加有希望，这表明这些方法在生成用于肿瘤分割的有效合成图像方面相辅相成。特别是在
+5000 张合成图像的实验中，Med-DDPM 与 DiscoGAN 和 Pix2Pix 相结合，获得了
+0.4443 的 Dice 分数和 0.3511 的
+IoU，几乎与最先进的增强技术一样好。<strong>总的来说，这些结果说明了使用合成图像训练
+U-Net 进行肿瘤分割的有效性，以及所提出的方法 Med-DDPM，特别是与 DiscoGAN
+和 Pix2Pix
+结合使用时，展示了与最先进的增强技术相比的竞争性能</strong>。</font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size = "5">  在本文中，我们提出了
+Med-DDPM，这是一种利用条件去噪扩散概率模型生成高质量、多样化 3D
+医学图像的新方法。我们在训练和采样阶段都将条件掩模图像作为先验。我们的结果证实了
+Med-DDPM 生成 3D
+医学图像的能力，这些图像不仅具有卓越的质量，而且还包含广泛的可变性。使用在
+Med-DDPM
+生成的合成图像上训练的分割模型进行的实验证明了分割性能的显着提高。这一成功凸显了
+Med-DDPM
+作为医学成像数据增强的强大工具以及医学成像领域先进数据匿名化工具的潜力。另外，本文使用的是最原始DDPM的框架进行实验，作者提出未来的工作可以通过潜在扩散模型的集成来增强其图像生成能力。</font></p>
 
     </article>
     <!-- license -->
@@ -745,7 +831,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、方法原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-Med-DDPM%E5%90%88%E6%88%90%E7%9A%84%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0-font"><span class="toc-number">3.1.</span> <span class="toc-text">1.Med-DDPM合成的质量评估</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E5%9C%A8%E5%90%88%E6%88%90%E5%9B%BE%E5%83%8F%E4%B8%8A%E8%AE%AD%E7%BB%83%E7%9A%84%E5%88%86%E5%89%B2%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%AF%94%E8%BE%83-font"><span class="toc-number">3.2.</span> <span class="toc-text">2.在合成图像上训练的分割模型的比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、方法原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#med-ddpm%E5%90%88%E6%88%90%E7%9A%84%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0"><span class="toc-number">3.1.</span> <span class="toc-text">1.Med-DDPM合成的质量评估</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E5%90%88%E6%88%90%E5%9B%BE%E5%83%8F%E4%B8%8A%E8%AE%AD%E7%BB%83%E7%9A%84%E5%88%86%E5%89%B2%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">3.2.</span> <span class="toc-text">2.在合成图像上训练的分割模型的比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -830,6 +916,8 @@
         
         
     
+        
+        
         
         
         
@@ -1025,14 +1113,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">

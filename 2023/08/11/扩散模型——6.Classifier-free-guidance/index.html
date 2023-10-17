@@ -19,28 +19,17 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）的方向，生成图">
+    <meta name="description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——6.Classifier-free guidance">
 <meta property="og:url" content="http://example.com/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）的方向，生成图">
+<meta property="og:description" content="一、前言   在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：  仅针对带标签的数据集； 该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果; 当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816349.jpg">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816464.jpg">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816629.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817466.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817996.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817616.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819629.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818853.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818858.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819412.png">
 <meta property="article:published_time" content="2023-08-11T01:51:16.000Z">
 <meta property="article:modified_time" content="2023-10-07T03:46:31.878Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816349.jpg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
@@ -500,102 +489,201 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1>一、前言</h1>
-<p><font color="black" size = "5">  在之前Classifier Guidance的博客当中提到了关于Classifier Guidance的几个问题：</font></p>
+        <h1 id="一前言">一、前言</h1>
+<p><font color="black" size = "5">  在之前Classifier
+Guidance的博客当中提到了关于Classifier Guidance的几个问题：</font></p>
 <ul>
 <li><font color="black" size = "5">仅针对带标签的数据集；</font></li>
-<li><font color="black" size = "5">该分类器需要对所有 noise 都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果;</font></li>
+<li><font color="black" size = "5">该分类器需要对所有 noise
+都有分类能力，所以还不能直接加载常见的预训练模型,该分类器的质量可能会影响按类别生成的效果;</font></li>
 <li><font color="black" size = "5">当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）的方向，生成图像可能会通过人眼不可察觉的细节欺骗分类器，实际上并没有按条件生成。</font></li>
 </ul>
-<p><font color="black" size = "5">  为了解决这些问题，本篇作者提出了<strong>Classifier-Free Guidance</strong>（无分类器指导）方案，该方案完全避免了任何分类器，直接训练带类别信息的噪声预测模型来实现特定类别图片的生成。此外，Classifier-Free方法不局限于类别信息的融入，它还能实现将语义信息（文本）融入到diffusion model中，实现更为灵活的文生图。这用Classifier Guidance是很难做到的。目前的很多工作如DALLE，Stable Diffusion， Imagen等都是Classifier-Free形式。下面就具体看看它是如何去实现的：</font></p>
-<h1>二、原理</h1>
-<h2 id="font-color-black-size-5-1-具体方案-font"><a class="header-anchor" href="#font-color-black-size-5-1-具体方案-font">¶</a><font color="black" size = "5">1.具体方案</font></h2>
-<p><font color="black" size = "5">  Classifier-Free Diffusion的实现非常简单，它就是直接定义：</font></p>
-<p>$$\huge p_\theta(x_{t-1}|x_t,y)=\mathcal{N}(x_{t-1};\mu_\theta(x_t,y),\sigma^2_tI)$$</p>
-<p><font color="black" size = "5">  $\mu_\theta(x_t,y)$一般参数化为：</font></p>
-<p>$$\huge \mu_\theta(x_t,y)=\frac{1}{\sqrt\alpha_t}(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}<em>t}}\epsilon</em>\theta(x_t,y,t))$$</p>
+<p><font color="black" size = "5">  为了解决这些问题，本篇作者提出了<strong>Classifier-Free
+Guidance</strong>（无分类器指导）方案，该方案完全避免了任何分类器，直接训练带类别信息的噪声预测模型来实现特定类别图片的生成。此外，Classifier-Free方法不局限于类别信息的融入，它还能实现将语义信息（文本）融入到diffusion
+model中，实现更为灵活的文生图。这用Classifier
+Guidance是很难做到的。目前的很多工作如DALLE，Stable Diffusion，
+Imagen等都是Classifier-Free形式。下面就具体看看它是如何去实现的：</font></p>
+<h1 id="二原理">二、原理</h1>
+<h2 id="具体方案"><font color="black" size = "5">1.具体方案</font></h2>
+<p><font color="black" size = "5">  Classifier-Free
+Diffusion的实现非常简单，它就是直接定义：</font></p>
+<p><span class="math display">\[\huge
+p_\theta(x_{t-1}|x_t,y)=\mathcal{N}(x_{t-1};\mu_\theta(x_t,y),\sigma^2_tI)\]</span></p>
+<p><font color="black" size = "5">  <span
+class="math inline">\(\mu_\theta(x_t,y)\)</span>一般参数化为：</font></p>
+<p><span class="math display">\[\huge
+\mu_\theta(x_t,y)=\frac{1}{\sqrt\alpha_t}(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,y,t))\]</span></p>
 <p><font color="black" size = "5">  训练损失就是：</font></p>
-<p>$$\huge E_{x_0,y \backsim \tilde{p}(x_0,y),\epsilon \backsim \mathcal{N}(0,I)}[||\epsilon-\epsilon_\theta(x_t,y,t)||^2]$$</p>
-<p><font color="black" size = "5">  Classifier-Free方案也模仿Classifier-Guidance方案加入了$s$参数的缩放机制来平衡相关性与多样性。那么我们就能将原本Classifier Guidance的更新后的均值$μ(x_t)+σ^2_ts∇_{x_t}\log p(y|x_t)$改写成：</font></p>
-<p>$$\Large μ(x_t)+σ^2_ts∇_{x_t}\log p(y|x_t)=s[μ(x_t)+σ^2_t∇_{x_t}\log p(y|x_t)]-(s-1)\mu(x_t)$$</p>
-<p><font color="black" size = "5">  Classifier-Free方案相当于直接用模型拟合了$μ(x_t)+σ^2_t∇_{x_t}\log p(y|x_t)$,我们进一步化简再引入$w=s−1$参数，可以得到：</font></p>
-<p>$$\huge \hat\epsilon_\theta(x_t,y,t) = (1+w)\epsilon_\theta(x_t,y,t)-w\epsilon_\theta(x_t,t)$$</p>
-<p><font color="black" size = "5">  用上式代替$ϵ_θ(x_t,y,t)$来做生成。那无条件的$ϵ_θ(x_t,t)$怎么来呢？作者通过新引入一个特定的输入$ϕ$，它对应的目标图像为全体图像，加到了模型的训练中，这样我们就可以认为$ϵ_θ(x_t,t)=ϵ_θ(x_t,ϕ,t)$。</font></p>
-<p><font color="black" size = "5">  也就是说，<strong>使用无分类器引导的最终解析式要求我们只需要训练两个模型，其中一个通过$\epsilon_\theta(x_t,t)$训练是无条件生成模型（例如常规的 DDPM），另一个通过$\epsilon_\theta(x_t,y,t)$训练基于条件生成模型。而我们甚至可以使用同一个模型同时训练表示两者，区别只在于无条件生成时将条件信息置为空序列$ϕ$。</strong></font></p>
-<p><font color="black" size = "5">  实际训练的时候会通过一个概率$p_{uncond}$随机去掉条件(y换成$ϕ$)，从而达到分别训练有条件以及无条件模型。这样做的好处是使得联合训练很容易实现，且不会使得训练过程变得复杂。</font></p>
+<p><span class="math display">\[\huge E_{x_0,y \backsim
+\tilde{p}(x_0,y),\epsilon \backsim
+\mathcal{N}(0,I)}[||\epsilon-\epsilon_\theta(x_t,y,t)||^2]\]</span></p>
+<p><font color="black" size = "5">  Classifier-Free方案也模仿Classifier-Guidance方案加入了<span
+class="math inline">\(s\)</span>参数的缩放机制来平衡相关性与多样性。那么我们就能将原本Classifier
+Guidance的更新后的均值<span
+class="math inline">\(μ(x_t)+σ^2_ts∇_{x_t}\log
+p(y|x_t)\)</span>改写成：</font></p>
+<p><span class="math display">\[\Large μ(x_t)+σ^2_ts∇_{x_t}\log
+p(y|x_t)=s[μ(x_t)+σ^2_t∇_{x_t}\log p(y|x_t)]-(s-1)\mu(x_t)\]</span></p>
+<p><font color="black" size = "5">  Classifier-Free方案相当于直接用模型拟合了<span
+class="math inline">\(μ(x_t)+σ^2_t∇_{x_t}\log
+p(y|x_t)\)</span>,我们进一步化简再引入<span
+class="math inline">\(w=s−1\)</span>参数，可以得到：</font></p>
+<p><span class="math display">\[\huge \hat\epsilon_\theta(x_t,y,t) =
+(1+w)\epsilon_\theta(x_t,y,t)-w\epsilon_\theta(x_t,t)\]</span></p>
+<p><font color="black" size = "5">  用上式代替<span
+class="math inline">\(ϵ_θ(x_t,y,t)\)</span>来做生成。那无条件的<span
+class="math inline">\(ϵ_θ(x_t,t)\)</span>怎么来呢？作者通过新引入一个特定的输入<span
+class="math inline">\(ϕ\)</span>，它对应的目标图像为全体图像，加到了模型的训练中，这样我们就可以认为<span
+class="math inline">\(ϵ_θ(x_t,t)=ϵ_θ(x_t,ϕ,t)\)</span>。</font></p>
+<p><font color="black" size = "5">  也就是说，<strong>使用无分类器引导的最终解析式要求我们只需要训练两个模型，其中一个通过<span
+class="math inline">\(\epsilon_\theta(x_t,t)\)</span>训练是无条件生成模型（例如常规的
+DDPM），另一个通过<span
+class="math inline">\(\epsilon_\theta(x_t,y,t)\)</span>训练基于条件生成模型。而我们甚至可以使用同一个模型同时训练表示两者，区别只在于无条件生成时将条件信息置为空序列<span
+class="math inline">\(ϕ\)</span>。</strong></font></p>
+<p><font color="black" size = "5">  实际训练的时候会通过一个概率<span
+class="math inline">\(p_{uncond}\)</span>随机去掉条件(y换成<span
+class="math inline">\(ϕ\)</span>)，从而达到分别训练有条件以及无条件模型。这样做的好处是使得联合训练很容易实现，且不会使得训练过程变得复杂。</font></p>
 <blockquote>
-<p><font color="black" size = "5">注：在GLIDE等其他文章中其公式也可以这样表示：</font><font color="blue" size = "5">$\hat\epsilon_\theta(x_t,y,t) =\epsilon_\theta(x_t,t)+ s(\epsilon_\theta(x_t,y,t)-\epsilon_\theta(x_t,t))$</font></p>
-<p><font color="black" size = "5">guidance scale在0时候是unconditional，1时候是普通conditional，＞1是完全conditional，当condition的信息少的时候可以调高scale＞1获得更单一的结果，但condition的信息太多时候可以拉低scale＜1获得更多样且质量更高的结果。</font></p>
+<p><font color="black" size = "5">注：在GLIDE等其他文章中其公式也可以这样表示：</font><font color="blue" size = "5"><span
+class="math inline">\(\hat\epsilon_\theta(x_t,y,t)
+=\epsilon_\theta(x_t,t)+
+s(\epsilon_\theta(x_t,y,t)-\epsilon_\theta(x_t,t))\)</span></font></p>
+<p><font color="black" size = "5">guidance
+scale在0时候是unconditional，1时候是普通conditional，＞1是完全conditional，当condition的信息少的时候可以调高scale＞1获得更单一的结果，但condition的信息太多时候可以拉低scale＜1获得更多样且质量更高的结果。</font></p>
 </blockquote>
 <p><font color="black" size = "5">  怎么实现无条件以及有条件一起训练？以一定的概率（通常为10-20%）将标签替换为”[]”</font></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_uncond_tokens_mask</span>(<span class="params">tokenizer: Encoder</span>):</span><br><span class="line">    uncond_tokens, uncond_mask = tokenizer.padded_tokens_and_mask([], <span class="number">128</span>)</span><br><span class="line">    <span class="keyword">return</span> th.tensor(uncond_tokens), th.tensor(uncond_mask, dtype=th.<span class="built_in">bool</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, ind</span>):</span><br><span class="line">    <span class="keyword">if</span> self.text_files <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> random() &lt; self.uncond_p:</span><br><span class="line">        tokens, mask = get_uncond_tokens_mask(self.tokenizer)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        tokens, mask = self.get_caption(ind)</span><br></pre></td></tr></table></figure>
 <p><strong><font color="black" size = "5">  训练以及采样：</font></strong></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816349.jpg" alt=""></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816464.jpg" alt=""></p>
-<p><font color="black" size = "5">  我们可以通过下面的表格对比普通的diffusion model，classifier-guided与classifier-free三种方式的差异。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816349.jpg" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816464.jpg" /></p>
+<p><font color="black" size = "5">  我们可以通过下面的表格对比普通的diffusion
+model，classifier-guided与classifier-free三种方式的差异。</font></p>
 <table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:center"><font color="black" size = "5">模型</font></th>
-<th style="text-align:center"><font color="black" size = "5">训练目标</font></th>
-<th style="text-align:center"><font color="black" size = "5">实现功能</font></th>
-<th style="text-align:center"><font color="black" size = "5">训练数据</font></th>
+<tr class="header">
+<th
+style="text-align: center;"><font color="black" size = "5">模型</font></th>
+<th
+style="text-align: center;"><font color="black" size = "5">训练目标</font></th>
+<th
+style="text-align: center;"><font color="black" size = "5">实现功能</font></th>
+<th
+style="text-align: center;"><font color="black" size = "5">训练数据</font></th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center"><font color="black" size = "5">DM（DDPM,DDIM)</font></td>
-<td style="text-align:center"><font color="black" size = "5">$\epsilon_\theta(x_t,t)$</font></td>
-<td style="text-align:center"><font color="black" size = "5">从服从高斯分布的噪声中生成图片</font></td>
-<td style="text-align:center"><font color="black" size = "5">图片</font></td>
+<tr class="odd">
+<td
+style="text-align: center;"><font color="black" size = "5">DM（DDPM,DDIM)</font></td>
+<td style="text-align: center;"><font color="black" size = "5"><span
+class="math inline">\(\epsilon_\theta(x_t,t)\)</span></font></td>
+<td
+style="text-align: center;"><font color="black" size = "5">从服从高斯分布的噪声中生成图片</font></td>
+<td
+style="text-align: center;"><font color="black" size = "5">图片</font></td>
 </tr>
-<tr>
-<td style="text-align:center"><font color="black" size = "5">classifier-guided DM</font></td>
-<td style="text-align:center"><font color="black" size = "5">$\epsilon_\theta(x_t,t)$和分类器$p(y</td>
-<td style="text-align:center">x_t)$</font></td>
-<td style="text-align:center"><font color="black" size = "5">从服从高斯分布的噪声中生成<strong>特定类别</strong>的图片</font></td>
+<tr class="even">
+<td
+style="text-align: center;"><font color="black" size = "5">classifier-guided
+DM</font></td>
+<td style="text-align: center;"><font color="black" size = "5"><span
+class="math inline">\(\epsilon_\theta(x_t,t)\)</span>和分类器<span
+class="math inline">\(p(y|x_t)\)</span></font></td>
+<td
+style="text-align: center;"><font color="black" size = "5">从服从高斯分布的噪声中生成<strong>特定类别</strong>的图片</font></td>
+<td style="text-align: center;"><font color="black" size = "5">DM:图片
+分类器：噪声图片-标签对</font></td>
 </tr>
-<tr>
-<td style="text-align:center"><font color="black" size = "5">classifier-free DM</font></td>
-<td style="text-align:center"><font color="black" size = "5">$\epsilon_\theta(x_t,t),\epsilon_\theta(x_t,y,t)$</font></td>
-<td style="text-align:center"><font color="black" size = "5">从服从高斯分布的噪声中生成<strong>符合文本描述</strong>的图片</font></td>
-<td style="text-align:center"><font color="black" size = "5">图片-文本对</font></td>
+<tr class="odd">
+<td
+style="text-align: center;"><font color="black" size = "5">classifier-free
+DM</font></td>
+<td style="text-align: center;"><font color="black" size = "5"><span
+class="math inline">\(\epsilon_\theta(x_t,t),\epsilon_\theta(x_t,y,t)\)</span></font></td>
+<td
+style="text-align: center;"><font color="black" size = "5">从服从高斯分布的噪声中生成<strong>符合文本描述</strong>的图片</font></td>
+<td
+style="text-align: center;"><font color="black" size = "5">图片-文本对</font></td>
 </tr>
 </tbody>
 </table>
-<p><font color="black" size = "5">  classifier-free DM将类别信息（或语义信息）集成到diffusion model的训练过程中，训练<font color="black" size = "5">$\epsilon_\theta(x_t,t),\epsilon_\theta(x_t,y,t)$</font>。训练的过程中也会加入无类别信息（或语义信息）的图片进行训练。<br>
+<p><font color="black" size = "5">  classifier-free
+DM将类别信息（或语义信息）集成到diffusion
+model的训练过程中，训练<font color="black" size = "5"><span
+class="math inline">\(\epsilon_\theta(x_t,t),\epsilon_\theta(x_t,y,t)\)</span></font>。训练的过程中也会加入无类别信息（或语义信息）的图片进行训练。
 </font></p>
-<h1>三、实验</h1>
-<p><font color="black" size = "5">  该实验分别在ImageNet 64x64和128x128进行训练，采用与ADM相同的模型框架和超参数，而作者也表明实验的目的是为了证明在无分类指导能够实现类似于有分类器指导的FID/IS的权衡，并不一定要使得样本质量到达SOTA。</font></p>
-<h2 id="font-color-black-size-5-1-对比实验-font"><a class="header-anchor" href="#font-color-black-size-5-1-对比实验-font">¶</a><font color="black" size = "5">1.对比实验</font></h2>
-<p><font color="black" size = "5">  由实验结果可以发现，作者提出的模型通过少量指导（w = 0.1 或 w = 0.3，具体取决于数据集）获得了最佳 FID 结果，并通过强指导（w ≥ 4）获得了最佳 IS 结果。在这两个极端之间，我们看到这两个感知质量指标之间存在明显的权衡，FID 随着 w 单调递减，IS 随着 w 单调递增。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816629.png" alt=""></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817466.png" alt=""></p>
-<h2 id="font-color-black-size-5-2-无条件训练的概率-p-uncond-的影响-font"><a class="header-anchor" href="#font-color-black-size-5-2-无条件训练的概率-p-uncond-的影响-font">¶</a><font color="black" size = "5">2.无条件训练的概率$p_{uncond}$的影响</font></h2>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817996.png" alt=""></p>
-<h2 id="font-color-black-size-5-3-采样步数的影响-font"><a class="header-anchor" href="#font-color-black-size-5-3-采样步数的影响-font">¶</a><font color="black" size = "5">3.采样步数的影响</font></h2>
-<p><font color="black" size = "5">  采样步骤数 T 对扩散模型的样本质量有重大影响，因此作者在这里研究不同 T 对模型的影响。在一定引导强度范围内改变 $T \in [128, 256, 512]$。正如预期的那样，当 T 增加时，样本质量会提高，对于该模型，T = 256 在样本质量和采样速度之间取得了良好的平衡。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817616.png" alt=""></p>
-<h2 id="font-color-black-size-5-4-生成样本展示-font"><a class="header-anchor" href="#font-color-black-size-5-4-生成样本展示-font">¶</a><font color="black" size = "5">4.生成样本展示</font></h2>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819629.png" alt=""></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818853.png" alt=""></p>
-<h1>四、Classifier guidance与Classifier-Free guidance的区别</h1>
-<p><font color="black" size = "5">  **第一点：**无分类器指导方法最实际的优点是：只需在训练期间（随机删除条件）和采样期间（混合条件和无条件分数估计）对代码进行一行更改即可。相比之下，分类器指导使训练流程变得复杂，因为它需要训练额外的分类器。该分类器必须在噪声$x_t$上进行训练，因此不可能插入标准的预训练分类器。</font></p>
-<p><font color="black" size = "5">  **第二点：**由于无分类器指导能够像分类器指导一样权衡 IS 和 FID，而无需额外训练的分类器并且能够精细的控制。此外，Classifier-Free由无约束神经网络参数化，与分类器梯度不同。无分类器引导采样器遵循的步骤方向不类似于分类器梯度，因此不能被解释为对分类器的基于梯度的对抗性攻击。</font></p>
-<p><font color="black" size = "5">  **第三点：**无分类器引导的一个潜在缺点是采样速度。一般来说，分类器可以比生成模型更小、更快，因此分类器引导采样可能比无分类器引导更快，因为后者需要端到端训练两个模型，训练成本较大。而Classifier Guidance可以直接复用一个SOTA级别的扩散模型可以实现低成本控制生成。</font></p>
-<h1>五、总结</h1>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size = "5">  该实验分别在ImageNet
+64x64和128x128进行训练，采用与ADM相同的模型框架和超参数，而作者也表明实验的目的是为了证明在无分类指导能够实现类似于有分类器指导的FID/IS的权衡，并不一定要使得样本质量到达SOTA。</font></p>
+<h2 id="对比实验"><font color="black" size = "5">1.对比实验</font></h2>
+<p><font color="black" size = "5">  由实验结果可以发现，作者提出的模型通过少量指导（w
+= 0.1 或 w = 0.3，具体取决于数据集）获得了最佳 FID 结果，并通过强指导（w
+≥ 4）获得了最佳 IS
+结果。在这两个极端之间，我们看到这两个感知质量指标之间存在明显的权衡，FID
+随着 w 单调递减，IS 随着 w 单调递增。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270816629.png" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817466.png" /></p>
+<h2
+id="无条件训练的概率p_uncond的影响"><font color="black" size = "5">2.无条件训练的概率<span
+class="math inline">\(p_{uncond}\)</span>的影响</font></h2>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817996.png" /></p>
+<h2
+id="采样步数的影响"><font color="black" size = "5">3.采样步数的影响</font></h2>
+<p><font color="black" size = "5">  采样步骤数 T
+对扩散模型的样本质量有重大影响，因此作者在这里研究不同 T
+对模型的影响。在一定引导强度范围内改变 <span class="math inline">\(T \in
+[128, 256, 512]\)</span>。正如预期的那样，当 T
+增加时，样本质量会提高，对于该模型，T = 256
+在样本质量和采样速度之间取得了良好的平衡。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270817616.png" /></p>
+<h2
+id="生成样本展示"><font color="black" size = "5">4.生成样本展示</font></h2>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819629.png" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818853.png" /></p>
+<h1
+id="四classifier-guidance与classifier-free-guidance的区别">四、Classifier
+guidance与Classifier-Free guidance的区别</h1>
+<p><font color="black" size = "5">  <strong>第一点：</strong>无分类器指导方法最实际的优点是：只需在训练期间（随机删除条件）和采样期间（混合条件和无条件分数估计）对代码进行一行更改即可。相比之下，分类器指导使训练流程变得复杂，因为它需要训练额外的分类器。该分类器必须在噪声<span
+class="math inline">\(x_t\)</span>上进行训练，因此不可能插入标准的预训练分类器。</font></p>
+<p><font color="black" size = "5">  <strong>第二点：</strong>由于无分类器指导能够像分类器指导一样权衡
+IS 和
+FID，而无需额外训练的分类器并且能够精细的控制。此外，Classifier-Free由无约束神经网络参数化，与分类器梯度不同。无分类器引导采样器遵循的步骤方向不类似于分类器梯度，因此不能被解释为对分类器的基于梯度的对抗性攻击。</font></p>
+<p><font color="black" size = "5">  <strong>第三点：</strong>无分类器引导的一个潜在缺点是采样速度。一般来说，分类器可以比生成模型更小、更快，因此分类器引导采样可能比无分类器引导更快，因为后者需要端到端训练两个模型，训练成本较大。而Classifier
+Guidance可以直接复用一个SOTA级别的扩散模型可以实现低成本控制生成。</font></p>
+<h1 id="五总结">五、总结</h1>
 <p><font color="black" size = "5">  作者提出了无分类器指导，这是一种在扩散模型中提高样本质量同时降低样本多样性的方法。无分类器指导不需要额外训练分类器，只需要联合训练两个模型。实验的结果显示了无分类器指导的有效性，证实纯生成扩散模型能够最大化基于分类器的样本质量指标，同时完全避免分类器梯度。</font></p>
-<h1>六、其他</h1>
-<h2 id="font-color-black-size-5-1、无分类器指导造成图像过饱和的原因分析-font"><a class="header-anchor" href="#font-color-black-size-5-1、无分类器指导造成图像过饱和的原因分析-font">¶</a><font color="black" size = "5">1、无分类器指导造成图像过饱和的原因分析</font></h2>
+<h1 id="六其他">六、其他</h1>
+<h2
+id="无分类器指导造成图像过饱和的原因分析"><font color="black" size = "5">1、无分类器指导造成图像过饱和的原因分析</font></h2>
 <p><font color="black" size = "5">  先从结果来看，如下图所示，当随着w的提高，图像的饱和度越高：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818858.png" alt=""></p>
-<p><font color="black" size = "5">  **原因分析：**图像的饱和度增加随着w提高而提高。而w是为了控制条件信息指导的程度。</font></p>
-<p>$$\huge \hat\epsilon_\theta(x_t,y,t) = (1+w)\epsilon_\theta(x_t,y,t)-w\epsilon_\theta(x_t,t)$$</p>
-<p><font color="black" size = "5">  由上式可以进一步推出$x_{t-1}$分布下的均值和方差分别为：</font></p>
-<p>$$\huge \hat\mu = \mu + w(\mu-\mu_\phi) $$</p>
-<p>$$\huge \hat\sigma^2 = (1+w)<sup>2\sigma</sup>2+w<sup>2\sigma</sup>2_\phi$$</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270818858.png" /></p>
+<p><font color="black" size = "5">  <strong>原因分析：</strong>图像的饱和度增加随着w提高而提高。而w是为了控制条件信息指导的程度。</font></p>
+<p><span class="math display">\[\huge \hat\epsilon_\theta(x_t,y,t) =
+(1+w)\epsilon_\theta(x_t,y,t)-w\epsilon_\theta(x_t,t)\]</span></p>
+<p><font color="black" size = "5">  由上式可以进一步推出<span
+class="math inline">\(x_{t-1}\)</span>分布下的均值和方差分别为：</font></p>
+<p><span class="math display">\[\huge \hat\mu = \mu + w(\mu-\mu_\phi)
+\]</span></p>
+<p><span class="math display">\[\huge \hat\sigma^2 =
+(1+w)^2\sigma^2+w^2\sigma^2_\phi\]</span></p>
 <p><font color="black" size = "5">  均值以及方差都发生了偏移，并且在同一分布下，是随着w的提高逐渐增加的，通过T步骤逐步扩散这些统计偏移量也逐渐累积。在数字图像处理中，过大的方差会往往表现出的图像的对比度提高，从而导致图像过度饱和。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819412.png" alt=""></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309270819412.png" /></p>
 
     </article>
     <!-- license -->
@@ -792,7 +880,8 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E5%85%B7%E4%BD%93%E6%96%B9%E6%A1%88-font"><span class="toc-number">2.1.</span> <span class="toc-text">1.具体方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C-font"><span class="toc-number">3.1.</span> <span class="toc-text">1.对比实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E6%97%A0%E6%9D%A1%E4%BB%B6%E8%AE%AD%E7%BB%83%E7%9A%84%E6%A6%82%E7%8E%87-p-uncond-%E7%9A%84%E5%BD%B1%E5%93%8D-font"><span class="toc-number">3.2.</span> <span class="toc-text">2.无条件训练的概率$p_{uncond}$的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3-%E9%87%87%E6%A0%B7%E6%AD%A5%E6%95%B0%E7%9A%84%E5%BD%B1%E5%93%8D-font"><span class="toc-number">3.3.</span> <span class="toc-text">3.采样步数的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-4-%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E5%B1%95%E7%A4%BA-font"><span class="toc-number">3.4.</span> <span class="toc-text">4.生成样本展示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、Classifier guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">六、其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E6%97%A0%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BC%E9%80%A0%E6%88%90%E5%9B%BE%E5%83%8F%E8%BF%87%E9%A5%B1%E5%92%8C%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90-font"><span class="toc-number">6.1.</span> <span class="toc-text">1、无分类器指导造成图像过饱和的原因分析</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%96%B9%E6%A1%88"><span class="toc-number">2.1.</span> <span class="toc-text">1.具体方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.1.</span> <span class="toc-text">1.对比实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E6%9D%A1%E4%BB%B6%E8%AE%AD%E7%BB%83%E7%9A%84%E6%A6%82%E7%8E%87p_uncond%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">3.2.</span> <span class="toc-text">2.无条件训练的概率\(p_{uncond}\)的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E6%AD%A5%E6%95%B0%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">3.3.</span> <span class="toc-text">3.采样步数的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E5%B1%95%E7%A4%BA"><span class="toc-number">3.4.</span> <span class="toc-text">4.生成样本展示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9Bclassifier-guidance%E4%B8%8Eclassifier-free-guidance%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">四、Classifier
+guidance与Classifier-Free guidance的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">六、其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BC%E9%80%A0%E6%88%90%E5%9B%BE%E5%83%8F%E8%BF%87%E9%A5%B1%E5%92%8C%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="toc-number">6.1.</span> <span class="toc-text">1、无分类器指导造成图像过饱和的原因分析</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -877,6 +966,8 @@
         
         
     
+        
+        
         
         
         
@@ -1072,14 +1163,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
