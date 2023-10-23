@@ -19,17 +19,24 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言   有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。 1.什么是分数？   当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分">
+    <meta name="description" content="一、前言   有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。 1.什么是分数？   当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——4.分数模型">
 <meta property="og:url" content="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言   有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。 1.什么是分数？   当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分">
+<meta property="og:description" content="一、前言   有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。 1.什么是分数？   当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221515196.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\1692691208053.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\1692692782178.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png">
 <meta property="article:published_time" content="2023-07-26T09:32:09.000Z">
 <meta property="article:modified_time" content="2023-09-27T00:29:08.932Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
@@ -212,7 +219,9 @@
     <!-- Google tag (gtag.js) -->
     
 
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script type="text/javascript">
@@ -490,257 +499,153 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h1 id="一前言">一、前言</h1>
-<p><font color="black" size = "5">  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。</font></p>
-<h2
-id="什么是分数"><font color="black" size = "5">1.什么是分数？</font></h2>
-<p><font color="black" size = "5">  当我们能够从未知数据分布<span
-class="math inline">\(p_{data}(x)\)</span>中采样出独立同分布的样本<span
-class="math inline">\(\lbrace x_i\in
-R^D\rbrace^N_{i=1}\)</span>，我们定义分数为概率密度函数<span
-class="math inline">\(p(x)\)</span>的对数似然关于x的梯度，即<span
-class="math inline">\(\textcolor{red}{\nabla_x \log
+<p><font color="black" size="5">  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。</font></p>
+<h2 id="什么是分数"><font color="black" size="5">1.什么是分数？</font></h2>
+<p><font color="black" size="5">  当我们能够从未知数据分布<span class="math inline">\(p_{data}(x)\)</span>中采样出独立同分布的样本<span class="math inline">\(\lbrace x_i\in
+R^D\rbrace^N_{i=1}\)</span>，我们定义分数为概率密度函数<span class="math inline">\(p(x)\)</span>的对数似然关于x的梯度，即<span class="math inline">\(\textcolor{red}{\nabla_x \log
 p(x)}\)</span>。</font></p>
-<p><font color="black" size = "5">  那么我们可以进一步定义分数网络为<span
-class="math inline">\(s_\theta:R^D \rightarrow
-R^D\)</span>,它是用作对分数进行建模，即该网络是由参数<span
-class="math inline">\(\theta\)</span>所构成，训练的目的是使得网络的输出能够逼近我们真实分布<span
-class="math inline">\(p_{data}(x)\)</span>的分数。基于分数的生成模型的框架涉及到两个要素：Score
+<p><font color="black" size="5">  那么我们可以进一步定义分数网络为<span class="math inline">\(s_\theta:R^D \rightarrow
+R^D\)</span>,它是用作对分数进行建模，即该网络是由参数<span class="math inline">\(\theta\)</span>所构成，训练的目的是使得网络的输出能够逼近我们真实分布<span class="math inline">\(p_{data}(x)\)</span>的分数。基于分数的生成模型的框架涉及到两个要素：Score
 matching（分数匹配）以及Langevin dynamic（朗之万动力学）</font></p>
-<h2
-id="朗之万动力学朗之万采样"><font color="black" size = "5">2.朗之万动力学（朗之万采样）</font></h2>
-<p><font color="black" size = "5">  朗之万动力学：它是一种采样算法，仅仅只用到分数函数<span
-class="math inline">\(\nabla_x \log p(x)\)</span>就能从概率密度<span
-class="math inline">\(p(x)\)</span>中生成样本。当给定一个步长<span
-class="math inline">\(\epsilon&gt;0\)</span>并给定一个初始值<span
-class="math inline">\(\tilde{x}_0 \backsim
-\pi(x)\)</span>(从先验分布<span
-class="math inline">\(\pi\)</span>采样的初始值)，那么朗之万算法就能通过下面这个公式去迭代：</font></p>
+<h2 id="朗之万动力学朗之万采样"><font color="black" size="5">2.朗之万动力学（朗之万采样）</font></h2>
+<p><font color="black" size="5">  朗之万动力学：它是一种采样算法，仅仅只用到分数函数<span class="math inline">\(\nabla_x \log p(x)\)</span>就能从概率密度<span class="math inline">\(p(x)\)</span>中生成样本。当给定一个步长<span class="math inline">\(\epsilon&gt;0\)</span>并给定一个初始值<span class="math inline">\(\tilde{x}_0 \backsim
+\pi(x)\)</span>(从先验分布<span class="math inline">\(\pi\)</span>采样的初始值)，那么朗之万算法就能通过下面这个公式去迭代：</font></p>
 <p><span class="math display">\[\huge \tilde{x}_t =
 \tilde{x}_{t-1}+\frac{\epsilon}{2}\nabla_x\log
 p(\tilde{x}_{t-1})+\sqrt{\epsilon}z_t\]</span></p>
-<p><font color="black" size = "5">  其中<span class="math inline">\(z
-\backsim N(0,I)\)</span>,当<span
-class="math inline">\(\epsilon\rightarrow0\)</span>并且<span
-class="math inline">\(T\rightarrow\infty\)</span>时，我们就可以近似的认为上式得到<span
-class="math inline">\(\tilde{x}_T\)</span>的分布等于p(x),也就是说<span
-class="math inline">\(\tilde{x}_T\)</span>能够从p(x)分布中进行采样。由此我们可以看出朗之万算法仅仅依赖于分数函数<span
-class="math inline">\(\nabla_x \log
-p(x)\)</span>,因此我们希望能够用朗之万算法从一个分布<span
-class="math inline">\(p_{data}(x)\)</span>中获取样本的话，我们就首先需要训练分数网络使得<span
-class="math inline">\(s_\theta(x) \approx \nabla_x \log
-p_{data}(x)\)</span>，这样上面的公式中的分数就能够通过该分数网络去替代，在那之后，再进行不断的迭代，我们就能够从<span
-class="math inline">\(p_{data}(x)\)</span>分布中采样出样本。这就是基于分数模型生成样本的一个主要思想。</font></p>
-<h2 id="分数匹配"><font color="black" size = "5">3.分数匹配</font></h2>
-<p><font color="black" size = "5">  由上面的朗之万算法，我们可以直接训练分数网络<span
-class="math inline">\(s_\theta(x)\)</span>来去估计<span
-class="math inline">\(\nabla_x \log
-p_{data}(x)\)</span>,并不需要训练网络去估计<span
-class="math inline">\(p_{data}(x)\)</span>,那么我们就需要一个目标函数去对其算出损失，然后进一步去优化，那么分数匹配就是用来干这个的，它就是为了让分数网络输出的分数能够匹配<span
-class="math inline">\(p_{data}(x)\)</span>的分数，因此分数匹配就作为该网络的目标函数，其函数形式为：<span
-class="math inline">\(min\frac{1}{2}E_{p_{data}}[||s_\theta(x)-\nabla_x
+<p><font color="black" size="5">  其中<span class="math inline">\(z
+\backsim N(0,I)\)</span>,当<span class="math inline">\(\epsilon\rightarrow0\)</span>并且<span class="math inline">\(T\rightarrow\infty\)</span>时，我们就可以近似的认为上式得到<span class="math inline">\(\tilde{x}_T\)</span>的分布等于p(x),也就是说<span class="math inline">\(\tilde{x}_T\)</span>能够从p(x)分布中进行采样。由此我们可以看出朗之万算法仅仅依赖于分数函数<span class="math inline">\(\nabla_x \log
+p(x)\)</span>,因此我们希望能够用朗之万算法从一个分布<span class="math inline">\(p_{data}(x)\)</span>中获取样本的话，我们就首先需要训练分数网络使得<span class="math inline">\(s_\theta(x)&nbsp;\approx&nbsp;\nabla_x \log
+p_{data}(x)\)</span>，这样上面的公式中的分数就能够通过该分数网络去替代，在那之后，再进行不断的迭代，我们就能够从<span class="math inline">\(p_{data}(x)\)</span>分布中采样出样本。这就是基于分数模型生成样本的一个主要思想。</font></p>
+<h2 id="分数匹配"><font color="black" size="5">3.分数匹配</font></h2>
+<p><font color="black" size="5">  由上面的朗之万算法，我们可以直接训练分数网络<span class="math inline">\(s_\theta(x)\)</span>来去估计<span class="math inline">\(\nabla_x \log
+p_{data}(x)\)</span>,并不需要训练网络去估计<span class="math inline">\(p_{data}(x)\)</span>,那么我们就需要一个目标函数去对其算出损失，然后进一步去优化，那么分数匹配就是用来干这个的，它就是为了让分数网络输出的分数能够匹配<span class="math inline">\(p_{data}(x)\)</span>的分数，因此分数匹配就作为该网络的目标函数，其函数形式为：<span class="math inline">\(min\frac{1}{2}E_{p_{data}}[||s_\theta(x)-\nabla_x
 \log p_{data}(x)||_2^2]\)</span>,该式子可以等价与下式：</font></p>
 <p><span class="math display">\[\huge E_{p_{data}(x)}[tr(\nabla_x
 s_\theta(x))+\frac{1}{2}||s_\theta(x)||_2^2] \]</span></p>
-<p><font color="black" size = "5">  其中tr(.)为雅可比矩阵（<strong>雅可比矩阵</strong>是函数的一阶偏导数以一定方式排列成的矩阵），如果我们数据分布很高的情况下，上式并不太好能够泛化，计算复杂度比较高，那么后续就有人研究如何绕过雅可比矩阵的求解，就引出了去噪分数匹配：</font></p>
-<p><font color="black" size = "5">  <strong>去噪分数匹配：</strong>首先对数据样本x按照预定好的噪声分布<span
-class="math inline">\(q_\sigma(\tilde{x}|x)\)</span>去加噪,然后用分数匹配的方法来去估计加噪后的数据的分数：</font></p>
+<p><font color="black" size="5">  其中tr(.)为雅可比矩阵（<strong>雅可比矩阵</strong>是函数的一阶偏导数以一定方式排列成的矩阵），如果我们数据分布很高的情况下，上式并不太好能够泛化，计算复杂度比较高，那么后续就有人研究如何绕过雅可比矩阵的求解，就引出了去噪分数匹配：</font></p>
+<p><font color="black" size="5">  <strong>去噪分数匹配：</strong>首先对数据样本x按照预定好的噪声分布<span class="math inline">\(q_\sigma(\tilde{x}|x)\)</span>去加噪,然后用分数匹配的方法来去估计加噪后的数据的分数：</font></p>
 <p><span class="math display">\[\huge q_\sigma(\tilde{x}_t) =
 \int{q_\sigma(\tilde{x}|x)p_{data}(x)}dx\]</span></p>
-<p><font color="black" size = "5">  那么其目标函数我们可以进一步写出：</font></p>
+<p><font color="black" size="5">  那么其目标函数我们可以进一步写出：</font></p>
 <p><span class="math display">\[\huge\frac{1}{2}
 E_{q_\sigma(\tilde{x}|x)p_{data}(x)}[||s_\theta(\tilde{x})-\nabla_x \log
 q_\sigma(\tilde{x}|x)||_2^2]\]</span></p>
-<p><font color="black" size = "5">  一旦<span
-class="math inline">\(s_\theta(\tilde{x})\)</span>收敛之后，我们就有理由相信：<span
-class="math inline">\(s_\theta^*(x) = \nabla_x \log
-q_\sigma(x) \)</span>，此时的<span
-class="math inline">\(q_\sigma(x)\)</span>仅仅知识我们加噪后的分布，并不是初始的数据分布<span
-class="math inline">\(p_{data}(x)\)</span>。当我们加的噪声<span
-class="math inline">\(\sigma\)</span>很小的时候，我们可以近似的认为：<span
-class="math inline">\(q_\sigma(x) \approx p_{data}(x)\)</span>，如果当噪声<span
-class="math inline">\(\sigma\)</span>足够大的时候，<span
-class="math inline">\(q_\sigma(x) \approx
+<p><font color="black" size="5">  一旦<span class="math inline">\(s_\theta(\tilde{x})\)</span>收敛之后，我们就有理由相信：<span class="math inline">\(s_\theta^*(x) =&nbsp;\nabla_x \log
+q_\sigma(x)&nbsp;\)</span>，此时的<span class="math inline">\(q_\sigma(x)\)</span>仅仅知识我们加噪后的分布，并不是初始的数据分布<span class="math inline">\(p_{data}(x)\)</span>。当我们加的噪声<span class="math inline">\(\sigma\)</span>很小的时候，我们可以近似的认为：<span class="math inline">\(q_\sigma(x)&nbsp;\approx&nbsp;p_{data}(x)\)</span>，如果当噪声<span class="math inline">\(\sigma\)</span>足够大的时候，<span class="math inline">\(q_\sigma(x) \approx
 \mathcal{N}(x_t;0,\sigma_{max}^2I)\)</span>。</font></p>
-<p><font color="black" size = "5">  这种方法其实存在着一种<strong>挑战：</strong>在数据密度较低的区域，分数估计是不准确的，由于是计算p(x)的梯度，如果有的区域p(x)很小，甚至为0，那么这些地方的分数估计就不太准确，朗之万采样就更加不准确。</font></p>
+<p><font color="black" size="5">  这种方法其实存在着一种<strong>挑战：</strong>在数据密度较低的区域，分数估计是不准确的，由于是计算p(x)的梯度，如果有的区域p(x)很小，甚至为0，那么这些地方的分数估计就不太准确，朗之万采样就更加不准确。</font></p>
 <blockquote>
-<p><font color="black" size = "5">在低数据密度区域，由于缺乏数据样本，分数匹配可能没有足够的证据来准确估计分数函数。为了了解这一点，回顾前文提到的分数匹配中最小化分数估计平方误差的期望<span
-class="math inline">\(E_{p_{data}}[||s_\theta(x)-\nabla_x \log
-p_{data}(x)||_2^2]\)</span>，即实际上，关于数据分布的期望总是由独立同分布的样本<span
-class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \backsim
-p_{data}(x)\)</span>估计的。考虑任务使低密度区域<span
-class="math inline">\(R\in R^D\)</span>,<span
-class="math inline">\(p_{data}(R) \approx 0\)</span>。大多数情况下<span
-class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \bigcap R
-=\emptyset\)</span>，分数匹配将没有足够的数据样本来准确估计出对于<span
-class="math inline">\(x \in R\)</span>的<span
-class="math inline">\(\nabla_x \log p_{data}(x)\)</span>。</font></p>
+<p><font color="black" size="5">在低数据密度区域，由于缺乏数据样本，分数匹配可能没有足够的证据来准确估计分数函数。为了了解这一点，回顾前文提到的分数匹配中最小化分数估计平方误差的期望<span class="math inline">\(E_{p_{data}}[||s_\theta(x)-\nabla_x \log
+p_{data}(x)||_2^2]\)</span>，即实际上，关于数据分布的期望总是由独立同分布的样本<span class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \backsim
+p_{data}(x)\)</span>估计的。考虑任务使低密度区域<span class="math inline">\(R\in R^D\)</span>,<span class="math inline">\(p_{data}(R) \approx 0\)</span>。大多数情况下<span class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \bigcap R
+=\emptyset\)</span>，分数匹配将没有足够的数据样本来准确估计出对于<span class="math inline">\(x \in R\)</span>的<span class="math inline">\(\nabla_x \log p_{data}(x)\)</span>。</font></p>
 </blockquote>
-<p><img
-src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png" /></p>
-<p><font color="black" size = "5">  由上图我们可以看出来这个相信，在概率密度比较高的地方数据分数以及估计分数比较匹配，但是在概率密度比较低的区域，就开始估计的不太精确。那么接下来就是为了解决这个问题所出现的NSCN:</font></p>
-<h2
-id="noise-conditional-score-networkncsn"><font color="black" size = "5">4.Noise
+<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png"></p>
+<p><font color="black" size="5">  由上图我们可以看出来这个相信，在概率密度比较高的地方数据分数以及估计分数比较匹配，但是在概率密度比较低的区域，就开始估计的不太精确。那么接下来就是为了解决这个问题所出现的NSCN:</font></p>
+<h2 id="noise-conditional-score-networkncsn"><font color="black" size="5">4.Noise
 Conditional Score Network(NCSN)</font></h2>
-<p><font color="black" size = "5">  为了解决低密度问题，这里引入了新的分数网络，其实就是在原本的分数网络当中加了条件Noise。</font></p>
-<p><img
-src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221515196.png" /></p>
-<p><font color="black" size = "5">  右图所展示的是我们的数据分布被加噪后的样子，我们可以由此发现，加噪后的区域其低密度区域已经很少了，而加噪后的分数已经估计的分数都比较准确。那么我们该如何进行加噪呢？我们知道当加噪的噪声足够小的时候，会有<span
-class="math inline">\(q_\sigma(x) \approx
+<p><font color="black" size="5">  为了解决低密度问题，这里引入了新的分数网络，其实就是在原本的分数网络当中加了条件Noise。</font></p>
+<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221515196.png"></p>
+<p><font color="black" size="5">  右图所展示的是我们的数据分布被加噪后的样子，我们可以由此发现，加噪后的区域其低密度区域已经很少了，而加噪后的分数已经估计的分数都比较准确。那么我们该如何进行加噪呢？我们知道当加噪的噪声足够小的时候，会有<span class="math inline">\(q_\sigma(x) \approx
 p_{data}(x)\)</span>，但问题是加的噪声太小，我们仍然不是很好的能够解决低密度的问题。那么如果我们把噪声加的太大的话，就会导致数据分布被破坏掉。为了平衡这个加噪方式带来的后果，我们可以采取两个措施：<strong>1)使用不同级别的噪声扰动数据</strong>；<strong>2)通过训练单一条件分数网络，同时估计出与所有噪声级别相对应的分数。</strong></font></p>
-<p><font color="black" size = "5">  当我们使用NCSN训练完以后，我们可以采用朗之万采样算法去生成加噪加的比较大的情况下分布的样本，然后不断的减小噪声的量级。</font></p>
-<p><font color="black" size = "5">  <strong>NCSN定义:</strong>定义一组几何级数序列<span
-class="math inline">\(\lbrace \sigma_i\rbrace^L_{i=1}\)</span>,其中<span
-class="math inline">\(\sigma_i&gt;0\)</span>且<span
-class="math inline">\(\frac{\sigma_1}{\sigma_2}=\frac{\sigma_2}{\sigma_3}=...=\frac{\sigma_{L-1}}{\sigma_L}\)</span>
-，用分布 表示扰动噪声数据分布$ q_(x_t) = dt<span
-class="math inline">\(。NCSN的目标是训练一个条件分数网络来联合估计所有扰动数据的分布，即\)</span> <em>i^L</em>{i=1}<span
-class="math inline">\(都有\)</span>s_(x,) <em>x q</em>(x)$ ，其中当
-<span class="math inline">\(x∈R^D\)</span>时<span
-class="math inline">\(s_\theta(x,\sigma) \in R^D\)</span> 。一般把<span
-class="math inline">\(s_\theta(x,\sigma)\)</span>称为噪声条件分数网络。</font></p>
+<p><font color="black" size="5">  当我们使用NCSN训练完以后，我们可以采用朗之万采样算法去生成加噪加的比较大的情况下分布的样本，然后不断的减小噪声的量级。</font></p>
+<p><font color="black" size="5">  <strong>NCSN定义:</strong>定义一组几何级数序列<span class="math inline">\(\lbrace \sigma_i\rbrace^L_{i=1}\)</span>,其中<span class="math inline">\(\sigma_i&gt;0\)</span>且<span class="math inline">\(\frac{\sigma_1}{\sigma_2}=\frac{\sigma_2}{\sigma_3}=...=\frac{\sigma_{L-1}}{\sigma_L}\)</span>
+，用分布 表示扰动噪声数据分布$ q_(x_t) = dt<span class="math inline">\(。NCSN的目标是训练一个条件分数网络来联合估计所有扰动数据的分布，即\)</span>&nbsp;<em>i^L</em>{i=1}<span class="math inline">\(都有\)</span>s_(x,) <em>x q</em>(x)$ ，其中当
+<span class="math inline">\(x∈R^D\)</span>时<span class="math inline">\(s_\theta(x,\sigma) \in R^D\)</span> 。一般把<span class="math inline">\(s_\theta(x,\sigma)\)</span>称为噪声条件分数网络。</font></p>
 <figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\1692691208053.png"
-alt="1692691208053" />
+<img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\1692691208053.png" alt="1692691208053">
 <figcaption aria-hidden="true">1692691208053</figcaption>
 </figure>
-<p><font color="black" size = "5">  <strong>NCSN训练损失函数:</strong>选择一个噪声分布<span
-class="math inline">\(q_\sigma(\tilde{x}|x)=\mathcal{N}(\tilde{x};x,\sigma^2I)\)</span>,于是该分布的分数为：<span
-class="math inline">\(\nabla_{\tilde{x}} \log
-q_\sigma(\tilde{x}|x)=-\frac{\tilde{x}-x}{\sigma^2}\)</span>,在给定<span
-class="math inline">\(\sigma\)</span>的情况下，分数匹配的目标函数为：</font></p>
+<p><font color="black" size="5">  <strong>NCSN训练损失函数:</strong>选择一个噪声分布<span class="math inline">\(q_\sigma(\tilde{x}|x)=\mathcal{N}(\tilde{x};x,\sigma^2I)\)</span>,于是该分布的分数为：<span class="math inline">\(\nabla_{\tilde{x}} \log
+q_\sigma(\tilde{x}|x)=-\frac{\tilde{x}-x}{\sigma^2}\)</span>,在给定<span class="math inline">\(\sigma\)</span>的情况下，分数匹配的目标函数为：</font></p>
 <p><span class="math display">\[\huge l(\theta;\sigma)=\frac{1}{2}
 E_{p_{data}(x)}E_{\tilde{x} \backsim
 \mathcal{N}(x,\sigma^2I)}[||s_\theta(\tilde{x},\sigma)+\frac{\tilde{x}-x}{\sigma^2}||_2^2]\]</span></p>
-<p><font color="black" size = "5">  光是前言就足够一篇文章的内容了，然而这仅仅只是开始，下面才正式到SDE的介绍。</font></p>
+<p><font color="black" size="5">  光是前言就足够一篇文章的内容了，然而这仅仅只是开始，下面才正式到SDE的介绍。</font></p>
 <h1 id="二sdes">二、SDEs</h1>
-<p><font color="black" size = "5">  本文作者提出了一种随机微分方程（SDE），它通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相对应的反向
+<p><font color="black" size="5">  本文作者提出了一种随机微分方程（SDE），它通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相对应的反向
 SDE，通过缓慢消除噪声将先验分布转换回数据分布。反向 SDE
 仅取决于扰动数据分布的时间相关梯度场（也称为分数）。通过利用基于分数的生成模型的优化，我们可以使用神经网络准确地估计这些分数，并使用数值
 SDE 求解器来生成样本。</font></p>
 <figure>
-<img
-src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\1692692782178.png"
-alt="1692692782178" />
+<img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\1692692782178.png" alt="1692692782178">
 <figcaption aria-hidden="true">1692692782178</figcaption>
 </figure>
-<h2
-id="使用sde扰动数据"><font color="black" size = "5">1.使用SDE扰动数据</font></h2>
-<p><font color="black" size = "5">  为了生成样本，我们需要考虑一个扩散过程，去不断对数据加噪使得数据分布变成一个噪声分布。那么当<span
-class="math inline">\(\lbrace
+<h2 id="使用sde扰动数据"><font color="black" size="5">1.使用SDE扰动数据</font></h2>
+<p><font color="black" size="5">  为了生成样本，我们需要考虑一个扩散过程，去不断对数据加噪使得数据分布变成一个噪声分布。那么当<span class="math inline">\(\lbrace
 x_{(t)}\rbrace_{t=0}^T\)</span>是一个连续变量时，我们可以通过SDE去表达这个过程：</font></p>
 <p><span class="math display">\[\huge dx=f(x,t)dt+g(t)dw\]</span></p>
-<p><font color="black" size = "5">  其中<span
-class="math inline">\(f(\cdot,t)：R^d \rightarrow
+<p><font color="black" size="5">  其中<span class="math inline">\(f(\cdot,t)：R^d \rightarrow
 R^d\)</span>称为漂移系数,<span class="math inline">\(g(t)\in
-R^d\)</span>称为扩散系数，w是随机布朗运动的一个量。这个看不懂不要紧，我们可以把这个式子看成是下述离散形式在<span
-class="math inline">\(Δt→0\)</span>时的极限：</font></p>
+R^d\)</span>称为扩散系数，w是随机布朗运动的一个量。这个看不懂不要紧，我们可以把这个式子看成是下述离散形式在<span class="math inline">\(Δt→0\)</span>时的极限：</font></p>
 <p><span class="math display">\[\huge
 x_{t+Δt}−x_t=f_t(x_t)Δt+g_t\sqrtΔtε,ε∼N(0,I)\]</span></p>
-<p><font color="black" size = "5">  有没有感觉这个式子很眼熟，和朗之万迭代采样的式子很像。在这里越小的<span
-class="math inline">\(Δt\)</span>意味着是对原始SDE越好的近似，如果取<span
-class="math inline">\(Δt=0.001\)</span>，那就对应于原来的T=1000，如果是<span
-class="math inline">\(Δt=0.01\)</span>则对应于T=100。</font></p>
-<h2
-id="sde的逆向过程"><font color="black" size = "5">2.SDE的逆向过程</font></h2>
-<p><font color="black" size = "5">  用概率语言，上式我们可以表示为：</font></p>
+<p><font color="black" size="5">  有没有感觉这个式子很眼熟，和朗之万迭代采样的式子很像。在这里越小的<span class="math inline">\(Δt\)</span>意味着是对原始SDE越好的近似，如果取<span class="math inline">\(Δt=0.001\)</span>，那就对应于原来的T=1000，如果是<span class="math inline">\(Δt=0.01\)</span>则对应于T=100。</font></p>
+<h2 id="sde的逆向过程"><font color="black" size="5">2.SDE的逆向过程</font></h2>
+<p><font color="black" size="5">  用概率语言，上式我们可以表示为：</font></p>
 <p><span class="math display">\[\huge \begin{aligned}
 p(x_{t+Δt}|x_t)&amp;=\mathcal{N}(x_{t+Δt};x_t+f_t(x_t)Δt,g_t^2ΔtI)\\&amp;\varpropto
 exp(-\frac{|| x_{t+Δt}-x_t-f_t(x_t)Δt||^2}{2g_t^2Δt})
 \end{aligned}\]</span></p>
-<p><font color="black" size = "5">  按照DDPM中的思想，我们需要得到一个逆向过程去生成样本，那么我们需要知道<span
-class="math inline">\(p(x_t|x_{t+Δt})\)</span>的分布，根据贝叶斯定理：</font></p>
+<p><font color="black" size="5">  按照DDPM中的思想，我们需要得到一个逆向过程去生成样本，那么我们需要知道<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>的分布，根据贝叶斯定理：</font></p>
 <p><span class="math display">\[\Large
 \begin{aligned}p(x_t|x_{t+Δt})&amp;=
 \frac{p(x_{t+Δ_t}|x_t)p(x_t)}{p(x_{t+Δt})}\\&amp;=p(x_{t+Δ_t}|x_t)\exp(\log
 p(x_t)-\log p(x_{t+Δt}))\\ &amp;\varpropto exp(-\frac{||
 x_{t+Δ_t}-x_t-f_t(x_t)Δt||^2}{2g_t^2Δt}+\log p(x_t)-\log
 p(x_{t+Δt}))\end{aligned}\]</span></p>
-<p><font color="black" size = "5">  不难发现，当<span
-class="math inline">\(Δt\)</span>足够小时，只有当<span
-class="math inline">\(x_{t+Δt}\)</span>与<span
-class="math inline">\(xt\)</span>足够接近时，<span
-class="math inline">\(p(x_{t+Δt}|x_t)\)</span>才会明显不等于0，反过来也只有这种情况下<span
-class="math inline">\(p(x_t|x_{t+Δt})\)</span>才会明显不等于0。因此，我们只需要对<span
-class="math inline">\(x_{t+Δt}\)</span>与<span
-class="math inline">\(x_t\)</span>足够接近时的情形做近似分析，为此，我们可以在<span
-class="math inline">\(x_{t+Δt}=x_t\)</span>处泰勒展开：</font></p>
+<p><font color="black" size="5">  不难发现，当<span class="math inline">\(Δt\)</span>足够小时，只有当<span class="math inline">\(x_{t+Δt}\)</span>与<span class="math inline">\(xt\)</span>足够接近时，<span class="math inline">\(p(x_{t+Δt}|x_t)\)</span>才会明显不等于0，反过来也只有这种情况下<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>才会明显不等于0。因此，我们只需要对<span class="math inline">\(x_{t+Δt}\)</span>与<span class="math inline">\(x_t\)</span>足够接近时的情形做近似分析，为此，我们可以在<span class="math inline">\(x_{t+Δt}=x_t\)</span>处泰勒展开：</font></p>
 <p><span class="math display">\[\Large \log p(x_{t+Δt}) \approx \log
 p(x_t) + (x_{t+Δt}-x_t) \cdot \nabla_{x_t}\log
 p(x_t)+Δt\frac{\partial}{\partial t} \log p(x_t) \]</span></p>
-<p><font color="black" size = "5">  注意不要忽略了<span
-class="math inline">\(\frac{\partial}{\partial t}\)</span>项，因为<span
-class="math inline">\(p(x_t)\)</span>实际上是“t时刻随机变量等于<span
-class="math inline">\(x_t\)</span>的概率密度”，而<span
-class="math inline">\(p(x_{t+Δt})\)</span>实际上是“<span
-class="math inline">\(t+Δt\)</span>时刻随机变量等于<span
-class="math inline">\(x_{t+Δt}\)</span>的概率密度”，也就是说<span
-class="math inline">\(p(x_t)\)</span>实际上同时是t和<span
-class="math inline">\(x_t\)</span>的函数，所以要多一项t的偏导数。代入到<span
-class="math inline">\(p(x_t|x_{t+Δt})\)</span>后，配方得到:</font></p>
+<p><font color="black" size="5">  注意不要忽略了<span class="math inline">\(\frac{\partial}{\partial t}\)</span>项，因为<span class="math inline">\(p(x_t)\)</span>实际上是“t时刻随机变量等于<span class="math inline">\(x_t\)</span>的概率密度”，而<span class="math inline">\(p(x_{t+Δt})\)</span>实际上是“<span class="math inline">\(t+Δt\)</span>时刻随机变量等于<span class="math inline">\(x_{t+Δt}\)</span>的概率密度”，也就是说<span class="math inline">\(p(x_t)\)</span>实际上同时是t和<span class="math inline">\(x_t\)</span>的函数，所以要多一项t的偏导数。代入到<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>后，配方得到:</font></p>
 <p><span class="math display">\[\huge p(x_t|x_{t+Δt}) \varpropto
 exp(-\frac{|| x_{t+Δt}-x_t-[f_t(x_t)Δt-g_t^2\nabla_{x_t} \log
 p(x_t)]Δ_t||^2}{2g_t^2Δt}+l(Δt))\]</span></p>
-<p><font color="black" size = "5">  当<span
-class="math inline">\(Δt→0\)</span>时，<span
-class="math inline">\(\mathcal{l}(Δt)→0\)</span>不起作用，因此</font></p>
+<p><font color="black" size="5">  当<span class="math inline">\(Δt→0\)</span>时，<span class="math inline">\(\mathcal{l}(Δt)→0\)</span>不起作用，因此</font></p>
 <p><span class="math display">\[\Large \begin{aligned}p(x_t|x_{t+Δt})
 &amp;\varpropto \exp(-\frac{||
 x_{t+Δt}-x_t-[f_t(x_t)Δt-g_t^2\nabla_{x_t} \log
 p(x_t)]Δ_t||^2}{2g_t^2Δt})\\ &amp;\approx \exp(-\frac{||
 x_{t}-x_{t+Δt}+[f_{t+Δt}(x_{t+Δt})Δt-g_t^2\nabla_{x_{t+Δt}} \log
 p(x_{t+Δt})]Δ_t||^2}{2g_t^2Δt})\end{aligned}\]</span></p>
-<p><font color="black" size = "5">  即<span
-class="math inline">\(p(x_t|x_{t+Δt})\)</span>近似一个均值为<span
-class="math inline">\(x_{t+Δt}-[f_{t+Δt}(x_{t+Δt})Δt-g_t^2\nabla_{x_{t+Δt}}
-\log p(x_{t+Δt})]Δ_t\)</span>、协方差为<span
-class="math inline">\(g_t^2Δt\)</span>的正态分布，取<span
-class="math inline">\(Δt→0\)</span>的极限，那么对应于SDE：</font></p>
-<p><img
-src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png" /></p>
-<h2
-id="分数匹配-1"><font color="black" size = "5">3.分数匹配</font></h2>
-<p><font color="black" size = "5">  求解上面这个方程就能得到一个
-score-based generative model。也就是说的确我们的任务就是要估计这个<span
-class="math inline">\(\nabla_{x}\log
-p(x_t)\)</span>，和前面一致地训练一个网络来近似 <span
-class="math inline">\(s_\theta(x_t,t) \approx \nabla_{x}\log
+<p><font color="black" size="5">  即<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>近似一个均值为<span class="math inline">\(x_{t+Δt}-[f_{t+Δt}(x_{t+Δt})Δt-g_t^2\nabla_{x_{t+Δt}}
+\log p(x_{t+Δt})]Δ_t\)</span>、协方差为<span class="math inline">\(g_t^2Δt\)</span>的正态分布，取<span class="math inline">\(Δt→0\)</span>的极限，那么对应于SDE：</font></p>
+<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png"></p>
+<h2 id="分数匹配-1"><font color="black" size="5">3.分数匹配</font></h2>
+<p><font color="black" size="5">  求解上面这个方程就能得到一个
+score-based generative model。也就是说的确我们的任务就是要估计这个<span class="math inline">\(\nabla_{x}\log
+p(x_t)\)</span>，和前面一致地训练一个网络来近似 <span class="math inline">\(s_\theta(x_t,t) \approx \nabla_{x}\log
 p(x_t)\)</span>。</font></p>
 <figure>
-<img
-src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png"
-alt="1692750889757" />
+<img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png" alt="1692750889757">
 <figcaption aria-hidden="true">1692750889757</figcaption>
 </figure>
-<h2
-id="设计去噪基于分数网络"><font color="black" size = "5">4.设计去噪基于分数网络</font></h2>
-<p><font color="black" size = "5">  在我们去设计连续时刻的分数模型，其结构是没有限制的，但作者给出了四个建议：</font></p>
+<h2 id="设计去噪基于分数网络"><font color="black" size="5">4.设计去噪基于分数网络</font></h2>
+<p><font color="black" size="5">  在我们去设计连续时刻的分数模型，其结构是没有限制的，但作者给出了四个建议：</font></p>
 <ul>
-<li><font color="black" size = "5">使用U-Net网络作为<span
-class="math inline">\(s_\theta(x_t,t)\)</span>的主干网络表现的效果比较好；</font></li>
-<li><font color="black" size = "5">我们可以采用高斯随机特征的方式将时间信息注入到分数网络之中；</font></li>
-<li><font color="black" size = "5">可以对U-Net的输出上乘以一个<span
-class="math inline">\(1/\sqrt{E[||\)</span><em>{x}p</em>{0t}(x(t)|x(0))||^2]}$</font></li>
+<li><font color="black" size="5">使用U-Net网络作为<span class="math inline">\(s_\theta(x_t,t)\)</span>的主干网络表现的效果比较好；</font></li>
+<li><font color="black" size="5">我们可以采用高斯随机特征的方式将时间信息注入到分数网络之中；</font></li>
+<li><font color="black" size="5">可以对U-Net的输出上乘以一个<span class="math inline">\(1/\sqrt{E[||\)</span><em>{x}p</em>{0t}(x(t)|x(0))||^2]}$</font></li>
 </ul>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  </font></p>
-<p><font color="black" size = "5">  参考原文：<a
-target="_blank" rel="noopener" href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  参考原文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2011.13456">Score-Based Generative Modeling
 through Stochastic Differential Equations</a></font></p>
-<p><font color="black" size = "5">  参考文章：<a
-target="_blank" rel="noopener" href="https://kexue.fm/archives/9209">生成扩散模型漫谈（五）：一般框架之SDE篇</a></font></p>
+<p><font color="black" size="5">  参考文章：<a target="_blank" rel="noopener" href="https://kexue.fm/archives/9209">生成扩散模型漫谈（五）：一般框架之SDE篇</a></font></p>
 
     </article>
     <!-- license -->
@@ -1222,14 +1127,14 @@ Conditional Score Network(NCSN)</span></a></li></ol></li><li class="toc-item toc
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
