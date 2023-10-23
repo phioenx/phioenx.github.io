@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211121469.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211121313.png">
 <meta property="article:published_time" content="2023-07-25T03:49:13.000Z">
-<meta property="article:modified_time" content="2023-10-20T06:51:29.406Z">
+<meta property="article:modified_time" content="2023-10-23T07:48:02.949Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211125527.png">
@@ -601,9 +601,7 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211122073.png"
 class="math inline">\(L_{vlb}\)</span>和 <span
 class="math inline">\(L_{hybrid}\)</span>两个目标训练模型的梯度噪声尺度。从图7当中我们可以看出<span
 class="math inline">\(L_{vlb}\)</span>的梯度比 <span
-class="math inline">\(L_{hybrid}\)</span>的梯度噪声大得多。
-因此，我们找到了一种减少<span
-class="math inline">\(L_vlb\)</span>方差的方法，以便直接优化对数似然性。</font></p>
+class="math inline">\(L_{hybrid}\)</span>的梯度噪声大得多。因此，在实际优化过程中，应当找到真正需要继续优化的点进行优化，因此提出了基于Loss的重要性才采样。</font></p>
 <p><img
 src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211122393.png" /></p>
 <p><font color="black" size = "5">  注意到<span
@@ -627,9 +625,25 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310201106386.png"
 <p><font color="black" size = "5">  进入<strong>create_named_schedule_sampler</strong>函数里面（resample.py），我们可以看到其中有均匀采样（uniform），或者是基于loss重要性采样方式（二阶动量平滑loss，loss-second-moment）：</font></p>
 <p><img
 src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310201111612.png" /></p>
-<p><font color="black" size = "5">我们再进入<strong>LossSecondMomentResampler</strong>函数当中，我们就能看到作者是如何实现基于重要性采样的，具体来说就是：就是在随机进行时间步采样时，会使用一个动态更新的历史损失为各个时间步计算对应的采样权重，而不是进行各个时间步采样概率相同的均匀采样。该动态更新的历史损失，就是构造一个尺寸为[T,
-10]的矩阵，即为整个扩散过程的T步存储10个最新的损失值；在将该历史损失矩阵所有的值填满前，还是进行均匀采样；在填满之后，基于损失为每个时间步计算随机采样时的权重，为下一个step训练时更新时间步的采样权重；并且如果使用该类型的时间步sampler，在一个step中损失计算后，还需要调用update_with_local_losses函数将新计算得到的损失填入到历史损失矩阵最后端，并将最前端的最旧的历史损失弹出。</font>  </p>
+<p><font color="black" size = "5">  我们再进入<strong>LossSecondMomentResampler</strong>函数当中，我们就能看到作者是如何实现基于重要性采样的:</font></p>
+<p><font color="black" size = "5">具体来说就是：</font></p>
+<p><font color="black" size = "5">  <strong>1.动态更新历史损失：</strong>该动态更新的历史损失，就是构造一个尺寸为[T,
+10]的矩阵，即为整个扩散过程的T步存储10个最新的损失值（update_with_all_losses方法）；在将该历史损失矩阵所有的值填满前，先是用均匀采样对每个时间步都更新一遍，一直到所有时间步都存储了最新的10个历史损失为止。才计算其权重，不然前面的权重都是全一数组。</font></p>
+<p><font color="black" size = "5">  <strong>2.计算每个时间步的权重：</strong>在所有时间步上的历史损失都更新完毕以后（在填满之后），<strong>即(self._loss_counts
+==
+self.history_per_term).all()为True。</strong>基于每个时间步的10个历史损失计算随机采样的权重，为下一个step训练时更新时间步的采样权重；并且如果使用该类型的时间步sampler，在一个step中损失计算后，还需要调用update_with_local_losses函数将新计算得到的损失填入到历史损失矩阵最后端，并将最前端的最旧的历史损失弹出。</font></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LossSecondMomentResampler</span>(<span class="title class_ inherited__">LossAwareSampler</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, diffusion, history_per_term=<span class="number">10</span>, uniform_prob=<span class="number">0.001</span></span>):</span><br><span class="line">        self.diffusion = diffusion</span><br><span class="line">        self.history_per_term = history_per_term</span><br><span class="line">        self.uniform_prob = uniform_prob</span><br><span class="line">        <span class="comment"># 创建一个形状为[diffusion.num_timesteps, history_per_term]的全零数组_loss_history，用于存储损失的历史记录。</span></span><br><span class="line">        self._loss_history = np.zeros(</span><br><span class="line">            [diffusion.num_timesteps, history_per_term], dtype=np.float64</span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 创建一个长度为diffusion.num_timesteps的全零数组_loss_counts，用于记录每个时间步的损失数量。</span></span><br><span class="line">        self._loss_counts = np.zeros([diffusion.num_timesteps], dtype=np.<span class="built_in">int</span>)</span><br><span class="line">    <span class="comment"># 用于计算每个时间步的权重</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 如果还没有达到预定的历史记录数量，返回一个全一数组作为权重</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self._warmed_up():</span><br><span class="line">            <span class="keyword">return</span> np.ones([self.diffusion.num_timesteps], dtype=np.float64)</span><br><span class="line">        <span class="comment"># 计算损失历史记录的平方的均值的平方根，得到每个时间步的权重</span></span><br><span class="line">        weights = np.sqrt(np.mean(self._loss_history ** <span class="number">2</span>, axis=-<span class="number">1</span>))</span><br><span class="line">        <span class="comment"># 将权重归一化，使其总和为1</span></span><br><span class="line">        weights /= np.<span class="built_in">sum</span>(weights)</span><br><span class="line">        <span class="comment"># 将均匀概率乘以权重的总数减去1，并加上每个权重的均匀概率除以权重的数量</span></span><br><span class="line">        weights *= <span class="number">1</span> - self.uniform_prob</span><br><span class="line">        weights += self.uniform_prob / <span class="built_in">len</span>(weights)</span><br><span class="line">        <span class="comment"># 返回计算得到的权重</span></span><br><span class="line">        <span class="keyword">return</span> weights</span><br><span class="line">    <span class="comment"># 用于更新损失历史记录</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">update_with_all_losses</span>(<span class="params">self, ts, losses</span>):</span><br><span class="line">        <span class="comment"># 遍历传入的时间步和损失列表</span></span><br><span class="line">        <span class="keyword">for</span> t, loss <span class="keyword">in</span> <span class="built_in">zip</span>(ts, losses):</span><br><span class="line">            <span class="comment"># 如果某个时间步的损失数量达到了预定的历史记录数量</span></span><br><span class="line">            <span class="keyword">if</span> self._loss_counts[t] == self.history_per_term:</span><br><span class="line">                <span class="comment"># 将最旧的损失现移出历史记录，然后将新的损失项添加到历史记录的末尾</span></span><br><span class="line">                self._loss_history[t, :-<span class="number">1</span>] = self._loss_history[t, <span class="number">1</span>:]</span><br><span class="line">                self._loss_history[t, -<span class="number">1</span>] = loss</span><br><span class="line">            <span class="comment"># 如果某个时间步的损失数量还没有达到预定的历史记录数量</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 将新的损失项添加到历史记录中，并将损失数量加1</span></span><br><span class="line">                self._loss_history[t, self._loss_counts[t]] = loss</span><br><span class="line">                self._loss_counts[t] += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 用于判断是否已经达到预定的历史记录数量。</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_warmed_up</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 检查每个时间步的损失数量是否都等于预定的历史记录数量。</span></span><br><span class="line">        <span class="comment"># 如果所有时间步的损失数量都等于预定的历史记录数量，则返回True，表示已经达到预定的历史记录数量。</span></span><br><span class="line">        <span class="comment"># 否则，返回False，表示还没有达到预定的历史记录数量</span></span><br><span class="line">        <span class="keyword">return</span> (self._loss_counts == self.history_per_term).<span class="built_in">all</span>()</span><br></pre></td></tr></table></figure>
+<p><font color="black" size = "5">  最后，我们再根据sample得到每个批次随机选择的时间步以及权重：</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310231545378.png" /></p>
+<p><font color="black" size = "5">  然后再拿得到时间步去计算损失，最后利用权重加权求和。</font></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310231547107.png" /></p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310231547153.png" /></p>
+<p><font color="black" size = "5">  关于重要性采样也可以看一下这篇文章：<a
+target="_blank" rel="noopener" href="https://mathpretty.com/12375.html">Importance Sampling
+(重要性采样)介绍 | 文艺数学君</a></font></p>
 <h2
 id="实验结果以及消融实验"><font color="black" size = "5">4、实验结果以及消融实验</font></h2>
 <p><font color="red" size = "5">  注：下面实验中<span
@@ -776,7 +790,7 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211124620.png"
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/</a>
             <p>发表日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">July 25th 2023, 11:49:13 am</a>
-            <p>更新日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">October 20th 2023, 2:51:29 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">October 23rd 2023, 3:48:02 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1249,6 +1263,11 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211124620.png"
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
@@ -1257,11 +1276,6 @@ src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211124620.png"
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
