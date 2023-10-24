@@ -503,78 +503,96 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1>一、前言</h1>
-<p><font color="black" size="5">  图像到图像翻译问题归根结底就是说：<strong>使用生成模型去学习给定输入图像的条件分布。<strong>但现有的图像到图像翻译方法通常需要专门的架构设计并从头开始训练单独的翻译模型，尤其是在配对训练数据不丰富的情况下。Palette展示了使用扩散模型进行图像到图像转换的潜力，但它们是在有配对训练数据集下表现出来的结果，例如图像着色。因此作者将每个图像到图像的翻译问题视为下游任务，并介绍了一个简单而通用的框架，该框架采用</strong>预训练的</strong>扩散模型来适应各种类型的图像到图像的翻译。作者还提出对抗性训练来增强扩散模型训练中的纹理合成，并结合归一化引导采样来提高生成质量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181032439.png" alt=""></p>
-<h1>二、方法介绍：</h1>
+        <h1 id="一前言">一、前言</h1>
+<p><font color="black" size="5">  图像到图像翻译问题归根结底就是说：<strong>使用生成模型去学习给定输入图像的条件分布。</strong>但现有的图像到图像翻译方法通常需要专门的架构设计并从头开始训练单独的翻译模型，尤其是在配对训练数据不丰富的情况下。Palette展示了使用扩散模型进行图像到图像转换的潜力，但它们是在有配对训练数据集下表现出来的结果，例如图像着色。因此作者将每个图像到图像的翻译问题视为下游任务，并介绍了一个简单而通用的框架，该框架采用<strong>预训练的</strong>扩散模型来适应各种类型的图像到图像的翻译。作者还提出对抗性训练来增强扩散模型训练中的纹理合成，并结合归一化引导采样来提高生成质量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181032439.png"></p>
+<h1 id="二方法介绍">二、方法介绍：</h1>
 <p><font color="black" size="5">  本文提出一个使用预训练模型去提高图像到图像翻译的新范式。这关键思想是去使用一个预训练神经网络去捕捉自然图像流形（manifold），因此图像翻译相当于去遍历这个流形并且找到与输入语义相关的可行点。具体来说，预训练综合网络使用大量的图像进行预训练并作为生成先验，并能够从潜在空间进行的任何采样都将产生合理的输出。借助功能强大的预训练综合网络，下游训练只需将输入条件变成能被预训练模型识别的潜在表示。</font></p>
-<p><font color="black" size="5">  接下来，下面将介绍是如何使用大数据正确地预训练网络，然后将学到的知识应用到下游任务中，如图 2 所示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181033698.png" alt=""></p>
-<h2 id="font-color-black-size-5-1、生成预训练-font"><a class="header-anchor" href="#font-color-black-size-5-1、生成预训练-font">¶</a><font color="black" size="5">1、生成预训练</font></h2>
+<p><font color="black" size="5">  接下来，下面将介绍是如何使用大数据正确地预训练网络，然后将学到的知识应用到下游任务中，如图
+2 所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181033698.png"></p>
+<h2 id="生成预训练"><font color="black" size="5">1、生成预训练</font></h2>
 <p><font color="black" size="5">  作者的想法是：当预训练模型具备高度语义空间时，即该空间中相邻的点对应于语义相似的图像。我们就能通过对下游任务进行微调，该微调仅涉及特定于任务的输入。</font></p>
 <blockquote>
 <p><font size="5">在《<a target="_blank" rel="noopener" href="https://sander.ai/2022/01/31/diffusion.html">Diffusion&nbsp;models&nbsp;are&nbsp;autoencoder</a>》提出了扩散模型是否是自动编码器？原作者说虽然完成把扩散模型看成是一种自动编码器是不严谨不科学的，但是学习这两者之间的关系，有助于我们更好的理解扩散模型：</font></p>
-<p><font size="5">扩散模型通过额外的输入t使得一个模型能够用一组共享的参数（$\beta_t$）处理许多不同的噪声水平。噪声水平和特征尺度密切相关：使用不同噪声水平学习到的表征往往对应于不同尺度的特征，高噪声水平导致模型捕获大规模特征，低噪声水平导致模型聚焦于细粒度特征。</font></p>
+<p><font size="5">扩散模型通过额外的输入t使得一个模型能够用一组共享的参数（<span class="math inline">\(\beta_t\)</span>）处理许多不同的噪声水平。噪声水平和特征尺度密切相关：使用不同噪声水平学习到的表征往往对应于不同尺度的特征，高噪声水平导致模型捕获大规模特征，低噪声水平导致模型聚焦于细粒度特征。</font></p>
 </blockquote>
 <p><font color="black" size="5">  首先我们需要对大量的图像进行预训练并学习一个高度语义的潜在空间作为<strong>生成先验</strong>,</font></p>
 <p><font color="black" size="5">  该<strong>生成先验</strong>应该具有以下属性：</font></p>
 <ul>
-<li>
-<p><font color="black" size="5">预训练模型得具有对复杂场景进行建模和捕获自然图像分布的的能力；</font></p>
-</li>
-<li>
-<p><font color="black" size="5">能够从两种潜在代码生成图像：一种表征图像语义，而另一种解释剩余图像变化;</font></p>
-</li>
+<li><p><font color="black" size="5">预训练模型得具有对复杂场景进行建模和捕获自然图像分布的的能力；</font></p></li>
+<li><p><font color="black" size="5">能够从两种潜在代码生成图像：一种表征图像语义，而另一种解释剩余图像变化;</font></p></li>
 </ul>
-<p><font color="black" size="5">  本文作者提出：语义和低维度潜在变量对于下游任务是至关重要的，否则它将很难将不同模态的输入映射到复杂潜在空间，作者是采用GLIDE了作为预训练模型，该模型是以文本为条件在巨大且多样化的文本图像对上进行训练。由于GLIDE模式使用与文本条件相对应的潜函数，因此它自然地得到一个所需的潜在语义空间。GLIDE 利用分层生成方案，该方案从分辨率为 64 × 64 的<strong>基础扩散模型</strong>开始，然后是从 64 × 64 分辨率到 256 × 256 分辨率的<strong>扩散上采样模型</strong>。</font></p>
+<p><font color="black" size="5">  本文作者提出：语义和低维度潜在变量对于下游任务是至关重要的，否则它将很难将不同模态的输入映射到复杂潜在空间，作者是采用GLIDE了作为预训练模型，该模型是以文本为条件在巨大且多样化的文本图像对上进行训练。由于GLIDE模式使用与文本条件相对应的潜函数，因此它自然地得到一个所需的潜在语义空间。GLIDE
+利用分层生成方案，该方案从分辨率为 64 × 64
+的<strong>基础扩散模型</strong>开始，然后是从 64 × 64 分辨率到 256 × 256
+分辨率的<strong>扩散上采样模型</strong>。</font></p>
 <p><font color="black" size="5">  作者进一步提出了提高扩散模型生成图像的质量的技巧。</font></p>
 <p><font color="black" size="5">  1）<strong>采用分层生成策略</strong>，生成粗糙的图像然后执行超分辨率。然后，我们观察到由于去噪扩散步骤中的高斯噪声假设，扩散上采样起往往会产生过度平滑的结果，因此在去噪的过程中引入了对抗性训练，从而大大提高了感知质量。</font></p>
 <p><font color="black" size="5">  2）采用无分类器指导会导致图像过度饱和，细节被冲走。为了解决这个问题，<strong>提出明确地标准化噪声统计数据</strong>。这种标准化的指导采样可以实现更积极的指导并提高生成质量。</font></p>
-<h2 id="font-color-black-size-5-2、适配下游任务-font"><a class="header-anchor" href="#font-color-black-size-5-2、适配下游任务-font">¶</a><font color="black" size="5"> 2、适配下游任务</font></h2>
+<h2 id="适配下游任务"><font color="black" size="5">
+2、适配下游任务</font></h2>
 <p><font color="black" size="5">  一旦模型经过预训练，就可以通过使用不同的策略分别微调基本模型和上采样器模型，使其适应各种下游图像合成任务。</font></p>
-<h3 id="font-color-black-size-5-1）基本模型微调-font-："><a class="header-anchor" href="#font-color-black-size-5-1）基本模型微调-font-：">¶</a><font color="black" size="5"> 1）基本模型微调</font>：</h3>
+<h3 id="基本模型微调"><font color="black" size="5">
+1）基本模型微调</font>：</h3>
 <p><font color="black" size="5">  为了能够适应下游任务，作者训练一个特定于任务的头，将翻译输入（例如分割，掩码）投影到预训练的潜在空间（作为条件）。因此，下游任务网络采用编码器-解码器架构：编码器将输入转换为与任务无关的潜在空间，然后是强大的解码器（例如扩散模型）相应地去生成合理的图像。使用基础模型的生成可以表示为：</font></p>
-<p>$$\huge x_t=\tilde{D}(\tilde{E}(x_0,y))$$</p>
-<p><font color="black" size="5">  其中$\tilde{E}$和$\tilde{D}$分别作为预训练的编码器和解码器，y是用于预训练的条件。</font></p>
+<p><span class="math display">\[\huge
+x_t=\tilde{D}(\tilde{E}(x_0,y))\]</span></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\tilde{E}\)</span>和<span class="math inline">\(\tilde{D}\)</span>分别作为预训练的编码器和解码器，y是用于预训练的条件。</font></p>
 <p><font color="black" size="5">  作者提出两阶段的微调方法。</font></p>
 <p><font color="black" size="5">  <strong>第一阶段</strong>，训练用于特定任务的编码器，并保持预训练的解码器不变。此阶段的输出将大致匹配输入的语义，但没有精确的空间对齐。</font></p>
 <p><font color="black" size="5">  <strong>第二阶段</strong>，对编码器和解码器进行微调。获得了大大改进的空间语义对齐。</font></p>
-<h3 id="font-color-black-size-5-2）对抗扩散上采样器：-font"><a class="header-anchor" href="#font-color-black-size-5-2）对抗扩散上采样器：-font">¶</a><font color="black" size="5">2）对抗扩散上采样器：</font></h3>
-<p><font color="black" size="5">  进一步微调扩散上采样器以实现高分辨率生成。作者还对训练输入应用随机降级（degradation），特别是现实世界的 BSR 降级，以减少训练图像与基础模型样本之间的差距。特别是，还引入了 L0 滤波器 来模拟过度平滑的效果。</font></p>
-<p><font color="black" size="5">  尽管如此，即使应用了强大的数据增强，仍然观察到过度平滑的结果。我们推测该问题是由扩散去噪处理中的高斯噪声假设引起的。因此，除了计算噪声预测的标准均方误差损失之外，我们建议施加感知损失和对抗性损失以提高局部图像结构的感知真实性。感知损失和对抗性损失均根据图像预测：$\hat{x}_0 = \frac{1}{\sqrt{\bar{a}_t}}(x_t - \sqrt{1-\bar{a}<em>t}\epsilon</em>\theta(x_t,y,t))$</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181041599.png" alt=""></p>
-<p><font color="black" size="5">  其中，$\psi_m$为预训练VGG网络的多级特征，$D_\theta$是试图最大化$\mathcal{L}_{adv}$的对抗判别器。</font></p>
-<h2 id="font-color-black-size-5-3、无分类器指导-font"><a class="header-anchor" href="#font-color-black-size-5-3、无分类器指导-font">¶</a><font color="black" size="5"> 3、无分类器指导</font></h2>
-<p><font color="black" size="5">  这部分可以参考<a target="_blank" rel="noopener" href="https://phioenx.github.io/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>。</font></p>
-<h1>三、实验</h1>
-<h2 id="font-color-black-size-5-1-对比实验-font"><a class="header-anchor" href="#font-color-black-size-5-1-对比实验-font">¶</a><font color="black" size="5">1) 对比实验</font></h2>
+<h3 id="对抗扩散上采样器"><font color="black" size="5">2）对抗扩散上采样器：</font></h3>
+<p><font color="black" size="5">  进一步微调扩散上采样器以实现高分辨率生成。作者还对训练输入应用随机降级（degradation），特别是现实世界的
+BSR 降级，以减少训练图像与基础模型样本之间的差距。特别是，还引入了 L0
+滤波器 来模拟过度平滑的效果。</font></p>
+<p><font color="black" size="5">  尽管如此，即使应用了强大的数据增强，仍然观察到过度平滑的结果。我们推测该问题是由扩散去噪处理中的高斯噪声假设引起的。因此，除了计算噪声预测的标准均方误差损失之外，我们建议施加感知损失和对抗性损失以提高局部图像结构的感知真实性。感知损失和对抗性损失均根据图像预测：<span class="math inline">\(\hat{x}_0 = \frac{1}{\sqrt{\bar{a}_t}}(x_t -
+\sqrt{1-\bar{a}_t}\epsilon_\theta(x_t,y,t))\)</span></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181041599.png"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\psi_m\)</span>为预训练VGG网络的多级特征，<span class="math inline">\(D_\theta\)</span>是试图最大化<span class="math inline">\(\mathcal{L}_{adv}\)</span>的对抗判别器。</font></p>
+<h2 id="无分类器指导"><font color="black" size="5">
+3、无分类器指导</font></h2>
+<p><font color="black" size="5">  这部分可以参考<a target="_blank" rel="noopener" href="https://phioenx.github.io/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free
+guidance</a>。</font></p>
+<h1 id="三实验">三、实验</h1>
+<h2 id="对比实验"><font color="black" size="5">1) 对比实验</font></h2>
 <p><font color="black" size="5">  作者在三个图像到图像的翻译任务上做了实验：掩模到图像的合成（ADE20K以及COCO）、草图到图像合成(COCO以及Flickr)以及几何到图像生成（DIODE）。</font></p>
 <p><font color="black" size="5">  与三个baseline进行比较：Pix2PixHD、SPADE和OASIS。由于，扩散模型尚未执行上述任务。所以作者想提供一个扩散模型作为基线，它与PITI的架构具有相同的架构，但从头开始训练。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181033645.png" alt=""></p>
-<p><font color="black" size="5">  COCO 和 ADE20K 的视觉比较:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181034813.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181033645.png"></p>
+<p><font color="black" size="5">  COCO 和 ADE20K
+的视觉比较:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181034813.png"></p>
 <p><font color="black" size="5">  其他数据集的视觉比较:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181034753.png" alt=""></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181037320.png" alt=""></p>
-<h2 id="font-color-black-size-5-2-消融实验-font"><a class="header-anchor" href="#font-color-black-size-5-2-消融实验-font">¶</a><font color="black" size="5">2) 消融实验</font></h2>
-<p><font color="black" size="5">  为了分析微调策略的重要性，我们在 ADE20K 上执行三种微调方案：（a）固定解码器，我们冻结预训练的解码器并仅训练特定于任务的编码器，（b）单阶段微调，我们同时微调编码器和同时预训练的解码器，以及（c）两阶段微调，我们首先训练固定解码器的编码器，然后联合微调它们实验结果如表3a所示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181035118.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181034753.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181037320.png"></p>
+<h2 id="消融实验"><font color="black" size="5">2) 消融实验</font></h2>
+<p><font color="black" size="5">  为了分析微调策略的重要性，我们在
+ADE20K
+上执行三种微调方案：（a）固定解码器，我们冻结预训练的解码器并仅训练特定于任务的编码器，（b）单阶段微调，我们同时微调编码器和同时预训练的解码器，以及（c）两阶段微调，我们首先训练固定解码器的编码器，然后联合微调它们实验结果如表3a所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181035118.png"></p>
 <p><font color="black" size="5">  固定解码器可以生成高质量图像，但无法符合条件。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181035629.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181035629.png"></p>
 <p><font color="black" size="5">  对抗扩散上采样器。我们建议通过输入图像的退化和输出噪声的图像级损失来改进上采样扩散模型。表3b给出了不同上采样设置的定量比较。</font></p>
-<p><font color="black" size="5">  图像合成任务通常受到训练数据有限的影响，这阻碍了从头开始训练高质量的生成模型。为了展示预训练如何减轻数据需求，我们将 ADE20K 的训练图像数量分别减少到 25% (5k) 和 50% (10k)，并在表 4 中报告 FID。仅使用 25% 的训练数据，所提出的方法实现了与之前在完整数据上训练的方法相当的 FID:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181036265.png" alt=""></p>
-<h1>四、总结：</h1>
-<p><font color="black" size="5">  本文提出了一个简单而通用的框架，将预训练的力量带到了各种图像到图像的翻译任务中。通过对抗性扩散上采样器和归一化无分类器指导等技术的增强，完整模型 PITI 显着提高了最先进的合成质量，尤其是在具有挑战性的场景中。我们的方法的一个限制是采样的图像很难忠实地与给定的输入对齐，并且可能会错过小物体。一种可能的原因是预训练模型的中间空间缺乏准确的空间信息。我们计划将来探索其他预训练方法。我们希望这项工作能够激发更多的工作，并推动该领域走向现实的综合。</font></p>
-<h1>五、补充：</h1>
-<h2 id="font-color-black-size-5-1、预训练模型带来的局限-font"><a class="header-anchor" href="#font-color-black-size-5-1、预训练模型带来的局限-font">¶</a><font color="black" size="5">1、预训练模型带来的局限</font></h2>
-<p><font color="black" size="5">  图 21 显示了所提出方法的局限性。</font></p>
+<p><font color="black" size="5">  图像合成任务通常受到训练数据有限的影响，这阻碍了从头开始训练高质量的生成模型。为了展示预训练如何减轻数据需求，我们将
+ADE20K 的训练图像数量分别减少到 25% (5k) 和 50% (10k)，并在表 4 中报告
+FID。仅使用 25%
+的训练数据，所提出的方法实现了与之前在完整数据上训练的方法相当的
+FID:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181036265.png"></p>
+<h1 id="四总结">四、总结：</h1>
+<p><font color="black" size="5">  本文提出了一个简单而通用的框架，将预训练的力量带到了各种图像到图像的翻译任务中。通过对抗性扩散上采样器和归一化无分类器指导等技术的增强，完整模型
+PITI
+显着提高了最先进的合成质量，尤其是在具有挑战性的场景中。我们的方法的一个限制是采样的图像很难忠实地与给定的输入对齐，并且可能会错过小物体。一种可能的原因是预训练模型的中间空间缺乏准确的空间信息。我们计划将来探索其他预训练方法。我们希望这项工作能够激发更多的工作，并推动该领域走向现实的综合。</font></p>
+<h1 id="五补充">五、补充：</h1>
+<h2 id="预训练模型带来的局限"><font color="black" size="5">1、预训练模型带来的局限</font></h2>
+<p><font color="black" size="5">  图 21
+显示了所提出方法的局限性。</font></p>
 <ul>
 <li><font color="black" size="5">单个样本中的相似对象容易出现高相关的风格和颜色，尽管该模型可以产生不同风格的不同样本。与众所周知的样本缺乏图像间多样性的模式崩溃问题不同，我们称之为图像内模式崩溃。</font></li>
 <li><font color="black" size="5">另一个限制是，生成的图像与某些小物体的输入条件存在轻微的偏差。</font></li>
 </ul>
 <p><font color="black" size="5">我推测该模型的潜在空间缺乏准确的空间信息，因为该模型最初是在文本到图像合成上进行预训练的。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181036435.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181036435.png"></p>
 
     </article>
     <!-- license -->
@@ -771,7 +789,10 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、方法介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E7%94%9F%E6%88%90%E9%A2%84%E8%AE%AD%E7%BB%83-font"><span class="toc-number">2.1.</span> <span class="toc-text">1、生成预训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2%E3%80%81%E9%80%82%E9%85%8D%E4%B8%8B%E6%B8%B8%E4%BB%BB%E5%8A%A1-font"><span class="toc-number">2.2.</span> <span class="toc-text"> 2、适配下游任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-1%EF%BC%89%E5%9F%BA%E6%9C%AC%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83-font-%EF%BC%9A"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 1）基本模型微调：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-2%EF%BC%89%E5%AF%B9%E6%8A%97%E6%89%A9%E6%95%A3%E4%B8%8A%E9%87%87%E6%A0%B7%E5%99%A8%EF%BC%9A-font"><span class="toc-number">2.2.2.</span> <span class="toc-text">2）对抗扩散上采样器：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3%E3%80%81%E6%97%A0%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BC-font"><span class="toc-number">2.3.</span> <span class="toc-text"> 3、无分类器指导</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C-font"><span class="toc-number">3.1.</span> <span class="toc-text">1) 对比实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C-font"><span class="toc-number">3.2.</span> <span class="toc-text">2) 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、总结：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">五、补充：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%B1%80%E9%99%90-font"><span class="toc-number">5.1.</span> <span class="toc-text">1、预训练模型带来的局限</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">二、方法介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">2.1.</span> <span class="toc-text">1、生成预训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E9%85%8D%E4%B8%8B%E6%B8%B8%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">
+2、适配下游任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83"><span class="toc-number">2.2.1.</span> <span class="toc-text">
+1）基本模型微调：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E6%8A%97%E6%89%A9%E6%95%A3%E4%B8%8A%E9%87%87%E6%A0%B7%E5%99%A8"><span class="toc-number">2.2.2.</span> <span class="toc-text">2）对抗扩散上采样器：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BC"><span class="toc-number">2.3.</span> <span class="toc-text">
+3、无分类器指导</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.1.</span> <span class="toc-text">1) 对比实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">2) 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E8%A1%A5%E5%85%85"><span class="toc-number">5.</span> <span class="toc-text">五、补充：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-number">5.1.</span> <span class="toc-text">1、预训练模型带来的局限</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->

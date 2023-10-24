@@ -19,12 +19,12 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 ¶一、前言 ¶1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT">
+    <meta name="description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
 <meta property="og:type" content="article">
 <meta property="og:title" content="生成增强ct图像的相关论文1">
 <meta property="og:url" content="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 ¶一、前言 ¶1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT">
+<meta property="og:description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png">
@@ -502,57 +502,98 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1>《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》</h1>
-<h2 id="font-color-black-size-5-一、前言-font"><a class="header-anchor" href="#font-color-black-size-5-一、前言-font">¶</a><font color="black" size="5">一、前言</font></h2>
-<h3 id="font-color-black-size-5-1-CE-CT图像概述以及局限-font"><a class="header-anchor" href="#font-color-black-size-5-1-CE-CT图像概述以及局限-font">¶</a><font color="black" size="5">1.CE-CT图像概述以及局限</font></h3>
+        <h1 id="synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</h1>
+<h2 id="一前言"><font color="black" size="5">一、前言</font></h2>
+<h3 id="ce-ct图像概述以及局限"><font color="black" size="5">1.CE-CT图像概述以及局限</font></h3>
 <p><font color="black" size="5">  目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（<strong>CE-CT</strong>）图像做临床诊断，例如肝癌。</font></p>
 <p><font color="black" size="5">  <strong>CE-CT</strong>也称多时相CT图像，它是由身体注入造影剂，再进行CT扫描所获得的。</font></p>
 <p><font color="black" size="5">  注射前的CT图像（<strong>NC-CT</strong>）一般也称作平扫图像，它是无需注射造影剂的CT扫描。</font></p>
 <p><font color="black" size="5">  注射造影剂后获得<strong>CE-CT</strong>图像，可分为三个阶段：动脉期（<strong>ART</strong>）、门静脉期（<strong>PV</strong>）和延迟期（<strong>DL</strong>）。</font></p>
-<p><font color="black" size="5">  简单的来说，不同类型的肝癌的肝脏局灶性病变（FLL）在平扫图像看，看不出什么区别。然而，它们在 <strong>ART</strong> 和 <strong>PV</strong> 阶段就能够表现出明显不同的视觉特征，这是放射科医生鉴别肝癌的主要标准。</font></p>
+<p><font color="black" size="5">  简单的来说，不同类型的肝癌的肝脏局灶性病变（FLL）在平扫图像看，看不出什么区别。然而，它们在
+<strong>ART</strong> 和 <strong>PV</strong>
+阶段就能够表现出明显不同的视觉特征，这是放射科医生鉴别肝癌的主要标准。</font></p>
 <p><font color="black" size="5">  虽然<strong>CE-CT</strong>图像对肝癌的诊断有效，但由于造影剂注射和长时间成像，获得<strong>CE-CT</strong>图像会增加患者的身体负担。</font></p>
-<p><font color="black" size="5">  因此，本文的目标就是从 <strong>NC</strong> 图像合成不同阶段的 <strong>CE-CT</strong> 图像来解决上述问题。</font></p>
-<h3 id="font-color-black-size-5-2-GAN-font"><a class="header-anchor" href="#font-color-black-size-5-2-GAN-font">¶</a><font color="black" size="5">2.GAN</font></h3>
+<p><font color="black" size="5">  因此，本文的目标就是从
+<strong>NC</strong> 图像合成不同阶段的 <strong>CE-CT</strong>
+图像来解决上述问题。</font></p>
+<h3 id="gan"><font color="black" size="5">2.GAN</font></h3>
 <p><font color="black" size="5">  现有的生成模型有两个缺陷：</font></p>
 <p><font color="black" size="5">  第一：卷积神经网络（CNN）的感受野与其理论大小不一致，导致其捕获全局信息的性能较差。</font></p>
 <p><font color="black" size="5">  第二：在解码过程中，语义特征由深层向浅层传递，这不可避免地会导致信息丢失。</font></p>
 <p><font color="black" size="5">  为了解决上述缺点，作者提出了一种改进的条件生成对抗网络（改进的cGAN）并将其应用于合成高质量的CE-CT图像。更具体地说，为了解决第一个缺点，首先在图像合成任务中引入金字塔池模块（PPM），以提高编码器捕获全局信息的能力。</font></p>
 <p><font color="black" size="5">  除此之外，作者构建了一系列信息流路径（IFP）来连接PPM的输出和每个解码器单元，这可以有效防止解码过程中的信息稀释。此外，为了使解码器有效地集成不同的特征（即从PPM、先前的解码器单元和相应的编码器单元中提取的高级、中级和低级语义信息），我们设计了一种新颖的特征融合模块（FFM）。本文主要的贡献如下：</font></p>
-<p><font color="blue" size="5">  **1）**提出了一种新颖的图像合成框架，它可以从 NC图像自动合成 ART 和 PV 阶段的 CE-CT 图像。</font></p>
-<p><font color="blue" size="5">  **2）**新设计的生成模型在 PPM、IFP 和 FFM 的帮助下，能够有效捕获全局和局部语义信息，并防止解码层中的信息稀释。</font></p>
-<h2 id="font-color-black-size-5-二、方法-font"><a class="header-anchor" href="#font-color-black-size-5-二、方法-font">¶</a><font color="black" size="5">二、方法</font></h2>
-<h3 id="font-color-black-size-5-1-架构-font"><a class="header-anchor" href="#font-color-black-size-5-1-架构-font">¶</a><font color="black" size="5">1.架构</font></h3>
-<p><font color="black" size="5">  首先，让$x_i\in X$和$y_i\in Y$分别表示源域图像（NC）和目标域图像（ART或PV阶段的CE-CT图像）当中的训练图像。对于源域中给定的输入图像 x，提出的改进 cGAN 旨在合成 CE-CT 图像 $\hat{y}$，该图像应尽可能与真实的 CE-CT 图像 y 相似。所提出的改进cGAN由两个模型组成：鉴别器D和生成器G。生成器G以NC图像作为输入并生成相应的CE-CT图像。鉴别器 D 学习区分其输入的类型：真实的或合成的 CE-CT 图像如图1所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png" alt=""></p>
-<p><font color="black" size="5">  首先，NC图像输入到编码器，编码器的前四层是在 ImageNet 训练集上预训练的 ResNet，之后添加了两个卷积层。</font></p>
-<p><font color="black" size="5">  编码器的输出将被输入到 PPM 中以形成新的特征向量，该向量将沿着 IFP 传递到解码器中的每个 FFM。</font></p>
-<p><font color="black" size="5">  合成的 CE-CT 图像&nbsp;$\hat{y}$ 和真实的 CE-CT 图像 y 将一起输入鉴别器 D。生成器 G 的目的是欺骗鉴别器 D。相反，鉴别器 D 试图区分其输入的类型：真实的 CE-CT 图像或合成的 CE-CT 图像。对于生成器G，这个过程可以描述如下:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png" alt=""></p>
-<p><font color="black" size="5">  为了稳定训练过程，我们利用带有梯度惩罚的 WGAN 来训练 GAN 的判别器。判别器D的目标函数可以定义为方程2:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png" alt=""></p>
-<p><font color="black" size="5">  $\hat{x}$是一个新样本，它是通过输入和合成 CE-CT 图像之间的线性插值生成的</font></p>
-<p><font color="black" size="5">  为了保证生成的CE-CT图像$\hat{y}$尽可能接近真实的CE-CT图像y，我们采用L1距离作为重建损失，其定义如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png" alt=""></p>
-<p><font color="black" size="5">  最后，生成器 G 的目标表述为方程 4:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png" alt=""></p>
-<p><font color="black" size="5">  本文中λ1、λ2、λ3、λ4的系数分别为1、1、5、25。生成器 G 和鉴别器 D 尝试分别最小化方程 4 和方程 2。</font></p>
-<h3 id="font-color-black-size-5-2-PPM-font"><a class="header-anchor" href="#font-color-black-size-5-2-PPM-font">¶</a><font color="black" size="5">2.PPM</font></h3>
-<p><font color="black" size="5">  为了增强编码器捕获不同尺度语义特征的能力，我们将 PPM 引入到跨模态医学图像合成任务中。更具体地说，PPM的概述如图2所示，它可以有效地捕获不同尺度的语义信息。PPM的详细介绍可以参见《Pyramid scene parsing network》</font></p>
-<h3 id="font-color-black-size-5-3-FFM-font"><a class="header-anchor" href="#font-color-black-size-5-3-FFM-font">¶</a><font color="black" size="5">3.FFM</font></h3>
-<p><font color="black" size="5">  语义特征在解码过程中从解码器的深层传递到浅层，这不可避免地导致特征丢失。为了充分利用语义特征，从 PPM 中提取的特征将沿着 IFP 传递到解码器的每一层。 IFP是一系列具有不同上采样率的上采样层。为了融合不同层次的特征，作者设计了一种新颖的FFM，如图3所示。从 PPM 和之前的解码器单元提取的特征将被馈送到串联层以形成中间特征。中间特征和从编码器单元提取的特征将一起输入注意门以形成最终特征向量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png" alt=""></p>
-<h2 id="font-color-black-size-5-三、实验-font"><a class="header-anchor" href="#font-color-black-size-5-三、实验-font">¶</a><font color="black" size="5">三、实验</font></h2>
-<p><font color="black" size="5">  实验中使用的数据集是内部的对比增强CT数据集，并没有向外公开，使用NC-ART图像对和NC-PV图像对分别用于训练两个模型（即ART模型和PV模型），以分别合成ART图像和PV图像。对于测试，仅使用 NC 图像作为输入来合成相应的 CE-CT 图像。</font></p>
+<p><font color="blue" size="5">  <strong>1）</strong>提出了一种新颖的图像合成框架，它可以从
+NC图像自动合成 ART 和 PV 阶段的 CE-CT 图像。</font></p>
+<p><font color="blue" size="5">  <strong>2）</strong>新设计的生成模型在
+PPM、IFP 和 FFM
+的帮助下，能够有效捕获全局和局部语义信息，并防止解码层中的信息稀释。</font></p>
+<h2 id="二方法"><font color="black" size="5">二、方法</font></h2>
+<h3 id="架构"><font color="black" size="5">1.架构</font></h3>
+<p><font color="black" size="5">  首先，让<span class="math inline">\(x_i\in X\)</span>和<span class="math inline">\(y_i\in
+Y\)</span>分别表示源域图像（NC）和目标域图像（ART或PV阶段的CE-CT图像）当中的训练图像。对于源域中给定的输入图像
+x，提出的改进 cGAN 旨在合成 CE-CT 图像 <span class="math inline">\(\hat{y}\)</span>，该图像应尽可能与真实的 CE-CT
+图像 y
+相似。所提出的改进cGAN由两个模型组成：鉴别器D和生成器G。生成器G以NC图像作为输入并生成相应的CE-CT图像。鉴别器
+D 学习区分其输入的类型：真实的或合成的 CE-CT 图像如图1所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png"></p>
+<p><font color="black" size="5">  首先，NC图像输入到编码器，编码器的前四层是在
+ImageNet 训练集上预训练的 ResNet，之后添加了两个卷积层。</font></p>
+<p><font color="black" size="5">  编码器的输出将被输入到 PPM
+中以形成新的特征向量，该向量将沿着 IFP 传递到解码器中的每个
+FFM。</font></p>
+<p><font color="black" size="5">  合成的 CE-CT 图像&nbsp;<span class="math inline">\(\hat{y}\)</span> 和真实的 CE-CT 图像 y
+将一起输入鉴别器 D。生成器 G 的目的是欺骗鉴别器 D。相反，鉴别器 D
+试图区分其输入的类型：真实的 CE-CT 图像或合成的 CE-CT
+图像。对于生成器G，这个过程可以描述如下:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png"></p>
+<p><font color="black" size="5">  为了稳定训练过程，我们利用带有梯度惩罚的
+WGAN 来训练 GAN 的判别器。判别器D的目标函数可以定义为方程2:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\hat{x}\)</span>是一个新样本，它是通过输入和合成
+CE-CT 图像之间的线性插值生成的</font></p>
+<p><font color="black" size="5">  为了保证生成的CE-CT图像<span class="math inline">\(\hat{y}\)</span>尽可能接近真实的CE-CT图像y，我们采用L1距离作为重建损失，其定义如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png"></p>
+<p><font color="black" size="5">  最后，生成器 G 的目标表述为方程
+4:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png"></p>
+<p><font color="black" size="5">  本文中λ1、λ2、λ3、λ4的系数分别为1、1、5、25。生成器
+G 和鉴别器 D 尝试分别最小化方程 4 和方程 2。</font></p>
+<h3 id="ppm"><font color="black" size="5">2.PPM</font></h3>
+<p><font color="black" size="5">  为了增强编码器捕获不同尺度语义特征的能力，我们将
+PPM
+引入到跨模态医学图像合成任务中。更具体地说，PPM的概述如图2所示，它可以有效地捕获不同尺度的语义信息。PPM的详细介绍可以参见《Pyramid
+scene parsing network》</font></p>
+<h3 id="ffm"><font color="black" size="5">3.FFM</font></h3>
+<p><font color="black" size="5">  语义特征在解码过程中从解码器的深层传递到浅层，这不可避免地导致特征丢失。为了充分利用语义特征，从
+PPM 中提取的特征将沿着 IFP 传递到解码器的每一层。
+IFP是一系列具有不同上采样率的上采样层。为了融合不同层次的特征，作者设计了一种新颖的FFM，如图3所示。从
+PPM
+和之前的解码器单元提取的特征将被馈送到串联层以形成中间特征。中间特征和从编码器单元提取的特征将一起输入注意门以形成最终特征向量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png"></p>
+<h2 id="三实验"><font color="black" size="5">三、实验</font></h2>
+<p><font color="black" size="5">  实验中使用的数据集是内部的对比增强CT数据集，并没有向外公开，使用NC-ART图像对和NC-PV图像对分别用于训练两个模型（即ART模型和PV模型），以分别合成ART图像和PV图像。对于测试，仅使用
+NC 图像作为输入来合成相应的 CE-CT 图像。</font></p>
 <p><font color="black" size="5">  在本文中，结构相似性指数（SSIM）和峰值信噪比（PSNR）用于评估合成图像和真实CE-CT图像之间的差异。为了定量评估合成图像中肿瘤区域的质量，我们计算了估计的CE-CT图像与真实CE-CT图像之间的密度特征的皮尔逊相关系数（PCC），它可以反映合成图像内平均像素密度的比率。病变到肝实质的平均像素密度。</font></p>
-<p><font color="black" size="5">  作者将他们所提出的模型与Pix2pix GAN 和 Cycle GAN 在从 NC 图像合成 ART 和 PV 阶段的 CE-CT 图像方面的性能进行了比较。不同的定量结果如下表所展示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png" alt=""></p>
+<p><font color="black" size="5">  作者将他们所提出的模型与Pix2pix GAN
+和 Cycle GAN 在从 NC 图像合成 ART 和 PV 阶段的 CE-CT
+图像方面的性能进行了比较。不同的定量结果如下表所展示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png"></p>
 <p><font color="black" size="5">  图4显示了不同的定性结果，这表明从所提出的模型生成的CE-CT图像的FFL最接近真实的CE-CT图像。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png"></p>
 <p><font color="black" size="5">  所提出模型的PCC可视化如图5所示，进一步说明所提出的模型可以学习病变内部平均像素密度与肝实质平均像素密度的比率。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png" alt=""></p>
-<p><font color="black" size="5">  最后，作者进行了消融研究，以测试 PPM、IFP 和提出的 FFM 在合成 CE-CT 图像中的贡献。定量结果如表 2 所示。“模型 1”是我们的基线模型，编码器和解码器之间使用跳跃连接。 “模型2”是我们在编码器和解码器之间添加金字塔池化模块。 “模型3”是我们通过信息流路径在金字塔池化模块和解码器之间添加跳过连接。 “建议模型”是完整模型。定量结果表明，通过引入 PPM、IFP 和提出的 FFM，在 PSNR 和 SSIM 评分方面提高了合成 CE-CT 图像的质量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png" alt=""></p>
-<h1>《Contrast Phase Classification with a Generative Adversarial Network》</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png"></p>
+<p><font color="black" size="5">  最后，作者进行了消融研究，以测试
+PPM、IFP 和提出的 FFM 在合成 CE-CT 图像中的贡献。定量结果如表 2
+所示。“模型 1”是我们的基线模型，编码器和解码器之间使用跳跃连接。
+“模型2”是我们在编码器和解码器之间添加金字塔池化模块。
+“模型3”是我们通过信息流路径在金字塔池化模块和解码器之间添加跳过连接。
+“建议模型”是完整模型。定量结果表明，通过引入 PPM、IFP 和提出的 FFM，在
+PSNR 和 SSIM 评分方面提高了合成 CE-CT 图像的质量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png"></p>
+<h1 id="contrast-phase-classification-with-a-generative-adversarial-network">《Contrast
+Phase Classification with a Generative Adversarial Network》</h1>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -876,8 +917,15 @@
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
-<h1>总结</h1>
-<p><font color="black" size="5">  第一篇文章讲的是提出了一种改进的 cGAN，它可以从 NC 图像生成高质量的 CE-CT 图像，而无需注射造影剂。定量和定性实验结果表明，所提出的模型在 PSNR、SSIM 和 PCC 评分方面优于对比模型。除此之外，还进行了消融研究，分析金字塔池化模型、信息流路径和特征融合模型在合成 CE-CT 图像中的有效性。然而，为了获得ART和PV阶段的CE-CT图像，需要训练两个生成器模型，这增加了训练时间。作者也提出了未来会尝试通过生成器从 NC 图像合成不同阶段的 CE-CT 图像。</font></p>
+<h1 id="总结">总结</h1>
+<p><font color="black" size="5">  第一篇文章讲的是提出了一种改进的
+cGAN，它可以从 NC 图像生成高质量的 CE-CT
+图像，而无需注射造影剂。定量和定性实验结果表明，所提出的模型在
+PSNR、SSIM 和 PCC
+评分方面优于对比模型。除此之外，还进行了消融研究，分析金字塔池化模型、信息流路径和特征融合模型在合成
+CE-CT
+图像中的有效性。然而，为了获得ART和PV阶段的CE-CT图像，需要训练两个生成器模型，这增加了训练时间。作者也提出了未来会尝试通过生成器从
+NC 图像合成不同阶段的 CE-CT 图像。</font></p>
 
     </article>
     <!-- license -->
@@ -1074,7 +1122,10 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80-font"><span class="toc-number">1.1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-1-CE-CT%E5%9B%BE%E5%83%8F%E6%A6%82%E8%BF%B0%E4%BB%A5%E5%8F%8A%E5%B1%80%E9%99%90-font"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.CE-CT图像概述以及局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-2-GAN-font"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.GAN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-%E4%BA%8C%E3%80%81%E6%96%B9%E6%B3%95-font"><span class="toc-number">1.2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-1-%E6%9E%B6%E6%9E%84-font"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-2-PPM-font"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.PPM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-3-FFM-font"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.FFM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-%E4%B8%89%E3%80%81%E5%AE%9E%E9%AA%8C-font"><span class="toc-number">1.3.</span> <span class="toc-text">三、实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">《Contrast Phase Classification with a Generative Adversarial Network》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network"><span class="toc-number">1.</span> <span class="toc-text">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ce-ct%E5%9B%BE%E5%83%8F%E6%A6%82%E8%BF%B0%E4%BB%A5%E5%8F%8A%E5%B1%80%E9%99%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.CE-CT图像概述以及局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gan"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.GAN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ppm"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.PPM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ffm"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.FFM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.3.</span> <span class="toc-text">三、实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#contrast-phase-classification-with-a-generative-adversarial-network"><span class="toc-number">2.</span> <span class="toc-text">《Contrast
+Phase Classification with a Generative Adversarial Network》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->

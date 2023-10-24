@@ -512,131 +512,185 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1>一、前言</h1>
-<p><font color="black" size="5">  之前介绍到的扩散模型,虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味着我们想要训练一个强大的扩散模型去生成高分辩图像，可能需要巨大的参数量和高昂的训练成本，一般功能强大的diffusion models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个 A100 GPU 上生成 50k 样本大约需要 5 天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练 DM 模型，同时保持其效果。</font></p>
-<p><font color="black" size="5">  作者认为Diffusion model与其他基于似然可能性的模型类似（如VAE），学习过程能够被分为两个阶段：</font></p>
+        <h1 id="一前言">一、前言</h1>
+<p><font color="black" size="5">  之前介绍到的扩散模型,虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味着我们想要训练一个强大的扩散模型去生成高分辩图像，可能需要巨大的参数量和高昂的训练成本，一般功能强大的diffusion
+models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个
+A100 GPU 上生成 50k 样本大约需要 5
+天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练
+DM 模型，同时保持其效果。</font></p>
+<p><font color="black" size="5">  作者认为Diffusion
+model与其他基于似然可能性的模型类似（如VAE），学习过程能够被分为两个阶段：</font></p>
 <ul>
-<li><font color="black" size="5">第一阶段**：感知压缩阶段（Perceptual Compression Stage）**用于压缩高频的、纹理细节等信息，学习少量的语义信息。</font></li>
-<li><font color="black" size="5">第二阶段：**语义压缩阶段（Semantic Compression Stage）**使用生成模型学习数据的语义和概念。</font></li>
+<li><font color="black" size="5">第一阶段<strong>：感知压缩阶段（Perceptual
+Compression
+Stage）</strong>用于压缩高频的、纹理细节等信息，学习少量的语义信息。</font></li>
+<li><font color="black" size="5">第二阶段：<strong>语义压缩阶段（Semantic
+Compression
+Stage）</strong>使用生成模型学习数据的语义和概念。</font></li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png"></p>
 <p><font color="black" size="5">  由上图所展示的横轴是接收到的图像信息量累积的比特数，纵坐标是失真程度，也是模型的损失。随着接受到的比特数增大，模型刚开始学到的是semantic部分的压缩，这一阶段是人物语义部分转变损失下降的很快，然后学习到的是细节部分的压缩，这是perceptual细节处的转变，损失开始缓慢的下降。我们能够发现大多比特都被分配在感知压缩阶段学习那些难以察觉的细节,也就是说<strong>图像压缩感知信息的步骤要远远多于图像压缩语义信息的步骤</strong>。</font></p>
 <p><font color="black" size="5">  总的来说，上图说明了两个事情：</font></p>
 <ul>
-<li>
-<p><font color="red" size="5"><strong>小图主要提供语义信息</strong>：对于小分辨率的图像增加比特数时，图像语义信息猛涨（失真程度猛降）</font></p>
-</li>
-<li>
-<p><font color="red" size="5"><strong>大图比小图多出来那部分增加的是感知信息</strong>：随着分辨率的增加，能“看”到的信息也会增加，就是在增加感知信息。模型在大多数时候都在处理几乎无意义的感知压缩，在感知压缩过程中，尽管在每一步像素的变化的非常的微小，但是依然需要在整个图像域上进行计算loss，这就会造成了巨大且无意义的计算量。</font></p>
-</li>
+<li><p><font color="red" size="5"><strong>小图主要提供语义信息</strong>：对于小分辨率的图像增加比特数时，图像语义信息猛涨（失真程度猛降）</font></p></li>
+<li><p><font color="red" size="5"><strong>大图比小图多出来那部分增加的是感知信息</strong>：随着分辨率的增加，能“看”到的信息也会增加，就是在增加感知信息。模型在大多数时候都在处理几乎无意义的感知压缩，在感知压缩过程中，尽管在每一步像素的变化的非常的微小，但是依然需要在整个图像域上进行计算loss，这就会造成了巨大且无意义的计算量。</font></p></li>
 </ul>
-<p><font color="black" size="5">  为了规避DM的这个缺陷，**作者想到的是用自动编码器学习一个小图到大图的映射，再用DM学习语义信息。**这样我们就能重建压缩数据，摆脱一些无用的特征转而关注那些重要的特征，大大减少了我们的训练负担。这种方法所带来的好处就是能够大幅降低训练和采样阶段的计算复杂度，让文图生成等任务能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181015105.png" alt=""></p>
-<h1>二、原理</h1>
+<p><font color="black" size="5">  为了规避DM的这个缺陷，<strong>作者想到的是用自动编码器学习一个小图到大图的映射，再用DM学习语义信息。</strong>这样我们就能重建压缩数据，摆脱一些无用的特征转而关注那些重要的特征，大大减少了我们的训练负担。这种方法所带来的好处就是能够大幅降低训练和采样阶段的计算复杂度，让文图生成等任务能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181015105.png"></p>
+<h1 id="二原理">二、原理</h1>
 <p><font color="black" size="5">  本文的关键思想：<strong>你可以看作原本是扩散模型的学习过程被一分为二，利用一个自动编码器去学习感知信息，而扩散模型只是去学习语义信息，再把条件和图像的语义对应起来。</strong></font></p>
 <p><font color="black" size="5">  作者为了规避上述扩散模型耗费大量的计算成本在感知压缩阶段这一缺点。利用了一个自动编码模型来学习了一个在感知上与图像空间等价的潜在空间。</font></p>
 <p><font color="black" size="5">  作者提出了使用潜在空间的优势：</font></p>
 <ul>
-<li>
-<p><font color="black" size="5">扩散模型训练以及采样过程从高维图像空间转换为了在低维空间上进行，所以<strong>能够提高计算效率；</strong></font></p>
-</li>
-<li>
-<p><font color="black" size="5">利用从 UNet 架构继承的 DM 的归纳偏差，这使得它们对于具有空间结构的数据特别有效，从而减轻了对先前方法所要求的降低质量的压缩级别的需求。</font></p>
+<li><p><font color="black" size="5">扩散模型训练以及采样过程从高维图像空间转换为了在低维空间上进行，所以<strong>能够提高计算效率；</strong></font></p></li>
+<li><p><font color="black" size="5">利用从 UNet 架构继承的 DM
+的归纳偏差，这使得它们对于具有空间结构的数据特别有效，从而减轻了对先前方法所要求的降低质量的压缩级别的需求。</font></p>
 <blockquote>
 <p><font color="black" size="5"><strong>深度神经网络结构</strong>就偏好性的认为，层次化处理信息有更好效果；<strong>卷积神经网络</strong>认为信息具有空间局部性（locality），可以用滑动卷积共享权重方式降低参数空间；<strong>反馈神经网络</strong>则将时序信息考虑进来强调顺序重要性；<strong>图网络</strong>则是认为中心节点与邻居节点的相似性会更好引导信息流动。对于不同分布的数据，合理的归纳偏置还能够反映不同任务之间的共性，从而帮助模型快速适应不同的任务，实现分布外泛化。</font></p>
-</blockquote>
-</li>
-<li>
-<p><font color="black" size="5">最后，我们获得了通用压缩模型，其潜在空间可用于训练多个生成模型，也可用于其他下游应用，例如单图像 CLIP 引导合成 。</font></p>
-</li>
+</blockquote></li>
+<li><p><font color="black" size="5">最后，我们获得了通用压缩模型，其潜在空间可用于训练多个生成模型，也可用于其他下游应用，例如单图像
+CLIP 引导合成 。</font></p></li>
 </ul>
-<p><font color="black" size="5">  接下来就来介绍Latent Diffusion model的模型架构，如下图所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911046.png" alt=""></p>
+<p><font color="black" size="5">  接下来就来介绍Latent Diffusion
+model的模型架构，如下图所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911046.png"></p>
 <p><font color="black" size="5">  整个LDM可以分为三个主要组件：</font></p>
 <p><font color="black" size="5">  1.红色部分为Autoencoder，<strong>用于处理感知图像压缩，将图像从像素空间转换到潜在空间</strong>。</font></p>
-<p><font color="black" size="5">  2.绿色部分为LDM的主体部分，包含time-conditional attention UNet。</font></p>
-<p><font color="black" size="5">  3.最右边白色部分是条件编码器$\tau_\theta$，可以融入不同模态的条件信息。</font></p>
+<p><font color="black" size="5">  2.绿色部分为LDM的主体部分，包含time-conditional
+attention UNet。</font></p>
+<p><font color="black" size="5">  3.最右边白色部分是条件编码器<span class="math inline">\(\tau_\theta\)</span>，可以融入不同模态的条件信息。</font></p>
 <p><font color="black" size="5">  本质上LDM是一种二阶段的图片生成方法，需要先训练VAE模型再训练DM模型。DM训练时会利用已训练好的VAE的encoder将数据从像素空间切换到隐空间。预测时，在隐空间随机采样一个噪声，用DM进行去噪。最后将DM的预测结果传给VAE的Decode进行解码。下面将详细逐步介绍这三块内容。</font></p>
-<h2 id="font-color-black-size-5-1-感知图像压缩模型-font"><a class="header-anchor" href="#font-color-black-size-5-1-感知图像压缩模型-font">¶</a><font color="black" size="5">1.感知图像压缩模型</font></h2>
-<p><font color="black" size="5">  <strong>感知压缩模型</strong>本质上是利用一个预训练的自动编码器。其分为编码器和解码器两个部分，编码器$\textcolor{blue}{\varepsilon}$把图像$\textcolor{blue}{x∈R<sup>{H×W×3}}$映射到潜在空间的特征$\textcolor{blue}{z=\varepsilon(x)}$，解码器$\textcolor{blue}{\mathcal{D}}$把特征$\textcolor{blue}{z∈R</sup>{h×w×c}}$映射为图像$\textcolor{blue}{\tilde{x}=\mathcal{D}(z)=\mathcal{D}(\varepsilon(x))}$，其中编码器按照不同的下采样系数$\textcolor{blue}{f=\frac{H}{h}=\frac{W}{w}}$对图像进行下采样，作者研究了不同这个下采样因子，最后选择$\textcolor{blue}{f=2^m,m \in N}$。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911519.png" alt=""></p>
+<h2 id="感知图像压缩模型"><font color="black" size="5">1.感知图像压缩模型</font></h2>
+<p><font color="black" size="5">  <strong>感知压缩模型</strong>本质上是利用一个预训练的自动编码器。其分为编码器和解码器两个部分，编码器<span class="math inline">\(\textcolor{blue}{\varepsilon}\)</span>把图像<span class="math inline">\(\textcolor{blue}{x∈R^{H×W×3}}\)</span>映射到潜在空间的特征<span class="math inline">\(\textcolor{blue}{z=\varepsilon(x)}\)</span>，解码器<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>把特征<span class="math inline">\(\textcolor{blue}{z∈R^{h×w×c}}\)</span>映射为图像<span class="math inline">\(\textcolor{blue}{\tilde{x}=\mathcal{D}(z)=\mathcal{D}(\varepsilon(x))}\)</span>，其中编码器按照不同的下采样系数<span class="math inline">\(\textcolor{blue}{f=\frac{H}{h}=\frac{W}{w}}\)</span>对图像进行下采样，作者研究了不同这个下采样因子，最后选择<span class="math inline">\(\textcolor{blue}{f=2^m,m \in
+N}\)</span>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911519.png"></p>
 <p><font color="black" size="5">  该模型由感知损失和patch-based对抗损失组合训练，其目标函数主要由三部分所组成：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018436.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018436.png"></p>
 <ul>
-<li><font color="black" size="5">第一部分（紫色块）就是<strong>感知损失（$L_{rec}$）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground Truth）、网络生成结果（Prediciton）作为其输入，得到对应的输出特征：feature_gt、feature_pre，然后使用feature_gt与feature_pre构造损失（通常为L2损失），目的就是最小化feature_gt、feature_pre之间的差异，<strong>逼近真实图像与网络生成结果之间的深层信息</strong>，也就是感知信息，相比普通的L2损失而言，可以增强输出特征的细节信息。</font></li>
-<li><font color="black" size="5">第二部分（绿色块）就是<strong>基于patch的对抗损失（$L_{adv}$）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，<strong>旨在区分真实图像和重建图像</strong>。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，而是引用来自VQGAN当中的对抗损失）。</font></li>
+<li><font color="black" size="5">第一部分（紫色块）就是<strong>感知损失（<span class="math inline">\(L_{rec}\)</span>）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground
+Truth）、网络生成结果（Prediciton）作为其输入，得到对应的输出特征：feature_gt、feature_pre，然后使用feature_gt与feature_pre构造损失（通常为L2损失），目的就是最小化feature_gt、feature_pre之间的差异，<strong>逼近真实图像与网络生成结果之间的深层信息</strong>，也就是感知信息，相比普通的L2损失而言，可以增强输出特征的细节信息。</font></li>
+<li><font color="black" size="5">第二部分（绿色块）就是<strong>基于patch的对抗损失（<span class="math inline">\(L_{adv}\)</span>）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，<strong>旨在区分真实图像和重建图像</strong>。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，而是引用来自VQGAN当中的对抗损失）。</font></li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018414.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018414.png"></p>
 <blockquote>
-<p><font color="black" size="5">引入感知损失和patch-based对抗损失是为了确保通过局部真实性将重建图像限制在真实图像流形内，并避免仅依赖像素空间损失（例如 L2 或 L1 损失）而引入的模糊。</font></p>
+<p><font color="black" size="5">引入感知损失和patch-based对抗损失是为了确保通过局部真实性将重建图像限制在真实图像流形内，并避免仅依赖像素空间损失（例如
+L2 或 L1 损失）而引入的模糊。</font></p>
 </blockquote>
 <ul>
-<li><font color="black" size="5">第三部分（黄色块）是<strong>正则化损失项（$L_{reg}$</strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者介绍了两者不同的正则化方法：</font></li>
+<li><font color="black" size="5">第三部分（黄色块）是<strong>正则化损失项（<span class="math inline">\(L_{reg}\)</span></strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者介绍了两者不同的正则化方法：</font></li>
 </ul>
-<p><font color="black" size="5">**1)KL-reg:**对学习到的潜在空间施加 KL 惩罚，类似于VAE；</font></p>
+<p><font color="black" size="5"><strong>1)KL-reg:</strong>对学习到的潜在空间施加
+KL 惩罚，类似于VAE；</font></p>
 <p><font color="black" size="5"><strong>2)VQ-reg</strong>:在解码器内使用矢量量化层（使得空间为离散的）,通过学习|Z|个不同典范的codebook，用矢量量化层正则化潜在空间。（参考VQGAN）；</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261059880.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261059880.png"></p>
 <blockquote>
-<p><font color="blue" size="5">简要概述一下VQGAN的工作原理就是：输入图像通过encoder编码后得到中间特征变量$\hat{z}$普通的AutoEncoder会将$\hat{z}$直接送入解码器中进行图像重建。而在VQVAE/VQGAN中，会将$\hat{z}$进行进一步的离散化编码。需要预先生成一个离散数值的codebook&nbsp;$\mathcal{Z}$，在$\hat{z}$的每一个编码位置都去$\mathcal{Z}$中去寻找其距离最近的code，生成具有相同维度的变量$z_q$，最后在已经数值离散化$z_q$的基础上使用CNN Decoder进行解码。</font></p>
+<p><font color="blue" size="5">简要概述一下VQGAN的工作原理就是：输入图像通过encoder编码后得到中间特征变量<span class="math inline">\(\hat{z}\)</span>普通的AutoEncoder会将<span class="math inline">\(\hat{z}\)</span>直接送入解码器中进行图像重建。而在VQVAE/VQGAN中，会将<span class="math inline">\(\hat{z}\)</span>进行进一步的离散化编码。需要预先生成一个离散数值的codebook&nbsp;<span class="math inline">\(\mathcal{Z}\)</span>，在<span class="math inline">\(\hat{z}\)</span>的每一个编码位置都去<span class="math inline">\(\mathcal{Z}\)</span>中去寻找其距离最近的code，生成具有相同维度的变量<span class="math inline">\(z_q\)</span>，最后在已经数值离散化<span class="math inline">\(z_q\)</span>的基础上使用CNN
+Decoder进行解码。</font></p>
 </blockquote>
-<p><font color="black" size="5">  如何使用这两个不同的正则化方法，其实就是看你感知压缩模型选用的是VAE或者VQGAN，KL-reg不用多说，因为VAE就是带有KL的正则化项的autoencoder。对于 VQ-reg，VQ 操作被算进了 Decoder 之中，即<strong>扩散模型之后</strong>，所以扩散模型仍然是在连续（而非量化后）的特征空间上执行的。</font></p>
+<p><font color="black" size="5">  如何使用这两个不同的正则化方法，其实就是看你感知压缩模型选用的是VAE或者VQGAN，KL-reg不用多说，因为VAE就是带有KL的正则化项的autoencoder。对于
+VQ-reg，VQ 操作被算进了 Decoder
+之中，即<strong>扩散模型之后</strong>，所以扩散模型仍然是在连续（而非量化后）的特征空间上执行的。</font></p>
 <p><font color="black" size="5">  本文还列出了分别使用这两种不同的正则化所生成图像的示例图。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261128385.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261128385.png"></p>
 <blockquote>
-<p><font color="black" size="5">在官方发布的预训练自动编码器模型中，会看到KL和VQ两种实现。在Stable Diffusion中主要采用AutoencoderKL这种实现。</font></p>
+<p><font color="black" size="5">在官方发布的预训练自动编码器模型中，会看到KL和VQ两种实现。在Stable
+Diffusion中主要采用AutoencoderKL这种实现。</font></p>
 </blockquote>
-<h2 id="font-color-black-size-5-2-潜在扩散模型-font"><a class="header-anchor" href="#font-color-black-size-5-2-潜在扩散模型-font">¶</a><font color="black" size="5">2.潜在扩散模型</font></h2>
+<h2 id="潜在扩散模型"><font color="black" size="5">2.潜在扩散模型</font></h2>
 <p><font color="black" size="5">  普通扩散模型的目标函数如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912661.png" alt=""></p>
-<p><font color="black" size="5">  而在潜在扩散模型当中，引入了前面$\textcolor{blue}{\varepsilon}$和$\textcolor{blue}{\mathcal{D}}$组成的预训练感知压缩模型，我们能够得到一个低维的潜在空间，其中原空间中的高频、不可察觉的细节被抽象出来。与高维像素空间相比，这个潜在空间更适合基于似然的生成模型，因为它们现在可以：<strong>(1)关注数据中重要的语义信息; (2)在一个低维的、计算上更有效的空间中进行训练。</strong></font></p>
-<p><font color="black" size="5">  由编码器得到的$z_t$,让模型在潜在表示空间中进行学习，相应的目标函数就可以写出如下形式：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912602.png" alt=""></p>
-<h2 id="font-color-black-size-5-3-条件机制-font"><a class="header-anchor" href="#font-color-black-size-5-3-条件机制-font">¶</a><font color="black" size="5">3.条件机制</font></h2>
-<p><font color="black" size="5">  除了无条件图片生成外，LDMs还可以进行条件图片生成，这主要是通过条件去噪自动编码器$\textcolor{blue}{\epsilon_\theta(z_t,y,t)}$来实现。输入 y可以是文本、语义图或者轮廓图等。</font></p>
-<p><font color="black" size="5">  作者在原有的Unet 主干网络上引入 cross-attention 机制，来融入条件信息。为了能够预处理多个不同的模态$\textcolor{blue}y$ ，论文引入了一个特定邻域的编码器$\textcolor{blue}{\tau_\theta}$ ，它可以将$\textcolor{blue}{y}$投影到中间特征&nbsp;$\textcolor{blue}{\tau_{\theta}(y) \in R^{M\times d_\tau}}$，随后和DM的某层输出进行融合。假设$\textcolor{blue}{ φ_i(z_t)\in R^N \times d^i_\epsilon}$表示隐变量z在 UNet第i层时间步为t时的输出，下面需要将$\textcolor{blue}{ φ_i(z_t)}$与$\textcolor{blue}{\tau_{\theta}(y)}$用交叉注意力机制融合，如下式：&nbsp;</font></p>
-<p>$$\Large \textcolor{blue}{Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d}})\cdot V}$$</p>
-<p>$$\Large \textcolor{blue}{Q = W^{(i)}_Q · φ_i(z_t), K = W^{(i)}_K · τ_θ(y), V = W^{(i)}_V · τ_θ(y)}$$</p>
-<p><font color="black" size="5">  其中$\textcolor{blue}{ φ_i(z_t)\in R^N \times d^i_\epsilon}$表示 U-Net 实现$\textcolor{blue}{\epsilon_{\theta}}$的 flattened 中间层表示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912624.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912661.png"></p>
+<p><font color="black" size="5">  而在潜在扩散模型当中，引入了前面<span class="math inline">\(\textcolor{blue}{\varepsilon}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>组成的预训练感知压缩模型，我们能够得到一个低维的潜在空间，其中原空间中的高频、不可察觉的细节被抽象出来。与高维像素空间相比，这个潜在空间更适合基于似然的生成模型，因为它们现在可以：<strong>(1)关注数据中重要的语义信息;
+(2)在一个低维的、计算上更有效的空间中进行训练。</strong></font></p>
+<p><font color="black" size="5">  由编码器得到的<span class="math inline">\(z_t\)</span>,让模型在潜在表示空间中进行学习，相应的目标函数就可以写出如下形式：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912602.png"></p>
+<h2 id="条件机制"><font color="black" size="5">3.条件机制</font></h2>
+<p><font color="black" size="5">  除了无条件图片生成外，LDMs还可以进行条件图片生成，这主要是通过条件去噪自动编码器<span class="math inline">\(\textcolor{blue}{\epsilon_\theta(z_t,y,t)}\)</span>来实现。输入
+y可以是文本、语义图或者轮廓图等。</font></p>
+<p><font color="black" size="5">  作者在原有的Unet 主干网络上引入
+cross-attention 机制，来融入条件信息。为了能够预处理多个不同的模态<span class="math inline">\(\textcolor{blue}y\)</span>
+，论文引入了一个特定邻域的编码器<span class="math inline">\(\textcolor{blue}{\tau_\theta}\)</span>
+，它可以将<span class="math inline">\(\textcolor{blue}{y}\)</span>投影到中间特征&nbsp;<span class="math inline">\(\textcolor{blue}{\tau_{\theta}(y) \in R^{M\times
+d_\tau}}\)</span>，随后和DM的某层输出进行融合。假设<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)\in R^N \times
+d^i_\epsilon}\)</span>表示隐变量z在
+UNet第i层时间步为t时的输出，下面需要将<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)}\)</span>与<span class="math inline">\(\textcolor{blue}{\tau_{\theta}(y)}\)</span>用交叉注意力机制融合，如下式：&nbsp;</font></p>
+<p><span class="math display">\[\Large
+\textcolor{blue}{Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d}})\cdot
+V}\]</span></p>
+<p><span class="math display">\[\Large \textcolor{blue}{Q = W^{(i)}_Q ·
+φ_i(z_t), K = W^{(i)}_K · τ_θ(y), V = W^{(i)}_V · τ_θ(y)}\]</span></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)\in R^N \times
+d^i_\epsilon}\)</span>表示 U-Net 实现<span class="math inline">\(\textcolor{blue}{\epsilon_{\theta}}\)</span>的
+flattened 中间层表示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912624.png"></p>
 <blockquote>
-<p><font color="black" size="5">这里的<strong>条件编码器</strong>要说一下，此时针对y的条件编码器还是随着LDM一起，从随机初始化开始逐步训练的。后来的知名作品 Stable Diffusion、Dalle2、Imagen 等等，都把这个条件编码器直接换成了CLIP模型里的文本Encoder。</font></p>
+<p><font color="black" size="5">这里的<strong>条件编码器</strong>要说一下，此时针对y的条件编码器还是随着LDM一起，从随机初始化开始逐步训练的。后来的知名作品
+Stable Diffusion、Dalle2、Imagen
+等等，都把这个条件编码器直接换成了CLIP模型里的文本Encoder。</font></p>
 </blockquote>
 <p><font color="black" size="5">  最终，我们的损失函数变为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260922745.png" alt=""></p>
-<p><font color="black" size="5">  在这里$\textcolor{blue}{\tau_\theta}$和$\textcolor{blue}{\epsilon_{\theta}}$在这里同时被优化，最后附上完整的LDMs流程图：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913744.png" alt=""></p>
-<h1>三、实验</h1>
-<p><font color="black" size="5">  论文的所用到的模型为LDMs，在无条件图片生成任务上用到的数据集为LSUN、FFHQ以及CelebA-HQ，在类别条件图片生成用到的数据集为ImageNet，在文图生成任务上用到的数据集为Conceptual Captions、LAION。论文设计了大量的对比实验，并分别对感知压缩权衡（下采样因子）、LDM生成效果对比进行了分析验证。并且还在其他任务上进行了实验，包括Super-Resolution、Inpainting、layout-condition在内的多种图片生成等任务</font></p>
-<h2 id="font-color-black-size-5-1-关于感知压缩的权衡-font"><a class="header-anchor" href="#font-color-black-size-5-1-关于感知压缩的权衡-font">¶</a><font color="black" size="5">1.关于感知压缩的权衡</font></h2>
-<p><font color="black" size="5">  通过分析对 encoder 使用不同的下采样系数$f \in {1,2,4,8,16,32}$对 LDM 造成的影响（设为1的时候表示基于原像素级别做扩散）：<br>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260922745.png"></p>
+<p><font color="black" size="5">  在这里<span class="math inline">\(\textcolor{blue}{\tau_\theta}\)</span>和<span class="math inline">\(\textcolor{blue}{\epsilon_{\theta}}\)</span>在这里同时被优化，最后附上完整的LDMs流程图：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913744.png"></p>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size="5">  论文的所用到的模型为LDMs，在无条件图片生成任务上用到的数据集为LSUN、FFHQ以及CelebA-HQ，在类别条件图片生成用到的数据集为ImageNet，在文图生成任务上用到的数据集为Conceptual
+Captions、LAION。论文设计了大量的对比实验，并分别对感知压缩权衡（下采样因子）、LDM生成效果对比进行了分析验证。并且还在其他任务上进行了实验，包括Super-Resolution、Inpainting、layout-condition在内的多种图片生成等任务</font></p>
+<h2 id="关于感知压缩的权衡"><font color="black" size="5">1.关于感知压缩的权衡</font></h2>
+<p><font color="black" size="5">  通过分析对 encoder
+使用不同的下采样系数<span class="math inline">\(f \in
+\{1,2,4,8,16,32\}\)</span>对 LDM
+造成的影响（设为1的时候表示基于原像素级别做扩散）：
 </font><font color="black" size="5">  </font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913330.png" alt=""></p>
-<p><font color="black" size="5">  上图是在 ImageNet数据集上训练的类条件模型的 2M 步训练进度函数的样本质量,我们可以看到:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913330.png"></p>
+<p><font color="black" size="5">  上图是在
+ImageNet数据集上训练的类条件模型的 2M
+步训练进度函数的样本质量,我们可以看到:</font></p>
 <ul>
-<li><font color="black" size="5">**1）**LDM-{1,2} 的下采样系数较小会导致训练进度缓慢;</font></li>
-<li><font color="black" size="5">**2）**当f值过大（如LDM-32）下采样会导致保真度停滞，这是由于压缩的太多导致信息丢失，限制了恢复的效果；</font></li>
-<li><font color="black" size="5"><strong>3）</strong> LDM-{4，8，16} 在效率和视觉感知结果之间取得了良好的平衡</font></li>
+<li><font color="black" size="5"><strong>1）</strong>LDM-{1,2}
+的下采样系数较小会导致训练进度缓慢;</font></li>
+<li><font color="black" size="5"><strong>2）</strong>当f值过大（如LDM-32）下采样会导致保真度停滞，这是由于压缩的太多导致信息丢失，限制了恢复的效果；</font></li>
+<li><font color="black" size="5"><strong>3）</strong> LDM-{4，8，16}
+在效率和视觉感知结果之间取得了良好的平衡</font></li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260914662.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260914662.png"></p>
 <p><font color="black" size="5">  左边是CelebA-HQ数据集上的结果，右边是ImageNet的结果。</font></p>
-<p><font color="black" size="5">  在上图中，拿左边LDM-16(紫色线)为例，可以看到有不同的标记，这些不同的标记意味着使用DDIM的采样下不同的采样步数，其采样步数从右到左分别为&nbsp; {10, 20, 50, 100, 200} 。这张图想表达的意思是：对于LDM-1和LDM-2这种下采样比例f相对较小的模型，即使采样部署足够多效果也依然差，而且速度还慢，表现为挤在左上角；对于LDM16和LDM-32这类下采样比例f相对比较大的模型，虽然在左边这张图上它们的表现似乎比LDM-8更好，但是看右边的图，对ImageNet这种复杂数据集来说LDM-32就崩了。</font></p>
+<p><font color="black" size="5">  在上图中，拿左边LDM-16(紫色线)为例，可以看到有不同的标记，这些不同的标记意味着使用DDIM的采样下不同的采样步数，其采样步数从右到左分别为&nbsp;
+{10, 20, 50, 100, 200}
+。这张图想表达的意思是：对于LDM-1和LDM-2这种下采样比例f相对较小的模型，即使采样部署足够多效果也依然差，而且速度还慢，表现为挤在左上角；对于LDM16和LDM-32这类下采样比例f相对比较大的模型，虽然在左边这张图上它们的表现似乎比LDM-8更好，但是看右边的图，对ImageNet这种复杂数据集来说LDM-32就崩了。</font></p>
 <p><strong><font color="black" size="5">  综合下来，LDM-4和-8是最好的选择，可能获得较高的生成质量。</font></strong></p>
-<h2 id="font-color-black-size-5-2-对比生成图像质量-font"><a class="header-anchor" href="#font-color-black-size-5-2-对比生成图像质量-font">¶</a><font color="black" size="5">2.对比生成图像质量</font></h2>
-<p><font color="black" size="5">  在$256^2$的 CelebA-HQ, FFHQ, LSUN-Churches and Bedrooms的数据集上训练了无条件的256x256的图像生成模型，并验证了：1）采样质量；2）用FID和Precision-and-Recall验证了它们数据的流形覆盖范围；下表总结了结果。&nbsp;</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260924768.png" alt=""></p>
-<p><font color="black" size="5">  除了 LSUN-Bedrooms 数据集之外，在所有数据集上都优于先前基于像素空间的方法，尽管使用了一半的参数并且需要的训练资源减少了 4 倍，但LDM的得分接近 ADM。</font></p>
-<p><font color="black" size="5">  此外，LDM 在精确度和召回率方面不断改进基于 GAN 的方法，从而确认了基于模式覆盖可能性的训练目标相对于对抗性方法的优势。下图中展示了每个数据集上的定性结果。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260925717.png" alt=""></p>
-<h2 id="font-color-black-size-5-3-条件潜在扩散-font"><a class="header-anchor" href="#font-color-black-size-5-3-条件潜在扩散-font">¶</a><font color="black" size="5">3.条件潜在扩散</font></h2>
-<p><font color="black" size="5">  对于<strong>文生图</strong>模型，训练了1.45B参数量的KL-正则化 LDM 条件，基于语言prompts在LAION-400M上。这里用了 BERT-tokenizer，并且引入了条件编码器作为transformer来进行潜空间编码，之后通过 multi-head cross-attention 注入UNet。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261146575.png" alt=""></p>
-<p><font color="black" size="5">  对于定量分析，这里遵循先前的工作并在 MS-COCO验证集上评估文本到图像的生成，模型改进了强大的 AR 和基于 GAN的方法。这里注意到使用了 classifier-free diffusion fuidance 会大大提高采样效率，比如有引导的 LDM-KL-8-G 与最近最先进的 AR 和用于文本到图像合成的扩散模型相当，同时大幅减少了参数量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261145774.png" alt=""></p>
-<p><font color="black" size="5">  遵循了先前的工作，作者验证了他们效果最好的 class-conditional（类别条件）ImageNet 模型，其中f是4和8，验证结果看下表，效果很能打。在这里，超越了最先进的扩散模型 ADM，同时显着降低了计算要求和参数数量 。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261144113.png" alt=""></p>
+<h2 id="对比生成图像质量"><font color="black" size="5">2.对比生成图像质量</font></h2>
+<p><font color="black" size="5">  在<span class="math inline">\(256^2\)</span>的 CelebA-HQ, FFHQ, LSUN-Churches
+and
+Bedrooms的数据集上训练了无条件的256x256的图像生成模型，并验证了：1）采样质量；2）用FID和Precision-and-Recall验证了它们数据的流形覆盖范围；下表总结了结果。&nbsp;</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260924768.png"></p>
+<p><font color="black" size="5">  除了 LSUN-Bedrooms
+数据集之外，在所有数据集上都优于先前基于像素空间的方法，尽管使用了一半的参数并且需要的训练资源减少了
+4 倍，但LDM的得分接近 ADM。</font></p>
+<p><font color="black" size="5">  此外，LDM
+在精确度和召回率方面不断改进基于 GAN
+的方法，从而确认了基于模式覆盖可能性的训练目标相对于对抗性方法的优势。下图中展示了每个数据集上的定性结果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260925717.png"></p>
+<h2 id="条件潜在扩散"><font color="black" size="5">3.条件潜在扩散</font></h2>
+<p><font color="black" size="5">  对于<strong>文生图</strong>模型，训练了1.45B参数量的KL-正则化
+LDM 条件，基于语言prompts在LAION-400M上。这里用了
+BERT-tokenizer，并且引入了条件编码器作为transformer来进行潜空间编码，之后通过
+multi-head cross-attention 注入UNet。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261146575.png"></p>
+<p><font color="black" size="5">  对于定量分析，这里遵循先前的工作并在
+MS-COCO验证集上评估文本到图像的生成，模型改进了强大的 AR 和基于
+GAN的方法。这里注意到使用了 classifier-free diffusion fuidance
+会大大提高采样效率，比如有引导的 LDM-KL-8-G 与最近最先进的 AR
+和用于文本到图像合成的扩散模型相当，同时大幅减少了参数量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261145774.png"></p>
+<p><font color="black" size="5">  遵循了先前的工作，作者验证了他们效果最好的
+class-conditional（类别条件）ImageNet
+模型，其中f是4和8，验证结果看下表，效果很能打。在这里，超越了最先进的扩散模型
+ADM，同时显着降低了计算要求和参数数量 。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261144113.png"></p>
 <p><font color="black" size="5">  </font></p>
-<h1>四、总结</h1>
-<p><font color="black" size="5">  本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，提出了Latent Diffusion Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。</font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，提出了Latent
+Diffusion
+Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。</font></p>
 
     </article>
     <!-- license -->
@@ -833,7 +887,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E6%A8%A1%E5%9E%8B-font"><span class="toc-number">2.1.</span> <span class="toc-text">1.感知图像压缩模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-font"><span class="toc-number">2.2.</span> <span class="toc-text">2.潜在扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3-%E6%9D%A1%E4%BB%B6%E6%9C%BA%E5%88%B6-font"><span class="toc-number">2.3.</span> <span class="toc-text">3.条件机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E5%85%B3%E4%BA%8E%E6%84%9F%E7%9F%A5%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%9D%83%E8%A1%A1-font"><span class="toc-number">3.1.</span> <span class="toc-text">1.关于感知压缩的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E5%AF%B9%E6%AF%94%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F-font"><span class="toc-number">3.2.</span> <span class="toc-text">2.对比生成图像质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3-%E6%9D%A1%E4%BB%B6%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3-font"><span class="toc-number">3.3.</span> <span class="toc-text">3.条件潜在扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.感知图像压缩模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.潜在扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3.条件机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%84%9F%E7%9F%A5%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">3.1.</span> <span class="toc-text">1.关于感知压缩的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.对比生成图像质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3"><span class="toc-number">3.3.</span> <span class="toc-text">3.条件潜在扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
