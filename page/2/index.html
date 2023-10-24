@@ -566,16 +566,16 @@
             </a>
             <div class="abstract-content">
                 一、前言
-  有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是DDPM以及SMLD（朗之万动力学），DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对对SMLD的一些预备，为后续做铺垫。
-1.什么是分数？
-  当我们能够从未知数据分布\(p_{data}(x)\)中采样出独立同分布的样本\(\lbrace x_i\in
-R^D\rbrace^N_{i=1}\)，我们定义分数为概率密度函数\(p(x)\)的对数似然关于x的梯度，即\(\textcolor{red}{\nabla...
+  你是否想过，当我们在玩生成模型的时候，实际上是在玩什么？其实就是想让它**“表示”概率分布**，从而能够通过其实现采样生成。
+
+  至于如何表示，不同的模型有不同的方法，但它们大致都可被归纳为两种范式，分别是：对数据的采样过程建模和对概率密度进行建模。前者不纠结于数据分布的概率密度，而是通过其它方法达到表示概率分布的目的，因此也被称为隐式(implicit)生成模型；而后者则直接让模型去估计概率密度，不绕圈子，于是被称为显式(explicit)生成模型。
+  而在显示生成模型中，有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
+                <div class="abstract-date" title="Last updated: 2023/10/24">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
                 </div>
                 <!-- tags -->
