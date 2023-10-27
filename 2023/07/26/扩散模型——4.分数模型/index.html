@@ -28,15 +28,15 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240838725.jpeg">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240826571.png">
-<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\v2-b49ba4d664e96b0a01b9570fa6d0ce00_1440w.gif">
-<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png">
-<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221515196.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241052666.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241448528.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241450903.png">
 <meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\1692691208053.png">
 <meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\1692692782178.png">
 <meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png">
 <meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png">
 <meta property="article:published_time" content="2023-07-26T09:32:09.000Z">
-<meta property="article:modified_time" content="2023-10-24T01:00:14.244Z">
+<meta property="article:modified_time" content="2023-10-27T07:06:04.970Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240838725.jpeg">
@@ -506,60 +506,137 @@
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240838725.jpeg" alt="NCSN 基于噪声的分数模型" style="zoom: 80%;"></p>
 <p><font color="black" size="5">  至于如何表示，不同的模型有不同的方法，但它们大致都可被归纳为两种范式，分别是：<strong>对数据的采样过程建模</strong>和<strong>对概率密度进行建模</strong>。前者不纠结于数据分布的概率密度，而是通过其它方法达到表示概率分布的目的，因此也被称为<strong>隐式(implicit)生成</strong>模型；而后者则直接让模型去估计概率密度，不绕圈子，于是被称为<strong>显式(explicit)生成</strong>模型。</font></p>
 <p><font color="black" size="5">  而在显示生成模型中，有两类概率生成模型，它们都涉及到了如何缓慢的增加噪声从而迭代的破坏训练数据，然后学习扭转这种破坏以形成数据的生成模型。它们分别是<strong>DDPM以及SMLD（朗之万动力学）</strong>，DDPM我们再熟悉不过了，但是对于SMLD而言似乎还有些许陌生，所以这一节主要是针对SMLD的一些预备，为后续做铺垫。</font></p>
-<h2 id="什么是分数"><font color="black" size="5">1.什么是分数？</font></h2>
+<h2 id="什么是分数"><font color="black" size="5">1.什么是分数？🤖</font></h2>
 <p><font color="black" size="5">  数据往往是多维的。由分数的定义以及从数学的角度出发来看，它应当是一个<strong>“矢(向)量场”(vector
-field)</strong>。既然是向量，那么就有方向，这个方向就是：<strong>对于输入数据(样本)来说，其对数概率密度增长最快的方向</strong>,其箭头代表分数，圆弧描绘了概率密度的情况。</font></p>
+field)</strong>。既然是向量，那么就有方向，这个方向就是：<strong>对于输入数据(样本)来说，其对数概率密度增长最快的方向</strong>，其箭头代表分数，圆弧描绘了概率密度的情况。</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240826571.png" style="zoom:100%;"></p>
 <p><font color="black" size="5">  当我们能够从未知数据分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>中采样出独立同分布的样本<span class="math inline">\(\textcolor{blue}{\lbrace x_i\in
-R^D\rbrace^N_{i=1}}\)</span>，我们定义分数为概率密度函数<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>的对数似然关于x的梯度，<strong>即<span class="math inline">\(\textcolor{blue}{\nabla_x \log
+R^D\rbrace^N_{i=1}}\)</span>，我们定义<strong>分数为概率密度函数<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>的对数似然关于x的梯度</strong>，<strong>即<span class="math inline">\(\textcolor{blue}{\nabla_x \log
 p(x)}\)</span></strong>。而分数模型，就是要<strong>训练它让它学会估计(预测)分数</strong>。</font></p>
 <p><font color="black" size="5">  <strong>在采样过程中沿着分数的方向走，就能够走到数据分布的高概率密度区域，最终生成的样本就会符合原数据分布。</strong>这也就是为什么我们想要估计分数的原因：</font></p>
-<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\v2-b49ba4d664e96b0a01b9570fa6d0ce00_1440w.gif"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241052666.gif"></p>
 <p><font color="black" size="5">  那么可以进一步定义分数网络为<span class="math inline">\(\textcolor{blue}{s_\theta:R^D \rightarrow
-R^D}\)</span>,它是用作对分数进行建模，即该网络是由参数<span class="math inline">\(\theta\)</span>所构成，训练的目的是<strong>使得网络的输出能够逼近我们真实分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>的分数</strong>。基于分数的生成模型的框架涉及到两个要素：Score
+R^D}\)</span>,它是用作对分数进行建模，即该网络是由参数<span class="math inline">\(\textcolor{blue}{\theta}\)</span>所构成，训练的目的是<strong>使得网络的输出能够逼近我们真实分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>的分数</strong>。基于分数的生成模型的框架涉及到两个要素：Score
 matching（分数匹配）以及Langevin dynamic（朗之万动力学）</font></p>
-<h2 id="朗之万动力学朗之万采样"><font color="black" size="5">2.朗之万动力学（朗之万采样）</font></h2>
-<p><font color="black" size="5">  概括地来说，该方法首先从先验分布随机采样一个初始样本，然后利用模型估计出来的分数逐渐将样本向数据分布的高概率密度区域靠近。<strong>为保证生成结果的多样性，我们需要采样过程带有随机性。</strong>正好！布朗运动就是带有随机性的，朗之万动力学方程因此也带有随机项。</font></p>
+<h2 id="朗之万动力学朗之万采样"><font color="black" size="5">2.朗之万动力学（朗之万采样）🦊</font></h2>
+<p><font color="black" size="5">  概括地来说，该方法首先从先验分布随机采样一个初始样本，然后利用模型估计出来的分数<span class="math inline">\(\textcolor{blue}{\nabla_x \log
+p(x)}\)</span>逐渐将样本向数据分布的高概率密度区域靠近。<strong>为保证生成结果的多样性，我们需要采样过程带有随机性。</strong>正好！布朗运动就是带有随机性的，朗之万动力学方程因此也带有随机项。</font></p>
 <p><font color="black" size="5">  朗之万动力学：它是一种采样算法，仅仅只用到分数函数<span class="math inline">\(\textcolor{blue}{\nabla_x \log
 p(x)}\)</span>就能从概率密度<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>中生成样本。当给定一个步长<span class="math inline">\(\textcolor{blue}{\epsilon&gt;0}\)</span>并给定一个初始值<span class="math inline">\(\textcolor{blue}{\tilde{x}_0 \backsim
-\pi(x)}\)</span>(从先验分布<span class="math inline">\(\pi\)</span>采样的初始值)，那么朗之万算法就能通过下面这个公式去迭代：</font></p>
+\pi(x)}\)</span>(从先验分布<span class="math inline">\(\textcolor{blue}{\pi}\)</span>采样的初始值)，那么朗之万算法就能通过下面这个公式去迭代：</font></p>
 <p><span class="math display">\[\huge \tilde{x}_t =
 \tilde{x}_{t-1}+\frac{\epsilon}{2}\nabla_x\log
 p(\tilde{x}_{t-1})+\sqrt{\epsilon}z_t\]</span></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(z
-\backsim N(0,I)\)</span>,当<span class="math inline">\(\epsilon\rightarrow0\)</span>并且<span class="math inline">\(T\rightarrow\infty\)</span>时，我们就可以近似的认为上式得到<span class="math inline">\(\tilde{x}_T\)</span>的分布等于p(x),也就是说<span class="math inline">\(\tilde{x}_T\)</span>能够从p(x)分布中进行采样。由此我们可以看出朗之万算法仅仅依赖于分数函数<span class="math inline">\(\nabla_x \log
-p(x)\)</span>,因此我们希望能够用朗之万算法从一个分布<span class="math inline">\(p_{data}(x)\)</span>中获取样本的话，我们就首先需要训练分数网络使得<span class="math inline">\(s_\theta(x)&nbsp;\approx&nbsp;\nabla_x \log
-p_{data}(x)\)</span>，这样上面的公式中的分数就能够通过该分数网络去替代，在那之后，再进行不断的迭代，我们就能够从<span class="math inline">\(p_{data}(x)\)</span>分布中采样出样本。这就是基于分数模型生成样本的一个主要思想。</font></p>
-<h2 id="分数匹配"><font color="black" size="5">3.分数匹配</font></h2>
-<p><font color="black" size="5">  由上面的朗之万算法，我们可以直接训练分数网络<span class="math inline">\(s_\theta(x)\)</span>来去估计<span class="math inline">\(\nabla_x \log
-p_{data}(x)\)</span>,并不需要训练网络去估计<span class="math inline">\(p_{data}(x)\)</span>,那么我们就需要一个目标函数去对其算出损失，然后进一步去优化，那么分数匹配就是用来干这个的，它就是为了让分数网络输出的分数能够匹配<span class="math inline">\(p_{data}(x)\)</span>的分数，因此分数匹配就作为该网络的目标函数，其函数形式为：<span class="math inline">\(min\frac{1}{2}E_{p_{data}}[||s_\theta(x)-\nabla_x
-\log p_{data}(x)||_2^2]\)</span>,该式子可以等价与下式：</font></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{z \backsim N(0,I)}\)</span>,<span class="math inline">\(\textcolor{blue}{\epsilon}\)</span>是预定义的步长，当<span class="math inline">\(\textcolor{blue}{\epsilon\rightarrow0}\)</span>并且<span class="math inline">\(\textcolor{blue}{T\rightarrow\infty}\)</span>时，我们就可以近似的认为上式得到<span class="math inline">\(\textcolor{blue}{\tilde{x}_T}\)</span>的分布等于<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>,也就是说<span class="math inline">\(\textcolor{blue}{\tilde{x}_T}\)</span>能够从<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>分布中进行采样。由此我们可以看出朗之万算法仅仅依赖于分数函数<span class="math inline">\(\textcolor{blue}{\nabla_x \log
+p(x)}\)</span>,因此我们希望能够用朗之万算法从一个分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>中获取样本的话，我们就首先需要训练分数网络使得<span class="math inline">\(\textcolor{blue}{s_\theta(x)&nbsp;\approx&nbsp;\nabla_x \log
+p_{data}(x)}\)</span>，这样上面的公式中的分数就能够通过该分数网络去替代，在那之后，再进行不断的迭代，我们就能够从<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>分布中采样出样本。这就是基于分数模型生成样本的一个主要思想。</font></p>
+<h2 id="分数匹配"><font color="black" size="5">3.分数匹配🦚</font></h2>
+<p><font color="black" size="5">  由上面的朗之万算法，我们可以直接训练分数网络<span class="math inline">\(\textcolor{blue}{s_\theta(x)}\)</span>来去估计<span class="math inline">\(\textcolor{blue}{\nabla_x \log
+p_{data}(x)}\)</span>,并不需要训练网络去估计<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>，那么我们就需要一个目标函数去对其算出损失，然后进一步去优化，而该训练目标可表示为：</font></p>
+<p><span class="math display">\[\huge
+min\frac{1}{2}E_{p_{data}}[||s_\theta(x)-\nabla_x \log
+p_{data}(x)||_2^2]-(1)\]</span></p>
+<p><font color="black" size="5">  然而，这就要求我们知道概率密度<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>，但通常我们是无法知道训练集服从的分布的。并且，如果提前知道了数据分布，那么直接从其中采样生成样本就好了，还搞那么多飞机来炼丹干嘛..</font></p>
+<p><font color="black" size="5">  那么分数匹配就是用来干这个的，它就是为了让我们在不了解概率分布的情况下，也可以让分数网络输出的分数能够匹配<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>的分数，这种方法利用了分部积分，将式1转化为了如下的函数形式：</font></p>
 <p><span class="math display">\[\huge E_{p_{data}(x)}[tr(\nabla_x
-s_\theta(x))+\frac{1}{2}||s_\theta(x)||_2^2] \]</span></p>
-<p><font color="black" size="5">  其中tr(.)为雅可比矩阵（<strong>雅可比矩阵</strong>是函数的一阶偏导数以一定方式排列成的矩阵），如果我们数据分布很高的情况下，上式并不太好能够泛化，计算复杂度比较高，那么后续就有人研究如何绕过雅可比矩阵的求解，就引出了去噪分数匹配：</font></p>
-<p><font color="black" size="5">  <strong>去噪分数匹配：</strong>首先对数据样本x按照预定好的噪声分布<span class="math inline">\(q_\sigma(\tilde{x}|x)\)</span>去加噪,然后用分数匹配的方法来去估计加噪后的数据的分数：</font></p>
+s_\theta(x))+\frac{1}{2}||s_\theta(x)||_2^2]-(2) \]</span></p>
+<p><font color="red" size="5">  <strong>（1）转成（2）的推导过程如下：</strong></font></p>
+<p><span class="math display">\[\huge
+\frac{1}{2}E_{p_{data}}[||s_{\theta}(x)-\nabla_x \log p_{data}(x)||_2^2]
+\]</span></p>
+<p><font color="black" size="5">  把上面loss的期望写开，二次项打开，可以得到：</font></p>
+<p><span class="math display">\[\Large \frac{1}{2}\int
+p_{data}(x)[||s_{\theta}(x)||_2^2-2(\nabla_x \log
+p_{data}(x))^Ts_{\theta}(x)+||\nabla_x \log p_{data}(x)||_2^2]dx-(3)
+\]</span></p>
+<p><font color="black" size="5">  其中，[]
+内的最后一项对于模型参数<span class="math inline">\(\textcolor{blue}{\theta}\)</span>来说是常数项，因此我们可以忽略掉；而第一项，通过模型的输出可以直接计算出来，于是可以先不管它，在这里我们主要关注第二项：</font></p>
+<p><span class="math display">\[\Large \begin{aligned} &amp;
+\frac{1}{2}\int p_{data}(x)[-2(\nabla_x \log
+p_{data}(x))^Ts_{\theta}(x)]dx\\ &amp;=-\int p(x)[(\frac{\partial
+\log(p(x))}{\partial x})^Ts_{\theta}(x)]dx \\ &amp;= -\int
+p(x)[\sum_{i=1}^N\frac{\partial \log(p(x))}{\partial
+x_i}s_{\theta_i}(x)]dx \\&amp;=-\sum_{i=1}^N\int
+p(x)[(\frac{1}{p(x)}\frac{\partial p(x)}{\partial
+x_i})s_{\theta_i}(x)]dx \\ &amp;=-\sum_{i=1}^N \int[\frac{\partial
+p(x)}{\partial x_i}s_{\theta_i}(x)]dx \end{aligned}\]</span></p>
+<p><font color="black" size="5">  根据分部积分法：<span class="math inline">\(\textcolor{blue}{u^{\prime}v=(uv)^{\prime}-uv^{\prime}}\)</span>，则<span class="math inline">\(\textcolor{blue}{\int u^{\prime}v dx=uv-\int
+uv^{\prime}dx}\)</span>，我们可以得到：</font></p>
+<p><span class="math display">\[\Large \begin{aligned} &amp;
+-\sum_{i=1}^N \int[\frac{\partial p(x)}{\partial x_i}s_{\theta_i}(x)]dx
+\\ &amp;=-\sum_{i=1}^N \int[\frac{\partial p(x)s_{\theta_i}(x)}{\partial
+x_i}-p(x)\frac{\partial s_{\theta_i}(x)}{\partial x_i}]dx \\
+&amp;=-\sum_{i=1}^N\int p(x)s_{\theta_i}(x) |_{-
+\infty}^{+\infty}dx_{/i}+\int p(x)\frac{\partial
+s_{\theta_i}(x)}{\partial x_i}dx \end{aligned}\]</span></p>
+<p><font color="black" size="5">  第一项为0可忽略，故：</font></p>
+<p><span class="math display">\[\Large \begin{aligned} &amp;\sum_{i=1}^N
+\int p(x)\frac{\partial s_{\theta_i}(x)}{\partial x_i}dx\\&amp;=\int
+p(x) \sum_{i=1}^N \frac{\partial s_{\theta_i}(x)}{\partial x_i} dx \\
+&amp;= \int p(x) tr(\frac{\partial s_{\theta}(x)}{\partial x})dx \\
+&amp;= \int p(x) tr(\nabla_x s_{\theta}(x))dx\end{aligned}\]</span></p>
+<p><font color="black" size="5">  最后将上式与式3的第一项相加即可得到：</font></p>
+<p><span class="math display">\[\Large \begin{aligned} &amp; \int
+[p(x)tr(\nabla_x s_{\theta}(x))+
+\frac{1}{2}p(x)||s_{\theta}(x)||_2^2]dx\\ &amp; =\int
+p_{data}(x)[tr(\nabla_x s_\theta(x))+\frac{1}{2}||s_\theta(x)||_2^2]dx
+\\ &amp;= E_{p_{data}(x)}[tr(\nabla_x
+s_\theta(x))+\frac{1}{2}||s_\theta(x)||_2^2]\end{aligned}\]</span></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\nabla_x
+s_\theta(x)}\)</span>为雅可比矩阵（<strong>雅可比矩阵</strong>是函数的一阶偏导数以一定方式排列成的矩阵），而<span class="math inline">\(\textcolor{blue}{tr(\cdot)}\)</span>为矩阵的迹，其定义为方阵上对角线所有元素之和。如果我们数据分布很高的情况下，上式并不太好能够泛化，计算复杂度比较高（当遇到<strong>高维数据</strong>时，其图像特征的通道数常都成百上千，那么就<strong>需要经历多次反向传播来求偏微分</strong>），那么后续就有人研究如何绕过雅可比矩阵的求解，就引出了去噪分数匹配。</font></p>
+<blockquote>
+<p><font color="black" size="5">其实也有的方法是对其降维，但后续的NCSN采用的是去噪分数匹配方法，所以这里不作介绍，有兴趣可以自查。</font></p>
+</blockquote>
+<h2 id="去噪分数匹配"><font color="black" size="5">4.去噪分数匹配🐳</font></h2>
+<p><font color="black" size="5">  这个做法其实是绕过了上面计算雅可比矩阵的方式，回归到了（1）的做法。那么我们就回到了最初的问题上，我们是不知道<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>的分布的，但我们可以自己搞一个出来。首先对原始数据样本<span class="math inline">\(\textcolor{blue}{x}\)</span>按照预定好的噪声分布<span class="math inline">\(\textcolor{blue}{q_\sigma(\tilde{x}|x)}\)</span>去加噪，使得其结果满足我们预先定义好的分布，比如高斯分布。这样，我们就知道了现在的概率密度了，接下来就可以使用式（1）的方法来去估计加噪后的数据的分数。</font></p>
+<p><font color="black" size="5">  记训练样本为<span class="math inline">\(\textcolor{blue}{x}\)</span>，加噪后的数据为<span class="math inline">\(\textcolor{blue}{\tilde{x}}\)</span>，预定义分布为<span class="math inline">\(\textcolor{blue}{q_\sigma(\tilde{x}|x) \sim
+\mathcal{N}(\tilde{x};x,\sigma^2I)}\)</span>，加噪后的数据分布表示为:</font></p>
 <p><span class="math display">\[\huge q_\sigma(\tilde{x}_t) =
 \int{q_\sigma(\tilde{x}|x)p_{data}(x)}dx\]</span></p>
-<p><font color="black" size="5">  那么其目标函数我们可以进一步写出：</font></p>
+<p><font color="black" size="5">  我们在这个数据分布上计算的分数表示为：</font></p>
+<p><span class="math display">\[\huge \frac{\partial \log
+q_\sigma(\tilde{x}_t)}{\partial\tilde{x}} \equiv \frac{\partial \log
+(q_\sigma(\tilde{x}|x)p_{data}(x))}{\partial\tilde{x}}=\frac{\partial
+\log (q_\sigma(\tilde{x}|x))}{\partial\tilde{x}}\]</span></p>
+<p><font color="black" size="5">  由于<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>与<span class="math inline">\(\textcolor{blue}{\tilde{x}}\)</span>不相干，于是导数为0，因此最右边那项没有了它的身影。那么其目标函数我们可以进一步写出：</font></p>
 <p><span class="math display">\[\huge\frac{1}{2}
-E_{q_\sigma(\tilde{x}|x)p_{data}(x)}[||s_\theta(\tilde{x})-\nabla_x \log
-q_\sigma(\tilde{x}|x)||_2^2]\]</span></p>
-<p><font color="black" size="5">  一旦<span class="math inline">\(s_\theta(\tilde{x})\)</span>收敛之后，我们就有理由相信：<span class="math inline">\(s_\theta^*(x) =&nbsp;\nabla_x \log
-q_\sigma(x)&nbsp;\)</span>，此时的<span class="math inline">\(q_\sigma(x)\)</span>仅仅知识我们加噪后的分布，并不是初始的数据分布<span class="math inline">\(p_{data}(x)\)</span>。当我们加的噪声<span class="math inline">\(\sigma\)</span>很小的时候，我们可以近似的认为：<span class="math inline">\(q_\sigma(x)&nbsp;\approx&nbsp;p_{data}(x)\)</span>，如果当噪声<span class="math inline">\(\sigma\)</span>足够大的时候，<span class="math inline">\(q_\sigma(x) \approx
-\mathcal{N}(x_t;0,\sigma_{max}^2I)\)</span>。</font></p>
-<p><font color="black" size="5">  这种方法其实存在着一种<strong>挑战：</strong>在数据密度较低的区域，分数估计是不准确的，由于是计算p(x)的梯度，如果有的区域p(x)很小，甚至为0，那么这些地方的分数估计就不太准确，朗之万采样就更加不准确。</font></p>
+E_{q_\sigma(\tilde{x}|x)p_{data}(x)}[||s_\theta(\tilde{x})-\nabla_{\tilde{x}}
+\log q_\sigma(\tilde{x}|x)||_2^2]\]</span></p>
+<p><font color="black" size="5">  一旦<span class="math inline">\(\textcolor{blue}{s_\theta(\tilde{x})}\)</span>收敛之后，我们就有理由相信：<span class="math inline">\(\textcolor{blue}{s_\theta^*(x) =&nbsp;\nabla_x \log
+q_\sigma(x) }\)</span>，此时的<span class="math inline">\(\textcolor{blue}{q_\sigma(x)}\)</span>仅仅只是我们加噪后的分布，并不是初始的数据分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>。当我们加的噪声方差<span class="math inline">\(\textcolor{blue}{\sigma}\)</span>很小的时候，我们可以近似的认为：<span class="math inline">\(\textcolor{blue}{q_\sigma(x)&nbsp;\approx&nbsp;p_{data}(x)}\)</span>，如果当噪声方差<span class="math inline">\(\textcolor{blue}{\sigma}\)</span>足够大的时候，<span class="math inline">\(\textcolor{blue}{q_\sigma(x) \approx
+\mathcal{N}(x_t;0,\sigma_{max}^2I)}\)</span>。</font></p>
+<p><font color="black" size="5">  在这种方法下，我们只要从标准高斯分布<span class="math inline">\(\textcolor{blue}{N(0,I)}\)</span>中采样随机噪声<span class="math inline">\(\textcolor{blue}{\epsilon}\)</span>，然后乘上我们预定义的<span class="math inline">\(\textcolor{blue}{\sigma}\)</span>，接着加到样本中<span class="math inline">\(\textcolor{blue}{x}\)</span>，从而就能得到加噪后的样本<span class="math inline">\(\textcolor{blue}{\tilde{x}=x+\sigma
+\epsilon}\)</span>。根据高斯分布的性质，这样加噪后<span class="math inline">\(\textcolor{blue}{q_\sigma(\tilde{x}|x)}\)</span>就会满足分布<span class="math inline">\(\textcolor{blue}{\mathcal{N}(\tilde{x};x,\sigma^2I)}\)</span>。<strong>估计分数时，记得要将加噪后的样本<span class="math inline">\(\textcolor{blue}{\tilde{x}}\)</span>&nbsp;喂给模型，而非原数据样本<span class="math inline">\(\textcolor{blue}{x}\)</span>
+。</strong></font></p>
+<h2 id="分数模型的困境"><font color="black" size="5">5.分数模型的困境🦅</font></h2>
+<p><font color="black" size="5">  分数模型在实际应用时会面临一些困难。概括起来，主要是以下三点：</font></p>
+<p><font color="black" size="5">1️⃣<strong>loss
+不收敛</strong></font></p>
+<p><font color="black" size="5"><strong>2️⃣模型估计的分数不准</strong></font></p>
+<p><font color="black" size="5">3️⃣<strong>生成结果与原数据分布偏差大</strong></font></p>
+<p><font color="black" size="5">  接下来将逐步分析这三点</font></p>
+<h3 id="loss不收敛"><font color="black" size="5">5.1
+loss不收敛</font></h3>
+<p><font color="black" size="5">  如果你根据前文介绍的 score matching
+去训练分数模型，会发现模型被“玩坏”了：loss
+不断震荡，可谓“一秒天堂，一秒地狱”。</font></p>
+<p><font color="black" size="5">  这种方法其实存在着一种<strong>挑战：</strong>在数据密度较低的区域，分数估计是不准确的，由于是计算<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>的梯度，如果有的区域<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>很小，甚至为0，那么这些地方的分数估计就不太准确，朗之万采样就更加不准确。</font></p>
 <blockquote>
-<p><font color="black" size="5">在低数据密度区域，由于缺乏数据样本，分数匹配可能没有足够的证据来准确估计分数函数。为了了解这一点，回顾前文提到的分数匹配中最小化分数估计平方误差的期望<span class="math inline">\(E_{p_{data}}[||s_\theta(x)-\nabla_x \log
-p_{data}(x)||_2^2]\)</span>，即实际上，关于数据分布的期望总是由独立同分布的样本<span class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \backsim
-p_{data}(x)\)</span>估计的。考虑任务使低密度区域<span class="math inline">\(R\in R^D\)</span>,<span class="math inline">\(p_{data}(R) \approx 0\)</span>。大多数情况下<span class="math inline">\(\lbrace x_i\rbrace^N_{i=1} \bigcap R
-=\emptyset\)</span>，分数匹配将没有足够的数据样本来准确估计出对于<span class="math inline">\(x \in R\)</span>的<span class="math inline">\(\nabla_x \log p_{data}(x)\)</span>。</font></p>
+<p><font color="black" size="5">在低数据密度区域，由于缺乏数据样本，分数匹配可能没有足够的证据来准确估计分数函数。为了了解这一点，回顾前文提到的分数匹配中最小化分数估计平方误差的期望<span class="math inline">\(\textcolor{blue}{E_{p_{data}}[||s_\theta(x)-\nabla_x
+\log
+p_{data}(x)||_2^2]}\)</span>，即实际上，关于数据分布的期望总是由独立同分布的样本<span class="math inline">\(\textcolor{blue}{\lbrace x_i\rbrace^N_{i=1}
+\backsim p_{data}(x)}\)</span>估计的。考虑任务使低密度区域<span class="math inline">\(\textcolor{blue}{R\in R^D}\)</span>,<span class="math inline">\(\textcolor{blue}{p_{data}(R) \approx
+0}\)</span>。大多数情况下<span class="math inline">\(\textcolor{blue}{\lbrace x_i\rbrace^N_{i=1}
+\bigcap R
+=\emptyset}\)</span>，分数匹配将没有足够的数据样本来准确估计出对于<span class="math inline">\(\textcolor{blue}{x \in R}\)</span>的<span class="math inline">\(\textcolor{blue}{\nabla_x \log
+p_{data}(x)}\)</span>。</font></p>
 </blockquote>
-<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221446808.png"></p>
-<p><font color="black" size="5">  由上图我们可以看出来这个相信，在概率密度比较高的地方数据分数以及估计分数比较匹配，但是在概率密度比较低的区域，就开始估计的不太精确。那么接下来就是为了解决这个问题所出现的NSCN:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241448528.png"></p>
+<p><font color="black" size="5">  由上图我们可以看出来，在概率密度比较高的地方数据分数以及估计分数比较匹配，但是在概率密度比较低的区域，就开始估计的不太精确。那么接下来就是为了解决这个问题所出现的NCSN:</font></p>
 <h2 id="noise-conditional-score-networkncsn"><font color="black" size="5">4.Noise
 Conditional Score Network(NCSN)</font></h2>
 <p><font color="black" size="5">  为了解决低密度问题，这里引入了新的分数网络，其实就是在原本的分数网络当中加了条件Noise。</font></p>
-<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308221515196.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310241450903.png"></p>
 <p><font color="black" size="5">  右图所展示的是我们的数据分布被加噪后的样子，我们可以由此发现，加噪后的区域其低密度区域已经很少了，而加噪后的分数已经估计的分数都比较准确。那么我们该如何进行加噪呢？我们知道当加噪的噪声足够小的时候，会有<span class="math inline">\(q_\sigma(x) \approx
 p_{data}(x)\)</span>，但问题是加的噪声太小，我们仍然不是很好的能够解决低密度的问题。那么如果我们把噪声加的太大的话，就会导致数据分布被破坏掉。为了平衡这个加噪方式带来的后果，我们可以采取两个措施：<strong>1)使用不同级别的噪声扰动数据</strong>；<strong>2)通过训练单一条件分数网络，同时估计出与所有噪声级别相对应的分数。</strong></font></p>
 <p><font color="black" size="5">  当我们使用NCSN训练完以后，我们可以采用朗之万采样算法去生成加噪加的比较大的情况下分布的样本，然后不断的减小噪声的量级。</font></p>
@@ -667,7 +744,7 @@ through Stochastic Differential Equations</a></font></p>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/</a>
             <p>发表日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">July 26th 2023, 5:32:09 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">October 24th 2023, 9:00:14 am</a>
+            <p>更新日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">October 27th 2023, 3:06:04 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -855,7 +932,8 @@ through Stochastic Differential Equations</a></font></p>
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">1.什么是分数？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%97%E4%B9%8B%E4%B8%87%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%9C%97%E4%B9%8B%E4%B8%87%E9%87%87%E6%A0%B7"><span class="toc-number">1.2.</span> <span class="toc-text">2.朗之万动力学（朗之万采样）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E5%8C%B9%E9%85%8D"><span class="toc-number">1.3.</span> <span class="toc-text">3.分数匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#noise-conditional-score-networkncsn"><span class="toc-number">1.4.</span> <span class="toc-text">4.Noise
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">1.什么是分数？🤖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%97%E4%B9%8B%E4%B8%87%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%9C%97%E4%B9%8B%E4%B8%87%E9%87%87%E6%A0%B7"><span class="toc-number">1.2.</span> <span class="toc-text">2.朗之万动力学（朗之万采样）🦊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E5%8C%B9%E9%85%8D"><span class="toc-number">1.3.</span> <span class="toc-text">3.分数匹配🦚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E5%99%AA%E5%88%86%E6%95%B0%E5%8C%B9%E9%85%8D"><span class="toc-number">1.4.</span> <span class="toc-text">4.去噪分数匹配🐳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9B%B0%E5%A2%83"><span class="toc-number">1.5.</span> <span class="toc-text">5.分数模型的困境🦅</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#loss%E4%B8%8D%E6%94%B6%E6%95%9B"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1
+loss不收敛</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#noise-conditional-score-networkncsn"><span class="toc-number">1.6.</span> <span class="toc-text">4.Noise
 Conditional Score Network(NCSN)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Csdes"><span class="toc-number">2.</span> <span class="toc-text">二、SDEs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8sde%E6%89%B0%E5%8A%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">2.1.</span> <span class="toc-text">1.使用SDE扰动数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sde%E7%9A%84%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.SDE的逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E5%8C%B9%E9%85%8D-1"><span class="toc-number">2.3.</span> <span class="toc-text">3.分数匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%BB%E5%99%AA%E5%9F%BA%E4%BA%8E%E5%88%86%E6%95%B0%E7%BD%91%E7%BB%9C"><span class="toc-number">2.4.</span> <span class="toc-text">4.设计去噪基于分数网络</span></a></li></ol></li></ol>
             </div>
         
@@ -941,12 +1019,6 @@ Conditional Score Network(NCSN)</span></a></li></ol></li><li class="toc-item toc
         
         
     
-        
-        
-        
-        
-        
-        
         
         
         
