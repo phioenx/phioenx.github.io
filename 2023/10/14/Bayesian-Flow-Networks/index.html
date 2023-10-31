@@ -97,7 +97,6 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311034341.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311035264.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311035616.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311108861.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311144384.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311146501.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311108395.png">
@@ -108,7 +107,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311648651.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311650512.gif">
 <meta property="article:published_time" content="2023-10-14T02:20:30.000Z">
-<meta property="article:modified_time" content="2023-10-31T09:16:16.727Z">
+<meta property="article:modified_time" content="2023-10-31T10:22:07.766Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310160918455.jpg">
@@ -626,7 +625,7 @@ distribution"(接收方分布)</strong></font>。他先从输出分布中采样�
 Alice 手上的原始数据的可能性较低，因此 Bob 采取了暴力大法 ——
 他采样了输出分布的所有可能的结果(相当于穷尽了分布中所有类别的样本)，并且对它们加噪后的结果<strong>加权求和</strong>，以此作为对观测样本的猜测结果。因此<strong>发送者分布是观测样本真实服从的分布，而接收者分布是
 Bob
-在观测到样本前自己猜测的观测样本可能会服从的分布。</strong></font></p>
+在观测到样本前自己猜测的观测样本可能会服从的分布。</strong>如果是训练时Alice是知道原始数据真实服从的分布，但是在建模采样生成时，Alice和Bob都是不知道原始数据真实服从的分布。所有才要让Bob去逐步学会如何猜测信息。</font></p>
 <p><font color="black" size="5">  5️⃣Alice
 从发送者分布中挑选一个样本，并将其发送给
 Bob，<strong>其成本等于接收者和发送者的 KL 散度</strong>。然后，Bob
@@ -968,8 +967,8 @@ x+\mu_{i-1}\rho_{i-1}}{\rho_{i}},\frac{\alpha}{\rho_{i}^2}I)\]</span></p>
 <p><font color="black" size="5">  下图展示了连续数据的贝叶斯更新分布。对于
 <span class="math inline">\(\textcolor{blue}{x =
 0.7}\)</span>，该图显示了方程52中输入平均值<span class="math inline">\(\textcolor{blue}{μ}\)</span>的分布<span class="math inline">\(\textcolor{blue}{p(\mu|\theta_0,x;\alpha)}\)</span>。
-给定初始参数<span class="math inline">\(\textcolor{blue}{μ0 = 0、ρ0 =
-1}\)</span>和 11 个在 <span class="math inline">\(\textcolor{blue}{e−5}\)</span>和 <span class="math inline">\(\textcolor{blue}{e5}\)</span>
+给定初始参数<span class="math inline">\(\textcolor{blue}{μ_0 = 0、ρ_0 =
+1}\)</span>和 11 个在 <span class="math inline">\(\textcolor{blue}{e^{−5}}\)</span>和 <span class="math inline">\(\textcolor{blue}{e^5}\)</span>
 之间以对数线性间隔的<span class="math inline">\(\textcolor{blue}{\alpha}\)</span>值。我们可以看到对于非常低的
 alpha，分布是紧密集中在<span class="math inline">\(\textcolor{blue}{\mu_0}\)</span>周围，然后平滑地进展到在<span class="math inline">\(\textcolor{blue}{x}\)</span>周围紧密集中，以获得高
 alpha。</font></p>
@@ -1018,8 +1017,8 @@ x;\alpha_b)}\)</span>得到，那么</font></p>
 <p><font color="black" size="5">  其中，</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310310957387.png"></p>
 <h2 id="输出分布-1"><font color="black" size="5">8.输出分布</font></h2>
-<p><font color="black" size="5">  遵循扩散模型的标准实践，输出分布是通过重新参数化高斯噪声向量<span class="math inline">\(\textcolor{blue}{ε ∼ N (0,
-I)}\)</span>的预测来定义的，该向量用于生成作为网络输入传递的平均值<span class="math inline">\(\textcolor{blue}{μ}\)</span>。根据式77：</font></p>
+<p><font color="black" size="5">  作者遵循扩散模型的标准，输出分布是通过重新参数化高斯噪声向量<span class="math inline">\(\textcolor{blue}{ε ∼ N (0,
+I)}\)</span>的预测来定义的，该向量用于生成作为网络输入传递的均值<span class="math inline">\(\textcolor{blue}{μ}\)</span>。根据式77：</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311009566.png"></p>
 <p><font color="black" size="5">  依据重新参数化，我们可以得到：</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311010086.png"></p>
@@ -1044,11 +1043,10 @@ E_{ p_O (x^′|\theta;t)} p_S( y | x^′; \alpha)\]</span></p>
 <p><font color="black" size="5">  可以推出：</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311026272.png"></p>
 <h2 id="重建损失lrx"><font color="black" size="5">10.重建损失<span class="math inline">\(L^r(x)\)</span></font></h2>
-<p><font color="black" size="5">  真正连续的数据需要无限的精度来重建，这使得重建损失成为问题。然而，可以合理地假设数据要么被精细离散（因为所有信息都在数字计算机上），要么包含一些噪声。离散数据的重建损失在第
-5.3 节中介绍。或者，如果我们假设 x
-上存在正态分布的测量噪声，且具有固定的各向同性方差
-σ2，则重建损失的噪声版本可以定义为 N x、σ2I 与 t = 1
-时的输出分布之间的预期 KL 散度：</font></p>
+<p><font color="black" size="5">  真正连续的数据需要无限的精度来重建，这使得重建损失成为问题。然而，可以合理地假设数据要么被精细离散，要么包含一些噪声。或者，如果我们假设
+x 上存在正态分布的测量噪声，且具有固定的各向同性方差
+σ2，则重建损失的噪声版本可以定义为<span class="math inline">\(\textcolor{blue}{N(x、σ^2I)}\)</span>与<span class="math inline">\(\textcolor{blue}{t=1}\)</span>时的输出分布之间的预期
+KL 散度：</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311028840.png"></p>
 <p><font color="black" size="5">  噪声不会直接影响训练，因为重建损失没有优化。然而，σ
 的值对应为 σ1
@@ -1059,190 +1057,183 @@ E_{ p_O (x^′|\theta;t)} p_S( y | x^′; \alpha)\]</span></p>
 12.连续时间损失<span class="math inline">\(L^\infty
 (x)\)</span></font></h2>
 <h2 id="伪代码"><font color="black" size="5"> 13.伪代码</font></h2>
-<p><font color="black" size="5">  算法 1 和 2
-中给出了用于评估连续数据的 n 步损失 Ln(x) 和连续时间损失 L∞(x)
-的伪代码，而算法 3 中给出了样本生成过程。</font></p>
-<p><font color="black" size="5">  </font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311034601.png"></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  1️⃣给定输入参数<span class="math inline">\(\textcolor{blue}{\theta =
+\{\mu,\rho\}}\)</span>，其中<span class="math inline">\(\textcolor{blue}{\rho}\)</span>完全由<span class="math inline">\(\textcolor{blue}{t}\)</span>决定。下面是定义了一个对于连续数据网络输出的参数进行重新参数化采样样本的函数。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311034601.png"><font color="black" size="5">  2️⃣算法1是计算连续数据的<span class="math inline">\(\textcolor{blue}{n}\)</span>步损失<span class="math inline">\(\textcolor{blue}{L^n(x)}\)</span>，其中<span class="math inline">\(\textcolor{blue}{n}\)</span>步传输，<span class="math inline">\(\textcolor{blue}{\sigma_1}\)</span>都是预先设定好的超参数，由此也能够进一步得出<span class="math inline">\(\textcolor{blue}{t}\)</span>以及<span class="math inline">\(\textcolor{blue}{\gamma}\)</span>，把<span class="math inline">\(\textcolor{blue}{\gamma}\)</span>按照式77进一步计算出均值<span class="math inline">\(\textcolor{blue}{\mu}\)</span>。接下来把<span class="math inline">\(\textcolor{blue}{\mu,t,\gamma}\)</span>送入网络中计算参数，返回采样得到的估计<span class="math inline">\(\textcolor{blue}{\hat{x}(θ,
+t)}\)</span>，最后将得到的网络估计样本与原始数据进行损失计算。</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311034341.png"></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  3️⃣算法2是计算连续时间的连续时间损失<span class="math inline">\(\textcolor{blue}{L^{\infty}(x)}\)</span>，具体做法和算法1类似，只是不需要<span class="math inline">\(\textcolor{blue}{n}\)</span>步传输作为超参数。</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311035264.png"></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  4️⃣算法 3
+中给出了样本生成过程，其中<span class="math inline">\(\textcolor{blue}{n}\)</span>步传输，<span class="math inline">\(\textcolor{blue}{\sigma_1}\)</span>都是预先设定好的超参数，预先设定的先验输入参数为<span class="math inline">\(\textcolor{blue}{μ_0 = 0、ρ_0 =
+1}\)</span>，在第<span class="math inline">\(\textcolor{blue}{i}\)</span>步当中我们用已经训练好的网络估计出<span class="math inline">\(\textcolor{blue}{\hat{x}(θ,
+t)}\)</span>，并计算在第<span class="math inline">\(\textcolor{blue}{i}\)</span>步下的精度<span class="math inline">\(\textcolor{blue}{\alpha}\)</span>。然后根据接收者分布采样出观测样本<span class="math inline">\(\textcolor{blue}{y}\)</span>，利用贝叶斯更新函数对<span class="math inline">\(\textcolor{blue}{μ、ρ}\)</span>进行更新，重复上述过程一直到n步。最后得到进行n步更新好的<span class="math inline">\(\textcolor{blue}{\mu}\)</span>送入到网络中得到最终的生成样本。</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311035616.png"></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
 <h1 id="六离散数据">六、离散数据</h1>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
 <h1 id="七离散化数据">七、离散化数据</h1>
 <h1 id="八实验">八、实验</h1>
 <p><font color="black" size="5">  作者根据以下生成基准评估了贝叶斯流网络
@@ -1254,16 +1245,13 @@ FID 分数。但是为所有实验都提供了生成数据的示例。</font></p
 <h2 id="动态二值化-mnist"><font color="black" size="5">1.动态二值化
 MNIST</font></h2>
 <p><font color="black" size="5">  <strong>设置：</strong>该网络架构基于为扩散模型引入的
-U-Net [28]。实验使用 600 张随机选择的训练图像（训练集的
+U-Net 。实验使用 600 张随机选择的训练图像（训练集的
 1%）用作验证集。模型可学习参数总数约为25M。</font></p>
 <p><font color="black" size="5">  <strong>结果：</strong></font></p>
-<p><font color="black" size="5">  1️⃣从表 1 中可以看出，BFN
-在没有数据增强的情况下接近这项任务的最新技术。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311108861.png"></p>
-<p><font color="black" size="5">  3️⃣图 12：MNIST
+<p><font color="black" size="5">  1️⃣图 12：MNIST
 真实数据和生成数据。经过 100 个步骤生成的样本。</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310311144384.png"></p>
-<p><font color="black" size="5">  4️⃣下图分别展示了MNIST
+<p><font color="black" size="5">  2️⃣下图分别展示了MNIST
 输入和输出分布。对于两个测试集图像，该图显示了 t = 0 和 t = 1/3
 之间均匀间隔的 20
 个步骤的白色像素概率。我们能够注意输入概率最初是均匀的，而输出分布最初预测多个数字的叠加，与训练集上的每像素边缘先验紧密匹配。另请注意，输出分布的噪声比输入分布小得多，并且随着接收到新信息，输出分布的变化更加显着。这凸显了网络使用上下文来解决输入分布中的歧义和噪声。</font></p>
@@ -1341,7 +1329,7 @@ BPC。通过离散时间损失训练可能会改善这个结果。</font></p>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/10/14/Bayesian-Flow-Networks/">http://example.com/2023/10/14/Bayesian-Flow-Networks/</a>
             <p>发表日期：<a href="http://example.com/2023/10/14/Bayesian-Flow-Networks/">October 14th 2023, 10:20:30 am</a>
-            <p>更新日期：<a href="http://example.com/2023/10/14/Bayesian-Flow-Networks/">October 31st 2023, 5:16:16 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/10/14/Bayesian-Flow-Networks/">October 31st 2023, 6:22:07 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
