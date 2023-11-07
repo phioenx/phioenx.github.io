@@ -19,34 +19,36 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成过">
+    <meta name="description" content="一、简要   预测编码（predictive coding）是一种认知科学的假说。该假说认为更高层次的神经表征会参与定义感觉输入（Sensory Input）。   预测编码的一个决定性特征是：它使用自上而下的重构机制来预测感觉输入或其低级别的表征。具体来说，预测编码首先确定预测值和实际输入之间的差异（称为预测误差），然后启动后续学习过程，以改进所学的更高层次表征的预测准确度。在深度学习发展之前，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Medical diffusion model——2.Med-DDPM">
-<meta property="og:url" content="http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/index.html">
+<meta property="og:title" content="PredNet">
+<meta property="og:url" content="http://example.com/2023/11/02/PredNet/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="本文所介绍的内容是来自《Med-DDPM: Conditional Diffusion Models for Semantic 3D Medical Image Synthesis》。   本文代码已开源：med-ddpm。 一、介绍   本文使用了扩散模型做语义3D医学图像生成，命名为Med-DDPM。 本文的创新点是它在 3D 图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成过">
+<meta property="og:description" content="一、简要   预测编码（predictive coding）是一种认知科学的假说。该假说认为更高层次的神经表征会参与定义感觉输入（Sensory Input）。   预测编码的一个决定性特征是：它使用自上而下的重构机制来预测感觉输入或其低级别的表征。具体来说，预测编码首先确定预测值和实际输入之间的差异（称为预测误差），然后启动后续学习过程，以改进所学的更高层次表征的预测准确度。在深度学习发展之前，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251105510.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027183.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027464.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251552238.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251536087.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251540029.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543920.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543906.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251614874.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251634626.png">
-<meta property="article:published_time" content="2023-09-23T02:42:01.000Z">
-<meta property="article:modified_time" content="2023-10-07T00:53:54.945Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021131061.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021546420.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021600016.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021608863.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021619396.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021640934.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021648222.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021723826.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021724973.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021728637.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030854943.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030858625.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030902044.png">
+<meta property="article:published_time" content="2023-11-02T03:16:44.000Z">
+<meta property="article:modified_time" content="2023-11-04T00:44:39.479Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021131061.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Medical diffusion model——2.Med-DDPM · PhoenixPeng&#39;s blog</title>
+    <title>PredNet · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -274,7 +276,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Medical diffusion model——2.Med-DDPM</a>
+                <a href="#" class="post-name">PredNet</a>
             </div>
         </div>
     
@@ -320,7 +322,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Medical diffusion model——2.Med-DDPM
+                PredNet
             <!-- 404 -->
             
         </h1>
@@ -348,7 +350,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/09/23</span>
+                    <span class="post-intro-time">2023/11/02</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -503,144 +505,151 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><font color="black" size="5">  本文所介绍的内容是来自<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.18453.pdf">《Med-DDPM: Conditional
-Diffusion Models for Semantic 3D Medical Image
-Synthesis》</a>。</font></p>
-<p><font color="black" size="5">  本文代码已开源：<a target="_blank" rel="noopener" href="https://github.com/mobaidoctor/med-ddpm/">med-ddpm</a>。</font></p>
-<h1 id="一介绍">一、介绍</h1>
-<p><font color="black" size="5">  本文使用了扩散模型做语义3D医学图像生成，命名为<strong>Med-DDPM</strong>。
-本文的创新点是它在 3D
-图像合成中对扩散模型使用语义条件。通过像素级掩模标签控制生成过程，它有助于创建逼真的医学图像。实证评估强调了
-Med-DDPM 在准确性、稳定性和多功能性等指标方面优于 GAN
-技术。此外，Med-DDPM 在提高分割模型的准确性方面优于传统增强技术和合成
-GAN
-图像。它解决了数据集不足、注释数据缺乏和类别不平衡等挑战。</font></p>
-<h1 id="二方法原理">二、方法原理</h1>
-<p><font color="black" size="5">  在原始DDPM的基础上，作者做出了如下的改进：</font></p>
-<p><font color="black" size="5">  1）将线性噪声序列改成余弦噪声序列（详细可参考第三篇Improved
-DDPM）；</font></p>
-<p><font color="black" size="5">  2）在原始的U-Net架构中，将所有2D操作（如层、噪声输入）替换成3d项；</font></p>
-<p><font color="black" size="5">  3）<strong>通过将加噪后的图像<span class="math inline">\(x_t\)</span>的通道与分割掩模的通道进行级联，从而修改U-Net模型的输入图像
-<span class="math inline">\(x_t\)</span></strong>&nbsp;，该掩模指导生成过程，从而能够合成有意义的图像，例如精确定位肿瘤的大脑病理
-MRI。</font></p>
-<p><font color="black" size="5">  4）将原始DDPM的L2损失改为L1损失：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251537758.png"></p>
-<p><font color="black" size="5">  由于本文的创新点以及模型改进主要集中在第三点以及第四点上，所以下面逐步展开细说第三点以及第四点的改进：</font></p>
-<p><font color="black" size="5">  本文使用的训练图像和分割掩模是具有三个维度的单通道体积图像：宽度（w）、高度（h）和深度（d）。而文中所使用的是原始临床脑部
-MRI
-数据集，该数据集的分割掩模由三个类别标签组成：0代表背景，1对应大脑区域，2代表肿瘤区域。为了将掩模图像与类标签对齐，作者执行了
-one-hot 编码操作，排除背景类标签
-0，因为它不相关。该操作产生了具有两个通道的掩模图像，其中通道 0
-代表大脑区域，通道 1
-代表肿瘤区域。<strong>然后应用通道级联来组合图像和掩模，从而产生具有三个通道的级联图像，表示为：</strong></font></p>
-<p><span class="math display">\[\huge
-\textcolor{blue}{\tilde{x}_t^{(3,w,h,d)}:=x_t^{(1,w,h,d)} \bigoplus
-c^{(2,w,h,d)}}\]</span></p>
-<p><font color="black" size="5">  在作者的研究当中， L2
-损失函数由于计算的是估计值和目标值之间的平方差，因此对异常值很敏感。另一方面，L1损失计算估计值与目标值之间的绝对差，使其对异常值的敏感度相对较低。因此，在本文的主要实验中，将利用
-L1 损失代替原本L2损失：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251105510.png"></p>
-<p><font color="black" size="5">  最后，Med-DDPM的训练以及采样分别如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027183.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251027464.png"></p>
+        <h1 id="一简要">一、简要</h1>
+<p><font color="black" size="5">  预测编码（<strong>predictive
+coding</strong>）是一种认知科学的假说。该假说认为更高层次的神经表征会参与定义感觉输入（Sensory
+Input）。</font></p>
+<p><font color="black" size="5">  预测编码的一个决定性特征是：<strong>它使用自上而下的重构机制来预测感觉输入或其低级别的表征。</strong>具体来说，预测编码首先确定预测值和实际输入之间的差异（称为预测误差），然后启动后续学习过程，以改进所学的更高层次表征的预测准确度。在深度学习发展之前，旨在描述新皮质计算（computations
+in the
+neocortex）的预测编码模型就已经出现，这些模型构建了模块之间的通信结构，称之为
+Rao-Ballard 协议（RB protocol）。RB
+协议是由贝叶斯生成模型得出的（通过结合感觉输入与先前的预期，以做出更好的未来预测），包含了一些强统计假设。而非贝叶斯预测编码模型（不遵循
+RB
+协议）一般用于减少信息传输要求和取消自身行动的影响，而不是用于预测。</font></p>
+<p><font color="black" size="5">  预测编码可以看作是一种表征学习（representation
+learning）。支持贝叶斯预测编码的学习机制能够改进所获取的内部表征的质量，这可以看做是减少未来预测误差的一种副作用。预测
+/
+重构能力确保获得的表征能够完全代表输入中所包含的信息。由于整个学习过程是由预测误差所驱动的，所以是一种无监督学习，只需要预测的数据流的信息。</font></p>
+<p><font color="black" size="5">  预测编码是一个试图解释认知现象和理解神经系统的统一框架，它提出了神经系统中如何减少冗余和进行高效编码：通过只传输传入的感觉信号中未预测的部分，预测编码允许神经系统减少冗余并充分利用神经元的有限动态范围。预测编码为一系列神经反应和大脑组织的许多方面提供了功能性解释。自然界中视网膜和外侧膝状核（lateral
+geniculate nucleus，LGN）接受区(receptive field)
+的侧向和时间拮抗（temporal
+antagonism）是自然图像预测编码的结果。在预测编码模型中，视网膜 / LGN
+中的神经回路主动地从空间中的附近值或时间中的先验输入值的线性加权总和来预测局部强度的数值。这些电路中的细胞传达的不是原始图像强度，而是预测值和实际强度之间的差异，这种处理方式减少了输出冗余。而在高级视觉系统中，预测编码为定向感受区和背景效应以及大脑皮层的分层互连组织提供了解释。从不同脑区获得的各种神经生理学和心理物理学数据也与预测编码的猜想一致。</font></p>
+<p><font color="black" size="5">  我们先了解一下不同层级的神经系统的响应特点：大脑中初级视觉皮层（V1）的神经元对特定方向的条形和边缘作出反应，而
+V2 和 V4 区的神经元对更复杂的形状和轮廓特征作出反应。内侧颞上区（medial
+superior
+temporal，MST）的神经元对视觉运动有反应。这些反应的选择性可以从自然输入的分层预测编码的角度来理解。例如，由于视觉系统是分层组织的，皮层区域之间有相互的联系。根据
+Rao 和 Ballard 提出的分层神经网络的架构（RB
+架构），来自高阶视觉皮层区域的自上而下的反馈连接承载了对低阶神经活动的预测，而自下而上的连接则传达了预测的剩余误差。在对取自自然场景的图像斑块进行模型网络训练后，他们发现模型神经元发展出与
+V1 相似的感受野特性，包括定向感受野、末端停顿和其他背景效应。</font></p>
+<p><font color="black" size="5">  预测编码的一个早期应用是创建视网膜的模型，这些模型具有较低的信息传输要求，因为视神经是向大脑传输视觉信息的瓶颈。连续的视觉输入具有高冗余度。如果视网膜上的细胞从空间上和时间上计算出传入光线的移动平均值，就可以得到对当前输入的预测。通过将实际输入与预测进行比较，视网膜可以将预测误差发送到后来的处理区域，从而减少传输带宽。如果脊椎动物的视网膜从头开始创建当前输入图像的表征，信息传输的要求将取决于建立当前环境的完整表征所需的带宽。然而，大脑通常可以利用其对过去环境的现有表征以及关于环境如何变化的约束条件，对环境的当前状态做出非常好的预测。与从头开始建立当前环境状态的表征相比，预测误差只需要较少的带宽来表示。如果大脑已经有了一个相当准确的默认预测，那么用预测误差来更新默认预测就可以创造一个最新的、信息传输需求较低的表征。此外，预测误差可以提供很好的信息来指导学习，以改善表征并减少未来的预测误差。</font></p>
+<p><font color="black" size="5">  随着预测编码模型的发展，人们开始尝试将其构建为生成模型，以使其能够直接生成预测的感觉输入。这通常将其表示为一个层次结构，其中上层预测下层的输出（即对上层的输入），任何预测误差都提供信息来指导上层的学习。涉及前馈和反馈连接的分层结构也与灵长类动物的新皮层结构一致。在感知推理和识别的背景下，一个训练好的生成模型具有这样的特性：学习到的表征可以重建原始感觉输入的分布，并在不同的空间和时间尺度上估计输入中的隐性原因。学习到的表征能够捕捉到首先产生输入的因果因素，因此使得重建变为可能。它需要一个从感觉到原因的逆向映射，以便构建表征。这很有挑战性，因为计算物理世界中感觉和原因之间的逆向映射是一个
+ill-posed
+问题，也就是说，它的解决方案不是唯一的。在贝叶斯方法中，这可以通过使用适当的先验概率来解决，在某些情况下，如果有足够的输入，可以学习这些先验概率。一种方法是通过学习使预测误差最小化（即预测性编码）。</font></p>
+<p><font color="black" size="5">  一般人类的大脑通常可以利用其对过去环境的现有表征以及关于环境如何变化的约束条件，对环境的当前状态做出非常好的预测。而预测编码模型则是通过生成方式来预测感觉输入。一般的，这种生成方式构建为一个<strong>层次化的结构：上层预测下层的输出（即上层的输入），任何预测误差都提供信息来指导上层的学习</strong>。预测编码模型通过减少各层的预测误差来构建层次化的表征，即<strong>表征层次结构（Representation
+hierarchies）</strong>，具体包括两类方法：第一类方法是构建越来越抽象的特征层次，通过在层次结构的后期使用更大的输入上下文信息（input
+context）来实现，类似于卷积网络。第二类方法是像在泰勒级数展开中一样学习高阶误差的层次结构。我们在这一章节具体介绍一种第一类方法，即
+Rao/Ballard 模型。</font></p>
+<p><font color="black" size="5">  Rao/Ballard 的经典文献 [5]
+中使用三级表示层次结构对初级视皮层末梢神经感受野模型进行建模，其中来自更上层的反馈传达对前一层神经活动的预测。例如，将最下层的预测活动与实际活动（原始感官输入）进行比较。预测误差是一个层的输出，并被转发到下一个更高的层。在层次结构中，有两类神经元：内部表示神经元和预测误差神经元。在预测中间层表征时，通过让最上层表征使用相邻的空间上下文对结束停止（End-stopping）进行建模。最上层表征为空间更大的上下文构建表示。该模型是围绕预测元素（predictive
+element，PE）建立的。人们可以将预测元素视为大脑中的一个处理阶段或皮质层。在深度学习术语中，它由两个执行互补功能的神经层组成，并通过前馈和反馈连接连接。</font></p>
+<p><font color="black" size="5">  为了方便理解，我们给出 PE
+的图形化展示。将 PE 堆叠成层次结构（图 1（a））。PE
+从层次结构中的前一层接收预测误差（通过前向连接），并以先验概率的形式（通过后向连接）向前一层发送预测。图
+1（a）给出信息流的原始视图。第 l+1 层学习第 l
+层的变换表示，从而提高其对第 l
+层活动的预测性能。r(l)表示输入的假设原因。不同的层 l
+以越来越高的描述级别提供相同原因的不同表示。每一层的表达都表现为形成该层的神经元向量的一组激活水平。图
+1（b）中的视图显示相邻层之间的交互遵循一个约束协议，即 Rao-Ballard
+协议。在我们的表示中，有四种连接类型：预测（prediction，P）、预测误差（prediction
+error，PE）、横向目标（lateral target，LT）和横向目标误差（lateral
+target error，LTE）。层输出是由 PE 连接提供的信息。P 和 PE
+为完全连接，LT 和 LTE 为点对点连接（见图
+2）。表示模块仅与预测误差模块通信，预测误差模块仅与表示模块通信。此外，预测误差神经元在层次结构中从不向下投射，内部表征神经元在层次结构中从不向上投射。</font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<h1 id="二prednet-model">二、PredNet model</h1>
+<h2 id="网络架构"><font color="black" size="5">1.网络架构👨‍🏫</font></h2>
+<p><font color="black" size="5">  PredNet网络由一系列重复堆叠的模块组成，这些模块尝试对模块的输入进行本地预测，然后从实际输入中减去该预测并传递到下一层。PredNet模型架构如下图所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021131061.png"></p>
+<p><font color="black" size="5">  该网络的每个模块由四个基本部分组成：<strong>输入卷积层（<span class="math inline">\(\textcolor{blue}{A_l}\)</span>）、循环表示层（<span class="math inline">\(\textcolor{blue}{R_l}\)</span>）、预测层（<span class="math inline">\(\textcolor{blue}{\hat{A}_l}\)</span>）和误差表示层（<span class="math inline">\(\textcolor{blue}{E_l}\)</span>）</strong>。</font></p>
+<p><font color="black" size="5">  1️⃣循环表示层<span class="math inline">\(\textcolor{blue}{R_l}\)</span>是一个循环卷积网络，它产生预测<span class="math inline">\(\textcolor{blue}{\hat{A}_l}\)</span>。网络计算
+<span class="math inline">\(\textcolor{blue}{A_l}\)</span>和 <span class="math inline">\(\textcolor{blue}{\hat{A}_l}\)</span>之间的差异并输出一个误差表示<span class="math inline">\(\textcolor{blue}{E_l}\)</span>，该误差表示被分成<strong>单独的校正正误差总体</strong>和<strong>负误差总体</strong>。</font></p>
+<p><font color="black" size="5">  2️⃣然后误差<span class="math inline">\(\textcolor{blue}{E_l}\)</span>通过卷积层向前传递，成为下一层
+<span class="math inline">\(\textcolor{blue}{A_{l+1}}\)</span>的输入。循环预测层<span class="math inline">\(\textcolor{blue}{R_l}\)</span>有两个输入，分别是接收误差信号<span class="math inline">\(\textcolor{blue}{E_l}\)</span>的副本以及下一层的表示层<span class="math inline">\(\textcolor{blue}{R_{l+1}}\)</span>的输入。</font></p>
+<p><font color="black" size="5">  网络的组织方式是这样的：在操作的第一个步骤中，网络的“右”侧（<span class="math inline">\(\textcolor{blue}{A_l}\)</span>和 <span class="math inline">\(\textcolor{blue}{E_l}\)</span>）相当于<strong>标准的深度卷积网络</strong>。同时，网络的“左侧”（<span class="math inline">\(\textcolor{blue}{R_l}\)</span>）相当于<strong>每个阶段都有局部递归的生成反卷积网络</strong>,并使用梯度下降进行端到端训练。</font></p>
+<h2 id="模块更新"><font color="black" size="5">2.模块更新👩‍🔬</font></h2>
+<p><font color="black" size="5">  PredNet架构适用于各种建模的数据，但本文重点关注的是图像序列（视频）数据。</font></p>
+<p><font color="black" size="5">  1️⃣考虑图像序列 <span class="math inline">\(\textcolor{blue}{x_t}\)</span>,<strong>当layer=0时，最低层的目标设置为实际序列本身</strong>，即
+<span class="math inline">\(\textcolor{blue}{A^t_0 = x_t
+∀t}\)</span>。<strong>当layers&gt;0时，较高层的目标<span class="math inline">\(\textcolor{blue}{A^t_l(l &gt;
+0)}\)</span>通过对下层的误差单元 <span class="math inline">\(\textcolor{blue}{E^t_{l−1}}\)</span>
+进行卷积计算，然后进行修正线性单元 (ReLU) 激活和最大池化（Max
+pooling）</strong>。</font></p>
+<p><font color="black" size="5">  2️⃣循环表示层（<span class="math inline">\(\textcolor{blue}{R_l}\)</span>）使用 LSTM
+作为表示神经元。<span class="math inline">\(\textcolor{blue}{R^t_l}\)</span> 隐藏状态根据
+<span class="math inline">\(\textcolor{blue}{R^{t−1}_l}\)</span>、 <span class="math inline">\(\textcolor{blue}{E^{t−1}_l}\)</span>以及 <span class="math inline">\(\textcolor{blue}{R^t_{l+1}}\)</span>进行更新。</font></p>
+<p><font color="black" size="5">  3️⃣预测<span class="math inline">\(\textcolor{blue}{\hat{A}^t_l}\)</span>是通过<span class="math inline">\(\textcolor{blue}{R^t_l}\)</span>层的卷积和 ReLU
+非线性进行的。对于最低层，<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span>还通过最大像素值处的饱和非线性集：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021546420.png" alt="img" style="zoom:80%;"></p>
+<p><font color="black" size="5">  4️⃣最后，<strong>误差响应<span class="math inline">\(\textcolor{blue}{E^t_l}\)</span>是根据<span class="math inline">\(\textcolor{blue}{\hat{A}^t_l}\)</span>和<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span>
+之间的差异计算的，并分为 ReLU
+激活的正预测误差和负预测误差</strong>，它们沿特征维度串联。完整的更新公式如下:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021600016.png"></p>
+<p><font color="black" size="5">  该模型经过训练，可以最小化误差单元活动的加权和。训练损失为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021608863.png"></p>
+<p><font color="black" size="5">  加权因子为时间<span class="math inline">\(\textcolor{blue}{λ_t}\)</span>和层<span class="math inline">\(\textcolor{blue}{λ_l}\)</span>，其中<span class="math inline">\(\textcolor{blue}{n_l}\)</span>是第<span class="math inline">\(\textcolor{blue}{l}\)</span>层中的单元数量。对于由减法和ReLU激活组成的误差单元，每层的损失相当于
+L1 误差。</font></p>
+<h2 id="算法流程"><font color="black" size="5">3.算法流程👨‍🌾</font></h2>
+<p><font color="black" size="5">  算法 1
+中描述了上述该模型的实现流程。状态更新通过两个过程进行：一个自上而下的过程，其中计算<span class="math inline">\(\textcolor{blue}{R^t_l}\)</span>状态，然后一个向前的过程，以计算预测、误差和更高级别的目标。最后一个值得注意的细节是<span class="math inline">\(\textcolor{blue}{E^0_l}\)</span>和<span class="math inline">\(\textcolor{blue}{R^0_l}\)</span>被初始化为零，这是由于网络的卷积性质，意味着初始预测在空间上是一致的。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021619396.png"></p>
+<p><font color="black" size="5">  1️⃣从输入数据中获取当前时间步的数据：<span class="math inline">\(\textcolor{blue}{A^t_0}\)</span>；<strong>注:输入数据是个五维数据（batch_size,t,c,w,h）</strong></font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021640934.png" alt="1698914437252">
+<figcaption aria-hidden="true">1698914437252</figcaption>
+</figure>
+<p><font color="black" size="5">  2️⃣当t=0时，每一层的<span class="math inline">\(\textcolor{blue}{E^0_l}\)</span>和<span class="math inline">\(\textcolor{blue}{R^0_l}\)</span>都初始化为0；</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021648222.png" alt="1698914923074">
+<figcaption aria-hidden="true">1698914923074</figcaption>
+</figure>
+<p><font color="black" size="5">  3️⃣在第一层循环下<span class="math inline">\(\textcolor{blue}{t}\)</span>从1到T,接到第二层循环<span class="math inline">\(\textcolor{blue}{l}\)</span>从最后一层（L）到0；这一层循环主要是为了更新当前t时刻，每一层<span class="math inline">\(\textcolor{blue}{R^t_l}\)</span>的隐藏状态</font></p>
+<p><font color="black" size="5">  4️⃣如果当前是最后一层(L)，则将上一个时刻的最后一层的<span class="math inline">\(\textcolor{blue}{E^{t-1}_l}\)</span>和<span class="math inline">\(\textcolor{blue}{R^{t-1}_l}\)</span>送到ConvLSTM网络当中。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021723826.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021724973.png"></p>
+<p><font color="black" size="5">  5️⃣如果不是最后一层，则将E和R_seq中下一层的上采样结果拼接起来，并将拼接结果作为输入。并调用cell函数，得到R和hx。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311021728637.png"></p>
+<p><font color="black" size="5">  6️⃣在第一个第二层循环结束以后，进入到第二个第二层循环当中，该层循环是为了更新每一层的<span class="math inline">\(\textcolor{blue}{\hat{A}^t_l}\)</span>,<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span>,<span class="math inline">\(\textcolor{blue}{E^t_l}\)</span>状态</font></p>
+<p><font color="black" size="5">  7️⃣如果l=0时，<span class="math inline">\(\textcolor{blue}{\hat{A}^t_0}\)</span>要额外通过SatLU激活函数。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030854943.png"></p>
+<p><font color="black" size="5">  8️⃣计算正差值和负差值，分别为<span class="math inline">\(\textcolor{blue}{\hat{A}^t_l}\)</span>与<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span>之间的差值和<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span>与<span class="math inline">\(\textcolor{blue}{\hat{A}^t_l}\)</span>之间的差值，并更新<span class="math inline">\(\textcolor{blue}{E^t_l}\)</span>状态</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030858625.png"></p>
+<p><font color="black" size="5">  9️⃣如果当前层小于L,则使用误差<span class="math inline">\(\textcolor{blue}{E^t_l}\)</span>更新<span class="math inline">\(\textcolor{blue}{A^t_l}\)</span></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311030902044.png"></p>
 <h1 id="三实验">三、实验</h1>
-<p><font color="black" size="5">  本文进行实验的目的如下：</font></p>
-<p><font color="black" size="5">  1）证明Med-DDPM
-在准确性、稳定性和多功能性等指标方面优于 GAN 。</font></p>
-<p><font color="black" size="5">  2）证明 Med-DDPM
-在增强分割模型性能和作为数据增强替代方案方面的功效。</font></p>
-<p><font color="black" size="5">  为了验证实验想要达到的预期效果，作者从主数据集创建了两个子数据集。第一种模式涉及
-1292 个图像的训练集和 208 个图像的测试集。在第二种模式中，随机选择 100
-张图像进行训练，100 张图像进行验证，100
-张图像进行测试，创建一个小型数据集（<strong>创建小型数据集的原因，是为了挑战扩散模型在数据稀缺情况下所展现的潜力</strong>）。并且选择
-Pix2Pix GAN和 DiscoGAN 作为基线模型，并将其架构调整为 3D
-模型。</font></p>
-<h2 id="med-ddpm合成的质量评估"><font color="black" size="5">1.Med-DDPM合成的质量评估</font></h2>
-<p><font color="black" size="5">  在第一种模式中，作者使用 1292
-个图像训练Med-DDPM和基线 GAN 模型，历时 100,000 个epoch，batch-size为
-1（称为主模型）,然后在 208
-张测试图像上评估了这些模型。本文采用定量和定性措施来评估合成图像。</font></p>
-<p><font color="black" size="5">  <strong>定量结果：</strong>下表展示了MedDDPM
-与基线 DiscoGAN 和 Pix2Pix 相比的性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251552238.png"></p>
-<p><font color="black" size="5">  结果证明了 Med-DDPM
-的优越性能。它实现了 0.0548 的最低
-MSE，表明其在输出中保留更精细细节和结构的强大能力。此外，Med-DDPM 在 MMD
-方面表现优于 GAN，值为
-4.1909，表明其匹配目标域分布的能力很强。而Med-DDPM模型在的3D-FID指标显示得分明显较低，值为249.713，这一结果表明
-Med-DDPM 在生成逼真且高质量 3D 结构方面的熟练程度。尽管模型的 MS-SSIM
-得分 (0.4358) 与真实数据的 MS-SSIM 得分 (0.4728) 不太接近，但与 Pix2Pix
-相比，它使模型更接近真实数据。</font></p>
-<p><font color="black" size="5">  下图展示的是真实图像的冠状面、矢状面和轴向切片以及Med-DDPM和基线
-GAN 模型生成的样本。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251536087.png"></p>
-<p><font color="black" size="5">  从图中可以观察到，Pix2Pix
-模型生成的图像较模糊。与 Pix2Pix 模型相比，DiscoGAN
-模型表现更好，生成更真实的图像，肿瘤区域清晰。然而，值得注意的是，DiscoGAN
-生成的图像未能清楚地描绘大脑的独特特征。此外，它们会产生粗糙的脑回和脑沟，这看起来不自然。相比之下，本文所提出的
-Med-DDPM
-模型生成高度逼真和高质量的图像，显示出大脑特征和肿瘤区域的清晰可见性。</font></p>
-<p><font color="black" size="5">  下图展示的是真实图像和合成图像的轴向平面中肿瘤区域的放大图像。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251540029.png"></p>
-<p><font color="black" size="5">  下图展示了使用操纵掩模生成的合成图像</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543920.png"></p>
-<p><font color="black" size="5">  下图展示了为单个输入掩模生成的合成图像的多样性。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251543906.png"></p>
-<h2 id="在合成图像上训练的分割模型的比较"><font color="black" size="5">2.在合成图像上训练的分割模型的比较</font></h2>
-<p><font color="black" size="5">  在第二种模式中，使用小型数据集从头开始训练所有模型，历时
-50,000 个epoch，batch-size为
-1（称为玩具模型）。此外，作者使用该小型数据集和玩具模型生成的合成图像去训练了
-3D U-Net
-分割模型。为了评估合成图像作为数据增强替代方案的性能，作者还使用各种训练数据组合来训练
-U-Net 模型，包括中当前最先进的医学图像增强。分割模型使用 BCE 损失进行
-100 个时期的训练，批量大小为 4。使用 Dice 系数和 IoU
-分数评估模型性能。</font></p>
-<p><font color="black" size="5">  下表展示了各种数据样本组合进行训练的
-3D U-Net
-在玩具数据集上进行肿瘤分割的实验结果，这些数据样本<strong>包括真实图像、增强图像以及由Med-DDPM
-玩具模型和在同一数据集上训练的基线模型生成的合成图像。</strong>其中，真实图像是指来自玩具数据集的
-100 张训练图像。增强图像通过应用最先进的 nnU-Net
-增强来操作玩具数据集中的训练图像来创建。下表的评估分数代表分割模型在测试集上的性能，测试集由玩具数据集中的
-100 张图像组成。 Syn 1000、Syn 2000 和 Syn 5000
-表示用于训练分割模型的合成图像的数量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251614874.png"></p>
-<p><font color="black" size="5">  首先，我们可以看到使用合成图像进行训练（Pix2Pix
-模型除外）的分割模型，其性能始终优于使用真实图像进行训练。另外，使用最先进的增强生成的图像始终能够实现最高的性能。对于
-1000、2000 和 5000 张图像，Dice 分数分别增加到 0.4442、0.4688 和
-0.4704。这种提高可能是由于增强图像源自对真实训练图像的操作，捕获了真实肿瘤图像的复杂且相关的特征，同时增加了训练数据的多样性。</font></p>
-<p><font color="black" size="5">   Med-DDPM 相对于基线和其他 GAN
-模型提供了显着的改进，1000、2000 和 5000 个图像集的 Dice 分数分别为
-0.3593、0.3746 和 0.3563,如下图所示。这一改进意味着 Med-DDPM 方法比其他
-GAN
-模型更好地捕捉了分割任务的复杂性，并且更接近最先进的增强技术所实现的性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309251634626.png"></p>
-<p><font color="black" size="5">  当 Med-DDPM 与 DiscoGAN 和 Pix2Pix
-结合时（<strong>具体如何结合，本文没有明说</strong>），结果变得更加有希望，这表明这些方法在生成用于肿瘤分割的有效合成图像方面相辅相成。特别是在
-5000 张合成图像的实验中，Med-DDPM 与 DiscoGAN 和 Pix2Pix 相结合，获得了
-0.4443 的 Dice 分数和 0.3511 的
-IoU，几乎与最先进的增强技术一样好。<strong>总的来说，这些结果说明了使用合成图像训练
-U-Net 进行肿瘤分割的有效性，以及所提出的方法 Med-DDPM，特别是与 DiscoGAN
-和 Pix2Pix
-结合使用时，展示了与最先进的增强技术相比的竞争性能</strong>。</font></p>
-<h1 id="四总结">四、总结</h1>
-<p><font color="black" size="5">  在本文中，我们提出了
-Med-DDPM，这是一种利用条件去噪扩散概率模型生成高质量、多样化 3D
-医学图像的新方法。我们在训练和采样阶段都将条件掩模图像作为先验。我们的结果证实了
-Med-DDPM 生成 3D
-医学图像的能力，这些图像不仅具有卓越的质量，而且还包含广泛的可变性。使用在
-Med-DDPM
-生成的合成图像上训练的分割模型进行的实验证明了分割性能的显着提高。这一成功凸显了
-Med-DDPM
-作为医学成像数据增强的强大工具以及医学成像领域先进数据匿名化工具的潜力。另外，本文使用的是最原始DDPM的框架进行实验，作者提出未来的工作可以通过潜在扩散模型的集成来增强其图像生成能力。</font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/</a>
-            <p>发表日期：<a href="http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">September 23rd 2023, 10:42:01 am</a>
-            <p>更新日期：<a href="http://example.com/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">October 7th 2023, 8:53:54 am</a>
+            <p>原文链接：<a href="http://example.com/2023/11/02/PredNet/">http://example.com/2023/11/02/PredNet/</a>
+            <p>发表日期：<a href="http://example.com/2023/11/02/PredNet/">November 2nd 2023, 11:16:44 am</a>
+            <p>更新日期：<a href="http://example.com/2023/11/02/PredNet/">November 4th 2023, 8:44:39 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -648,17 +657,12 @@ Med-DDPM
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/" title="Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation">
-                    <div class="nextTitle">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/" title="Medical diffusion model——1.Medfusion">
-                    <div class="prevTitle">Medical diffusion model——1.Medfusion</div>
+                <a href="/2023/10/14/Bayesian-Flow-Networks/" title="BFNs——Bayesian Flow Networks">
+                    <div class="prevTitle">BFNs——Bayesian Flow Networks</div>
                 </a>
             
         </li>
@@ -828,7 +832,7 @@ Med-DDPM
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、方法原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#med-ddpm%E5%90%88%E6%88%90%E7%9A%84%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0"><span class="toc-number">3.1.</span> <span class="toc-text">1.Med-DDPM合成的质量评估</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E5%90%88%E6%88%90%E5%9B%BE%E5%83%8F%E4%B8%8A%E8%AE%AD%E7%BB%83%E7%9A%84%E5%88%86%E5%89%B2%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">3.2.</span> <span class="toc-text">2.在合成图像上训练的分割模型的比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E7%AE%80%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">一、简要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cprednet-model"><span class="toc-number">2.</span> <span class="toc-text">二、PredNet model</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">1.网络架构👨‍🏫</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E6%9B%B4%E6%96%B0"><span class="toc-number">2.2.</span> <span class="toc-text">2.模块更新👩‍🔬</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text">3.算法流程👨‍🌾</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
