@@ -38,11 +38,20 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310271603326.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311070949901.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311071003856.png">
-<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\1692692782178.png">
-<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png">
-<meta property="og:image" content="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311071453322.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081444695.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081545921.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081443540.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311080851332.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\202311071457171.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081657323.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081705453.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081733271.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311090907036.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311091045596.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B.assets\202311071453322.png">
 <meta property="article:published_time" content="2023-07-26T09:32:09.000Z">
-<meta property="article:modified_time" content="2023-11-07T02:45:58.572Z">
+<meta property="article:modified_time" content="2023-11-09T03:47:36.633Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310240838725.jpeg">
@@ -823,84 +832,116 @@ p(x|y)}\)</span>才是名副其实的条件分数。</font></p>
 guidance</strong>,这两个内容也会在后续的文章当中陆续介绍。</font></p>
 <p><font color="black" size="5">  光是前面的内容就足够一篇文章的内容了，然而这仅仅只是开始，下面才正式到SDE的介绍。</font></p>
 <h1 id="三sdes">三、SDEs</h1>
-<p><font color="black" size="5">  本文作者提出了一种随机微分方程（SDE），它通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相对应的反向
-SDE，通过缓慢消除噪声将先验分布转换回数据分布。反向 SDE
+<p><font color="black" size="5">  在扩散模型和NCSN当中我们都能看到，<strong>Diffustion的关键在于在多个不同规模上加入噪声扰动，通过将这些不同规模的噪声的数量扩展到无穷大</strong>，我们不仅可以得到高质量的生成样本，而且可以得到准确的Log-likelihood和可控的生成过程(比如给定生成标签)。</font></p>
+<p><font color="black" size="5">  注意到，不论是DDPM，还是NCSN而言，它们都存在一个共同的特性：加噪链和去噪过程都是离散化的，即他们按照时间步<span class="math inline">\(\textcolor{blue}{1 \sim
+T}\)</span>被打散，我们已经强调过，当然时间<span class="math inline">\(\textcolor{blue}{T}\)</span>需要足够大，才可以保证我们最终加噪后的样本趋近于标准正态分布。事实上，这是一个随机的过程，如果把上述有限步<span class="math inline">\(\textcolor{blue}{T}\)</span>拓展到无限步会怎么样？因为经过实验验证，
+<span class="math inline">\(\textcolor{blue}{T}\)</span>越大，可以得到更准确的似然估计，以及质量更好的结果。而这样我们对数据进行连续时间的扰动就可以被建模成一个<strong>随机微分方程
+(stochastic differential equation,
+SDE)</strong>。<strong>SDE的思想是想将这个离散的随机控制过程连续化</strong>，那么就要涉及随机微分方程(随机控制)的理论和原理了。Song
+Yang详细的对这个过程进行了可视化的描述(从图中我们可以看出想要通过一个连续的过程来描述该问题)。
+</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311071453322.png"></p>
+<p><font color="black" size="5">  由此我们可以看出，作者<strong>提出了一种随机微分方程（SDE），它通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相对应的反向
+SDE，通过缓慢消除噪声将先验分布转换回数据分布</strong>。反向 SDE
 仅取决于扰动数据分布的时间相关梯度场（也称为分数）。通过利用基于分数的生成模型的优化，我们可以使用神经网络准确地估计这些分数，并使用数值
 SDE 求解器来生成样本。</font></p>
-<figure>
-<img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\1692692782178.png" alt="1692692782178">
-<figcaption aria-hidden="true">1692692782178</figcaption>
-</figure>
-<h2 id="使用sde扰动数据"><font color="black" size="5">1.使用SDE扰动数据</font></h2>
-<p><font color="black" size="5">  为了生成样本，我们需要考虑一个扩散过程，去不断对数据加噪使得数据分布变成一个噪声分布。那么当<span class="math inline">\(\lbrace
-x_{(t)}\rbrace_{t=0}^T\)</span>是一个连续变量时，我们可以通过SDE去表达这个过程：</font></p>
-<p><span class="math display">\[\huge dx=f(x,t)dt+g(t)dw\]</span></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(f(\cdot,t)：R^d \rightarrow
-R^d\)</span>称为漂移系数,<span class="math inline">\(g(t)\in
-R^d\)</span>称为扩散系数，w是随机布朗运动的一个量。这个看不懂不要紧，我们可以把这个式子看成是下述离散形式在<span class="math inline">\(Δt→0\)</span>时的极限：</font></p>
+<h2 id="使用sde扰动数据"><font color="black" size="5">1.使用SDE扰动数据🌒</font></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081444695.gif"></p>
+<p><font color="black" size="5">  为了生成样本，我们需要考虑一个扩散过程，去不断对数据加噪使得数据分布变成一个噪声分布。那么当<span class="math inline">\(\textcolor{blue}{\lbrace
+x_{(t)}\rbrace_{t=0}^T}\)</span>是一个连续变量时，我们可以通过SDE去表达这个过程：</font></p>
+<p><span class="math display">\[\huge
+dx=f(x,t)dt+g(t)dw-(8)\]</span></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{f(\cdot,t):R^d \rightarrow
+R^d}\)</span>是个向量函数，被称为<strong>漂移系数</strong>，<span class="math inline">\(\textcolor{blue}{g(t)\in
+R^d}\)</span>称为<strong>扩散系数</strong>，w是随机布朗运动的一个量，<span class="math inline">\(\textcolor{blue}{dw}\)</span>是无限小的白噪声。<strong>这个SDE公式表达一个扩散过程，相当于DDPM当中的前向扩散过程，只不过在DDPM中，时间<span class="math inline">\(\textcolor{blue}{t}\)</span>是离散的，而在SDE中，时间是连续的。因此SDE可以看做是DDPM在连续时间上的扩展。</strong>我们可以把这个式子看成是下述离散形式在<span class="math inline">\(\textcolor{blue}{Δt→0}\)</span>时的极限：</font></p>
 <p><span class="math display">\[\huge
 x_{t+Δt}−x_t=f_t(x_t)Δt+g_t\sqrtΔtε,ε∼N(0,I)\]</span></p>
-<p><font color="black" size="5">  有没有感觉这个式子很眼熟，和朗之万迭代采样的式子很像。在这里越小的<span class="math inline">\(Δt\)</span>意味着是对原始SDE越好的近似，如果取<span class="math inline">\(Δt=0.001\)</span>，那就对应于原来的T=1000，如果是<span class="math inline">\(Δt=0.01\)</span>则对应于T=100。</font></p>
-<h2 id="sde的逆向过程"><font color="black" size="5">2.SDE的逆向过程</font></h2>
-<p><font color="black" size="5">  用概率语言，上式我们可以表示为：</font></p>
-<p><span class="math display">\[\huge \begin{aligned}
-p(x_{t+Δt}|x_t)&amp;=\mathcal{N}(x_{t+Δt};x_t+f_t(x_t)Δt,g_t^2ΔtI)\\&amp;\varpropto
-exp(-\frac{|| x_{t+Δt}-x_t-f_t(x_t)Δt||^2}{2g_t^2Δt})
+<p><font color="black" size="5">  有没有感觉这个式子很眼熟，和朗之万迭代采样的式子很像。在这里越小的<span class="math inline">\(\textcolor{blue}{Δt}\)</span>意味着是对原始SDE越好的近似，如果取<span class="math inline">\(\textcolor{blue}{Δt=0.001}\)</span>，那就对应于原来的<span class="math inline">\(\textcolor{blue}{T=1000}\)</span>，如果是<span class="math inline">\(\textcolor{blue}{Δt=0.01}\)</span>则对应于<span class="math inline">\(\textcolor{blue}{T=100}\)</span>。也就是说，在连续时间的SDE视角之下，不同的<span class="math inline">\(\textcolor{blue}{T}\)</span>是SDE不同的离散化程度的体现，它们会自动地导致相似的结果，我们不需要事先指定<span class="math inline">\(\textcolor{blue}{T}\)</span>，而是根据实际情况下的精确度来取适当的<span class="math inline">\(\textcolor{blue}{T}\)</span>进行数值计算。该SDE的解是一个随机变量连续的集合<span class="math inline">\(\textcolor{blue}{\lbrace
+x_{(t)}\rbrace_{0:T}}\)</span></font></p>
+<p><font color="black" size="5">  在<span class="math inline">\(\textcolor{blue}{t=0}\)</span>时，<span class="math inline">\(\textcolor{blue}{p_0(x)=p(x)}\)</span>，表示初始时刻没有任何噪声混入的原始数据分布；在经过足够长的时间<span class="math inline">\(\textcolor{blue}{T}\)</span>后，随着规模不断增大的噪声的混入，<span class="math inline">\(\textcolor{blue}{p_T(x)}\)</span>变成了一个可以处理(tractable)的噪声分布(比如高斯分布)，记为<span class="math inline">\(\textcolor{blue}{\pi(x)}\)</span>，被称为先验分布(prior
+distrubution)。</font></p>
+<p><font color="red" size="5"><strong>根据DDPM推导上述式8：</strong></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081545921.jpg"></p>
+<p><font color="black" size="5">  和DDPM一样，这个前向过程不需要模型去学习，我们关注的是它的逆过程，利用逆过程从数据分布<span class="math inline">\(\textcolor{blue}{p_T}\)</span>中去采样新的样本。</font></p>
+<h2 id="sde的逆向过程"><font color="black" size="5">2.SDE的逆向过程🌖</font></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081443540.gif"></p>
+<p><font color="black" size="5">  在噪声规模数量有限的情况下(DDPMs,
+NCSNs)，我们通过逆向过程逐渐减少噪声来生成样本，NCSNs称之为<strong>退火朗之万动力学</strong>，即使用<strong>朗之万动力学</strong>从每个混入噪声的分布中按照逆序采样；类似的，对于无限数量的噪声尺度，我们使用逆向SDE来对混入噪声的过程进行反向来进行样本生成。</font></p>
+<p><font color="black" size="5">  对于任何的SDE，其反向过程仍为一个扩散过程，其封闭数学表达式可以表示为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311080851332.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{dt}\)</span>表示一个无穷小的负向时间步长，<span class="math inline">\(\textcolor{blue}{\bar{w}}\)</span>表示一个从时间<span class="math inline">\(\textcolor{blue}{t=T}\)</span>到<span class="math inline">\(\textcolor{blue}{t=0}\)</span>的维纳过程，<span class="math inline">\(\textcolor{blue}{\nabla_{x}\log
+p_t(x)}\)</span>表示概率函数的分数。反向SDE扩散过程即利用一个训练的神经网络<span class="math inline">\(\textcolor{blue}{s_\theta(x,t)}\)</span>来估计分数<span class="math inline">\(\textcolor{blue}{\nabla_{x}\log
+p_t(x)}\)</span>。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\202311071457171.png"></p>
+<p><font color="black" size="5">  我们可以通过SDE将数据中混入噪声，最终得到一个简单的噪声分布；这个过程可以逆转，如果我们知道每个时间步的score分布，那么我们就可以从噪声中生成样本。实际上，对逆向SDE的求解的过程，就是产生一个基于Score的生成模型的过程。</font></p>
+<p><font color="red" size="5"><strong>逆向SDE微分方程式的推导：</strong></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081657323.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081705453.jpg"></p>
+<h2 id="使用基于score的模型和score-matching来估计reverse-sde"><font color="black" size="5">3.使用基于Score的模型和score
+matching来估计reverse SDE🌌</font></h2>
+<p><font color="black" size="5">  想要求解逆向SDE不仅需要分数函数<span class="math inline">\(\textcolor{blue}{\nabla_{x}\log
+p_t(x)}\)</span>，也需要终端分布<span class="math inline">\(\textcolor{blue}{p_T(x)}\)</span>，因为那身正向SDE的终点，也是逆向SDE的起点。前面提到，<span class="math inline">\(\textcolor{blue}{p_T(x)}\)</span>接近于先验分布<span class="math inline">\(\textcolor{blue}{\pi(x)}\)</span>，通常是一个完全是噪声组成的可解(tractable)的简单噪声分布。</font></p>
+<p><font color="black" size="5">  为了估计分数函数<span class="math inline">\(\textcolor{blue}{\nabla_{x}\log
+p_t(x)}\)</span>，可以训练一个时间依赖的基于score的模型<span class="math inline">\(\textcolor{blue}{s_\theta(x,t)}\)</span>，使得<span class="math inline">\(\textcolor{blue}{s_\theta(x,t)\approx
+\nabla_{x}\log p_t(x)}\)</span></font></p>
+<p><font color="black" size="5">  这样，就可以将一个训练好的分数模型与上述的逆向SDE式子相结合就能得到：</font></p>
+<p><span class="math display">\[\huge dx =
+[f(x,t)-g^2(t)s_\theta(x,t)]dt+g(t)dw\]</span></p>
+<p><font color="black" size="5">  当我们得到已经训练好的基于分数的模型<span class="math inline">\(\textcolor{blue}{s_\theta(x,t)}\)</span>，就可以从<span class="math inline">\(\textcolor{blue}{p_T(x)}\)</span>出发逐步”去噪“来获得没有噪声的数据样本<span class="math inline">\(\textcolor{blue}{p_0(x)}\)</span>，也就是生成的数据。</font></p>
+<p><font color="black" size="5">  其优化目标函数，也是NCSN的目标函数的连续化结果：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311081733271.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{t \sim
+Uniform[0,T]}\)</span>表示在时间间隔内的均匀分布<span class="math inline">\(\textcolor{blue}{[0,T]}\)</span>。而<span class="math inline">\(\textcolor{blue}{\lambda(t):R \rightarrow
+R_{&gt;0}}\)</span>是一个正加权函数。通常使用<span class="math inline">\(\textcolor{blue}{\lambda(t) \propto
+1/E[||\nabla_{x(t)}\log
+p(x(t)|x(0))||^2_2]}\)</span>以平衡不同分数匹配损失随时间变化的幅度。</font></p>
+<p><font color="black" size="5">  </font></p>
+<h2 id="ode常微分方程"><font color="black" size="5">4.ODE（常微分方程）⭐</font></h2>
+<p><font color="black" size="5">  样本生成过程就是逆向SDE的解。所以如何求解反向SDE呢？而基于分数的模型提供了一种求解逆时
+SDE 的数值方法。对于所有扩散过程，都存在一个相应的确定性过程，其轨迹与
+SDE 具有相同的边际概率密度<span class="math inline">\(\textcolor{blue}{\{p_t(x)\}_{t=0}^T}\)</span>。<strong>扩散过程的SDE有确定的ODE对应解代表着我们可以借用业界一直在研究的ODE求解器，快速求解（在几十步内）从而避开了扩散所需几千步的庞大计算量。同时，将扩散由离散向连续统一，使得条件控制生成变得特别自然。</strong>ODE的形式如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311090907036.png"></p>
+<p><font color="red" size="5">  <strong>接下来就一步步推导，如何从SDE转换到ODE:</strong></font></p>
+<p><font color="black" size="5">  我们已知SDE的正向加噪公式为：</font></p>
+<p><span class="math display">\[\huge
+dx=f(x,t)dt+g(t)dw-(8)\]</span></p>
+<p><font color="black" size="5">  <strong>其描述的是一个随机运动过程中粒子的位置变化情况，其包含着运动的随机性。而粒子整体的分布则可以通过Fokker-Planck方程进行描述，其分布则是确定的</strong>，因此我们可以写出它对应的F-P方程（F-P方程的形式是如何推导出来的，具体可以参考文章《<a target="_blank" rel="noopener" href="https://kexue.fm/archives/9228">生成扩散模型漫谈（六）：一般框架之ODE篇</a>》，它是描述边际分布的偏微分方程：</font></p>
+<p><span class="math display">\[\huge \frac{\partial}{\partial
+t}p(x,t)=-
+\nabla_{x}[f(x,t)p(x,t)]+\frac{1}{2}g_t^2\nabla_{x}^2p(x,t)-(9)\]</span></p>
+<p><font color="black" size="5">  对于任意满足<span class="math inline">\(\textcolor{blue}{σ^2_t≤g^2_t}\)</span>的函数<span class="math inline">\(\textcolor{blue}{σ_t}\)</span>,我们有如下推导：</font></p>
+<p><span class="math display">\[\huge
+\begin{aligned}\frac{\partial}{\partial t}p(x,t) &amp;=-
+\nabla_{x}[f(x,t)p(x,t)]+\frac{1}{2}g_t^2\nabla_{x}^2p(x,t)\\&amp;=-
+\nabla_{x}[f(x,t)p(x,t)-\frac{1}{2}(g_t^2-\sigma_t^2)\nabla_{x}p(x,t)]\\&amp;+\frac{1}{2}\sigma_t^2\nabla_{x}^2p(x,t)
 \end{aligned}\]</span></p>
-<p><font color="black" size="5">  按照DDPM中的思想，我们需要得到一个逆向过程去生成样本，那么我们需要知道<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>的分布，根据贝叶斯定理：</font></p>
-<p><span class="math display">\[\Large
-\begin{aligned}p(x_t|x_{t+Δt})&amp;=
-\frac{p(x_{t+Δ_t}|x_t)p(x_t)}{p(x_{t+Δt})}\\&amp;=p(x_{t+Δ_t}|x_t)\exp(\log
-p(x_t)-\log p(x_{t+Δt}))\\ &amp;\varpropto exp(-\frac{||
-x_{t+Δ_t}-x_t-f_t(x_t)Δt||^2}{2g_t^2Δt}+\log p(x_t)-\log
-p(x_{t+Δt}))\end{aligned}\]</span></p>
-<p><font color="black" size="5">  不难发现，当<span class="math inline">\(Δt\)</span>足够小时，只有当<span class="math inline">\(x_{t+Δt}\)</span>与<span class="math inline">\(xt\)</span>足够接近时，<span class="math inline">\(p(x_{t+Δt}|x_t)\)</span>才会明显不等于0，反过来也只有这种情况下<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>才会明显不等于0。因此，我们只需要对<span class="math inline">\(x_{t+Δt}\)</span>与<span class="math inline">\(x_t\)</span>足够接近时的情形做近似分析，为此，我们可以在<span class="math inline">\(x_{t+Δt}=x_t\)</span>处泰勒展开：</font></p>
-<p><span class="math display">\[\Large \log p(x_{t+Δt}) \approx \log
-p(x_t) + (x_{t+Δt}-x_t) \cdot \nabla_{x_t}\log
-p(x_t)+Δt\frac{\partial}{\partial t} \log p(x_t) \]</span></p>
-<p><font color="black" size="5">  注意不要忽略了<span class="math inline">\(\frac{\partial}{\partial t}\)</span>项，因为<span class="math inline">\(p(x_t)\)</span>实际上是“t时刻随机变量等于<span class="math inline">\(x_t\)</span>的概率密度”，而<span class="math inline">\(p(x_{t+Δt})\)</span>实际上是“<span class="math inline">\(t+Δt\)</span>时刻随机变量等于<span class="math inline">\(x_{t+Δt}\)</span>的概率密度”，也就是说<span class="math inline">\(p(x_t)\)</span>实际上同时是t和<span class="math inline">\(x_t\)</span>的函数，所以要多一项t的偏导数。代入到<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>后，配方得到:</font></p>
-<p><span class="math display">\[\huge p(x_t|x_{t+Δt}) \varpropto
-exp(-\frac{|| x_{t+Δt}-x_t-[f_t(x_t)Δt-g_t^2\nabla_{x_t} \log
-p(x_t)]Δ_t||^2}{2g_t^2Δt}+l(Δt))\]</span></p>
-<p><font color="black" size="5">  当<span class="math inline">\(Δt→0\)</span>时，<span class="math inline">\(\mathcal{l}(Δt)→0\)</span>不起作用，因此</font></p>
-<p><span class="math display">\[\Large \begin{aligned}p(x_t|x_{t+Δt})
-&amp;\varpropto \exp(-\frac{||
-x_{t+Δt}-x_t-[f_t(x_t)Δt-g_t^2\nabla_{x_t} \log
-p(x_t)]Δ_t||^2}{2g_t^2Δt})\\ &amp;\approx \exp(-\frac{||
-x_{t}-x_{t+Δt}+[f_{t+Δt}(x_{t+Δt})Δt-g_t^2\nabla_{x_{t+Δt}} \log
-p(x_{t+Δt})]Δ_t||^2}{2g_t^2Δt})\end{aligned}\]</span></p>
-<p><font color="black" size="5">  即<span class="math inline">\(p(x_t|x_{t+Δt})\)</span>近似一个均值为<span class="math inline">\(x_{t+Δt}-[f_{t+Δt}(x_{t+Δt})Δt-g_t^2\nabla_{x_{t+Δt}}
-\log p(x_{t+Δt})]Δ_t\)</span>、协方差为<span class="math inline">\(g_t^2Δt\)</span>的正态分布，取<span class="math inline">\(Δt→0\)</span>的极限，那么对应于SDE：</font></p>
-<p><img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230823666.png"></p>
-<h2 id="分数匹配-1"><font color="black" size="5">3.分数匹配</font></h2>
-<p><font color="black" size="5">  求解上面这个方程就能得到一个
-score-based generative model。也就是说的确我们的任务就是要估计这个<span class="math inline">\(\nabla_{x}\log
-p(x_t)\)</span>，和前面一致地训练一个网络来近似 <span class="math inline">\(s_\theta(x_t,t) \approx \nabla_{x}\log
-p(x_t)\)</span>。</font></p>
-<figure>
-<img src="https://cdn.staticaly.com/gh/phioenx/blogimage@main/img/202308230834067.png" alt="1692750889757">
-<figcaption aria-hidden="true">1692750889757</figcaption>
-</figure>
-<h2 id="设计去噪基于分数网络"><font color="black" size="5">4.设计去噪基于分数网络</font></h2>
-<p><font color="black" size="5">  在我们去设计连续时刻的分数模型，其结构是没有限制的，但作者给出了四个建议：</font></p>
-<ul>
-<li><font color="black" size="5">使用U-Net网络作为<span class="math inline">\(s_\theta(x_t,t)\)</span>的主干网络表现的效果比较好；</font></li>
-<li><font color="black" size="5">我们可以采用高斯随机特征的方式将时间信息注入到分数网络之中；</font></li>
-<li><font color="black" size="5">可以对U-Net的输出上乘以一个<span class="math inline">\(1/\sqrt{E[||\)</span><em>{x}p</em>{0t}(x(t)|x(0))||^2]}$</font></li>
-</ul>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{\frac{\partial f(x)}{\partial
+x}=\frac{\partial \log f(x)}{\partial x} \cdot f(x),\frac{\partial \log
+f(x)}{\partial x}=\frac{\partial f(x)}{\partial x} \cdot
+\frac{1}{f(x)}}\)</span>则有：</font></p>
+<p><span class="math display">\[\huge \begin{aligned}\frac{\partial
+p(x,t)}{\partial t}=&amp;-
+\nabla_{x}[(f(x,t)-\frac{1}{2}(g_t^2-\sigma_t^2)\nabla_{x} \log
+p(x,t))p(x,t)]\\&amp;+\frac{1}{2}\sigma_t^2\nabla_{x}^2p(x,t)-(10)\end{aligned}\]</span></p>
+<p><font color="black" size="5">  形式上该F-P方程又相当于原来的F-P的<span class="math inline">\(\textcolor{blue}{f(x,t)}\)</span>换成了<span class="math inline">\(\textcolor{blue}{(f(x,t)+\frac{1}{2}(g_t^2-\sigma_t^2)\nabla_{x}
+\log p(x,t))}\)</span>，<span class="math inline">\(\textcolor{blue}{g_t}\)</span>换成了<span class="math inline">\(\textcolor{blue}{\sigma_t}\)</span>根据式9对应于式8，上式则对应于:</font></p>
+<p><span class="math display">\[\huge dx
+=(f(x,t)-\frac{1}{2}(g_t^2-\sigma_t^2)\nabla_{x} \log p(x,t))dt +
+\sigma_tdw-(11)\]</span></p>
+<p><font color="black" size="5">  别忘了式10跟式9是完全等价的，所以这意味着式8和式11这两个随机微分方程所对应的边际分布<span class="math inline">\(\textcolor{blue}{p_t(x)}\)</span>是完全等价的！这个结果告诉我们存在不同方差的前向过程，它们产生的边际分布是一样的。</font></p>
+<p><font color="black" size="5">  特别地，我们可以写出式(11)对应的反向SDE：</font></p>
+<p><span class="math display">\[\huge dx
+=(f(x,t)-\frac{1}{2}(g_t^2+\sigma_t^2)\nabla_{x} \log p(x,t))dt +
+\sigma_tdw-(12)\]</span></p>
+<p><font color="black" size="5">  式11允许我们改变采样过程的方差，这里我们特别考虑<span class="math inline">\(\textcolor{blue}{\sigma_t=0}\)</span>的极端情形，此时SDE退化为ODE（常微分方程）：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311091045596.png"></p>
+<p><font color="black" size="5">  这个ODE称为“概率流ODE（Probability
+flow ODE）”，由于实践中的<span class="math inline">\(\textcolor{blue}{\nabla_{x}\log
+p_t(x)}\)</span>需要用神经网络<span class="math inline">\(\textcolor{blue}{s_\theta(x,t)}\)</span>近似，所以上式也对应一个“神经ODE”。同时，这一方程的解，是一个确定性的轨迹，其从纯噪音分布<span class="math inline">\(\textcolor{blue}{\log
+p_t(x)}\)</span>指向原始图像分布<span class="math inline">\(\textcolor{blue}{\log
+p_0(x)}\)</span>。并且它的解是可逆的，因此其既可以用于描述前向传播过程，也可以用于描述逆向过程</font></p>
+<p><font color="black" size="5">  下图就展示了SDE和ODE解的过程，可以看到ODE的轨迹(白色线)是确定光滑的，而SDE的轨迹是随机的。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——4.分数模型.assets\202311071453322.png"></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -934,8 +975,8 @@ Estimating Gradients of the Data Distribution(score-based model,NCSN) -
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/</a>
-            <p>发表日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">July 26th 2023, 5:32:09 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">November 7th 2023, 10:45:58 am</a>
+            <p>发表日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">七月 26日 2023, 5:32:09 下午</a>
+            <p>更新日期：<a href="http://example.com/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">November 9th 2023, 11:47:36 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1128,7 +1169,8 @@ with Langevin Dynamics）🦊</span></a></li><li class="toc-item toc-level-2"><a
 loss不收敛</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E4%BC%B0%E8%AE%A1%E4%B8%8D%E5%87%86%E7%A1%AE"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2
 分数估计不准确</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E7%BB%93%E6%9E%9C%E5%81%8F%E5%B7%AE%E5%A4%A7"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3
 生成结果偏差大</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cnoise-conditional-score-networkncsn"><span class="toc-number">2.</span> <span class="toc-text">二、Noise Conditional
-Score Network(NCSN)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%99%AA%E5%A3%B0%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">2.1.</span> <span class="toc-text">1.噪声设计原则🚩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2.网络结构设计🌈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.3.</span> <span class="toc-text">3.模型训练方法🎨</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">2.4.</span> <span class="toc-text">4.采样生成方法🚀</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%81%94%E7%B3%BB"><span class="toc-number">2.5.</span> <span class="toc-text">5.与扩散模型的联系🚅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E7%94%9F%E6%88%90"><span class="toc-number">2.6.</span> <span class="toc-text">6.条件生成🌕</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89sdes"><span class="toc-number">3.</span> <span class="toc-text">三、SDEs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8sde%E6%89%B0%E5%8A%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1.使用SDE扰动数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sde%E7%9A%84%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2.SDE的逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E5%8C%B9%E9%85%8D-1"><span class="toc-number">3.3.</span> <span class="toc-text">3.分数匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%BB%E5%99%AA%E5%9F%BA%E4%BA%8E%E5%88%86%E6%95%B0%E7%BD%91%E7%BB%9C"><span class="toc-number">3.4.</span> <span class="toc-text">4.设计去噪基于分数网络</span></a></li></ol></li></ol>
+Score Network(NCSN)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%99%AA%E5%A3%B0%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">2.1.</span> <span class="toc-text">1.噪声设计原则🚩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2.网络结构设计🌈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.3.</span> <span class="toc-text">3.模型训练方法🎨</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">2.4.</span> <span class="toc-text">4.采样生成方法🚀</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%81%94%E7%B3%BB"><span class="toc-number">2.5.</span> <span class="toc-text">5.与扩散模型的联系🚅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E7%94%9F%E6%88%90"><span class="toc-number">2.6.</span> <span class="toc-text">6.条件生成🌕</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89sdes"><span class="toc-number">3.</span> <span class="toc-text">三、SDEs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8sde%E6%89%B0%E5%8A%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1.使用SDE扰动数据🌒</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sde%E7%9A%84%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2.SDE的逆向过程🌖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8Escore%E7%9A%84%E6%A8%A1%E5%9E%8B%E5%92%8Cscore-matching%E6%9D%A5%E4%BC%B0%E8%AE%A1reverse-sde"><span class="toc-number">3.3.</span> <span class="toc-text">3.使用基于Score的模型和score
+matching来估计reverse SDE🌌</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ode%E5%B8%B8%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B"><span class="toc-number">3.4.</span> <span class="toc-text">4.ODE（常微分方程）⭐</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1218,6 +1260,8 @@ Score Network(NCSN)</span></a><ol class="toc-child"><li class="toc-item toc-leve
         
         
     
+        
+        
         
         
         
@@ -1423,14 +1467,14 @@ Score Network(NCSN)</span></a><ol class="toc-child"><li class="toc-item toc-leve
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
