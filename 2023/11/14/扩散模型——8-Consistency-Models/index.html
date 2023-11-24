@@ -19,17 +19,32 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、前言   扩散模型也被称为是分数模型，在图像生成、音频合成以及视频生成等领域都取得了前所未有的成功。但扩散模型依赖于迭代生成过程，该过程逐渐从随机初始向量中消除噪声。然而该过程往往都需要计算和样本质量的灵活权衡，因为使用额外的计算进行更多次迭代通常会产生质量更好的样本。然而，与 GAN、VAE或归一化流等单步生成模型相比，扩散模型的迭代生成过程通常需要 10-2000 倍的计算量来生成样本，这">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——8.Consistency Models">
 <meta property="og:url" content="http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="PhoenixPeng">
+<meta property="og:description" content="一、前言   扩散模型也被称为是分数模型，在图像生成、音频合成以及视频生成等领域都取得了前所未有的成功。但扩散模型依赖于迭代生成过程，该过程逐渐从随机初始向量中消除噪声。然而该过程往往都需要计算和样本质量的灵活权衡，因为使用额外的计算进行更多次迭代通常会产生质量更好的样本。然而，与 GAN、VAE或归一化流等单步生成模型相比，扩散模型的迭代生成过程通常需要 10-2000 倍的计算量来生成样本，这">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311220827763.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311220956750.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221026727.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221026519.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221030060.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221028165.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221046154.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221047138.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221123695.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221511065.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221518989.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221723085.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311230839262.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311230850359.png">
 <meta property="article:published_time" content="2023-11-14T07:39:57.000Z">
-<meta property="article:modified_time" content="2023-11-14T07:39:57.069Z">
+<meta property="article:modified_time" content="2023-11-23T01:43:22.346Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311220827763.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
@@ -491,7 +506,129 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        
+        <h1 id="一前言">一、前言</h1>
+<p><font color="black" size="5">  扩散模型也被称为是分数模型，在图像生成、音频合成以及视频生成等领域都取得了前所未有的成功。但扩散模型依赖于迭代生成过程，该过程逐渐从随机初始向量中消除噪声。然而该过程往往都需要计算和样本质量的灵活权衡，因为使用额外的计算进行更多次迭代通常会产生质量更好的样本。然而，与
+GAN、VAE或归一化流等单步生成模型相比，扩散模型的迭代生成过程通常需要
+10-2000
+倍的计算量来生成样本，这导致推理速度慢和实时应用受到限制。</font></p>
+<p><font color="black" size="5">  而本次所介绍的一致性模型（Consistency
+Models）最大的特定就是具有实现高效的单步生成，而不牺牲迭代采样的重要优势。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311220827763.png"></p>
+<p><font color="black" size="5">  它是建立在连续时间扩散模型中的概率流
+(PF) 常微分方程 (ODE)
+之上，其轨迹将数据分布平滑地转变为易于处理的噪声分布，我们学习将 ODE
+轨迹上的任何点（例如 <span class="math inline">\(\textcolor{blue}{x_t}\)</span>、<span class="math inline">\(\textcolor{blue}{x_{t^\prime}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{x_T}\)</span>
+）映射到其原点（例如 <span class="math inline">\(\textcolor{blue}{x_0}\)</span>）以进行生成建模。由于模型的一个显着特性是：同一轨迹上的点映射到同一初始点。因此，作者将此类模型称为一致性模型。</font></p>
+<p><font color="black" size="5">  一<strong>致性模型允许我们只需一次网络评估，就能通过转换随机噪声向量（ODE
+轨迹的端点<span class="math inline">\(\textcolor{blue}{x_T}\)</span>
+）来生成数据样本（ODE 轨迹的初始点<span class="math inline">\(\textcolor{blue}{x_0}\)</span>）</strong>。具体而言，Consistency
+Models 支持快速 one-step 生成，同时仍然允许 few-step
+采样，以权衡计算量和样本质量。它们还支持零样本（zero-shot）数据编辑，例如图像修复、着色和超分辨率生成。</font></p>
+<p><font color="black" size="5">  在训练方面，研究团队为 Consistency
+Models 提供了两种基于自洽性的方法。第一种方法依赖于使用数值 ODE
+求解器和预训练扩散模型来生成 PF ODE
+轨迹上的相邻点对。通过最小化这些点对的模型输出之间的差异，该研究有效地将扩散模型蒸馏为
+Consistency Models，从而允许通过 one network
+评估生成高质量样本。</font></p>
+<p><font color="black" size="5">  第二种方法则是完全消除了对预训练扩散模型的依赖，可独立训练
+Consistency Models。这种方法将 Consistency Models
+定位为一类独立的生成模型。</font></p>
+<h1 id="二模型原理">二、模型原理</h1>
+<h2 id="sde-以及-ode"><font color="black" size="5">1.SDE 以及
+ODE</font></h2>
+<p><font color="black" size="5">  假设我们有数据分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>，扩散模型通过如下的
+SDE 形式对数据分布进行加噪：</font></p>
+<p><span class="math display">\[\huge
+dx_t=\mu(x_t,t)dt+\sigma(t)dw_t-(1)\]</span></p>
+<p><font color="black" size="5">  由宋飏博士推导出，上述 SDE 存在一个
+ODE 形式的解轨迹：</font></p>
+<p><span class="math display">\[\huge dx_t
+=[\mu(x_t,t)-\frac{1}{2}\sigma(t)^2\nabla \log p_t(x_t)]dt
+-(2)\]</span></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{\nabla \log
+p(x)}\)</span>作为<span class="math inline">\(\textcolor{blue}{p(x)}\)</span>的得分函数。作者采用EDM的设置方法，令<span class="math inline">\(\textcolor{blue}{\mu(x_t,t) = 0}\)</span>，<span class="math inline">\(\textcolor{blue}{\sigma(t)=\sqrt{2t}}\)</span>，并训练一个分数模型，则有<span class="math inline">\(\textcolor{blue}{s_\phi(x_t,t) \approx \nabla \log
+p_t(x)}\)</span>，然后将这些代入到式2，则能得到如下表达式：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311220956750.png"></p>
+<p><font color="black" size="5">  将该方程称之为<strong>empirical PF
+ODE</strong>。接下来，我们对<span class="math inline">\(\textcolor{blue}{\hat{x}_T \sim
+\pi=\mathcal{N}(0,T^2I)}\)</span>进行采样，以初始化<strong>empirical PF
+ODE</strong>，并使用任何数值 ODE 求解器（例如 Euler 和 Heun 求解器
+）对该式子进行求解，获得解轨迹<span class="math inline">\(\textcolor{blue}{\lbrace \hat{x}_t\rbrace_{t \in
+[0,T]}}\)</span> 。由此产生的<span class="math inline">\(\textcolor{blue}{\hat{x}_0}\)</span>可以被视为来自数据分布<span class="math inline">\(\textcolor{blue}{p_{data}(x)}\)</span>的近似样本。</font></p>
+<h2 id="consistency-models"><font color="black" size="5">2.
+Consistency Models</font></h2>
+<p><font color="black" size="5">  <strong>定义：</strong>给定一条解轨迹<span class="math inline">\(\textcolor{blue}{\lbrace x_t\rbrace_{t \in
+[\epsilon,T]}}\)</span>，定义<strong>一致性函数</strong>为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221026727.png"></p>
+<p><font color="black" size="5">  对于这条轨迹上的任意点<span class="math inline">\(\textcolor{blue}{(x_t,t)}\)</span>
+，<strong>一致性函数</strong>都能将它们映射到相同的一个值，即：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221026519.png"></p>
+<p><font color="black" size="5">  并且对于轨迹的起点<span class="math inline">\(\textcolor{blue}{x_0 = x_\epsilon}\)</span>
+，我们有</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221030060.png"></p>
+<p><font color="black" size="5">  那么对于轨迹中任意一点，我们代入先验分布,
+即可得到<span class="math inline">\(\textcolor{blue}{f(x_T,T)=x_\epsilon}\)</span>。这样也就完成了一步采样</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221028165.png"></p>
+<p><font color="black" size="5">  自然就能想到我们训练一个神经网络来拟合
+<span class="math inline">\(\textcolor{blue}{f}\)</span>，但是这里要满足一个条件，就是轨迹上的点输出值一致，也就是说，<strong>要保证<span class="math inline">\(\textcolor{blue}{f(x_\epsilon,\epsilon)=x_\epsilon}\)</span>是恒等函数。将此约束称为边界条件，所有一致性模型都必须满足这个边界条件</strong>，如果无法保证轨迹上的任意点映射到起点的输出值相同，自然也无法保证一致性模型能够单步生成正确样本，因此它对于一致性模型的成功训练起着至关重要的作用。作者给出了两种实现此边界条件的方法。</font></p>
+<p><font color="black" size="5">  假设有一个自由形式的深度神经网络<span class="math inline">\(\textcolor{blue}{F_\theta(x,t)}\)</span>
+，其输出与<span class="math inline">\(\textcolor{blue}{x}\)</span>具有相同的维度。第一种方法是简单地将一致性模型参数化为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221046154.png"></p>
+<p><font color="black" size="5">  第二种方法是使用跳跃连接来参数化一致性模型，即：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221047138.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{c_{skip}(t),c_{out}(t)}\)</span>都是可微函数，当<span class="math inline">\(\textcolor{blue}{c_{skip}(\epsilon)=1,c_{out}(\epsilon)=0}\)</span>，就可以天然实现<span class="math inline">\(\textcolor{blue}{f(x_\epsilon,\epsilon)=x_\epsilon}\)</span>。由于第二种方法与许多扩散模型非常相似，使得更容易借用强大的扩散模型架构来构建一致性模型。因此，在所有实验中都遵循第二个参数化。</font></p>
+<p><font color="black" size="5">  <strong>单步采样</strong>：当我们训练好一个一致性模型<span class="math inline">\(\textcolor{blue}{f_\theta(x_t,t)}\)</span>时，那么生成过程，就是从先验分布采样一个随机样本<span class="math inline">\(\textcolor{blue}{\hat{x}_T \sim
+\mathcal{N}(0,T^2I)}\)</span>，代入到模型当中进行评估，一步到位<span class="math inline">\(\textcolor{blue}{\hat{x}_\epsilon =
+f_\theta(\hat{x}_T,T)}\)</span>。</font></p>
+<p><font color="black" size="5">  <strong>多步采样：</strong>显然，<span class="math inline">\(\textcolor{blue}{f(x_T,T)=x_\epsilon}\)</span>可以得到我们想要的生成结果。但一般认为，这样的生成误差会比较大。就像DDPM也可以通过预测噪声直接从<span class="math inline">\(\textcolor{blue}{x_t}\)</span>预测<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，但我们会依赖<span class="math inline">\(\textcolor{blue}{x_t,x_0}\)</span>预测<span class="math inline">\(\textcolor{blue}{x_{t-1}}\)</span>的依次向下采样来获得<span class="math inline">\(\textcolor{blue}{x_0}\)</span>来减小误差。同样的。一致性模型也能够每次从<span class="math inline">\(\textcolor{blue}{x_{\tau_n}}\)</span>预测出初始的<span class="math inline">\(\textcolor{blue}{x}\)</span>后，回退一步来预测<span class="math inline">\(\textcolor{blue}{x_{\tau_{n_1}}}\)</span>。通过这种交替去噪和噪声注入步骤方式来多次评估一致性模型，就能减小误差，提高样本质量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221123695.png"></p>
+<h2 id="训练方式"><font color="black" size="5">3. 训练方式</font></h2>
+<h3 id="通过蒸馏训练一致性模型cd"><font color="black" size="5">3.1&nbsp;通过蒸馏训练一致性模型(CD)</font></h3>
+<p><font color="black" size="5">  该方法的前提是，我们已经拥有了一个训练好的分数模型<span class="math inline">\(\textcolor{blue}{s_\phi(x_t,t)}\)</span>，那么就可以根据PF
+ODE(式3)去构建一条确定性的解轨迹，此时假设采样轨迹的时间序列为：<span class="math inline">\(\textcolor{blue}{\epsilon = t_1 &lt; t_2 &lt;
+...&lt;t_N=T}\)</span>，其中<span class="math inline">\(\textcolor{blue}{t_i
+=(\epsilon^{\frac{1}{\rho}}+\frac{i-1}{N-1(T^{\frac{1}{\rho}}-\epsilon^{\frac{1}{\rho}})})^\rho,\rho=7}\)</span>，当<span class="math inline">\(\textcolor{blue}{N}\)</span>足够大的时候，我们可以通过运行数值
+ODE 求解器的一个离散化步骤，从<span class="math inline">\(\textcolor{blue}{x_{t_{n+1}}}\)</span>获得<span class="math inline">\(\textcolor{blue}{x_{t_{n}}}\)</span>的准确估计。这个估计，我们表示为<span class="math inline">\(\textcolor{blue}{\hat{x}^\phi_{t_{n}}}\)</span>
+，定义为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221511065.png"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{\Phi(...;\phi)}\)</span>表示应用于经验
+PF ODE 的单步 ODE 求解器的更新函数。例如当使用Euler求解器时，<span class="math inline">\(\textcolor{blue}{\Phi(x,t;\phi)=-ts_\phi(x,t)}\)</span>，代入到式6则有：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221518989.png"></p>
+<p><font color="black" size="5">  首先，我们可以根据式1，将高斯噪声添加到数据<span class="math inline">\(\textcolor{blue}{x}\)</span>上，从<span class="math inline">\(\textcolor{blue}{\mathcal{N}(x,t^2_{n+1}I)}\)</span>的跃迁密度（transition
+density）中采样<span class="math inline">\(\textcolor{blue}{x_{t_{n+1}}}\)</span>，然后利用公式6数值ODE求解器的一个离散化步骤来计算<span class="math inline">\(\textcolor{blue}{\hat{x}^\phi_{t_{n}}}\)</span>，就能够生成相邻数据点<span class="math inline">\(\textcolor{blue}{(\hat{x}^\phi_{t_{n}},x_{t_{n+1}})}\)</span>在
+PF ODE 轨迹上。然后。通过最小化<span class="math inline">\(\textcolor{blue}{(\hat{x}^\phi_{t_{n}},x_{t_{n+1}})}\)</span>对的输出差异来训练一致性模型，因而有如下训练损失：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311221723085.png"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{\lambda(\cdot)}\)</span>是权重，论文实验发现<span class="math inline">\(\textcolor{blue}{\lambda(\cdot)\equiv
+1}\)</span>效果最好，<span class="math inline">\(\textcolor{blue}{d(\cdot,\cdot)}\)</span>是度量函数，可以是L1,
+L2或者LPIPS等等。</font></p>
+<p><font color="black" size="5">  这里很重要的一个特别之处是<span class="math inline">\(\textcolor{blue}{\theta^-}\)</span>是参数<span class="math inline">\(\textcolor{blue}{\theta}\)</span>在训练过程中的指数移动平均，在实践中，通过模型参数<span class="math inline">\(\textcolor{blue}{\theta}\)</span>的随机梯度下降来最小化目标，同时使用指数移动平均值
+(EMA) 更新<span class="math inline">\(\textcolor{blue}{\theta^-}\)</span>。也就是说，给定衰减速率<span class="math inline">\(\textcolor{blue}{0\leq \mu
+&lt;1}\)</span>,在每个优化步骤后执行以下更新：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311230839262.png"></p>
+<blockquote>
+<p><font color="red" size="5"><strong>指数移动平均（EMA）：</strong></font><font color="black" size="5">是将每次梯度更新后的权值和前一次的权重进行联系，使得本次更新收到上次权值的影响。其公式就是：<span class="math inline">\(\textcolor{blue}{v_t = \alpha \cdot v_{t-1} +
+(1-\alpha)\cdot \theta_t}\)</span>，<span class="math inline">\(\textcolor{blue}{\alpha}\)</span>代表衰减速率，用于控制模型的更新速度，一般设为0.9-0.999。<span class="math inline">\(\textcolor{blue}{\theta_t}\)</span>：在第<span class="math inline">\(\textcolor{blue}{t}\)</span>次更新得到的所有参数权重。<span class="math inline">\(\textcolor{blue}{v_t}\)</span>：在第<span class="math inline">\(\textcolor{blue}{t}\)</span>次更新的所有参数移动平均数。普通的参数权重相当于一直累积更新整个训练过程的梯度，使用EMA的<strong>参数权重</strong>相当于<strong>使用训练过程梯度的加权平均</strong>（刚开始的梯度权值很小）。由于刚开始训练不稳定，得到的梯度给更小的权值更为合理，所以EMA会有效。</font></p>
+</blockquote>
+<p><font color="black" size="5">  算法 2 总结了整个训练过程。将<span class="math inline">\(\textcolor{blue}{f_{\theta^-}}\)</span>称为“目标网络”，将&nbsp;<span class="math inline">\(\textcolor{blue}{f_{\theta}}\)</span>
+称为“在线网络”。我们发现，与简单设置<span class="math inline">\(\textcolor{blue}{\theta^-,\theta}\)</span>相比，公式8中的
+EMA
+更新和stopgrad算子可以极大地稳定训练过程，提高一致性模型的最终性能。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311230850359.png"></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+
     </article>
     <!-- license -->
     
@@ -499,7 +636,7 @@
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/">http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/</a>
             <p>发表日期：<a href="http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/">November 14th 2023, 3:39:57 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/">November 14th 2023, 3:39:57 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/">November 23rd 2023, 9:43:22 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -562,6 +699,21 @@
     <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
     <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
     
 </main>
 
@@ -667,7 +819,9 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、模型原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sde-%E4%BB%A5%E5%8F%8A-ode"><span class="toc-number">2.1.</span> <span class="toc-text">1.SDE 以及
+ODE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#consistency-models"><span class="toc-number">2.2.</span> <span class="toc-text">2.
+Consistency Models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E5%BC%8F"><span class="toc-number">2.3.</span> <span class="toc-text">3. 训练方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E8%92%B8%E9%A6%8F%E8%AE%AD%E7%BB%83%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8Bcd"><span class="toc-number">2.3.1.</span> <span class="toc-text">3.1 通过蒸馏训练一致性模型(CD)</span></a></li></ol></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -762,14 +916,6 @@
         
         
     
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
