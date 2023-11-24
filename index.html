@@ -474,6 +474,7 @@
         
         
             
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2023/11/02/PredNet/">
@@ -481,14 +482,7 @@
                 <span class="abstract-title-text">PredNet</span>
             </a>
             <div class="abstract-content">
-                一、简要
-  预测编码（predictive
-coding）是一种认知科学的假说。该假说认为更高层次的神经表征会参与定义感觉输入（Sensory
-Input）。
-  预测编码的一个决定性特征是：它使用自上而下的重构机制来预测感觉输入或其低级别的表征。具体来说，预测编码首先确定预测值和实际输入之间的差异（称为预测误差），然后启动后续学习过程，以改进所学的更高层次表征的预测准确度。在深度学习发展之前，旨在描述新皮质计算（computations
-in the
-neocortex）的预测编码模型就已经出现，这些模型构建了模块之间的通信结构，称之为
-Rao-Ballard 协议（RB proto...
+                本篇文章主要是对《Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning》本文探索了视频序列中未来帧的预测作为学习视觉世界结构的无监督学习规则。提出了一种名为预测神经网络（“PredNet”）的架构，其灵感来自神经科学文献中的“预测编码”概念。这些网络学习预测视频序列中的未来帧，网络中的每一层都进行本地预测，并且仅将这些预测的偏差转发到后续网络层。我们表明，这些网络能够稳健地学习预测合成（渲染）对象的运动，并且在此过程中，网络学习内部表示，这些内部表示对于解码潜在对象参数（例如姿势）非常有用，这些参数支持以更少的时间进行对象识别。实验结果表明预测代表了无监督学习的强大框架，允许对对象和场景结构进行隐式学习。
             </div>
             <!-- read more -->
             
@@ -567,19 +561,19 @@ Rao-Ballard 协议（RB proto...
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/10/08/%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">
+            <a class="abstract-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">
                 
-                <span class="abstract-title-text">使用sklearn做数据挖掘</span>
+                <span class="abstract-title-text">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</span>
             </a>
             <div class="abstract-content">
-                本文介绍了如何利用sklearn做数据挖掘，本文以IRIS（鸢尾花）数据集为例，一步步手把手完全整个数据挖掘的流程包括特征工程，训练模型，模型评估等步骤。
+                本文主要是用于探究扩散模型是否能够用于生成医学3D图像。作者提出了一种适用于潜在空间的扩散模型的新架构，并在四个公开可用的数据集上对其进行训练，这些数据集包含来自广泛解剖范围的数据：脑 MRI、胸部 CT、乳腺 MRI 和膝部 MRI。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/10/09">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/08</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/07</span>
                 </div>
                 <!-- tags -->
                 
@@ -595,19 +589,19 @@ Rao-Ballard 协议（RB proto...
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">
+            <a class="abstract-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">
                 
-                <span class="abstract-title-text">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</span>
+                <span class="abstract-title-text">Medical diffusion model——2.Med-DDPM</span>
             </a>
             <div class="abstract-content">
-                本文主要是用于探究扩散模型是否能够用于生成医学3D图像。作者提出了一种适用于潜在空间的扩散模型的新架构，并在四个公开可用的数据集上对其进行训练，这些数据集包含来自广泛解剖范围的数据：脑 MRI、胸部 CT、乳腺 MRI 和膝部 MRI。
+                本文提出了一种利用扩散模型进行像素级可控 3D 医学图像合成的创新方法。该方法将分割掩模合并到扩散过程中，从而能够生成高分辨率、语义引导的 3D 医学图像。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/10/09">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/07</span>
+                <div class="abstract-date" title="Last updated: 2023/10/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/23</span>
                 </div>
                 <!-- tags -->
                 
@@ -893,11 +887,6 @@ Rao-Ballard 协议（RB proto...
         
         
         
-        
-        
-        
-        
-        
     
         
         
@@ -989,7 +978,7 @@ Rao-Ballard 协议（RB proto...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -1025,12 +1014,6 @@ Rao-Ballard 协议（RB proto...
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
             <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/08</span>
-            <a class="archive-post-title" href="/2023/10/08/%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">使用sklearn做数据挖掘</a>
         </li>
     
         
