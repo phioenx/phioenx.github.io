@@ -19,43 +19,37 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言   之前介绍到的扩散模型,虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味着我们想要训练一个强大的扩散模型去生成高分辩图像，可能需要巨大的参数量和高昂的训练成本，一般功能强大的diffusion models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个 A100 GPU 上生成 50k">
+    <meta name="description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：\(\textcolor{blue}{2^b-1}\)，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型——7.Latent diffusion model">
-<meta property="og:url" content="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/index.html">
+<meta property="og:title" content="常见的图像评价指标">
+<meta property="og:url" content="http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言   之前介绍到的扩散模型,虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味着我们想要训练一个强大的扩散模型去生成高分辩图像，可能需要巨大的参数量和高昂的训练成本，一般功能强大的diffusion models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个 A100 GPU 上生成 50k">
+<meta property="og:description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：\(\textcolor{blue}{2^b-1}\)，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181015105.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911046.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911519.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018436.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018414.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261059880.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261128385.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912661.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912602.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912624.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260922745.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913744.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913330.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260914662.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260924768.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260925717.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261146575.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261145774.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261144113.png">
-<meta property="article:published_time" content="2023-08-31T01:26:34.000Z">
-<meta property="article:modified_time" content="2023-09-27T06:42:00.296Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133612.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271144301.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627344.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627497.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627192.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627842.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627083.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271628364.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271651923.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271659863.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271710109.jpeg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271718579.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271733089.png">
+<meta property="article:published_time" content="2023-11-27T02:51:40.000Z">
+<meta property="article:modified_time" content="2023-11-27T09:41:29.205Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型——7.Latent diffusion model · PhoenixPeng&#39;s blog</title>
+    <title>常见的图像评价指标 · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -283,7 +277,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型——7.Latent diffusion model</a>
+                <a href="#" class="post-name">常见的图像评价指标</a>
             </div>
         </div>
     
@@ -329,7 +323,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                扩散模型——7.Latent diffusion model
+                常见的图像评价指标
             <!-- 404 -->
             
         </h1>
@@ -357,7 +351,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/08/31</span>
+                    <span class="post-intro-time">2023/11/27</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -512,194 +506,76 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一前言">一、前言</h1>
-<p><font color="black" size="5">  之前介绍到的扩散模型,虽然能够生成SOTA级别的图像，但都是在像素空间（高维）上进行训练的，直接对图像做去噪扩散。这意味着我们想要训练一个强大的扩散模型去生成高分辩图像，可能需要巨大的参数量和高昂的训练成本，一般功能强大的diffusion
-models的优化通常会消耗数百个GPU天。加上对像素空间的噪声进行重复评估也会导致推理成本高昂，ADM在单个
-A100 GPU 上生成 50k 样本大约需要 5
-天。基于上述的扩散模型的计算量大的问题，本文作者就思考是否能够在有限的计算资源上训练
-DM 模型，同时保持其效果。</font></p>
-<p><font color="black" size="5">  作者认为Diffusion
-model与其他基于似然可能性的模型类似（如VAE），学习过程能够被分为两个阶段：</font></p>
-<ul>
-<li><font color="black" size="5">第一阶段<strong>：感知压缩阶段（Perceptual
-Compression
-Stage）</strong>用于压缩高频的、纹理细节等信息，学习少量的语义信息。</font></li>
-<li><font color="black" size="5">第二阶段：<strong>语义压缩阶段（Semantic
-Compression
-Stage）</strong>使用生成模型学习数据的语义和概念。</font></li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png"></p>
-<p><font color="black" size="5">  由上图所展示的横轴是接收到的图像信息量累积的比特数，纵坐标是失真程度，也是模型的损失。随着接受到的比特数增大，模型刚开始学到的是semantic部分的压缩，这一阶段是人物语义部分转变损失下降的很快，然后学习到的是细节部分的压缩，这是perceptual细节处的转变，损失开始缓慢的下降。我们能够发现大多比特都被分配在感知压缩阶段学习那些难以察觉的细节,也就是说<strong>图像压缩感知信息的步骤要远远多于图像压缩语义信息的步骤</strong>。</font></p>
-<p><font color="black" size="5">  总的来说，上图说明了两个事情：</font></p>
-<ul>
-<li><p><font color="red" size="5"><strong>小图主要提供语义信息</strong>：对于小分辨率的图像增加比特数时，图像语义信息猛涨（失真程度猛降）</font></p></li>
-<li><p><font color="red" size="5"><strong>大图比小图多出来那部分增加的是感知信息</strong>：随着分辨率的增加，能“看”到的信息也会增加，就是在增加感知信息。模型在大多数时候都在处理几乎无意义的感知压缩，在感知压缩过程中，尽管在每一步像素的变化的非常的微小，但是依然需要在整个图像域上进行计算loss，这就会造成了巨大且无意义的计算量。</font></p></li>
-</ul>
-<p><font color="black" size="5">  为了规避DM的这个缺陷，<strong>作者想到的是用自动编码器学习一个小图到大图的映射，再用DM学习语义信息。</strong>这样我们就能重建压缩数据，摆脱一些无用的特征转而关注那些重要的特征，大大减少了我们的训练负担。这种方法所带来的好处就是能够大幅降低训练和采样阶段的计算复杂度，让文图生成等任务能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181015105.png"></p>
-<h1 id="二原理">二、原理</h1>
-<p><font color="black" size="5">  本文的关键思想：<strong>你可以看作原本是扩散模型的学习过程被一分为二，利用一个自动编码器去学习感知信息，而扩散模型只是去学习语义信息，再把条件和图像的语义对应起来。</strong></font></p>
-<p><font color="black" size="5">  作者为了规避上述扩散模型耗费大量的计算成本在感知压缩阶段这一缺点。利用了一个自动编码模型来学习了一个在感知上与图像空间等价的潜在空间。</font></p>
-<p><font color="black" size="5">  作者提出了使用潜在空间的优势：</font></p>
-<ul>
-<li><p><font color="black" size="5">扩散模型训练以及采样过程从高维图像空间转换为了在低维空间上进行，所以<strong>能够提高计算效率；</strong></font></p></li>
-<li><p><font color="black" size="5">利用从 UNet 架构继承的 DM
-的归纳偏差，这使得它们对于具有空间结构的数据特别有效，从而减轻了对先前方法所要求的降低质量的压缩级别的需求。</font></p>
-<blockquote>
-<p><font color="black" size="5"><strong>深度神经网络结构</strong>就偏好性的认为，层次化处理信息有更好效果；<strong>卷积神经网络</strong>认为信息具有空间局部性（locality），可以用滑动卷积共享权重方式降低参数空间；<strong>反馈神经网络</strong>则将时序信息考虑进来强调顺序重要性；<strong>图网络</strong>则是认为中心节点与邻居节点的相似性会更好引导信息流动。对于不同分布的数据，合理的归纳偏置还能够反映不同任务之间的共性，从而帮助模型快速适应不同的任务，实现分布外泛化。</font></p>
-</blockquote></li>
-<li><p><font color="black" size="5">最后，我们获得了通用压缩模型，其潜在空间可用于训练多个生成模型，也可用于其他下游应用，例如单图像
-CLIP 引导合成 。</font></p></li>
-</ul>
-<p><font color="black" size="5">  接下来就来介绍Latent Diffusion
-model的模型架构，如下图所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911046.png"></p>
-<p><font color="black" size="5">  整个LDM可以分为三个主要组件：</font></p>
-<p><font color="black" size="5">  1.红色部分为Autoencoder，<strong>用于处理感知图像压缩，将图像从像素空间转换到潜在空间</strong>。</font></p>
-<p><font color="black" size="5">  2.绿色部分为LDM的主体部分，包含time-conditional
-attention UNet。</font></p>
-<p><font color="black" size="5">  3.最右边白色部分是条件编码器<span class="math inline">\(\tau_\theta\)</span>，可以融入不同模态的条件信息。</font></p>
-<p><font color="black" size="5">  本质上LDM是一种二阶段的图片生成方法，需要先训练VAE模型再训练DM模型。DM训练时会利用已训练好的VAE的encoder将数据从像素空间切换到隐空间。预测时，在隐空间随机采样一个噪声，用DM进行去噪。最后将DM的预测结果传给VAE的Decode进行解码。下面将详细逐步介绍这三块内容。</font></p>
-<h2 id="感知图像压缩模型"><font color="black" size="5">1.感知图像压缩模型</font></h2>
-<p><font color="black" size="5">  <strong>感知压缩模型</strong>本质上是利用一个预训练的自动编码器。其分为编码器和解码器两个部分，编码器<span class="math inline">\(\textcolor{blue}{\varepsilon}\)</span>把图像<span class="math inline">\(\textcolor{blue}{x∈R^{H×W×3}}\)</span>映射到潜在空间的特征<span class="math inline">\(\textcolor{blue}{z=\varepsilon(x)}\)</span>，解码器<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>把特征<span class="math inline">\(\textcolor{blue}{z∈R^{h×w×c}}\)</span>映射为图像<span class="math inline">\(\textcolor{blue}{\tilde{x}=\mathcal{D}(z)=\mathcal{D}(\varepsilon(x))}\)</span>，其中编码器按照不同的下采样系数<span class="math inline">\(\textcolor{blue}{f=\frac{H}{h}=\frac{W}{w}}\)</span>对图像进行下采样，作者研究了不同这个下采样因子，最后选择<span class="math inline">\(\textcolor{blue}{f=2^m,m \in
-N}\)</span>。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260911519.png"></p>
-<p><font color="black" size="5">  该模型由感知损失和patch-based对抗损失组合训练，其目标函数主要由三部分所组成：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018436.png"></p>
-<ul>
-<li><font color="black" size="5">第一部分（紫色块）就是<strong>感知损失（<span class="math inline">\(L_{rec}\)</span>）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground
-Truth）、网络生成结果（Prediciton）作为其输入，得到对应的输出特征：feature_gt、feature_pre，然后使用feature_gt与feature_pre构造损失（通常为L2损失），目的就是最小化feature_gt、feature_pre之间的差异，<strong>逼近真实图像与网络生成结果之间的深层信息</strong>，也就是感知信息，相比普通的L2损失而言，可以增强输出特征的细节信息。</font></li>
-<li><font color="black" size="5">第二部分（绿色块）就是<strong>基于patch的对抗损失（<span class="math inline">\(L_{adv}\)</span>）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，<strong>旨在区分真实图像和重建图像</strong>。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，而是引用来自VQGAN当中的对抗损失）。</font></li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018414.png"></p>
-<blockquote>
-<p><font color="black" size="5">引入感知损失和patch-based对抗损失是为了确保通过局部真实性将重建图像限制在真实图像流形内，并避免仅依赖像素空间损失（例如
-L2 或 L1 损失）而引入的模糊。</font></p>
-</blockquote>
-<ul>
-<li><font color="black" size="5">第三部分（黄色块）是<strong>正则化损失项（<span class="math inline">\(L_{reg}\)</span></strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者介绍了两者不同的正则化方法：</font></li>
-</ul>
-<p><font color="black" size="5"><strong>1)KL-reg:</strong>对学习到的潜在空间施加
-KL 惩罚，类似于VAE；</font></p>
-<p><font color="black" size="5"><strong>2)VQ-reg</strong>:在解码器内使用矢量量化层（使得空间为离散的）,通过学习|Z|个不同典范的codebook，用矢量量化层正则化潜在空间。（参考VQGAN）；</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261059880.png"></p>
-<blockquote>
-<p><font color="blue" size="5">简要概述一下VQGAN的工作原理就是：输入图像通过encoder编码后得到中间特征变量<span class="math inline">\(\hat{z}\)</span>普通的AutoEncoder会将<span class="math inline">\(\hat{z}\)</span>直接送入解码器中进行图像重建。而在VQVAE/VQGAN中，会将<span class="math inline">\(\hat{z}\)</span>进行进一步的离散化编码。需要预先生成一个离散数值的codebook&nbsp;<span class="math inline">\(\mathcal{Z}\)</span>，在<span class="math inline">\(\hat{z}\)</span>的每一个编码位置都去<span class="math inline">\(\mathcal{Z}\)</span>中去寻找其距离最近的code，生成具有相同维度的变量<span class="math inline">\(z_q\)</span>，最后在已经数值离散化<span class="math inline">\(z_q\)</span>的基础上使用CNN
-Decoder进行解码。</font></p>
-</blockquote>
-<p><font color="black" size="5">  如何使用这两个不同的正则化方法，其实就是看你感知压缩模型选用的是VAE或者VQGAN，KL-reg不用多说，因为VAE就是带有KL的正则化项的autoencoder。对于
-VQ-reg，VQ 操作被算进了 Decoder
-之中，即<strong>扩散模型之后</strong>，所以扩散模型仍然是在连续（而非量化后）的特征空间上执行的。</font></p>
-<p><font color="black" size="5">  本文还列出了分别使用这两种不同的正则化所生成图像的示例图。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261128385.png"></p>
-<blockquote>
-<p><font color="black" size="5">在官方发布的预训练自动编码器模型中，会看到KL和VQ两种实现。在Stable
-Diffusion中主要采用AutoencoderKL这种实现。</font></p>
-</blockquote>
-<h2 id="潜在扩散模型"><font color="black" size="5">2.潜在扩散模型</font></h2>
-<p><font color="black" size="5">  普通扩散模型的目标函数如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912661.png"></p>
-<p><font color="black" size="5">  而在潜在扩散模型当中，引入了前面<span class="math inline">\(\textcolor{blue}{\varepsilon}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>组成的预训练感知压缩模型，我们能够得到一个低维的潜在空间，其中原空间中的高频、不可察觉的细节被抽象出来。与高维像素空间相比，这个潜在空间更适合基于似然的生成模型，因为它们现在可以：<strong>(1)关注数据中重要的语义信息;
-(2)在一个低维的、计算上更有效的空间中进行训练。</strong></font></p>
-<p><font color="black" size="5">  由编码器得到的<span class="math inline">\(z_t\)</span>,让模型在潜在表示空间中进行学习，相应的目标函数就可以写出如下形式：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912602.png"></p>
-<h2 id="条件机制"><font color="black" size="5">3.条件机制</font></h2>
-<p><font color="black" size="5">  除了无条件图片生成外，LDMs还可以进行条件图片生成，这主要是通过条件去噪自动编码器<span class="math inline">\(\textcolor{blue}{\epsilon_\theta(z_t,y,t)}\)</span>来实现。输入
-y可以是文本、语义图或者轮廓图等。</font></p>
-<p><font color="black" size="5">  作者在原有的Unet 主干网络上引入
-cross-attention 机制，来融入条件信息。为了能够预处理多个不同的模态<span class="math inline">\(\textcolor{blue}y\)</span>
-，论文引入了一个特定邻域的编码器<span class="math inline">\(\textcolor{blue}{\tau_\theta}\)</span>
-，它可以将<span class="math inline">\(\textcolor{blue}{y}\)</span>投影到中间特征&nbsp;<span class="math inline">\(\textcolor{blue}{\tau_{\theta}(y) \in R^{M\times
-d_\tau}}\)</span>，随后和DM的某层输出进行融合。假设<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)\in R^N \times
-d^i_\epsilon}\)</span>表示隐变量z在
-UNet第i层时间步为t时的输出，下面需要将<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)}\)</span>与<span class="math inline">\(\textcolor{blue}{\tau_{\theta}(y)}\)</span>用交叉注意力机制融合，如下式：&nbsp;</font></p>
-<p><span class="math display">\[\Large
-\textcolor{blue}{Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d}})\cdot
-V}\]</span></p>
-<p><span class="math display">\[\Large \textcolor{blue}{Q = W^{(i)}_Q ·
-φ_i(z_t), K = W^{(i)}_K · τ_θ(y), V = W^{(i)}_V · τ_θ(y)}\]</span></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{ φ_i(z_t)\in R^N \times
-d^i_\epsilon}\)</span>表示 U-Net 实现<span class="math inline">\(\textcolor{blue}{\epsilon_{\theta}}\)</span>的
-flattened 中间层表示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260912624.png"></p>
-<blockquote>
-<p><font color="black" size="5">这里的<strong>条件编码器</strong>要说一下，此时针对y的条件编码器还是随着LDM一起，从随机初始化开始逐步训练的。后来的知名作品
-Stable Diffusion、Dalle2、Imagen
-等等，都把这个条件编码器直接换成了CLIP模型里的文本Encoder。</font></p>
-</blockquote>
-<p><font color="black" size="5">  最终，我们的损失函数变为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260922745.png"></p>
-<p><font color="black" size="5">  在这里<span class="math inline">\(\textcolor{blue}{\tau_\theta}\)</span>和<span class="math inline">\(\textcolor{blue}{\epsilon_{\theta}}\)</span>在这里同时被优化，最后附上完整的LDMs流程图：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913744.png"></p>
-<h1 id="三实验">三、实验</h1>
-<p><font color="black" size="5">  论文的所用到的模型为LDMs，在无条件图片生成任务上用到的数据集为LSUN、FFHQ以及CelebA-HQ，在类别条件图片生成用到的数据集为ImageNet，在文图生成任务上用到的数据集为Conceptual
-Captions、LAION。论文设计了大量的对比实验，并分别对感知压缩权衡（下采样因子）、LDM生成效果对比进行了分析验证。并且还在其他任务上进行了实验，包括Super-Resolution、Inpainting、layout-condition在内的多种图片生成等任务</font></p>
-<h2 id="关于感知压缩的权衡"><font color="black" size="5">1.关于感知压缩的权衡</font></h2>
-<p><font color="black" size="5">  通过分析对 encoder
-使用不同的下采样系数<span class="math inline">\(f \in
-\{1,2,4,8,16,32\}\)</span>对 LDM
-造成的影响（设为1的时候表示基于原像素级别做扩散）：
-</font><font color="black" size="5">  </font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260913330.png"></p>
-<p><font color="black" size="5">  上图是在
-ImageNet数据集上训练的类条件模型的 2M
-步训练进度函数的样本质量,我们可以看到:</font></p>
-<ul>
-<li><font color="black" size="5"><strong>1）</strong>LDM-{1,2}
-的下采样系数较小会导致训练进度缓慢;</font></li>
-<li><font color="black" size="5"><strong>2）</strong>当f值过大（如LDM-32）下采样会导致保真度停滞，这是由于压缩的太多导致信息丢失，限制了恢复的效果；</font></li>
-<li><font color="black" size="5"><strong>3）</strong> LDM-{4，8，16}
-在效率和视觉感知结果之间取得了良好的平衡</font></li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260914662.png"></p>
-<p><font color="black" size="5">  左边是CelebA-HQ数据集上的结果，右边是ImageNet的结果。</font></p>
-<p><font color="black" size="5">  在上图中，拿左边LDM-16(紫色线)为例，可以看到有不同的标记，这些不同的标记意味着使用DDIM的采样下不同的采样步数，其采样步数从右到左分别为&nbsp;
-{10, 20, 50, 100, 200}
-。这张图想表达的意思是：对于LDM-1和LDM-2这种下采样比例f相对较小的模型，即使采样部署足够多效果也依然差，而且速度还慢，表现为挤在左上角；对于LDM16和LDM-32这类下采样比例f相对比较大的模型，虽然在左边这张图上它们的表现似乎比LDM-8更好，但是看右边的图，对ImageNet这种复杂数据集来说LDM-32就崩了。</font></p>
-<p><strong><font color="black" size="5">  综合下来，LDM-4和-8是最好的选择，可能获得较高的生成质量。</font></strong></p>
-<h2 id="对比生成图像质量"><font color="black" size="5">2.对比生成图像质量</font></h2>
-<p><font color="black" size="5">  在<span class="math inline">\(256^2\)</span>的 CelebA-HQ, FFHQ, LSUN-Churches
-and
-Bedrooms的数据集上训练了无条件的256x256的图像生成模型，并验证了：1）采样质量；2）用FID和Precision-and-Recall验证了它们数据的流形覆盖范围；下表总结了结果。&nbsp;</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260924768.png"></p>
-<p><font color="black" size="5">  除了 LSUN-Bedrooms
-数据集之外，在所有数据集上都优于先前基于像素空间的方法，尽管使用了一半的参数并且需要的训练资源减少了
-4 倍，但LDM的得分接近 ADM。</font></p>
-<p><font color="black" size="5">  此外，LDM
-在精确度和召回率方面不断改进基于 GAN
-的方法，从而确认了基于模式覆盖可能性的训练目标相对于对抗性方法的优势。下图中展示了每个数据集上的定性结果。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260925717.png"></p>
-<h2 id="条件潜在扩散"><font color="black" size="5">3.条件潜在扩散</font></h2>
-<p><font color="black" size="5">  对于<strong>文生图</strong>模型，训练了1.45B参数量的KL-正则化
-LDM 条件，基于语言prompts在LAION-400M上。这里用了
-BERT-tokenizer，并且引入了条件编码器作为transformer来进行潜空间编码，之后通过
-multi-head cross-attention 注入UNet。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261146575.png"></p>
-<p><font color="black" size="5">  对于定量分析，这里遵循先前的工作并在
-MS-COCO验证集上评估文本到图像的生成，模型改进了强大的 AR 和基于
-GAN的方法。这里注意到使用了 classifier-free diffusion fuidance
-会大大提高采样效率，比如有引导的 LDM-KL-8-G 与最近最先进的 AR
-和用于文本到图像合成的扩散模型相当，同时大幅减少了参数量。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261145774.png"></p>
-<p><font color="black" size="5">  遵循了先前的工作，作者验证了他们效果最好的
-class-conditional（类别条件）ImageNet
-模型，其中f是4和8，验证结果看下表，效果很能打。在这里，超越了最先进的扩散模型
-ADM，同时显着降低了计算要求和参数数量 。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261144113.png"></p>
+        <h1 id="一psnr-峰值信噪比">一、PSNR 峰值信噪比</h1>
+<p><font color="black" size="5">  🐦用于<strong>衡量一张带有噪声的图片与干净的图片之间的差异</strong>。</font></p>
+<p><font color="black" size="5">  计算方式：PSNR的计算方式涉及到均方误差（MSE）：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  由此可以根据下式计算PSNR：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133612.png" alt="1701055993276" style="zoom:80%;"></p>
+<p><font color="black" size="5">  其中，MAX表示图片的动态范围：<span class="math inline">\(\textcolor{blue}{2^b-1}\)</span>，也就是可能的最大像素值。</font></p>
+<p><font color="black" size="5">  <strong>两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。</strong></font></p>
+<h1 id="二ssim-结构相似性">二、SSIM 结构相似性</h1>
+<p><font color="black" size="5">  🐦用于<strong>衡量图片的失真程度，也可以用于衡量两张图片之间的相似程度</strong>。</font></p>
+<p><font color="black" size="5">  计算方式：SSIM衡量了图片三个性质，分别是亮度，对比度，结构。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271144301.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  1️⃣其中，<strong>亮度指的是所有像素值灰度的平均值</strong>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627344.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  那么在分别计算好两张图片的亮度之后，可通过下面这个函数计算它们之间的亮度对比：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627497.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  当且仅当<span class="math inline">\(\textcolor{blue}{\mu_x = \mu_y}\)</span>时，<span class="math inline">\(\textcolor{blue}{l(x,y)}\)</span>能取到最大值1，否则在0~1之间。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>对比度，是要计算灰度的标准差</strong>，所以图像x的标准差以及相应的对比函数，如下所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627192.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  3️⃣<strong>结构对比，采用的是相关系数，用协方差除以方差的积来表示</strong>:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627842.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  所以SSIM的最终表达式为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627083.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  同样的，当且仅当两个图像之间的亮度，对比度，结构都相同时，<span class="math inline">\(\textcolor{blue}{S(x,y)}\)</span>能取到最大值1，否则在0~1之间。当我们取权重都为1时，SSIM就变成了：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271628364.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{C_1 =(K_1 L)^2 ,K_1 =
+0.01,L}\)</span>为像素的动态范围，8位图像就是255。<span class="math inline">\(\textcolor{blue}{C_2 =(K_2 L)^2 ,K_2 =
+0.03}\)</span>，<span class="math inline">\(\textcolor{blue}{C_3
+=C_2/2}\)</span></font></p>
+<p><font color="black" size="5">  在实际使用的时候，SSIM并不是直接对整张图像求平均以及方差，而是采用一个叫做圆对称的高斯加权公式。采用一个大小为11x11，标准差为1.5，和为1的高斯核，作为滑动窗口，求局部的均值，标准差和方差，最后对所有的局部SSIM求均值，得到MSSIM。</font></p>
+<p><font color="black" size="5">  在引入高斯核之后，相应的均值，标准差，协方差公式也进行了相应的修改，权重采用高斯核的参数w：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271651923.png"></p>
+<p><font color="black" size="5">  高斯核带来的一定程度上的模糊，是为了捕捉更高层的几何特征，而不是让比较仅仅停留在像素的尺度上。MSSIM确实不仅可以用来衡量两个图像之间的相似度，也可以用于当作损失去训练模型：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271659863.png" style="zoom:80%;"></p>
+<p><font color="black" size="5">  即图像越不相似，SSIMD的值就越接近为1，可以用作网络的损失函数。</font></p>
+<h1 id="三lpips-学习感知图像块相似度">三、LPIPS
+学习感知图像块相似度</h1>
+<p><font color="black" size="5">  <strong>LPIPS也可以称作感知损失，用图像的深度特征来衡量两张图片的相似度。</strong></font></p>
+<p><font color="black" size="5">  来源于CVPR2018的一篇论文《The
+Unreasonable Effectiveness of Deep Features as a Perceptual
+Metric》。LPIPS 比传统方法（比如L2/PSNR, SSIM,
+FSIM）更符合人类的感知情况。<strong>LPIPS的值越低表示两张图像越相似，反之，则差异越大</strong>。</font></p>
+<p><font color="black" size="5">  将左右的两个图像块和中间的图像块进行比较：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271710109.jpeg"></p>
+<p><font color="black" size="5">  如图表示，每一组有三张图片，由传统的评价标准如L2、SSIM、PSNR等评价结果和人体认为的大不相同，这是传统方法的弊端。如果图片平滑，那么传统的评价方式则大概率会失效。而目前GAN尤其是VAE等生成模型生成结果都过于平滑。
+而最后三行的评价为深度学习的方式，可以看到，通过神经网络（非监督、自监督、监督模型）提取特征的方式，并对特征差异进行计算能够有效进行评价，而且能够和人体评价相似。</font></p>
+<p><font color="black" size="5">  <strong>LPIPS的具体计算流程</strong>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271718579.png"></p>
+<p><font color="black" size="5">  1️⃣把需要对比的图像<span class="math inline">\(\textcolor{blue}{x,x_0}\)</span>输入到网络F当中，这个F可以是简单的VGG或者是Alexnet。</font></p>
+<p><font color="black" size="5">  2️⃣把每一层经过激活函数的输出都拿出来进行Normalize归一化</font></p>
+<p><font color="black" size="5">  3️⃣再经过w层给予一个权重，然后求两个网络各层特征向量之间的L2误差</font></p>
+<p><font color="black" size="5">  4️⃣最后对所有层的误差取平均，得到相似度<span class="math inline">\(\textcolor{blue}{d_0}\)</span>，<strong>图像相似度越低，深度特征之间的差异就越大，LPIPS的输出结果就越大</strong>。</font></p>
+<p><font color="black" size="5">  给定Ground Truth图像参照块<span class="math inline">\(\textcolor{blue}{x}\)</span>和含噪声图像失真块<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，感知相似度度量公式如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271733089.png"></p>
+<p><font color="black" size="5">  两个输入<span class="math inline">\(\textcolor{blue}{x,x_0}\)</span>送入神经网络F（可以为VGG、Alexnet）中进行特征提取，对每个层的输出进行激活后归一化处理，记为<span class="math inline">\(\textcolor{blue}{\hat{y}^l,\hat{y}^l_0 \in
+R^{H_l\times W_l\times C_l}}\)</span>，然后经过w层权重<span class="math inline">\(\textcolor{blue}{w_l}\)</span>点乘后计算L2距离，最后取平均获得距离。</font></p>
 <p><font color="black" size="5">  </font></p>
-<h1 id="四总结">四、总结</h1>
-<p><font color="black" size="5">  本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，提出了Latent
-Diffusion
-Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。</font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/</a>
-            <p>发表日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">August 31st 2023, 9:26:34 am</a>
-            <p>更新日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">September 27th 2023, 2:42:00 pm</a>
+            <p>原文链接：<a href="http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/</a>
+            <p>发表日期：<a href="http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">November 27th 2023, 10:51:40 am</a>
+            <p>更新日期：<a href="http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">November 27th 2023, 5:41:29 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -707,17 +583,12 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/" title="Medical diffusion model——1.Medfusion">
-                    <div class="nextTitle">Medical diffusion model——1.Medfusion</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/" title="PITI:图像翻译任务+预训练扩散模型">
-                    <div class="prevTitle">PITI:图像翻译任务+预训练扩散模型</div>
+                <a href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948-Consistency-Models/" title="扩散模型——8.Consistency Models">
+                    <div class="prevTitle">扩散模型——8.Consistency Models</div>
                 </a>
             
         </li>
@@ -887,7 +758,8 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.感知图像压缩模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.潜在扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">3.条件机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%84%9F%E7%9F%A5%E5%8E%8B%E7%BC%A9%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">3.1.</span> <span class="toc-text">1.关于感知压缩的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E7%94%9F%E6%88%90%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.对比生成图像质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%BD%9C%E5%9C%A8%E6%89%A9%E6%95%A3"><span class="toc-number">3.3.</span> <span class="toc-text">3.条件潜在扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80psnr-%E5%B3%B0%E5%80%BC%E4%BF%A1%E5%99%AA%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">一、PSNR 峰值信噪比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cssim-%E7%BB%93%E6%9E%84%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">二、SSIM 结构相似性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89lpips-%E5%AD%A6%E4%B9%A0%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%9D%97%E7%9B%B8%E4%BC%BC%E5%BA%A6"><span class="toc-number">3.</span> <span class="toc-text">三、LPIPS
+学习感知图像块相似度</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
