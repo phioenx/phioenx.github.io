@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、前言   现实生活中许多数据都同时具有时间特征和空间特征，例如人体的运动轨迹，连续帧的视频等，每个时间点都对应一组数据，而数据往往又具有一定的空间特征。因此要在这样的时间序列数据上开展分类，预测等工作，就必须在时间（temporal）和空间(spatial)上对其进行建模和特征抽取。   时空预测学习的一个基本问题是如何有效地学习视频推理或推理的良好表示。在该领域目前最主流的模型仍然是RNN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="E3D-Lstm">
+<meta property="og:url" content="http://example.com/2023/11/29/E3D-Lstm/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="一、前言   现实生活中许多数据都同时具有时间特征和空间特征，例如人体的运动轨迹，连续帧的视频等，每个时间点都对应一组数据，而数据往往又具有一定的空间特征。因此要在这样的时间序列数据上开展分类，预测等工作，就必须在时间（temporal）和空间(spatial)上对其进行建模和特征抽取。   时空预测学习的一个基本问题是如何有效地学习视频推理或推理的良好表示。在该领域目前最主流的模型仍然是RNN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291536491.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291659227.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291720437.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291723046.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300908806.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300903013.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300913435.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300945683.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301519539.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301608148.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301614577.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301621453.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301646595.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301649287.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301712667.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\E3D-Lstm.assets\1701336030939.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301726315.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312010952944.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312010955120.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011009337.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011014553.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011022183.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011025038.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011025397.png">
+<meta property="article:published_time" content="2023-11-29T01:39:51.000Z">
+<meta property="article:modified_time" content="2023-12-01T02:31:48.982Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291536491.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>E3D-Lstm · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">E3D-Lstm</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                E3D-Lstm
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2023/11/29</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291536491.png"></p>
+<h1 id="一前言">一、前言</h1>
+<p><font color="black" size="5">  <strong>现实生活中许多数据都同时具有时间特征和空间特征</strong>，例如人体的运动轨迹，连续帧的视频等，每个时间点都对应一组数据，而数据往往又具有一定的空间特征。因此要<strong>在这样的时间序列数据上开展分类，预测等工作，就必须在时间（temporal）和空间(spatial)上对其进行建模和特征抽取。</strong></font></p>
+<p><font color="black" size="5">  时空预测学习的一个基本问题是<strong>如何有效地学习视频推理或推理的良好表示</strong>。在该领域目前最主流的模型仍然是RNN，它具有特有的门结构设计，能对时间序列特征具有强大的抽取能力。但RNN
+并不能很好的学习原始特征的高阶表示或捕获长期关联性。这不利于对空间信息进行提取。空间建模当属CNN，其具有强大的空间特征抽取能力，而3D
+CNN相对于RNN更有利于学习到信息的高级表示</font></p>
+<p><font color="black" size="5">  那么我们是否可以将这两者进行结合呢。使得该模型既能对时间依赖性有所敏感，也能学习到空间的局部动态特征。简单的办法<strong>是将二者串联堆叠或者并联结合，但测试发现这么做并不能带来太大的提升，这是因为二者的工作机制差距太大，简单的结合并不能很好的实现优势互补</strong>。</font></p>
+<p><font color="black" size="5">  为此，本文作者提出了一种用于时空预测学习的新模型，称为
+Eidetic 3D LSTM
+(E3D-LSTM)。🔹<strong>使用3D卷积代替原始LSTM中的门更新操作，使LSTM不仅能在时间层面，也能在空间层面上进行短期依赖的表象特征和运动特征的提取</strong>，从而在更深的机制层面实现两种网络的结合。🔹<strong>在LSTM中引入自注意力（self-attention）机制，进一步强化了LSTM的长时记忆能力，使其对长距离信息作用具有更好的感知力。</strong></font></p>
+<blockquote>
+<p><font color="black" size="5"><strong>短期依赖</strong>：它捕获相邻时间戳之间的短期变化，比如某两帧间物体变化趋势，还要图片本身的局部信息等等。</font></p>
+<p><font color="black" size="5"><strong>长期依赖：</strong>一些高阶有规律的信息，比如长期的周期性，和一些图片的高级时间表征。</font></p>
+</blockquote>
+<h1 id="二e3d-lstm">二、E3D-LSTM</h1>
+<h2 id="循环网络中的3d卷积"><font color="black" size="5">1.
+循环网络中的3D卷积</font></h2>
+<p><font color="black" size="5">  下图展示了三种不同的3D卷积和LSTM的结合方法</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291659227.png"></p>
+<p><font color="black" size="5">  图中每个颜色的模块都代表了多层相应的网络。图（a）和图（b）是两种3D卷积和LSTM结合的基线方法，3D卷积和LSTM线性叠加，主要起到了编码（解码器）的作用，并没有和RNN有机制上的结合。<strong>图（a）中3D卷积作为编码器，输入是一段视频帧，图（b）中作为解码器，得到每个单元的最终输出。</strong>这两个方法中的绿色模块使用的是时空长短时记忆网络（ST-LSTM），这种LSTM独立的维护两个记忆状态M和C，但由于记忆状态C的遗忘门过于响应具有短期依赖的特征，因此容易忽略长时依赖信息，因此E3D-LSTM在ST-LSTM的基础添加了自注意力机制和3D卷积操作，在一定程度上解决了这个问题。</font></p>
+<p><font color="black" size="5">  <strong>图（c）是E3D-LSTM网络的结构，3D卷积作为编码-解码器（蓝色模块），同时和LSTM结合（橙色模块）。</strong>E3D-LSTM既可用于分类任务，也可用于预测任务。分类时将所有LSTM单元的输出结合，预测时则利用3D卷积解码器的输出作为预测值。</font></p>
+<h2 id="逼真的记忆转换"><font color="black" size="5">2.
+逼真的记忆转换</font></h2>
+<p><font color="black" size="5">  下图展示的是ST-LSTM的架构。它和标准ConvLSTM相比，ST-LSTM还增加了不同层间对应位置的cell连接。<strong>水平灰色连接线表示标准LSTM的单元连接，竖直黄色连接线表示层间同一时刻的单元连接，通过张量M传播，注意当l=1时，<span class="math inline">\(\textcolor{blue}{M_t^{l-1}=M_{t-1}^L}\)</span></strong>（作者认为t时刻的顶层信息对t+1时刻的底层信息影响很大)，这样记忆信息就能同时在层内和层间传播。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291720437.png"></p>
+<p><font color="black" size="5">  下图是ST-LSTM的单元结构，主要分为两个部分：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311291723046.png"></p>
+<p><font color="black" size="5">  其中一部分处理同一层上一个时刻（<span class="math inline">\(\textcolor{blue}{t-1}\)</span>）的数据，输入为<span class="math inline">\(\textcolor{blue}{X_t,h_{t-1}^k,c_{t-1}^k}\)</span>，另一部分处理同一个时刻（<span class="math inline">\(\textcolor{blue}{t}\)</span>）上层的状态，输入为<span class="math inline">\(\textcolor{blue}{X_t,,h_{k-1}^t,m_{t}^{k-1}}\)</span>。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{X_t}\)</span>：为当前时刻输入到最低层细胞的原始数据。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{m_{t}^{k-1}}\)</span>：来自上一层同一个时刻的时空记忆状态。这个值沿不同的网络层垂直传播。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{h_{t-1}^{k}}\)</span>：来自上一个时刻的输出状态，这个值沿同一层不同时刻水平传播。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{c_{t-1}^{k}}\)</span>：来自上一个时刻的隐状态值，这个值沿同一层不同时刻水平传播。这些变量大小都是<span class="math inline">\(\textcolor{blue}{H\times W\times
+C}\)</span></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300908806.png"></p>
+<p><font color="black" size="5">  上图展示的更加直观，其中门控结构有三种，分别是输入门：<span class="math inline">\(\textcolor{blue}{i_{t},i_{t}^\prime}\)</span>，遗忘门：<span class="math inline">\(\textcolor{blue}{f_{t},f_{t}^\prime}\)</span>，输出门：<span class="math inline">\(\textcolor{blue}{o_{t}}\)</span>（整合并控制时间和空间信息）。右上角带一撇的门都是用于处理时空记忆状态<span class="math inline">\(\textcolor{blue}{m_{t}^{k-1}}\)</span>。其全部的记忆状态转换（更新）函数如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300903013.png"></p>
+<p><font color="black" size="5">  而该文章所提出的 Eidetic 3D LSTM
+的架构如下图所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300913435.png"></p>
+<p><font color="black" size="5">  其中<font color="red" size="5">红色箭头</font>表示短期信息流，<font color="blue" size="5">蓝色箭头</font>表示长期信息流。同样的E3D-LSTM也有四个输入，其分别是：</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{X_t}\)</span>：来自上一层的编码器或隐藏状态的
+3D-Conv 特征映射；</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{H_{t-1}^{k}}\)</span>：前一个时刻的隐藏状态；</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{C_{t-\tau:t-1}^{k}}\)</span>：来自前一个时刻的记忆隐状态，是一个维度为<span class="math inline">\(\textcolor{blue}{\tau \times T \times H \times W
+\times C}\)</span>的五维张量，代表之前<span class="math inline">\(\textcolor{blue}{\tau}\)</span>个时间步所有的隐藏状态。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{M_{t}^{k-1}}\)</span>：来自上一层同一个时刻的时空记忆状态。</font></p>
+<p><font color="black" size="5">  和ST-LSTM相比，具要有以下改进：</font></p>
+<p><font color="black" size="5">  1️⃣输入数据是四维张量，对应时刻<span class="math inline">\(\textcolor{blue}{t-\tau}\)</span>到<span class="math inline">\(\textcolor{blue}{t-1}\)</span>的连续帧序列，因此现在每个单元时间步都对应一段视频，而不是单帧视频。</font></p>
+<p><font color="black" size="5">  2️⃣针对帧序列数据额外添加了一个召回门（recall
+gate）以及相关结构，用于实现长时依赖学习，也就是自注意力机制。这部分对应网络名称中的Eidetic。</font></p>
+<p><font color="black" size="5">  3️⃣由于输入数据变成了四维张量，因此在更新公式中采用3D卷积操作而不是2D卷积。</font></p>
+<p><font color="black" size="5">  大部分门结构的更新公式和ST-LSTM相同，作者为了捕获长期帧交互，通过提出一种新的记忆
+RECALL 机制来改进记忆状态的循环转换函数：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311300945683.png"></p>
+<p><font color="black" size="5">  这里的卷积 *
+表示的三维卷积操作，前三个门的作用和ST-LSTM类似，只不过是用<span class="math inline">\(\textcolor{blue}{\mathcal{R}_t}\)</span>替代了前面的<span class="math inline">\(\textcolor{blue}{f_t}\)</span>，这个<span class="math inline">\(\textcolor{blue}{\mathcal{R}_t}\)</span>的作用就是控制历史记录所记录的位置和内容。<span class="math inline">\(\textcolor{blue}{\bigodot}\)</span>是点乘，<span class="math inline">\(\textcolor{blue}{\cdot}\)</span>是矩阵乘积。</font></p>
+<blockquote>
+<p><font color="black" size="5">由于输入数据是四维张量，因此这里所有门的更新值都是四维张量。将<span class="math inline">\(\textcolor{blue}{\mathcal{R}_t}\)</span>维度调整为<span class="math inline">\(\textcolor{blue}{THW \times C}\)</span>，将<span class="math inline">\(\textcolor{blue}{C_{t-\tau:t-1}^{k}}\)</span>维度调整为<span class="math inline">\(\textcolor{blue}{\tau THW \times
+C}\)</span>，即可实现矩阵乘法。由于添加了召回门，因此<span class="math inline">\(\textcolor{blue}{C_t^k}\)</span>的输入是<span class="math inline">\(\textcolor{blue}{\mathcal{I}_t,\mathcal{G}_t,C_{t-1}^k}\)</span>以及召回门的输出。</font></p>
+<p><font color="black" size="5"><span class="math inline">\(\textcolor{blue}{\tau}\)</span>的大小决定<span class="math inline">\(\textcolor{blue}{\mathcal{R}_t}\)</span>涉及多少个历史记忆状态。，作者则是直接把<span class="math inline">\(\textcolor{blue}{\tau}\)</span>设置为<span class="math inline">\(\textcolor{blue}{t-1}\)</span></font></p>
+</blockquote>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{\mathcal{I}_t
+\bigodot\mathcal{G}_t}\)</span>能实现对视频局部表象特征和运动特征的抽取，<span class="math inline">\(\textcolor{blue}{C_{t-1}^{k}}\)</span>刻画了短时依赖信息，最后<strong>召回门（RECALL
+函数）</strong>被实现为一个注意模块，用于计算编码的本地模式与整个内存空间之间的关系。它的输出则能从过去的所有历史记忆中选择有用的部分，有助于长期依赖信息的学习。最后通过对它们的元素总和应用层归一化将它们集成到一个统一的网络中。</font></p>
+<p><font color="black" size="5">  作者还想利用相同的 RECALL
+方法用在了不同层同一时间步的连接<span class="math inline">\(\textcolor{blue}{M_{t}^{1:k}}\)</span>（M记忆单元的更新），但事实证明它的帮助不大。这是因为不同层在同一时刻学习到的信息并没有太好的依赖性。所以M的更新和原来一样，不过换成了三维的卷积操作。输出隐藏状态为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301519539.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{W_{1\times1\times1}}\)</span>是<span class="math inline">\(\textcolor{blue}\)</span>的卷积，用于通道数变换。<span class="math inline">\(\textcolor{blue}{\mathcal{G}_t^\prime}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{F}_t^\prime}\)</span>是时空存储器的门结构。
+Ot 是输出门。用于通道号的变换。</font></p>
+<p><font color="black" size="5">  作者最后说了自己提出的这个Attention机制的运用与借鉴论文里面的不同之处：注意机制不是应用于输出状态，而是应用于记忆转换期间。它是用来唤起过去的记忆，从遥远的时间戳，以记忆和提取被感知到的有用的信息。我们发现学习注意过去的记忆状态有助于回忆长期的历史背景。</font></p>
+<h2 id="自监督辅助学习"><font color="black" size="5">3.
+自监督辅助学习</font></h2>
+<p><font color="black" size="5">  在许多监督学习任务，例如视频动作识别中，没有足够的监督信息和标注信息来帮助训练一个令人满意的RNN，因此可以将视频预测作为一个辅助的表征学习方法，来帮助网络更好的理解视频特征，并提高时间域上的监督性。</font></p>
+<p><font color="black" size="5">  考虑两个任务：像素级未来帧预测和另一个视频级分类任务（在本文的例子中是早期活动识别）。对于帧预测，目标函数为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301608148.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\hat{\mathcal{X}}}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{X}}\)</span>分别是预测的和真实的未来帧。
+F表示Frobenius归一化。</font></p>
+<p><font color="black" size="5">  对于早期活动识别，使用多任务学习目标使这两个任务的模型在端到端训练中共享相同的网络主干：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301614577.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\hat{\mathcal{Y}}}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{Y}}\)</span>是高级预测和相应的真实类别。
+<span class="math inline">\(\textcolor{blue}{\mathcal{L}_{ce}}\)</span>是分类的交叉熵损失，<span class="math inline">\(\textcolor{blue}{λ}\)</span>是权重因子。</font></p>
+<p><font color="black" size="5">  这样通过将预测任务的损失函数嵌入到识别任务中，以及主干网络的共享，能在一定程度上帮助识别任务学习到更多的时序信息。为了保证任务的过度平滑，额外添加了一个权重因子，会随着迭代次数的增加而线性衰减：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301621453.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{λ(0)}\)</span>和<span class="math inline">\(\textcolor{blue}{η}\)</span>分别是<span class="math inline">\(\textcolor{blue}{λ(i)}\)</span>的最大值和最小值，控制辅助任务角色的下降速度。我们将这种方法称为自我监督辅助学习。</font></p>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size="5">  作者在两个任务上评估所提出的
+E3D-LSTM 模型：未来视频预测和早期活动识别。</font></p>
+<h2 id="未来的视频预测移动-mnist"><font color="black" size="5">1.
+未来的视频预测：移动 MNIST</font></h2>
+<p><font color="black" size="5">  作者首先在常用的带有移动数字的合成基准数据集上对照最先进的视频预测模型来评估
+E3D-LSTM 模型。</font></p>
+<blockquote>
+<p><font color="black" size="5">移动 MNIST 数据集是通过从原始 MNIST
+数据集中随机采样两个数字并使其在 64 × 64
+像素的黑色画布内以恒定速度和角度在边界处浮动和弹跳来构建的。</font></p>
+</blockquote>
+<p><font color="black" size="5">  🧪<strong>实验结果1：</strong>表 1
+显示了使用文献中常见设置的评估模型的性能：根据之前 10 个观测值生成 10
+个未来帧（表示为 10 → 10）。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301646595.png"></p>
+<p><font color="black" size="5">  🧪<strong>实验结果2：</strong>图
+3(a)
+显示了定性比较，其中E3D-LSTM模型比其他方法更好地从纠缠数字预测未来帧。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301649287.png"></p>
+<p><font color="black" size="5">  为了证明E3D-LSTM模型能够更好地处理跨多个时间戳的有用历史表示，作者做了一个Copy
+Test，是在较长的输入序列中，当出现周期性干扰时，让网络记忆有用的信息。</font></p>
+<p><font color="black" size="5">  看右边那个图，这个测试是这样做的，训练的时候有三段输入<strong>Prior
+context，seq1和seq2</strong>， Prior context先输入到网络，这个prior
+context和seq2是一样的，用黑色箭头标记的帧是输入，用红色箭头标记的帧是预期输出。训练的时候，目标是2个，预测seq1的未来10帧，预测seq2的未来10帧，而测试的时候，只预测seq2的未来10帧，这样，seq1的预测在训练中就是一种比较强的干扰，就是为了看看E3D-LSTM的这种网络抗干扰的效果。</font></p>
+<p><font color="black" size="5">  🧪<strong>实验结果3：</strong>结果所有的基线模型都受到Seq
+2中不相关帧的影响，并逐渐忘记了之前情景中的显著信息，然而，由于eidetic
+3D记忆，E3D-LSTM模型能够捕获长期的视频帧交互，并且在这两个指标上都表现良好。<strong>这表明E3D-LSTM
+模型可以更好地关注跨多个时间戳的有用历史表示。</strong>复制测试表明
+E3D-LSTM 网络能够有效地模拟长程周期性运动。</font></p>
+<p><font color="black" size="5">  🧪<strong>实验结果4：</strong>作者进行了一系列的消融研究，并将结果总结在表
+2 中。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301712667.png"></p>
+<p><font color="black" size="5">  可以看到不管是添加3D卷积还是自注意力机制，网络性能相对于基线方法都有提升。</font></p>
+<h2 id="未来视频预测kth-动作"><font color="black" size="5">2.
+未来视频预测：KTH 动作</font></h2>
+<p><font color="black" size="5">  作者评估了所提出的 E3D-LSTM
+模型对真实世界数据集的视频预测。</font></p>
+<blockquote>
+<p><font color="black" size="5">KTH 动作数据集：包含 25 个人执行 6
+种动作，包括步行、慢跑、跑步、拳击、挥手和拍手。平均每个视频片段持续 4
+秒。本文使用 1-16 号人员进行训练，使用 17-25
+号人员进行测试。当模型经过训练后，可以根据之前 10 个观察结果预测接下来的
+10 帧。测试时间的预测范围扩展到 20 或 40 个时间戳。</font></p>
+</blockquote>
+<p><font color="black" size="5">  🔬<strong>实验结果1：</strong>表 3
+显示了所提出的模型和最先进方法的定量结果。E3D-LSTM 模型在预测未来 10
+帧、20
+帧和复制测试这三种设置中的表现优于最先进的方法。这些实证结果证明了
+E3D-LSTM 模型对于时空数据建模的有效性。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\E3D-Lstm.assets\1701336030939.png"></p>
+<p><font color="black" size="5">  🔬<strong>实验结果2：</strong>图 4
+比较了代表性的生成帧。作者选择了具有相对复杂的时空变化（运动轨迹和人物尺寸）的视频序列进行评估。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311301726315.png"></p>
+<p><font color="black" size="5">  由此上半部分的实验结果可以看出，E3D-LSTM
+预测未来的运动轨迹更准确，而 PredRNN++ 和 ConvLSTM
+错误地预测了离开场景的人。</font></p>
+<p><font color="black" size="5">  🔬<strong>实验结果3：</strong>下半部分显示了复制测试，提供了预期的输出作为先前的输入。我们直接将在第一个设置下训练的模型应用于此测试。如果没有先验上下文，就很难预测某些情况下的人体运动。借助先前的输入，E3D-LSTM
+从其记忆中获益最多，并且能够很好地响应快速的外观变化。相比之下，PredRNN++
+和 ConvLSTM
+由于缺乏对长期数据关系的建模，无法从遥远的观测中捕获有用的时空模式。</font></p>
+<h2 id="真实视频预测应用交通流预测"><font color="black" size="5">3.
+真实视频预测应用：交通流预测</font></h2>
+<p><font color="black" size="5">  作者在 TaxiBJ
+数据集上进一步评估了作者的方法，该数据集包含连续热图中的真实交通流量数据。</font></p>
+<blockquote>
+<p><font color="black" size="5">TaxiBJ 数据集是使用北京出租车的 GPS
+监视器从混乱的现实环境中收集的。每帧都是一个 32×32×2
+的热图。最后一个维度表示同一区域的进出交通流强度。</font></p>
+</blockquote>
+<p><font color="black" size="5">  🎥<strong>实验结果1：</strong>在表 4
+中报告每个时间戳的 MSE，其中较低的分数表示更好的预测结果：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312010952944.png"></p>
+<p><font color="black" size="5">  🎥<strong>实验结果2：</strong>在图 5
+中展示了一个预测示例。可视化生成的热图和真实实况热图之间的差异。总体而言，E3D-LSTM
+模型优于其他方法，在大多数区域中差异强度最低。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312010955120.png"></p>
+<h2 id="早期活动识别"><font color="black" size="5">4.
+早期活动识别</font></h2>
+<p><font color="black" size="5">  为了验证 E3D-LSTM
+模型可以有效地学习高级视频表示，作者进行了早期活动识别实验。该任务是在仅观察一小部分帧后预测视频中的活动类别。我们选择不对活动识别任务的完整视频进行评估，因为当模型看到完整视频时，它可能仅根据场景信息做出决策，例如仅看到最后一帧就足以识别许多动作。因此，全长视频任务可能与我们之前的视频预测任务不太一致，在视频预测任务中，顺序趋势和因果关系很重要。</font></p>
+<blockquote>
+<p><font color="black" size="5">  Something-something
+数据集是最近的活动/动作识别基准。本文使用标准和官方子集，其中包含 56,
+769 个短视频作为训练集，7, 503 个视频作为 41
+个动作类别的验证集。视频长度范围为 2 至 6 秒，帧速率为 24
+fps。其中模型在观察每个视频的前 25% 或 50% 帧后预测动作类型。</font></p>
+</blockquote>
+<p><font color="black" size="5">  📷<strong>实验结果1：</strong>表 5
+显示了 E3D-LSTM 网络相对于最先进的前馈 3D-CNN 的分类精度。在使用前 25%
+和 50% 帧的两种设置中，E3D-LSTM
+模型的表现优于其他方法，显示了其在学习高级时空表示方面的有效性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011009337.png"></p>
+<p><font color="black" size="5">  📷<strong>实验结果2：</strong>图 6
+显示了两对很容易混淆的视频活动，尤其是在观察如此有限的情况下。实验证明该模型能够正确预测了书籍的崩溃，但仅在前
+25%
+的帧内明确显示了其趋势。这种推理能力来自于我们模型的集成设计，以捕获短期运动和长期依赖性。另一方面，由于前馈
+3D-CNN
+通过采样和组装来建模长期关系，因此它在寻找因果关系之间的时间依赖性方面表现不佳。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011014553.png"></p>
+<p><font color="black" size="5">  📷<strong>实验结果3：</strong>作者进行了与第
+1 节类似的消融研究，并将结果总结在表 6 中。前两行的结果表明，在 RNN
+内更深入地集成 3D-Conv
+不仅有助于像素级视频预测，而且还有助于提高级活动识别。第 3 行和第 4
+行的结果显示了所提出的 Eidetic 3D LSTM 中两个重要组成部分的贡献：a）3D
+卷积特征，b）记忆注意力机制。这两个组件对于有效建模时空数据都很有用且重要。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011022183.png"></p>
+<p><font color="black" size="5">  📷<strong>实验结果4：</strong>表 7
+显示了在不同环境中应用自我监督训练。所提出的自监督辅助学习方法比其他替代方案表现更好，包括使用视频预测模型作为网络初始化，或在这两个任务下以固定的目标函数比率训练模型。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011025038.png"></p>
+<p><font color="black" size="5">  📷<strong>实验结果5：</strong>作者通过使分类器仅依赖于最后
+5
+个循环输出状态的串联来实现在线早期活动识别。表8显示了实验结果。尽管准确性略有下降，但它可以实现在线预测。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312011025397.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  该模型将3D卷积集成于LSTM，并改变了LSTM的门更新操作，使LSTM不仅能在时间层面，也能在空间层面上进行短期依赖的表象特征和运动特征的抽取，从而在更深的机制层面实现两种网络的结合。此外，在LSTM中引入自注意力（self-attention）机制，进一步强化了LSTM的长时记忆能力，使其对长距离信息作用具有更好的感知力，并且能够捕捉输入在时间维度的关联。
+</font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2023/11/29/E3D-Lstm/">http://example.com/2023/11/29/E3D-Lstm/</a>
+            <p>发表日期：<a href="http://example.com/2023/11/29/E3D-Lstm/">November 29th 2023, 9:39:51 am</a>
+            <p>更新日期：<a href="http://example.com/2023/11/29/E3D-Lstm/">December 1st 2023, 10:31:48 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/" title="扩散模型——9.Latent Consistency Models">
+                    <div class="nextTitle">扩散模型——9.Latent Consistency Models</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" title="常见的图像评价指标">
+                    <div class="prevTitle">常见的图像评价指标</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Ce3d-lstm"><span class="toc-number">2.</span> <span class="toc-text">二、E3D-LSTM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%843d%E5%8D%B7%E7%A7%AF"><span class="toc-number">2.1.</span> <span class="toc-text">1.
+循环网络中的3D卷积</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BC%E7%9C%9F%E7%9A%84%E8%AE%B0%E5%BF%86%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text">2.
+逼真的记忆转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E7%9B%91%E7%9D%A3%E8%BE%85%E5%8A%A9%E5%AD%A6%E4%B9%A0"><span class="toc-number">2.3.</span> <span class="toc-text">3.
+自监督辅助学习</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E7%9A%84%E8%A7%86%E9%A2%91%E9%A2%84%E6%B5%8B%E7%A7%BB%E5%8A%A8-mnist"><span class="toc-number">3.1.</span> <span class="toc-text">1.
+未来的视频预测：移动 MNIST</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E8%A7%86%E9%A2%91%E9%A2%84%E6%B5%8Bkth-%E5%8A%A8%E4%BD%9C"><span class="toc-number">3.2.</span> <span class="toc-text">2.
+未来视频预测：KTH 动作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%E5%AE%9E%E8%A7%86%E9%A2%91%E9%A2%84%E6%B5%8B%E5%BA%94%E7%94%A8%E4%BA%A4%E9%80%9A%E6%B5%81%E9%A2%84%E6%B5%8B"><span class="toc-number">3.3.</span> <span class="toc-text">3.
+真实视频预测应用：交通流预测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A9%E6%9C%9F%E6%B4%BB%E5%8A%A8%E8%AF%86%E5%88%AB"><span class="toc-number">3.4.</span> <span class="toc-text">4.
+早期活动识别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 18
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
