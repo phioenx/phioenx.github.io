@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111636211.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111641405.png">
 <meta property="article:published_time" content="2023-12-04T03:12:41.000Z">
-<meta property="article:modified_time" content="2023-12-12T10:53:42.564Z">
+<meta property="article:modified_time" content="2023-12-14T08:23:19.176Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312121833541.png">
@@ -512,166 +512,77 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一前言">一、前言</h1>
-<p><font color="black" size="5">  <strong>Consistency
-Models</strong>（CM）采用一致性映射将 ODE
-轨迹中的任意点直接映射到其原点，从而实现快速一步生成。
-CM可以通过蒸馏预训练的扩散模型或作为独立的生成模型来进行训练。
-然而，CM仅限于像素空间图像生成任务，使其不适合合成高分辨率图像。此外，尚未探索条件扩散模型的应用和无分类器指导的结合，使得它们的方法不适合文本到图像的生成合成。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312121833541.png"></p>
-<p><font color="black" size="5">  本文提出了<strong>Latent Consistency
-Models</strong> (LCMs)，LCM
-在图像潜在空间中采用一致性模型，可在预训练的潜在扩散模型上实现快速的几步甚至一步高保真采样。
-LCM 可以从任何预训练的稳定扩散 (SD) 中提取，只需 4,000 个训练步骤（32
-A100 GPU 小时），即可在 2∼4 个步骤甚至一步内生成高质量的 768×768
-分辨率图像。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110916243.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110920226.png"></p>
-<h1 id="二潜在一致性模型">二、潜在一致性模型</h1>
-<h2 id="潜在空间中的一致性蒸馏lcd"><font color="black" size="5">1.
-潜在空间中的一致性蒸馏（LCD）</font></h2>
-<p><font color="black" size="5">  <strong>在SD中，首先训练自动编码器
-<span class="math inline">\(\textcolor{blue}{(\mathcal{E},
-\mathcal{D})}\)</span>将高维图像数据压缩为低维潜在向量<span class="math inline">\(\textcolor{blue}{z =
-\mathcal{E}(x)}\)</span>，然后将其解码重建为图像<span class="math inline">\(\textcolor{blue}{\hat{x} =
-\mathcal{D}(z)}\)</span></strong>。在潜在空间中训练扩散模型大大降低了计算成本，并加快了推理过程；
-因此，我们可以利用潜在空间的优势进行一致性蒸馏。作者将这个方法称为潜在一致性蒸馏
-(LCD) ，下面就将介绍这个方法的是如何实现的，首先回顾一下逆向扩散过程的PF
-ODE形式：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110936240.png"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{z_t}\)</span>是潜在向量，<span class="math inline">\(\textcolor{blue}{\epsilon_\theta(z_t,c,t)}\)</span>是由神经网络预测出的噪声。<span class="math inline">\(\textcolor{blue}{c}\)</span>是输入的条件。我们可以通过一系列的求解器去求解该ODE得到一条<span class="math inline">\(\textcolor{blue}{T}\)</span>到<span class="math inline">\(\textcolor{blue}{0}\)</span>的轨迹，可以沿着这个轨迹一步步去噪，即可得到我们最终的样本。</font></p>
-<p><font color="black" size="5">  <strong>当我们引入一致性蒸馏时，可以通过一致性函数<span class="math inline">\(\textcolor{blue}{f_\theta(z_t,c,t)→
-z_0}\)</span>来直接预测&nbsp;<span class="math inline">\(\textcolor{blue}{t=0}\)</span> 时
-PF-ODE的解。</strong>而，一致性函数有两个比较关键的性质：</font></p>
-<p><font color="black" size="5">  1️⃣<span class="math inline">\(\textcolor{blue}{f_\theta(z_t,c,t) =
-z_0}\)</span></font></p>
-<p><font color="black" size="5">  2️⃣任意<span class="math inline">\(\textcolor{blue}{t_1,t_2\in
-[0,T]}\)</span>满足<span class="math inline">\(\textcolor{blue}{f(x_{t_1},t_1)=f(x_{t_2},t_2)}\)</span></font></p>
-<p><font color="black" size="5">  为了满足当 <span class="math inline">\(\textcolor{blue}{t=0}\)</span> 时，<span class="math inline">\(\textcolor{blue}{f_\theta(z_t,c,t) =
-z_0}\)</span>该性质成立，我们需要将<span class="math inline">\(\textcolor{blue}{f_\theta}\)</span>参数化为如下的形式：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111004997.png"></p>
-<p><font color="black" size="5">  当设置<span class="math inline">\(\textcolor{blue}{c_{skip}(0)=1,c_{out}(0)=0}\)</span>就能满足<span class="math inline">\(\textcolor{blue}{f_\theta(z_t,c,t) =
-z_0}\)</span>。</font></p>
-<p><font color="black" size="5">  之后，可以通过最小化下面这个损失来去拟合第二个性质，LCM
-旨在通过最小化一致性蒸馏损失来预测 PF-ODE 的解：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111014952.png"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{z^Ψ_{t_n}}\)</span> 是使用 ODE
-求解器 <span class="math inline">\(\textcolor{blue}{Ψ}\)</span>对 PF-ODE
-从 <span class="math inline">\(\textcolor{blue}{t_{n+1} → t_n}\)</span>
-演化的估计，该估计可由下式所得到。在实践中，我们可以使用
-DDIM、DPM-Solver或 DPM-Solver++ 作为 <span class="math inline">\(\textcolor{blue}{Ψ(·,·,·,·)}\)</span>
-。请注意，仅在训练/蒸馏中使用这些求解器，而不是在推理中。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111022619.png"></p>
-<p><font color="black" size="5">  至此，潜在空间的一致性蒸馏训练过程可总结为：🔸<strong>从样本集中采样一个样本，使用预训练好的自动编码器使其压缩为潜在变量</strong>；🔸<strong>将潜在变量加噪变为<span class="math inline">\(\textcolor{blue}{z_{t_{n+1}}}\)</span>，然后利用预训练的
-Diffusion 模型去一次噪，并使用上式估计另外一个点<span class="math inline">\(\textcolor{blue}{z^Ψ_{t_n}}\)</span>。</strong>🔸<strong>然后计算这两个点送入<span class="math inline">\(\textcolor{blue}{f_\theta}\)</span>后的结果，用特定损失函数约束其一致。</strong></font></p>
-<h2 id="求解增广pf-ode的单阶段引导蒸馏"><font color="black" size="5">2.
-求解增广PF-ODE的单阶段引导蒸馏</font></h2>
-<p><font color="black" size="5">  作者想要让LCM能够进行以文本为条件做生成，引入了Classifier-Free
-Gudiance（CFG）。回顾在逆扩散过程中使用的CFG：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111044029.png"></p>
-<p><font color="black" size="5">  在引导反向过程中，原始噪声预测被条件和无条件噪声的线性组合所取代，其中<span class="math inline">\(\textcolor{blue}{ω}\)</span>被称为引导尺度。为了从引导反向过程中进行采样，需要解决以下增强的PF-ODE问题（即与<span class="math inline">\(\textcolor{blue}{ω}\)</span>相关的项）。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111048471.png"></p>
-<p><font color="black" size="5">  同样的，我们可以引入增强的一致性函数<span class="math inline">\(\textcolor{blue}{f_\theta(z_t,w,c,t)→
-z_0}\)</span>直接预测增强的PF-ODE在<span class="math inline">\(\textcolor{blue}{t=0}\)</span>
-时的解。用于满足该函数两个性质的<span class="math inline">\(\textcolor{blue}{f_\theta}\)</span>参数化方式和损失函数都与上一节的形式相同，只不过是将<span class="math inline">\(\textcolor{blue}{\tilde{\epsilon}_\theta(z, c,
-t)}\)</span>替换为<span class="math inline">\(\textcolor{blue}{\tilde{\epsilon}_\theta(z, w, c,
-t)}\)</span>，另外还包含用于对<span class="math inline">\(\textcolor{blue}{w}\)</span>进行条件化的额外可训练参数。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111108672.png"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{w}\)</span>和<span class="math inline">\(\textcolor{blue}{n}\)</span>分别从区间<span class="math inline">\(\textcolor{blue}{[w_{min},w_{max}]}\)</span>以及<span class="math inline">\(\textcolor{blue}{[1，...,N-1]}\)</span>均匀采样得到。<span class="math inline">\(\textcolor{blue}{z^{Ψ,w}_{t_n}}\)</span>使用新的噪声模型进行估计:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111117183.png"></p>
-<h2 id="跳跃式时间步加速蒸馏"><font color="black" size="5">3.
-跳跃式时间步加速蒸馏</font></h2>
-<p><font color="black" size="5">  在上面的介绍当中，我们知道一致性损失尝试将
-LCM 模型<span class="math inline">\(\textcolor{blue}{f_\theta(z_{t_{n+1}},c,t_{n+1})}\)</span>
-的预测与后续步骤中的预测<span class="math inline">\(\textcolor{blue}{f_\theta(z_{t_{n}},c,t_{n})}\)</span>
-沿着相同的轨迹对齐。由于<span class="math inline">\(\textcolor{blue}{t_{n+1},t_n}\)</span>这两步非常接近，因此
-<span class="math inline">\(\textcolor{blue}{z_{t_{n}}}\)</span>和<span class="math inline">\(\textcolor{blue}{z_{t_{n+1}}}\)</span>。因此&nbsp;<span class="math inline">\(\textcolor{blue}{f_\theta(z_{t_{n+1}},c,t_{n+1})}\)</span>
-和<span class="math inline">\(\textcolor{blue}{f_\theta(z_{t_{n}},c,t_{n})}\)</span>也彼此接近，从而产生小的一致性损失从而导致收敛缓慢。为了解决这个问题，作者引入了<strong>SKIPPING-STEP</strong>方法可以极大的增加收敛速度，同时几乎不影响指标。</font></p>
-<p><font color="black" size="5">  与传统的一致性模型(<strong>确保相邻时间步<span class="math inline">\(\textcolor{blue}{t_{n+1}}\)</span>和<span class="math inline">\(\textcolor{blue}{t_{n}}\)</span>之间的一致性</strong>)不同，LCM旨在确保当前时间步<span class="math inline">\(\textcolor{blue}{t_{n}}\)</span>和k步<span class="math inline">\(\textcolor{blue}{t_{n+k}}\)</span>之间的一致性。</font></p>
+        <h1>一、前言</h1>
+<p><font color="black" size="5">  <strong>Consistency Models</strong>（CM）采用一致性映射将 ODE 轨迹中的任意点直接映射到其原点，从而实现快速一步生成。 CM可以通过蒸馏预训练的扩散模型或作为独立的生成模型来进行训练。 然而，CM仅限于像素空间图像生成任务，使其不适合合成高分辨率图像。此外，尚未探索条件扩散模型的应用和无分类器指导的结合，使得它们的方法不适合文本到图像的生成合成。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312121833541.png" alt=""></p>
+<p><font color="black" size="5">  本文提出了<strong>Latent Consistency Models</strong> (LCMs)，LCM 在图像潜在空间中采用一致性模型，可在预训练的潜在扩散模型上实现快速的几步甚至一步高保真采样。 LCM 可以从任何预训练的稳定扩散 (SD) 中提取，只需 4,000 个训练步骤（32 A100 GPU 小时），即可在 2∼4 个步骤甚至一步内生成高质量的 768×768 分辨率图像。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110916243.png" alt=""></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110920226.png" alt=""></p>
+<h1>二、潜在一致性模型</h1>
+<h2 id="font-color-black-size-5-1-潜在空间中的一致性蒸馏（LCD）-font"><a class="header-anchor" href="#font-color-black-size-5-1-潜在空间中的一致性蒸馏（LCD）-font">¶</a><font color="black" size="5">1. 潜在空间中的一致性蒸馏（LCD）</font></h2>
+<p><font color="black" size="5">  <strong>在SD中，首先训练自动编码器 $\textcolor{blue}{(\mathcal{E}, \mathcal{D})}$将高维图像数据压缩为低维潜在向量$\textcolor{blue}{z = \mathcal{E}(x)}$，然后将其解码重建为图像$\textcolor{blue}{\hat{x} = \mathcal{D}(z)}$</strong>。在潜在空间中训练扩散模型大大降低了计算成本，并加快了推理过程； 因此，我们可以利用潜在空间的优势进行一致性蒸馏。作者将这个方法称为潜在一致性蒸馏 (LCD) ，下面就将介绍这个方法的是如何实现的，首先回顾一下逆向扩散过程的PF ODE形式：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312110936240.png" alt=""></p>
+<p><font color="black" size="5">  其中，$\textcolor{blue}{z_t}$是潜在向量，$\textcolor{blue}{\epsilon_\theta(z_t,c,t)}$是由神经网络预测出的噪声。$\textcolor{blue}{c}$是输入的条件。我们可以通过一系列的求解器去求解该ODE得到一条$\textcolor{blue}{T}$到$\textcolor{blue}{0}$的轨迹，可以沿着这个轨迹一步步去噪，即可得到我们最终的样本。</font></p>
+<p><font color="black" size="5">  **当我们引入一致性蒸馏时，可以通过一致性函数$\textcolor{blue}{f_\theta(z_t,c,t)→ z_0}$来直接预测&nbsp;$\textcolor{blue}{t=0}$ 时 PF-ODE的解。**而，一致性函数有两个比较关键的性质：</font></p>
+<p><font color="black" size="5">  1️⃣$\textcolor{blue}{f_\theta(z_t,c,t) = z_0}$</font></p>
+<p><font color="black" size="5">  2️⃣任意$\textcolor{blue}{t_1,t_2\in [0,T]}$满足$\textcolor{blue}{f(x_{t_1},t_1)=f(x_{t_2},t_2)}$</font></p>
+<p><font color="black" size="5">  为了满足当 $\textcolor{blue}{t=0}$ 时，$\textcolor{blue}{f_\theta(z_t,c,t) = z_0}$该性质成立，我们需要将$\textcolor{blue}{f_\theta}$参数化为如下的形式：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111004997.png" alt=""></p>
+<p><font color="black" size="5">  当设置$\textcolor{blue}{c_{skip}(0)=1,c_{out}(0)=0}$就能满足$\textcolor{blue}{f_\theta(z_t,c,t) = z_0}$。</font></p>
+<p><font color="black" size="5">  之后，可以通过最小化下面这个损失来去拟合第二个性质，LCM 旨在通过最小化一致性蒸馏损失来预测 PF-ODE 的解：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111014952.png" alt=""></p>
+<p><font color="black" size="5">  其中，$\textcolor{blue}{z^Ψ_{t_n}}$ 是使用 ODE 求解器 $\textcolor{blue}{Ψ}$对 PF-ODE 从 $\textcolor{blue}{t_{n+1} → t_n}$ 演化的估计，该估计可由下式所得到。在实践中，我们可以使用 DDIM、DPM-Solver或 DPM-Solver++ 作为 $\textcolor{blue}{Ψ(·,·,·,·)}$ 。请注意，仅在训练/蒸馏中使用这些求解器，而不是在推理中。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111022619.png" alt=""></p>
+<p><font color="black" size="5">  至此，潜在空间的一致性蒸馏训练过程可总结为：🔸<strong>从样本集中采样一个样本，使用预训练好的自动编码器使其压缩为潜在变量</strong>；🔸<strong>将潜在变量加噪变为$\textcolor{blue}{z_{t_{n+1}}}$，然后利用预训练的 Diffusion 模型去一次噪，并使用上式估计另外一个点$\textcolor{blue}{z^Ψ_{t_n}}$。<strong>🔸</strong>然后计算这两个点送入$\textcolor{blue}{f_\theta}$后的结果，用特定损失函数约束其一致。</strong></font></p>
+<h2 id="font-color-black-size-5-2-求解增广PF-ODE的单阶段引导蒸馏-font"><a class="header-anchor" href="#font-color-black-size-5-2-求解增广PF-ODE的单阶段引导蒸馏-font">¶</a><font color="black" size="5">2. 求解增广PF-ODE的单阶段引导蒸馏</font></h2>
+<p><font color="black" size="5">  作者想要让LCM能够进行以文本为条件做生成，引入了Classifier-Free Gudiance（CFG）。回顾在逆扩散过程中使用的CFG：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111044029.png" alt=""></p>
+<p><font color="black" size="5">  在引导反向过程中，原始噪声预测被条件和无条件噪声的线性组合所取代，其中$\textcolor{blue}{ω}$被称为引导尺度。为了从引导反向过程中进行采样，需要解决以下增强的PF-ODE问题（即与$\textcolor{blue}{ω}$相关的项）。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111048471.png" alt=""></p>
+<p><font color="black" size="5">  同样的，我们可以引入增强的一致性函数$\textcolor{blue}{f_\theta(z_t,w,c,t)→ z_0}$直接预测增强的PF-ODE在$\textcolor{blue}{t=0}$ 时的解。用于满足该函数两个性质的$\textcolor{blue}{f_\theta}$参数化方式和损失函数都与上一节的形式相同，只不过是将$\textcolor{blue}{\tilde{\epsilon}<em>\theta(z, c, t)}$替换为$\textcolor{blue}{\tilde{\epsilon}</em>\theta(z, w, c, t)}$，另外还包含用于对$\textcolor{blue}{w}$进行条件化的额外可训练参数。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111108672.png" alt=""></p>
+<p><font color="black" size="5">  其中，$\textcolor{blue}{w}$和$\textcolor{blue}{n}$分别从区间$\textcolor{blue}{[w_{min},w_{max}]}$以及$\textcolor{blue}{[1，…,N-1]}$均匀采样得到。$\textcolor{blue}{z^{Ψ,w}_{t_n}}$使用新的噪声模型进行估计:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111117183.png" alt=""></p>
+<h2 id="font-color-black-size-5-3-跳跃式时间步加速蒸馏-font"><a class="header-anchor" href="#font-color-black-size-5-3-跳跃式时间步加速蒸馏-font">¶</a><font color="black" size="5">3. 跳跃式时间步加速蒸馏</font></h2>
+<p><font color="black" size="5">  在上面的介绍当中，我们知道一致性损失尝试将 LCM 模型$\textcolor{blue}{f_\theta(z_{t_{n+1}},c,t_{n+1})}$ 的预测与后续步骤中的预测$\textcolor{blue}{f_\theta(z_{t_{n}},c,t_{n})}$ 沿着相同的轨迹对齐。由于$\textcolor{blue}{t_{n+1},t_n}$这两步非常接近，因此 $\textcolor{blue}{z_{t_{n}}}$和$\textcolor{blue}{z_{t_{n+1}}}$。因此&nbsp;$\textcolor{blue}{f_\theta(z_{t_{n+1}},c,t_{n+1})}$ 和$\textcolor{blue}{f_\theta(z_{t_{n}},c,t_{n})}$也彼此接近，从而产生小的一致性损失从而导致收敛缓慢。为了解决这个问题，作者引入了<strong>SKIPPING-STEP</strong>方法可以极大的增加收敛速度，同时几乎不影响指标。</font></p>
+<p><font color="black" size="5">  与传统的一致性模型(<strong>确保相邻时间步$\textcolor{blue}{t_{n+1}}$和$\textcolor{blue}{t_{n}}$之间的一致性</strong>)不同，LCM旨在确保当前时间步$\textcolor{blue}{t_{n}}$和k步$\textcolor{blue}{t_{n+k}}$之间的一致性。</font></p>
 <blockquote>
-<p><font color="black" size="5">注意：设置 k=1
-会减少到原始调度，导致收敛缓慢，并且非常大的 k 可能会导致 ODE
-求解器出现较大的近似误差。在作者后续的主要实验中，设置k=20</font></p>
+<p><font color="black" size="5">注意：设置 k=1 会减少到原始调度，导致收敛缓慢，并且非常大的 k 可能会导致 ODE 求解器出现较大的近似误差。在作者后续的主要实验中，设置k=20</font></p>
 </blockquote>
 <p><font color="black" size="5">  由此，一致性蒸馏损失就可以修改成：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111144869.png"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{z^{Ψ,w}_{t_n}}\)</span>是使用数值增强
-PF-ODE 求解器<span class="math inline">\(\textcolor{blue}{Ψ}\)</span>对<span class="math inline">\(\textcolor{blue}{z_{t_{n}}}\)</span>的估计：</font></p>
-<figure>
-<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111535709.png" alt="1702280146329">
-<figcaption aria-hidden="true">1702280146329</figcaption>
-</figure>
-<p><font color="black" size="5">  在算法 1 中提出了采用 CFG 和
-SKIPPING-STEP 技术的 LCD 伪代码。对原始一致性蒸馏 (CD)
-算法的修改以蓝色突出显示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111150749.png"></p>
-<p><font color="black" size="5">  1️⃣<strong>采样当前一次训练所需要的数据</strong>:
-从数据集中采样的样本变为了<span class="math inline">\(\textcolor{blue}{(z,c)}\)</span>，即图片 latent
-与图片 caption。SD 加噪过程共有<span class="math inline">\(\textcolor{blue}{(N=1000)}\)</span>步，从<span class="math inline">\(\textcolor{blue}{[1,N−k]}\)</span>这区间中采样当前训练所针对的
-timestep&nbsp;<span class="math inline">\(\textcolor{blue}{n}\)</span>。最后从<span class="math inline">\(\textcolor{blue}{[w_{min},w_{max}]}\)</span>中选择一个<span class="math inline">\(\textcolor{blue}{w}\)</span>作为后续预测<span class="math inline">\(\textcolor{blue}{z^{Ψ,w}_{t_n}}\)</span>时使用的
-Guidance Scale；</font></p>
-<p><font color="black" size="5">  2️⃣<strong>加噪</strong>: 用标准的
-Diffusion 加噪算法计算<span class="math inline">\(\textcolor{blue}{z_{t_{n+k}}}\)</span>；</font></p>
-<p><font color="black" size="5">  3️⃣<strong>执行一次Diffusion
-去噪过程</strong>: 利用<span class="math inline">\(\textcolor{blue}{z_{t_{n+k}}}\)</span>以及PF-ODE
-求解器<span class="math inline">\(\textcolor{blue}{Ψ}\)</span>可以根据公式17，对<span class="math inline">\(\textcolor{blue}{z^{Ψ,w}_{t_n}}\)</span>进行估计。可以用
-DDIM、DPM Sovler++之类熟悉的 Diffusion Scheduler
-完成这一步。在这一步的预测中，融合了 CFG 的 Guidance Scale；</font></p>
-<p><font color="black" size="5">  4️⃣<strong>计算一致性蒸馏损失</strong>：上一步得到了一个加噪轨迹上的点，以及其用
-Diffusion
-去噪算法预测得到的另外一个点。这一步就是分别用当前网络权重以及网络权重的
-EMA
-计算两个点对应的一致性函数输出，然后用一个损失函数约束输出一致；</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111144869.png" alt=""></p>
+<p><font color="black" size="5">  其中，$\textcolor{blue}{z^{Ψ,w}<em>{t_n}}$是使用数值增强 PF-ODE 求解器$\textcolor{blue}{Ψ}$对$\textcolor{blue}{z</em>{t_{n}}}$的估计：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111535709.png" alt=""></p>
+<p><font color="black" size="5">  在算法 1 中提出了采用 CFG 和 SKIPPING-STEP 技术的 LCD 伪代码。对原始一致性蒸馏 (CD) 算法的修改以蓝色突出显示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111150749.png" alt=""></p>
+<p><font color="black" size="5">  1️⃣<strong>采样当前一次训练所需要的数据</strong>: 从数据集中采样的样本变为了$\textcolor{blue}{(z,c)}$，即图片 latent 与图片 caption。SD 加噪过程共有$\textcolor{blue}{(N=1000)}$步，从$\textcolor{blue}{[1,N−k]}$这区间中采样当前训练所针对的 timestep&nbsp;$\textcolor{blue}{n}$。最后从$\textcolor{blue}{[w_{min},w_{max}]}$中选择一个$\textcolor{blue}{w}$作为后续预测$\textcolor{blue}{z^{Ψ,w}_{t_n}}$时使用的 Guidance Scale；</font></p>
+<p><font color="black" size="5">  2️⃣<strong>加噪</strong>: 用标准的 Diffusion 加噪算法计算$\textcolor{blue}{z_{t_{n+k}}}$；</font></p>
+<p><font color="black" size="5">  3️⃣<strong>执行一次Diffusion 去噪过程</strong>: 利用$\textcolor{blue}{z_{t_{n+k}}}$以及PF-ODE 求解器$\textcolor{blue}{Ψ}$可以根据公式17，对$\textcolor{blue}{z^{Ψ,w}_{t_n}}$进行估计。可以用 DDIM、DPM Sovler++之类熟悉的 Diffusion Scheduler 完成这一步。在这一步的预测中，融合了 CFG 的 Guidance Scale；</font></p>
+<p><font color="black" size="5">  4️⃣<strong>计算一致性蒸馏损失</strong>：上一步得到了一个加噪轨迹上的点，以及其用 Diffusion 去噪算法预测得到的另外一个点。这一步就是分别用当前网络权重以及网络权重的 EMA 计算两个点对应的一致性函数输出，然后用一个损失函数约束输出一致；</font></p>
 <p><font color="black" size="5">  5️⃣<strong>更新网络权重</strong>；</font></p>
-<p><font color="black" size="5">  6️⃣<strong>计算网络
-EMA</strong>。</font></p>
-<p><font color="black" size="5">  下面展示的是潜在一致性模型的多步采样算法。
-LCM 的采样算法与一致性模型中的采样算法非常相似，除了 LCM
-中结合了无分类器指导之外。与扩散模型中的多步采样（其中我们从<span class="math inline">\(\textcolor{blue}{z_{t}}\)</span>预测<span class="math inline">\(\textcolor{blue}{z_{t+1}}\)</span>）不同，潜在一致性模型直接预测增强型
-PF-ODE 轨迹的原点<span class="math inline">\(\textcolor{blue}{z_{0}}\)</span>（增强型 PF-ODE
-的解），这一步即可生成样本。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111544830.png"></p>
-<p><font color="black" size="5">  还可以通过交替去噪和噪声注入步骤提高样本质量。特别是，在第<span class="math inline">\(\textcolor{blue}{n}\)</span>次迭代中，我们首先对先前预测的样本<span class="math inline">\(\textcolor{blue}{z}\)</span>执行噪声注入前向过程，如<span class="math inline">\(\textcolor{blue}{\hat{z}_{τ_n} ∼ N (α(τ_n)z;
-σ^2(τ_n)I)}\)</span>，其中 τn 是时间步长的递减序列。这相当于从<span class="math inline">\(\textcolor{blue}{z}\)</span>返回到 PF ODE
-轨迹上的点<span class="math inline">\(\textcolor{blue}{\hat{z}_{τ_n}}\)</span>。然后，我们使用训练后的潜在一致性函数再次执行下一个<span class="math inline">\(\textcolor{blue}{z_{0}}\)</span>预测。</font></p>
-<h1 id="三实验">三、实验</h1>
-<h2 id="文本到图像生成"><font color="black" size="5">1.
-文本到图像生成</font></h2>
-<p><font color="black" size="5">  💾<strong>数据集：</strong>实验使用
-LAION-5B的两个子集：LAION-Aesthetics-6+ (12M) 和 LAION-Aesthetics-6.5+
-(650K) 进行文本到图像生成。在实验当中分别考虑了512×512 和 768×768
-的分辨率。对于 512 分辨率，我们使用 LAION-Aesthetics-6+，其中包含 12M
-文本-图像对。对于 768 分辨率，我们使用 LAION-Aesthetics-6.5+，其中包含
-650K 文本-图像对。</font></p>
-<p><font color="black" size="5">  💻<strong>模型配置：</strong>本文介绍了在512分辨率和768分辨率下使用的模型配置。对于512分辨率，使用了预训练的Stable
-Diffusion-V2.1-Base模型作为教师模型，该模型最初是在512×512分辨率下使用ϵ-Prediction进行训练的。对于768分辨率，使用了广泛使用的预训练的Stable
-DiffusionV2.1模型，该模型最初是在768×768分辨率下使用v-Prediction进行训练的。LCM模型进行了10万次迭代训练，512分辨率设置下的批量大小为72，768分辨率设置下的批量大小为16，学习率和EMA率与Song等人的研究保持一致。在增强的PF-ODE求解器<span class="math inline">\(\textcolor{blue}{Ψ}\)</span>和跳跃步长<span class="math inline">\(\textcolor{blue}{k}\)</span>的设置上，使用了DDIM-Solver，并将跳跃步长设置为20。指导尺度范围设置为[2,
-14]。</font></p>
-<p><font color="black" size="5">  📡<strong>基线和评估：</strong>本文使用DDIM、DPM、DPM++和Guided-Distill作为基线模型，采用FID和CLIP分数评估生成图像的多样性和质量。</font></p>
-<p><font color="black" size="5">  📈<strong>结果：</strong>表1和表2中的定量结果显示，LCM在512和768分辨率下明显优于基准方法，尤其是在低步长范围（1∼4）下，突显了其效率和优越性能。与需要更多峰值内存的DDIM、DPM、DPM++不同，LCM每个采样步骤只需要一次前向传递，节省了时间和内存。此外，与Guided-Distill中采用的两阶段蒸馏过程相比，LCM只需要一阶段引导蒸馏，更简单和实用。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111615849.png"></p>
+<p><font color="black" size="5">  6️⃣<strong>计算网络 EMA</strong>。</font></p>
+<p><font color="black" size="5">  下面展示的是潜在一致性模型的多步采样算法。 LCM 的采样算法与一致性模型中的采样算法非常相似，除了 LCM 中结合了无分类器指导之外。与扩散模型中的多步采样（其中我们从$\textcolor{blue}{z_{t}}$预测$\textcolor{blue}{z_{t+1}}$）不同，潜在一致性模型直接预测增强型 PF-ODE 轨迹的原点$\textcolor{blue}{z_{0}}$（增强型 PF-ODE 的解），这一步即可生成样本。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111544830.png" alt=""></p>
+<p><font color="black" size="5">  还可以通过交替去噪和噪声注入步骤提高样本质量。特别是，在第$\textcolor{blue}{n}$次迭代中，我们首先对先前预测的样本$\textcolor{blue}{z}$执行噪声注入前向过程，如$\textcolor{blue}{\hat{z}<em>{τ_n} ∼ N (α(τ_n)z; σ^2(τ_n)I)}$，其中 τn 是时间步长的递减序列。这相当于从$\textcolor{blue}{z}$返回到 PF ODE 轨迹上的点$\textcolor{blue}{\hat{z}</em>{τ_n}}$。然后，我们使用训练后的潜在一致性函数再次执行下一个$\textcolor{blue}{z_{0}}$预测。</font></p>
+<h1>三、实验</h1>
+<h2 id="font-color-black-size-5-1-文本到图像生成-font"><a class="header-anchor" href="#font-color-black-size-5-1-文本到图像生成-font">¶</a><font color="black" size="5">1. 文本到图像生成</font></h2>
+<p><font color="black" size="5">  💾**数据集：**实验使用 LAION-5B的两个子集：LAION-Aesthetics-6+ (12M) 和 LAION-Aesthetics-6.5+ (650K) 进行文本到图像生成。在实验当中分别考虑了512×512 和 768×768 的分辨率。对于 512 分辨率，我们使用 LAION-Aesthetics-6+，其中包含 12M 文本-图像对。对于 768 分辨率，我们使用 LAION-Aesthetics-6.5+，其中包含 650K 文本-图像对。</font></p>
+<p><font color="black" size="5">  💻**模型配置：**本文介绍了在512分辨率和768分辨率下使用的模型配置。对于512分辨率，使用了预训练的Stable Diffusion-V2.1-Base模型作为教师模型，该模型最初是在512×512分辨率下使用ϵ-Prediction进行训练的。对于768分辨率，使用了广泛使用的预训练的Stable DiffusionV2.1模型，该模型最初是在768×768分辨率下使用v-Prediction进行训练的。LCM模型进行了10万次迭代训练，512分辨率设置下的批量大小为72，768分辨率设置下的批量大小为16，学习率和EMA率与Song等人的研究保持一致。在增强的PF-ODE求解器$\textcolor{blue}{Ψ}$和跳跃步长$\textcolor{blue}{k}$的设置上，使用了DDIM-Solver，并将跳跃步长设置为20。指导尺度范围设置为[2, 14]。</font></p>
+<p><font color="black" size="5">  📡**基线和评估：**本文使用DDIM、DPM、DPM++和Guided-Distill作为基线模型，采用FID和CLIP分数评估生成图像的多样性和质量。</font></p>
+<p><font color="black" size="5">  📈**结果：**表1和表2中的定量结果显示，LCM在512和768分辨率下明显优于基准方法，尤其是在低步长范围（1∼4）下，突显了其效率和优越性能。与需要更多峰值内存的DDIM、DPM、DPM++不同，LCM每个采样步骤只需要一次前向传递，节省了时间和内存。此外，与Guided-Distill中采用的两阶段蒸馏过程相比，LCM只需要一阶段引导蒸馏，更简单和实用。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111615849.png" alt=""></p>
 <p><font color="black" size="5">  图2中的定性结果进一步展示了LCM在2步和4步推理中的优越性。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111620172.png"></p>
-<h2 id="消融实验"><font color="black" size="5">2. 消融实验</font></h2>
-<p><font color="black" size="5">  🔴<strong>ODE求解器和跳步调度：</strong>本文比较了不同ODE求解器在解决增强型PF-ODE问题时的表现，并探索了不同跳步计划。结果表明，<strong>跳步技术可以加速收敛，DDIM求解器在k=1时收敛较慢，而k=5、10、20时收敛更快</strong>；但是当
-k=50 时，FID 也一直很高，说明一下子跳过太多步时，DDIM 解 ODE
-的误差太大了。DPM和DPM++求解器在k=50时表现更好；k值过小或过大都会导致收敛缓慢或结果较差，因此我们选择k=20作为主要实验的参数。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111628574.png"></p>
-<p><font color="black" size="5">  🟠<strong>引导效应ω：</strong>本文研究了在LCM中使用不同的CFG尺度ω的效果。</font></p>
-<p><font color="black" size="5">  &nbsp;图4 显示了不同推理步骤中不同 ω
-的结果。<strong>结果表明，使用较大的ω可以提高样本质量，但可能会降低样本多样性。</strong>LCM
-迭代次数为 2、4、8 时，CLIP Score 和 FID 相差都不大，说明了 LCM
-的蒸馏性能确实非常强悍，两步前向的效果可能都足够好了，只是一步前向的结果还差些。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111636211.png"></p>
-<p><font color="black" size="5">  在图 5 中展示了不同 ω
-的可视化效果。可以清楚地看到，较大的 ω
-提高了样品质量，验证了单阶段引导蒸馏方法的有效性。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111641405.png"></p>
-<h1 id="四总结">四、总结</h1>
-<p><font color="black" size="5">  本文提出了潜在一致性模型 (LCM)
-和一种高效的单阶段引导蒸馏方法，可以对预训练的 LDM
-进行几步甚至一步推理。 LAION-5B-Aesthetics 数据集上的大量实验证明了 LCM
-的卓越性能和效率。未来的工作包括将我们的方法扩展到更多图像生成任务，例如文本引导的图像编辑、修复和超分辨率。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111620172.png" alt=""></p>
+<h2 id="font-color-black-size-5-2-消融实验-font"><a class="header-anchor" href="#font-color-black-size-5-2-消融实验-font">¶</a><font color="black" size="5">2. 消融实验</font></h2>
+<p><font color="black" size="5">  🔴**ODE求解器和跳步调度：**本文比较了不同ODE求解器在解决增强型PF-ODE问题时的表现，并探索了不同跳步计划。结果表明，<strong>跳步技术可以加速收敛，DDIM求解器在k=1时收敛较慢，而k=5、10、20时收敛更快</strong>；但是当 k=50 时，FID 也一直很高，说明一下子跳过太多步时，DDIM 解 ODE 的误差太大了。DPM和DPM++求解器在k=50时表现更好；k值过小或过大都会导致收敛缓慢或结果较差，因此我们选择k=20作为主要实验的参数。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111628574.png" alt=""></p>
+<p><font color="black" size="5">  🟠**引导效应ω：**本文研究了在LCM中使用不同的CFG尺度ω的效果。</font></p>
+<p><font color="black" size="5">  &nbsp;图4 显示了不同推理步骤中不同 ω 的结果。**结果表明，使用较大的ω可以提高样本质量，但可能会降低样本多样性。**LCM 迭代次数为 2、4、8 时，CLIP Score 和 FID 相差都不大，说明了 LCM 的蒸馏性能确实非常强悍，两步前向的效果可能都足够好了，只是一步前向的结果还差些。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111636211.png" alt=""></p>
+<p><font color="black" size="5">  在图 5 中展示了不同 ω 的可视化效果。可以清楚地看到，较大的 ω 提高了样品质量，验证了单阶段引导蒸馏方法的有效性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312111641405.png" alt=""></p>
+<h1>四、总结</h1>
+<p><font color="black" size="5">  本文提出了潜在一致性模型 (LCM) 和一种高效的单阶段引导蒸馏方法，可以对预训练的 LDM 进行几步甚至一步推理。 LAION-5B-Aesthetics 数据集上的大量实验证明了 LCM 的卓越性能和效率。未来的工作包括将我们的方法扩展到更多图像生成任务，例如文本引导的图像编辑、修复和超分辨率。</font></p>
 <p><font color="black" size="5">  </font></p>
 
     </article>
@@ -681,7 +592,7 @@ k=50 时，FID 也一直很高，说明一下子跳过太多步时，DDIM 解 OD
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">http://example.com/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/</a>
             <p>发表日期：<a href="http://example.com/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">December 4th 2023, 11:12:41 am</a>
-            <p>更新日期：<a href="http://example.com/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">December 12th 2023, 6:53:42 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">December 14th 2023, 4:23:19 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -869,11 +780,7 @@ k=50 时，FID 也一直很高，说明一下子跳过太多步时，DDIM 解 OD
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%BD%9C%E5%9C%A8%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">二、潜在一致性模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E8%92%B8%E9%A6%8Flcd"><span class="toc-number">2.1.</span> <span class="toc-text">1.
-潜在空间中的一致性蒸馏（LCD）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E8%A7%A3%E5%A2%9E%E5%B9%BFpf-ode%E7%9A%84%E5%8D%95%E9%98%B6%E6%AE%B5%E5%BC%95%E5%AF%BC%E8%92%B8%E9%A6%8F"><span class="toc-number">2.2.</span> <span class="toc-text">2.
-求解增广PF-ODE的单阶段引导蒸馏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%B7%83%E5%BC%8F%E6%97%B6%E9%97%B4%E6%AD%A5%E5%8A%A0%E9%80%9F%E8%92%B8%E9%A6%8F"><span class="toc-number">2.3.</span> <span class="toc-text">3.
-跳跃式时间步加速蒸馏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E5%88%B0%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90"><span class="toc-number">3.1.</span> <span class="toc-text">1.
-文本到图像生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">2. 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、潜在一致性模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E8%92%B8%E9%A6%8F%EF%BC%88LCD%EF%BC%89-font"><span class="toc-number">2.1.</span> <span class="toc-text">1. 潜在空间中的一致性蒸馏（LCD）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E6%B1%82%E8%A7%A3%E5%A2%9E%E5%B9%BFPF-ODE%E7%9A%84%E5%8D%95%E9%98%B6%E6%AE%B5%E5%BC%95%E5%AF%BC%E8%92%B8%E9%A6%8F-font"><span class="toc-number">2.2.</span> <span class="toc-text">2. 求解增广PF-ODE的单阶段引导蒸馏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3-%E8%B7%B3%E8%B7%83%E5%BC%8F%E6%97%B6%E9%97%B4%E6%AD%A5%E5%8A%A0%E9%80%9F%E8%92%B8%E9%A6%8F-font"><span class="toc-number">2.3.</span> <span class="toc-text">3. 跳跃式时间步加速蒸馏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1-%E6%96%87%E6%9C%AC%E5%88%B0%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90-font"><span class="toc-number">3.1.</span> <span class="toc-text">1. 文本到图像生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C-font"><span class="toc-number">3.2.</span> <span class="toc-text">2. 消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1267,14 +1174,14 @@ k=50 时，FID 也一直很高，说明一下子跳过太多步时，DDIM 解 OD
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">

@@ -19,12 +19,12 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》   如何评价生成模型的质量：1）真实性 ，2）多样性。   图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比 likeli">
+    <meta name="description" content="一、前言 本文章出自《[Diffusion Models Beat GANs on Image Synthesis]([2105.05233] Diffusion Models Beat GANs on Image Synthesis (arxiv.org))》   如何评价生成模型的质量：1）真实性 ，2）多样性。   图像质量的衡量指标通常为 FID，Inception Score 和 Pre">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型——5.Classifier guidance">
 <meta property="og:url" content="http://example.com/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言 本文章出自《Diffusion Models Beat GANs on Image Synthesis》   如何评价生成模型的质量：1）真实性 ，2）多样性。   图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比 likeli">
+<meta property="og:description" content="一、前言 本文章出自《[Diffusion Models Beat GANs on Image Synthesis]([2105.05233] Diffusion Models Beat GANs on Image Synthesis (arxiv.org))》   如何评价生成模型的质量：1）真实性 ，2）多样性。   图像质量的衡量指标通常为 FID，Inception Score 和 Pre">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139753.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211150880.jpeg">
@@ -522,230 +522,156 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一前言">一、前言</h1>
-<p><font color="black" size="5">本文章出自《<a href="%5B%5B2105.05233%5D%20Diffusion%20Models%20Beat%20GANs%20on%20Image%20Synthesis%20(arxiv.org)%5D(https://arxiv.org/abs/2105.05233)">Diffusion
-Models Beat GANs on Image Synthesis</a>》</font></p>
-<p><font color="black" size="5">  如何评价生成模型的质量：<strong>1）真实性</strong>
-，<strong>2）多样性</strong>。</font></p>
-<p><font color="black" size="5">  图像质量的衡量指标通常为
-FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs
-在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比
-likelihood-based models 弱，另外
-GANs通常比较难训练，如果没有选择合适的超参或正则很容易 collapsing
-。</font></p>
-<p><font color="black" size="5">  基于GANs的缺陷，有很多的工作在改进
-likelihood-based models ，希望提高图像生成质量，然而和 GANs
-相比仍有差距，另外生成样本的速度比较慢。</font></p>
-<p><font color="black" size="5">  Diffusions models 属于
-likelihood-based
-models，其具有分布覆盖广，使用静态训练目标和易于扩展的优点，并且能够生成相当高质量图像，当前已在
-CIFAR-10 上取得了 SOTA 成绩，然而在 LSUN 和 ImageNet 数据集上与 GANs
-相比仍有差距。通过IDDPM的改进，扩散模型虽然已经可以在ImageNet数据集256×256
-数据集上也可以生成高质量的样本。但是在FID分数上仍然比不上BigGAN-deep。</font></p>
+        <h1>一、前言</h1>
+<p><font color="black" size="5">本文章出自《[Diffusion Models Beat GANs on Image Synthesis]([<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.05233">2105.05233] Diffusion Models Beat GANs on Image Synthesis (arxiv.org)</a>)》</font></p>
+<p><font color="black" size="5">  如何评价生成模型的质量：<strong>1）真实性</strong> ，<strong>2）多样性</strong>。</font></p>
+<p><font color="black" size="5">  图像质量的衡量指标通常为 FID，Inception Score 和 Precision，然而这些指标无法体现多样性。目前 GANs 在大部分的图像生成任务上都取得 SOTA 成绩，GANs 在生成多样性方面比 likelihood-based models 弱，另外 GANs通常比较难训练，如果没有选择合适的超参或正则很容易 collapsing 。</font></p>
+<p><font color="black" size="5">  基于GANs的缺陷，有很多的工作在改进 likelihood-based models ，希望提高图像生成质量，然而和 GANs 相比仍有差距，另外生成样本的速度比较慢。</font></p>
+<p><font color="black" size="5">  Diffusions models 属于 likelihood-based models，其具有分布覆盖广，使用静态训练目标和易于扩展的优点，并且能够生成相当高质量图像，当前已在 CIFAR-10 上取得了 SOTA 成绩，然而在 LSUN 和 ImageNet 数据集上与 GANs 相比仍有差距。通过IDDPM的改进，扩散模型虽然已经可以在ImageNet数据集256×256 数据集上也可以生成高质量的样本。但是在FID分数上仍然比不上BigGAN-deep。</font></p>
 <p><font color="black" size="5">  文章认为造成上述差距的原因为：</font></p>
 <ul>
-<li><font color="black" size="5">GANs
-的网络架构已经十分完善了；</font></li>
-<li><font color="black" size="5">GANs
-可以在多样性和逼真度方面取得平衡，虽可以产生高质量图像，但是不能覆盖整个分布。</font></li>
+<li><font color="black" size="5">GANs 的网络架构已经十分完善了；</font></li>
+<li><font color="black" size="5">GANs 可以在多样性和逼真度方面取得平衡，虽可以产生高质量图像，但是不能覆盖整个分布。</font></li>
 </ul>
-<p><font color="black" size="5">  基于此，本文想要改进现有 diffusion
-模型架构，同时提出了可以平衡图像生成多样性和逼真度的方案。</font></p>
-<h2 id="评判生成样本的质量指标"><font color="black" size="5">1、评判生成样本的质量指标</font></h2>
-<h3 id="is指标"><font color="black" size="5">1）IS指标</font></h3>
-<p><font color="black" size="5">  Inception Score (IS)
-是衡量模型捕获完整 ImageNet
-类分布的程度，同时仍然生成作为单个类的令人信服的示例的单个样本。<strong>IS</strong>是直接对生成图像进行评估，指标值越大越好。实际上其实就是算生成分布与真实发布的KL散度。</font></p>
-<h3 id="fid指标"><font color="black" size="5">2）FID指标</font></h3>
-<p><strong><font color="black" size="5">  FID
-提供了Inception-V3用于潜在空间中生成样本分布和真实数据分布之间距离的差异。</font></strong></p>
+<p><font color="black" size="5">  基于此，本文想要改进现有 diffusion 模型架构，同时提出了可以平衡图像生成多样性和逼真度的方案。</font></p>
+<h2 id="font-color-black-size-5-1、评判生成样本的质量指标-font"><a class="header-anchor" href="#font-color-black-size-5-1、评判生成样本的质量指标-font">¶</a><font color="black" size="5">1、评判生成样本的质量指标</font></h2>
+<h3 id="font-color-black-size-5-1）IS指标-font"><a class="header-anchor" href="#font-color-black-size-5-1）IS指标-font">¶</a><font color="black" size="5">1）IS指标</font></h3>
+<p><font color="black" size="5">  Inception Score (IS) 是衡量模型捕获完整 ImageNet 类分布的程度，同时仍然生成作为单个类的令人信服的示例的单个样本。<strong>IS</strong>是直接对生成图像进行评估，指标值越大越好。实际上其实就是算生成分布与真实发布的KL散度。</font></p>
+<h3 id="font-color-black-size-5-2）FID指标-font"><a class="header-anchor" href="#font-color-black-size-5-2）FID指标-font">¶</a><font color="black" size="5">2）FID指标</font></h3>
+<p><strong><font color="black" size="5">  FID 提供了Inception-V3用于潜在空间中生成样本分布和真实数据分布之间距离的差异。</font></strong></p>
 <p><font color="black" size="5">  在计算FID指标时，首先从真实数据分布和生成样本分布中抽取一组样本，然后使用预训练的Inception网络从这些样本中提取特征向量。接下来计算两个分布的均值和协方差矩阵，并计算它们之间的Frechet距离，得到FID值，该值越小表明生成样本分布越接近真实数据分布。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139753.png"></p>
-<h3 id="improved-precision-and-召回率"><font color="black" size="5">3)
-Improved Precision and 召回率</font></h3>
-<p><font color="black" size="5"><strong>  改进的精度(Precision):</strong>测量样本保真度作为模型生成的样本落入数据流形（数据分布）的比例（精度）。<strong>召回率：</strong>测量多样性作为数据样本落入样本流形（生成分布）的比例（召回率）。</font></p>
-<p><font color="black" size="5">  <strong>关于流形的解释：</strong>流形是几何中的一个概念，我们观察到的数据是三维的，但其本质是一个二维流形，流形能够刻画数据的本质。高维数据其实是由低维流形生成的。如果我们能模拟这个生成过程，再通过对低维流形的微调，应该能得到对应的“有意义且有道理”的高维数据。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211150880.jpeg" alt="03485970dad46aa5df8e05031ee781a5" style="zoom: 80%;"></p>
-<p><font color="black" size="5">  本篇论文的作者使用 FID
-作为比较整体样本质量的默认指标，因为它是多样性和保真度的权衡，使用
-Precision 或 IS 来衡量保真度，并使用 Recall
-来衡量多样性或分布覆盖范围。</font></p>
-<h1 id="二改进架构">二、改进架构</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139753.png" alt=""></p>
+<h3 id="font-color-black-size-5-3-Improved-Precision-and-召回率-font"><a class="header-anchor" href="#font-color-black-size-5-3-Improved-Precision-and-召回率-font">¶</a><font color="black" size="5">3) Improved Precision and 召回率</font></h3>
+<p><font color="black" size="5">**  改进的精度(Precision)😗*测量样本保真度作为模型生成的样本落入数据流形（数据分布）的比例（精度）。**召回率：**测量多样性作为数据样本落入样本流形（生成分布）的比例（召回率）。</font></p>
+<p><font color="black" size="5">  **关于流形的解释：**流形是几何中的一个概念，我们观察到的数据是三维的，但其本质是一个二维流形，流形能够刻画数据的本质。高维数据其实是由低维流形生成的。如果我们能模拟这个生成过程，再通过对低维流形的微调，应该能得到对应的“有意义且有道理”的高维数据。</font></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211150880.jpeg" alt="03485970dad46aa5df8e05031ee781a5" style="zoom: 80%;">
+<p><font color="black" size="5">  本篇论文的作者使用 FID 作为比较整体样本质量的默认指标，因为它是多样性和保真度的权衡，使用 Precision 或 IS 来衡量保真度，并使用 Recall 来衡量多样性或分布覆盖范围。</font></p>
+<h1>二、改进架构</h1>
 <p><font color="black" size="5">  原扩散模型DDPM中使用的是UNet架构作为去噪网络，而作者想要根据一下几点的架构改进，做消融实验，看是否能够提高图像生成质量。</font></p>
 <ul>
-<li><p><font color="black" size="5">增加深度（神经网络层数）并减小宽度（通道数），但保持模型尺寸相对恒定。</font></p></li>
-<li><p><font color="black" size="5">增加注意力头的数量。</font></p></li>
-<li><p><font color="black" size="5">在 32×32、16×16 和 8×8
-分辨率下使用注意力，而不仅仅是在 16×16 下。</font></p></li>
-<li><p><font color="black" size="5">使用 BigGAN
-的残差块进行上采样和下采样。</font></p></li>
-<li><p><font color="black" size="5">对残差连接使用<span class="math inline">\(1/\sqrt{2}\)</span>因子缩放。</font></p></li>
+<li>
+<p><font color="black" size="5">增加深度（神经网络层数）并减小宽度（通道数），但保持模型尺寸相对恒定。</font></p>
+</li>
+<li>
+<p><font color="black" size="5">增加注意力头的数量。</font></p>
+</li>
+<li>
+<p><font color="black" size="5">在 32×32、16×16 和 8×8 分辨率下使用注意力，而不仅仅是在 16×16 下。</font></p>
+</li>
+<li>
+<p><font color="black" size="5">使用 BigGAN 的残差块进行上采样和下采样。</font></p>
+</li>
+<li>
+<p><font color="black" size="5">对残差连接使用$1/\sqrt{2}$因子缩放。</font></p>
+</li>
 </ul>
-<p><font color="black" size="5">  上述改进的比较是基于在ImageNet
-128×128上训练模型，批量大小（batch_size）为 256，并使用 250
-个采样步骤（timesteps）进行采样,使用FID指标进行比较。如表1所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139721.png"></p>
-<p><font color="black" size="5">  在图 2
-中观察到，虽然增加的深度有助于提高性能，但它会增加训练时间，并且需要更长的时间才能达到与更广泛的模型相同的性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139747.png"></p>
-<p><font color="black" size="5">  作者还研究了其他更适合 Transformer
-架构的注意力配置。为此，他们尝试使用更多的 heads 或者每个 head
-使用更少的 channels。对于架构的其余部分，作者使用 128
-个基本通道、每个分辨率 2 个残差块、多分辨率（multi-resolution）注意力和
-BigGAN 上/下采样，并训练模型进行 700K 次迭代。表 2
-显示了我们的结果，表明每个头使用更少的通道可以改善 FID。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140391.png"></p>
+<p><font color="black" size="5">  上述改进的比较是基于在ImageNet 128×128上训练模型，批量大小（batch_size）为 256，并使用 250 个采样步骤（timesteps）进行采样,使用FID指标进行比较。如表1所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139721.png" alt=""></p>
+<p><font color="black" size="5">  在图 2 中观察到，虽然增加的深度有助于提高性能，但它会增加训练时间，并且需要更长的时间才能达到与更广泛的模型相同的性能。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211139747.png" alt=""></p>
+<p><font color="black" size="5">  作者还研究了其他更适合 Transformer 架构的注意力配置。为此，他们尝试使用更多的 heads 或者每个 head 使用更少的 channels。对于架构的其余部分，作者使用 128 个基本通道、每个分辨率 2 个残差块、多分辨率（multi-resolution）注意力和 BigGAN 上/下采样，并训练模型进行 700K 次迭代。表 2 显示了我们的结果，表明每个头使用更少的通道可以改善 FID。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140391.png" alt=""></p>
 <p><font color="black" size="5">  根据图2右图，可以看出当我们每个头使用64通道时更有助于节省训练时间。</font></p>
-<p><font color="black" size="5">  最后总结出作者采用的Unet架构为 128
-个channels、每个分辨率下2个残差块、多分辨率（multi-resolution）注意力和
-BigGAN 上/下采样，每个注意力头采用64通道。</font></p>
-<h2 id="自适应归一化"><font color="black" size="5">1、自适应归一化</font></h2>
+<p><font color="black" size="5">  最后总结出作者采用的Unet架构为 128 个channels、每个分辨率下2个残差块、多分辨率（multi-resolution）注意力和 BigGAN 上/下采样，每个注意力头采用64通道。</font></p>
+<h2 id="font-color-black-size-5-1、自适应归一化-font"><a class="header-anchor" href="#font-color-black-size-5-1、自适应归一化-font">¶</a><font color="black" size="5">1、自适应归一化</font></h2>
 <p><font color="black" size="5">  AdaGN，它在组标准化（GN）操作之后将时间步长t和类嵌入合并到每个残差块中，简单来说就是将组归一化后的值和条件做一个反射变换。</font></p>
-<p><span class="math display">\[\huge
-AdaGN(h,y)=y_sGrounpNorm(h)+y_b\]</span></p>
-<p><font color="black" size="5">  其中，h是第一个卷积后的残差块的激活函数，<span class="math inline">\(y = [y_s, y_b]\)</span>是从timesteps和class
-embedding的线性投影获得的。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140456.png"></p>
-<p><font color="black" size="5">  其中，Addition+GroupNorm指的是将h和<span class="math inline">\(y_s,y_b\)</span>加起来后再做GroupNorm。</font></p>
-<h1 id="三分类器指导classifier-guidance">三、分类器指导（classifier-guidance）</h1>
-<p><font color="black" size="5">  这是一个利用图片类别标签指导图像生成的方案。给定了一个训练好的无条件扩散模型，使用分类器的梯度来调节预训练的扩散模型。作者在噪声图像<span class="math inline">\(x_t\)</span>上训练分类器 <span class="math inline">\(p_\phi(y|x_t, t)\)</span>，然后使用梯度 <span class="math inline">\(∇_{x_t}\log
-p_\phi(y|x_t,t)\)</span>引导扩散采样过程朝向任意类标签
-y。如下，将进一步介绍这个是如何去实现的：</font></p>
+<p>$$\huge AdaGN(h,y)=y_sGrounpNorm(h)+y_b$$</p>
+<p><font color="black" size="5">  其中，h是第一个卷积后的残差块的激活函数，$y = [y_s, y_b]$是从timesteps和class embedding的线性投影获得的。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140456.png" alt=""></p>
+<p><font color="black" size="5">  其中，Addition+GroupNorm指的是将h和$y_s,y_b$加起来后再做GroupNorm。</font></p>
+<h1>三、分类器指导（classifier-guidance）</h1>
+<p><font color="black" size="5">  这是一个利用图片类别标签指导图像生成的方案。给定了一个训练好的无条件扩散模型，使用分类器的梯度来调节预训练的扩散模型。作者在噪声图像$x_t$上训练分类器 $p_\phi(y|x_t, t)$，然后使用梯度 $∇_{x_t}\log p_\phi(y|x_t,t)$引导扩散采样过程朝向任意类标签 y。如下，将进一步介绍这个是如何去实现的：</font></p>
 <blockquote>
 <p><font color="red" size="5">注：不管是无条件的扩散模型还是有条件的扩散模型，都可以使用分类器指导</font></p>
 </blockquote>
-<h2 id="条件扩散过程"><font color="black" size="5">1、条件扩散过程</font></h2>
-<p><font color="black" size="5">  首先作者定义了一个条件扩散过程<span class="math inline">\(\hat{q}\)</span>类似于DDPM的扩散过程q，并假设$(y|x_0)
-$是每个样本的已知且容易获得的标签分布。就是默认了我们输入的每一张图片都有已知的对应类别。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140346.png"></p>
-<p><font color="black" size="5">  上述定义了以y为条件的扩散过程<span class="math inline">\(\hat{q}\)</span>，之后作者证明了在不以y为条件的情况下，<span class="math inline">\(\hat{q}\)</span>加噪过程与q一致，分别证明了<span class="math inline">\(\hat{q}\)</span>的边缘分布、条件分布以及联合分布：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141328.png"></p>
-<p><font color="black" size="5">  按照类似的逻辑，可以进一步推出联合分布<span class="math inline">\(\hat{q}(x_{1:T} |x_0)\)</span>：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141855.png"></p>
-<p><font color="black" size="5">  最后，还可以推导出<span class="math inline">\(\hat{q}(x_t)\)</span>的边缘分布:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141615.png"></p>
-<h2 id="条件逆向过程"><font color="black" size="5">2、条件逆向过程</font></h2>
-<p><font color="black" size="5">  上述证明了，不管前向是否以y为条件，<span class="math inline">\(\hat{q}\)</span>都与q前向过程的表现一致，说白了噪声不会对分类有帮助。接下来就是去推导条件逆向过程的解析形式。作者先是做了如下证明，该证明说明：<span class="math inline">\(\hat{q}(y|x_t)\)</span>的分布只与当前时刻的<span class="math inline">\(x_t\)</span>,后一步<span class="math inline">\(x_{t+1}\)</span>不影响该分布,为之后推导条件逆过程做了一个铺垫：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141141.png"></p>
-<p><font color="black" size="5">  我们将带类别信息的去噪过程定义为<span class="math inline">\(\hat{q}(x_t|x_{t+1},y)\)</span>,由此我们就可以推导出条件逆过程：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142310.png"></p>
-<p><font color="black" size="5">  在上述的逆过程当中，我们已知的量有label
-y 和<span class="math inline">\(x_{t+1}\)</span>所以，<span class="math inline">\(\hat{q}(y|x_{t+1})\)</span>其实是一个已知的常数（视为Z），因为它不依赖与未知变量<span class="math inline">\(x_t\)</span>。然后我们希望从分布<span class="math inline">\(\hat{q}(x_t|x_{t+1},y)=
-Zq(x_t|x_{t+1})\hat{q}(y|x_t)\)</span> 中采样<span class="math inline">\(x_t\)</span>。然而我们也有了<span class="math inline">\(q(x_t|x_{t+1})\)</span> 的神经网络近似值，称为
-<span class="math inline">\(p_θ(x_t|x_{t+1})\)</span>，所以剩下的就是<span class="math inline">\(q(y|x_t)\)</span>的近似值。于是我们可以根据<span class="math inline">\(x_t,y\)</span>对再训练一个分类器<span class="math inline">\(p_\phi(y|x_t)\)</span>去近似&nbsp;<span class="math inline">\(q(y|x_t)\)</span>，我们就有了以下式子：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142220.png"></p>
-<p><font color="black" size="5">  我们现在知道了带条件y的扩散模型的加噪以及去噪过程的分布或者公式的形式，接下来我们需要求<span class="math inline">\(p_{θ,\phi}(x_t|x_{t+1},y)\)</span>的目标函数的形式，在DDPM我们是对其进行负对数似然。</font></p>
-<p><font color="black" size="5">  我们知道的是 <span class="math inline">\(p_θ(x_t|x_{t+1})\)</span>在DDPM中是用于拟合高斯分布的</font></p>
-<p><span class="math display">\[\huge
-p_\theta(x_t|x_{t-1})=\mathcal{N}(\mu,Σ)=\frac{1}{\sqrt{2\piΣ}}\exp(-\frac{(x-\mu)^2}{2Σ})\]</span></p>
+<h2 id="font-color-black-size-5-1、条件扩散过程-font"><a class="header-anchor" href="#font-color-black-size-5-1、条件扩散过程-font">¶</a><font color="black" size="5">1、条件扩散过程</font></h2>
+<p><font color="black" size="5">  首先作者定义了一个条件扩散过程$\hat{q}$类似于DDPM的扩散过程q，并假设$\hat{q}(y|x_0) $是每个样本的已知且容易获得的标签分布。就是默认了我们输入的每一张图片都有已知的对应类别。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211140346.png" alt=""></p>
+<p><font color="black" size="5">  上述定义了以y为条件的扩散过程$\hat{q}$，之后作者证明了在不以y为条件的情况下，$\hat{q}$加噪过程与q一致，分别证明了$\hat{q}$的边缘分布、条件分布以及联合分布：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141328.png" alt=""></p>
+<p><font color="black" size="5">  按照类似的逻辑，可以进一步推出联合分布$\hat{q}(x_{1:T} |x_0)$：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141855.png" alt=""></p>
+<p><font color="black" size="5">  最后，还可以推导出$\hat{q}(x_t)$的边缘分布:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141615.png" alt=""></p>
+<h2 id="font-color-black-size-5-2、条件逆向过程-font"><a class="header-anchor" href="#font-color-black-size-5-2、条件逆向过程-font">¶</a><font color="black" size="5">2、条件逆向过程</font></h2>
+<p><font color="black" size="5">  上述证明了，不管前向是否以y为条件，$\hat{q}$都与q前向过程的表现一致，说白了噪声不会对分类有帮助。接下来就是去推导条件逆向过程的解析形式。作者先是做了如下证明，该证明说明：$\hat{q}(y|x_t)$的分布只与当前时刻的$x_t$,后一步$x_{t+1}$不影响该分布,为之后推导条件逆过程做了一个铺垫：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211141141.png" alt=""></p>
+<p><font color="black" size="5">  我们将带类别信息的去噪过程定义为$\hat{q}(x_t|x_{t+1},y)$,由此我们就可以推导出条件逆过程：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142310.png" alt=""></p>
+<p><font color="black" size="5">  在上述的逆过程当中，我们已知的量有label y 和$x_{t+1}$所以，$\hat{q}(y|x_{t+1})$其实是一个已知的常数（视为Z），因为它不依赖与未知变量$x_t$。然后我们希望从分布$\hat{q}(x_t|x_{t+1},y)= Zq(x_t|x_{t+1})\hat{q}(y|x_t)$ 中采样$x_t$。然而我们也有了$q(x_t|x_{t+1})$ 的神经网络近似值，称为 $p_θ(x_t|x_{t+1})$，所以剩下的就是$q(y|x_t)$的近似值。于是我们可以根据$x_t,y$对再训练一个分类器$p_\phi(y|x_t)$去近似&nbsp;$q(y|x_t)$，我们就有了以下式子：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142220.png" alt=""></p>
+<p><font color="black" size="5">  我们现在知道了带条件y的扩散模型的加噪以及去噪过程的分布或者公式的形式，接下来我们需要求$p_{θ,\phi}(x_t|x_{t+1},y)$的目标函数的形式，在DDPM我们是对其进行负对数似然。</font></p>
+<p><font color="black" size="5">  我们知道的是 $p_θ(x_t|x_{t+1})$在DDPM中是用于拟合高斯分布的</font></p>
+<p>$$\huge p_\theta(x_t|x_{t-1})=\mathcal{N}(\mu,Σ)=\frac{1}{\sqrt{2\piΣ}}\exp(-\frac{(x-\mu)^2}{2Σ})$$</p>
 <p><font color="black" size="5">  对其取对数，可以进一步得到：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142490.png"></p>
-<p><font color="black" size="5">  在无限扩散步数下，<span class="math inline">\(p_θ(x_t|x_{t+1})\)</span>的方差足够小，作者假设
-<span class="math inline">\(\log_ϕ p(y|x_t)\)</span>相比<span class="math inline">\(Σ^−1\)</span>有着更低的曲率，意思就是<span class="math inline">\(\log
-p_\phi(y|x_t)\)</span>二阶展开式的曲率小于<span class="math inline">\(Σ^−1\)</span>，也就是二阶导数更小，因此只展开到一阶。然后再对<span class="math inline">\(\log p_ϕ(y|x_t)\)</span>在 <span class="math inline">\(x_t=μ\)</span>处进行泰勒展开：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142382.png"></p>
-<p><font color="black" size="5">  这里，<span class="math inline">\(g
-= ∇_{x_t} log
-p_φ(y|x_t)|_{x_t=μ}\)</span>，并且C1是常数。最后我们可以求出<span class="math inline">\(p_{θ,\phi}(x_t|x_{t+1},y)\)</span>的一个对数似然：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211143849.png"></p>
-<p><font color="black" size="5">  其中，C4是推导过程当中一系列的一个归一化常数，最后把两个高斯分布的对数似然用了一个新的高斯分布<span class="math inline">\(p(z)\)</span>去表示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211143280.png"></p>
-<p><font color="black" size="5">  算法1为DDPM的算法流程，我们从扩散模型当中预测出<span class="math inline">\(x_t\)</span>的均值和方差之后，要对均值做一个偏移。其偏移量(<span class="math inline">\(\Sigma
-g\)</span>就是由分类器算出来的一个梯度乘以协方差),scale可以理解为条件指导的程度。</font></p>
-<p><span class="math display">\[\huge
-x_{t-1}=\mu+s\Sigma∇_{x_t}logp_\phi(y|x_t)|_{x_t=\mu}+\Sigma
-\epsilon\]</span></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144101.jpg"></p>
-<p><font color="black" size="5">  由上述一系列推导我们可以得到一个结论：我们直接复用训练好的无条件扩散模型（因为前向过程表现出的效果是一致的），用一个分类器来调整生成过程就能实现控制生成。可以看到classifier求的是对
-<span class="math inline">\(x_t\)</span>
-的梯度与Unet是没有关系。这个梯度信息的含义是：让 <span class="math inline">\(x_t\)</span> 预测为 y
-的概率更大的一个方向。classifier guided采样过程将这个梯度信息传递给<span class="math inline">\(x_{t-1}\)</span>使得生成的图片不断朝期望类别靠近。</font></p>
-<h2 id="在ddim中的条件采样"><font color="black" size="5">3、在DDIM中的条件采样</font></h2>
-<p><font color="black" size="5">  经过上述条件采样的推导，我们得到了均值的修正项<span class="math inline">\(s\Sigma∇_{x_t}logp_\phi(y|x_t)\)</span>,该修正项有一个特点，就是当<span class="math inline">\(\Sigma\)</span>为0时，修正项也等于0，修正就失效了。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142490.png" alt=""></p>
+<p><font color="black" size="5">  在无限扩散步数下，$p_θ(x_t|x_{t+1})$的方差足够小，作者假设 $\log_ϕ p(y|x_t)$相比$Σ^−1$有着更低的曲率，意思就是$\log p_\phi(y|x_t)$二阶展开式的曲率小于$Σ^−1$，也就是二阶导数更小，因此只展开到一阶。然后再对$\log p_ϕ(y|x_t)$在 $x_t=μ$处进行泰勒展开：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211142382.png" alt=""></p>
+<p><font color="black" size="5">  这里，$g = ∇_{x_t} log p_φ(y|x_t)|<em>{x_t=μ}$，并且C1是常数。最后我们可以求出$p</em>{θ,\phi}(x_t|x_{t+1},y)$的一个对数似然：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211143849.png" alt=""></p>
+<p><font color="black" size="5">  其中，C4是推导过程当中一系列的一个归一化常数，最后把两个高斯分布的对数似然用了一个新的高斯分布$p(z)$去表示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211143280.png" alt=""></p>
+<p><font color="black" size="5">  算法1为DDPM的算法流程，我们从扩散模型当中预测出$x_t$的均值和方差之后，要对均值做一个偏移。其偏移量($\Sigma g$就是由分类器算出来的一个梯度乘以协方差),scale可以理解为条件指导的程度。</font></p>
+<p>$$\huge x_{t-1}=\mu+s\Sigma∇_{x_t}logp_\phi(y|x_t)|_{x_t=\mu}+\Sigma \epsilon$$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144101.jpg" alt=""></p>
+<p><font color="black" size="5">  由上述一系列推导我们可以得到一个结论：我们直接复用训练好的无条件扩散模型（因为前向过程表现出的效果是一致的），用一个分类器来调整生成过程就能实现控制生成。可以看到classifier求的是对 $x_t$ 的梯度与Unet是没有关系。这个梯度信息的含义是：让 $x_t$ 预测为 y 的概率更大的一个方向。classifier guided采样过程将这个梯度信息传递给$x_{t-1}$使得生成的图片不断朝期望类别靠近。</font></p>
+<h2 id="font-color-black-size-5-3、在DDIM中的条件采样-font"><a class="header-anchor" href="#font-color-black-size-5-3、在DDIM中的条件采样-font">¶</a><font color="black" size="5">3、在DDIM中的条件采样</font></h2>
+<p><font color="black" size="5">  经过上述条件采样的推导，我们得到了均值的修正项$s\Sigma∇_{x_t}logp_\phi(y|x_t)$,该修正项有一个特点，就是当$\Sigma$为0时，修正项也等于0，修正就失效了。</font></p>
 <p><font color="black" size="5">  那么生成过程的方差可以等于0吗？然而DDIM，就是方差为0的生成过程。</font></p>
 <blockquote>
-<p><font color="black" size="5">原论文的DDIM就是特指<span class="math inline">\(σ_t=0\)</span>的情形，其中“I”的含义就是“Implicit”，意思这是一个隐式的概率模型，此时从给定的<span class="math inline">\(x_T=z\)</span>出发，得到的生成结果<span class="math inline">\(x_0\)</span>是不带随机性的，因此采样过程中不涉及任何随机因素，最终生成图片将由一开始输入的图片噪声<span class="math inline">\(x_t\)</span>所在分布的均值决定。我还做了以下实验用同一个<span class="math inline">\(x_t\)</span>分别用DDIM和DDPM,各自进行两次采样：</font></p>
+<p><font color="black" size="5">原论文的DDIM就是特指$σ_t=0$的情形，其中“I”的含义就是“Implicit”，意思这是一个隐式的概率模型，此时从给定的$x_T=z$出发，得到的生成结果$x_0$是不带随机性的，因此采样过程中不涉及任何随机因素，最终生成图片将由一开始输入的图片噪声$x_t$所在分布的均值决定。我还做了以下实验用同一个$x_t$分别用DDIM和DDPM,各自进行两次采样：</font></p>
 </blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144024.png"></p>
-<p><font color="black" size="5">  因此这个上述的条件采样推导仅适用于随机扩散采样过程，不能应用于像
-DDIM 这样的确定性采样方法。为此，作者使用改编自 Song
-等人的基于分数的调节技巧。
-它利用了扩散模型和分数匹配之间的联系。直接利用无条件模型预测的<span class="math inline">\(\epsilon_θ(x_t)\)</span>等价于<span class="math inline">\(∇_{x_t}\log p_\phi(y|x_t)\)</span>:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144291.png"></p>
-<p><font color="black" size="5">  然后可以将其代入 <span class="math inline">\(p(x_t)p(y|x_t)\)</span>
-的分数函数（梯度）中:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144657.png"></p>
-<p><font color="black" size="5">  最后，我们可以定义一个新的<span class="math inline">\(\epsilon\)</span>预测<span class="math inline">\(\hat{x}_t\)</span>：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145266.png"></p>
-<p><font color="black" size="5">  然后，我们可以使用与常规 DDIM
-完全相同的采样过程，但使用修改后的噪声预测 <span class="math inline">\(\hat{\epsilon}_θ(x_t)\)</span> 而不是<span class="math inline">\(\epsilon_θ(x_t)\)</span>。这就意味着，不管生成方差是多少，我们只需要用<span class="math inline">\(ϵ_θ(x_t,t)−\sqrt{1-\bar{\alpha}_t}∇_{x_t}\log
-p_\phi(y|x)\)</span>代替<span class="math inline">\(ϵ_θ(x_t,t)\)</span>就可以实现条件控制生成了。算法2总结了相应的采样算法:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145563.png"></p>
-<h2 id="缩放scale分类器梯度"><font color="black" size="5">&nbsp;4、缩放（scale）分类器梯度</font></h2>
-<p><font color="black" size="5">  classifier的训练与扩散模型的训练可以是独立的。在训练classifier的时候可以使用噪声预测模型(Unet)的encoder部分作为主干，在后面接了一个分类层。但是classifier需要在<span class="math inline">\(x_t\)</span>上进行训练。</font></p>
-<p><font color="black" size="5">  在使用无条件 ImageNet
-模型的初始实验中，作者发现常数因子（s）scale Classifier
-gradients的作用。当s=1，大约能保证生成的图片50%是想要的类别，随着s的增大，这个比例也能够增加。当s&gt;1时，结果将会提高生成结果与输入标签y的相关性，但是会相应地降低生成结果的多样性，当s=10时，分类器的类别概率增加到接近
-100%。图 3 显示出了这种效果。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145704.png"></p>
-<p><font color="black" size="5">  图
-3：来自无条件扩散模型的样本，带有分类器指导，以“彭布罗克威尔士柯基犬”类别为条件。使用分类器尺度s=1.0（左FID：33.0），而分类器尺度s=10.0（右；FID：12.0）会产生更多类一致的图像。</font></p>
-<p><font color="black" size="5">  <strong>缩放 classifier gradients
-的影响:</strong></font></p>
-<p><span class="math display">\[\huge s \cdot \nabla_x
-logp(y|x)=&nbsp;\nabla_x log \frac{1}{z}p(y|x)^s\]</span></p>
-<p><font color="black" size="5">  式中，Z为常数，当 <span class="math inline">\(s&gt;1\)</span> ，分布<span class="math inline">\(p(y∣x)^s\)</span>比 <span class="math inline">\(p(y∣x)\)</span>更加陡峭，对于这个分布让它在概率密度更大的地方有更大的峰值，预测的结果会接近one-hot分布。所以使用大的scale会让模型更加关注
-classifier ，从而产生更加逼真（多样性减少）的样本。</font></p>
-<p><font color="black" size="5">  在上面的推导中，我们假设基础扩散模型是无条件的，对
-<span class="math inline">\(p(x)\)</span>进行建模,也还可以训练条件扩散模型<span class="math inline">\(p(x|y)\)</span>，并以完全相同的方式使用分类器指导。表4表明，<strong>通过分类器引导，无条件模型和条件模型的样本质量都可以得到极大的提高,我们可以看到</strong>，在足够高的规模下，引导无条件模型(guided
-unconditional model)可以非常接近无引导条件模型(unguided conditional
-model)的 FID。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146985.png"></p>
-<p><font color="black" size="5">  表4还表明了<strong>分类器指导(Classifier
-guidance)以Recall为代价提高了Precision，从而在样本保真度与多样性之间进行权衡</strong>，在图4中可以看到这种权衡是如何随梯度尺度变化的：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146760.png"></p>
-<p><font color="black" size="5">  作者进一步对使用 guidance 的
-diffusion 模型 和 BigGAN进行比较，发现2点现象：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144024.png" alt=""></p>
+<p><font color="black" size="5">  因此这个上述的条件采样推导仅适用于随机扩散采样过程，不能应用于像 DDIM 这样的确定性采样方法。为此，作者使用改编自 Song 等人的基于分数的调节技巧。 它利用了扩散模型和分数匹配之间的联系。直接利用无条件模型预测的$\epsilon_θ(x_t)$等价于$∇_{x_t}\log p_\phi(y|x_t)$:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144291.png" alt=""></p>
+<p><font color="black" size="5">  然后可以将其代入 $p(x_t)p(y|x_t)$ 的分数函数（梯度）中:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211144657.png" alt=""></p>
+<p><font color="black" size="5">  最后，我们可以定义一个新的$\epsilon$预测$\hat{x}_t$：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145266.png" alt=""></p>
+<p><font color="black" size="5">  然后，我们可以使用与常规 DDIM 完全相同的采样过程，但使用修改后的噪声预测 $\hat{\epsilon}<em>θ(x_t)$ 而不是$\epsilon_θ(x_t)$。这就意味着，不管生成方差是多少，我们只需要用$ϵ_θ(x_t,t)−\sqrt{1-\bar{\alpha}<em>t}∇</em>{x_t}\log p</em>\phi(y|x)$代替$ϵ_θ(x_t,t)$就可以实现条件控制生成了。算法2总结了相应的采样算法:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145563.png" alt=""></p>
+<h2 id="font-color-black-size-5-4、缩放（scale）分类器梯度-font"><a class="header-anchor" href="#font-color-black-size-5-4、缩放（scale）分类器梯度-font">¶</a><font color="black" size="5">&nbsp;4、缩放（scale）分类器梯度</font></h2>
+<p><font color="black" size="5">  classifier的训练与扩散模型的训练可以是独立的。在训练classifier的时候可以使用噪声预测模型(Unet)的encoder部分作为主干，在后面接了一个分类层。但是classifier需要在$x_t$上进行训练。</font></p>
+<p><font color="black" size="5">  在使用无条件 ImageNet 模型的初始实验中，作者发现常数因子（s）scale Classifier gradients的作用。当s=1，大约能保证生成的图片50%是想要的类别，随着s的增大，这个比例也能够增加。当s&gt;1时，结果将会提高生成结果与输入标签y的相关性，但是会相应地降低生成结果的多样性，当s=10时，分类器的类别概率增加到接近 100%。图 3 显示出了这种效果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211145704.png" alt=""></p>
+<p><font color="black" size="5">  图 3：来自无条件扩散模型的样本，带有分类器指导，以“彭布罗克威尔士柯基犬”类别为条件。使用分类器尺度s=1.0（左FID：33.0），而分类器尺度s=10.0（右；FID：12.0）会产生更多类一致的图像。</font></p>
+<p><font color="black" size="5">  <strong>缩放 classifier gradients 的影响:</strong></font></p>
+<p>$$\huge s \cdot \nabla_x logp(y|x)=&nbsp;\nabla_x log \frac{1}{z}p(y|x)^s$$</p>
+<p><font color="black" size="5">  式中，Z为常数，当 $s&gt;1$ ，分布$p(y∣x)^s$比 $p(y∣x)$更加陡峭，对于这个分布让它在概率密度更大的地方有更大的峰值，预测的结果会接近one-hot分布。所以使用大的scale会让模型更加关注 classifier ，从而产生更加逼真（多样性减少）的样本。</font></p>
+<p><font color="black" size="5">  在上面的推导中，我们假设基础扩散模型是无条件的，对 $p(x)$进行建模,也还可以训练条件扩散模型$p(x|y)$，并以完全相同的方式使用分类器指导。表4表明，<strong>通过分类器引导，无条件模型和条件模型的样本质量都可以得到极大的提高,我们可以看到</strong>，在足够高的规模下，引导无条件模型(guided unconditional model)可以非常接近无引导条件模型(unguided conditional model)的 FID。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146985.png" alt=""></p>
+<p><font color="black" size="5">  表4还表明了<strong>分类器指导(Classifier guidance)以Recall为代价提高了Precision，从而在样本保真度与多样性之间进行权衡</strong>，在图4中可以看到这种权衡是如何随梯度尺度变化的：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146760.png" alt=""></p>
+<p><font color="black" size="5">  作者进一步对使用 guidance 的 diffusion 模型 和 BigGAN进行比较，发现2点现象：</font></p>
 <ul>
-<li><font color="black" size="5">classifier guidance 在平衡 FID 和 IS
-方面远优于 BigGAN；&nbsp;</font></li>
-<li><font color="black" size="5">classifier guidance 在达到一个
-precision 阈值后，就无法取得更好的 precision。</font></li>
+<li><font color="black" size="5">classifier guidance 在平衡 FID 和 IS 方面远优于 BigGAN；&nbsp;</font></li>
+<li><font color="black" size="5">classifier guidance 在达到一个 precision 阈值后，就无法取得更好的 precision。</font></li>
 </ul>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146915.png"></p>
-<p><font color="black" size="5">  作者也提到了<strong>关于Classifier
-guidance的局限</strong>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211146915.png" alt=""></p>
+<p><font color="black" size="5">  作者也提到了<strong>关于Classifier guidance的局限</strong>：</font></p>
 <ul>
 <li><font color="black" size="5">分类器指导技术目前仅限于标记数据集；</font></li>
 <li><font color="black" size="5">需要额外训练一个噪声版本的图像分类器,那么该分类器的质量会影响按类别生成的效果;</font></li>
 <li><font color="black" size="5">当我们的分类器训练的还不足够好的时候，采用该分类器关于其输入的梯度可以在输入空间中产生任意（甚至是对抗）的方向，采样出来的图像骗过了一个并不健壮的分类器并不代表我们确实逼近了条件分布。</font></li>
 </ul>
-<h1 id="四实验结果">四、实验结果</h1>
-<p><font color="black" size="5">  作者评估改进的模型架构在无条件图像生成的性能使用数据集
-LSUN（分别对于类别bedroom, horse 和 cat），评估 classifier guidance
-性能使用数据集 ImageNet （分辨率分别为 128×128, 256×256 和
-512×512），几乎在每个任务上 diffusion models 都取得了
-SOTA成绩。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147212.png"></p>
-<p><font color="black" size="5">  图 6 比较了最佳 BigGAN
-深度模型和最佳扩散模型的随机样本。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147268.png"></p>
-<h2 id="与上采样方法进行比较"><font color="black" size="5">1、与上采样方法进行比较</font></h2>
-<p><font color="black" size="5">  作者比较了使用两阶段采样的思想，通过将低分辨率扩散模型与相应的上采样扩散模型相结合来训练两阶段扩散模型。在表
-6
-中，表明引导和上采样可以提高不同轴上的样本质量。虽然上采样在保持高召回率的同时提高了精度，但指导提供了一个在多样性和更高的精度之间进行权衡的旋钮。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147132.png"></p>
-<h1 id="五总结">五、总结</h1>
-<p><font color="black" size="5">  本文提出了改进扩散模型的结构框架，在无条件生成图像中可以获得比最先进的
-GAN
-更好的样本质量。最核心的是这篇论文提出了一个分类器梯度的思想去指导模型生成更符合我们需求的图像。而且还可以调整分类器梯度的规模，在多样性和保真度之间进行权衡。这些引导扩散模型可以减少
-GAN
-和扩散模型之间的采样时间差距，尽管扩散模型在采样期间仍然需要多次前向传递。最后，通过将引导与上采样相结合，我们可以进一步提高高分辨率条件图像合成的样本质量。</font></p>
+<h1>四、实验结果</h1>
+<p><font color="black" size="5">  作者评估改进的模型架构在无条件图像生成的性能使用数据集 LSUN（分别对于类别bedroom, horse 和 cat），评估 classifier guidance 性能使用数据集 ImageNet （分辨率分别为 128×128, 256×256 和 512×512），几乎在每个任务上 diffusion models 都取得了 SOTA成绩。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147212.png" alt=""></p>
+<p><font color="black" size="5">  图 6 比较了最佳 BigGAN 深度模型和最佳扩散模型的随机样本。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147268.png" alt=""></p>
+<h2 id="font-color-black-size-5-1、与上采样方法进行比较-font"><a class="header-anchor" href="#font-color-black-size-5-1、与上采样方法进行比较-font">¶</a><font color="black" size="5">1、与上采样方法进行比较</font></h2>
+<p><font color="black" size="5">  作者比较了使用两阶段采样的思想，通过将低分辨率扩散模型与相应的上采样扩散模型相结合来训练两阶段扩散模型。在表 6 中，表明引导和上采样可以提高不同轴上的样本质量。虽然上采样在保持高召回率的同时提高了精度，但指导提供了一个在多样性和更高的精度之间进行权衡的旋钮。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309211147132.png" alt=""></p>
+<h1>五、总结</h1>
+<p><font color="black" size="5">  本文提出了改进扩散模型的结构框架，在无条件生成图像中可以获得比最先进的 GAN 更好的样本质量。最核心的是这篇论文提出了一个分类器梯度的思想去指导模型生成更符合我们需求的图像。而且还可以调整分类器梯度的规模，在多样性和保真度之间进行权衡。这些引导扩散模型可以减少 GAN 和扩散模型之间的采样时间差距，尽管扩散模型在采样期间仍然需要多次前向传递。最后，通过将引导与上采样相结合，我们可以进一步提高高分辨率条件图像合成的样本质量。</font></p>
 <p><font color="black" size="5">  虽然扩散模型已经击败GAN在图像生成质量上，但仍然存在以下缺点：</font></p>
 <ul>
-<li><p><font color="black" size="5">尽管有DDIM和IDDPM各种加速采样的技术出现，但是仍然不如GAN采样的速度快；</font></p></li>
-<li><p><font color="black" size="5">Classifier
-guidance只针对有标签的数据，没有提供有效的策略来权衡未标记数据集的多样性和保真度。</font></p></li>
+<li>
+<p><font color="black" size="5">尽管有DDIM和IDDPM各种加速采样的技术出现，但是仍然不如GAN采样的速度快；</font></p>
+</li>
+<li>
+<p><font color="black" size="5">Classifier guidance只针对有标签的数据，没有提供有效的策略来权衡未标记数据集的多样性和保真度。</font></p>
+</li>
 </ul>
 
     </article>
@@ -943,8 +869,7 @@ guidance只针对有标签的数据，没有提供有效的策略来权衡未标
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E5%88%A4%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">1、评判生成样本的质量指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#is%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">1）IS指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fid%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">2）FID指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#improved-precision-and-%E5%8F%AC%E5%9B%9E%E7%8E%87"><span class="toc-number">1.1.3.</span> <span class="toc-text">3)
-Improved Precision and 召回率</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%94%B9%E8%BF%9B%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">二、改进架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">1、自适应归一化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%88%86%E7%B1%BB%E5%99%A8%E6%8C%87%E5%AF%BCclassifier-guidance"><span class="toc-number">3.</span> <span class="toc-text">三、分类器指导（classifier-guidance）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">1、条件扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2、条件逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8ddim%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6%E9%87%87%E6%A0%B7"><span class="toc-number">3.3.</span> <span class="toc-text">3、在DDIM中的条件采样</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%A9%E6%94%BEscale%E5%88%86%E7%B1%BB%E5%99%A8%E6%A2%AF%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text"> 4、缩放（scale）分类器梯度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">四、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E4%B8%8A%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="toc-number">4.1.</span> <span class="toc-text">1、与上采样方法进行比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E8%AF%84%E5%88%A4%E7%94%9F%E6%88%90%E6%A0%B7%E6%9C%AC%E7%9A%84%E8%B4%A8%E9%87%8F%E6%8C%87%E6%A0%87-font"><span class="toc-number">1.1.</span> <span class="toc-text">1、评判生成样本的质量指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-1%EF%BC%89IS%E6%8C%87%E6%A0%87-font"><span class="toc-number">1.1.1.</span> <span class="toc-text">1）IS指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-2%EF%BC%89FID%E6%8C%87%E6%A0%87-font"><span class="toc-number">1.1.2.</span> <span class="toc-text">2）FID指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#font-color-black-size-5-3-Improved-Precision-and-%E5%8F%AC%E5%9B%9E%E7%8E%87-font"><span class="toc-number">1.1.3.</span> <span class="toc-text">3) Improved Precision and 召回率</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、改进架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E8%87%AA%E9%80%82%E5%BA%94%E5%BD%92%E4%B8%80%E5%8C%96-font"><span class="toc-number">2.1.</span> <span class="toc-text">1、自适应归一化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、分类器指导（classifier-guidance）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E6%9D%A1%E4%BB%B6%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B-font"><span class="toc-number">3.1.</span> <span class="toc-text">1、条件扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-2%E3%80%81%E6%9D%A1%E4%BB%B6%E9%80%86%E5%90%91%E8%BF%87%E7%A8%8B-font"><span class="toc-number">3.2.</span> <span class="toc-text">2、条件逆向过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-3%E3%80%81%E5%9C%A8DDIM%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6%E9%87%87%E6%A0%B7-font"><span class="toc-number">3.3.</span> <span class="toc-text">3、在DDIM中的条件采样</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-4%E3%80%81%E7%BC%A9%E6%94%BE%EF%BC%88scale%EF%BC%89%E5%88%86%E7%B1%BB%E5%99%A8%E6%A2%AF%E5%BA%A6-font"><span class="toc-number">3.4.</span> <span class="toc-text"> 4、缩放（scale）分类器梯度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">四、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#font-color-black-size-5-1%E3%80%81%E4%B8%8E%E4%B8%8A%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83-font"><span class="toc-number">4.1.</span> <span class="toc-text">1、与上采样方法进行比较</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1338,14 +1263,14 @@ Improved Precision and 召回率</span></a></li></ol></li></ol></li><li class="t
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">

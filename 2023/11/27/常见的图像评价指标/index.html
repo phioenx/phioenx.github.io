@@ -19,12 +19,12 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：\(\textcolor{blue}{2^b-1}\)，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM">
+    <meta name="description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：$\textcolor{blue}{2^b-1}$，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM 结构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="常见的图像评价指标">
 <meta property="og:url" content="http://example.com/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：\(\textcolor{blue}{2^b-1}\)，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM">
+<meta property="og:description" content="一、PSNR 峰值信噪比   🐦用于衡量一张带有噪声的图片与干净的图片之间的差异。   计算方式：PSNR的计算方式涉及到均方误差（MSE）：    由此可以根据下式计算PSNR：    其中，MAX表示图片的动态范围：$\textcolor{blue}{2^b-1}$，也就是可能的最大像素值。   两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。 二、SSIM 结构">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133612.png">
@@ -506,62 +506,53 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一psnr-峰值信噪比">一、PSNR 峰值信噪比</h1>
+        <h1>一、PSNR 峰值信噪比</h1>
 <p><font color="black" size="5">  🐦用于<strong>衡量一张带有噪声的图片与干净的图片之间的差异</strong>。</font></p>
 <p><font color="black" size="5">  计算方式：PSNR的计算方式涉及到均方误差（MSE）：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133674.png" style="zoom:80%;">
 <p><font color="black" size="5">  由此可以根据下式计算PSNR：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133612.png" alt="1701055993276" style="zoom:80%;"></p>
-<p><font color="black" size="5">  其中，MAX表示图片的动态范围：<span class="math inline">\(\textcolor{blue}{2^b-1}\)</span>，也就是可能的最大像素值。</font></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271133612.png" alt="1701055993276" style="zoom:80%;">
+<p><font color="black" size="5">  其中，MAX表示图片的动态范围：$\textcolor{blue}{2^b-1}$，也就是可能的最大像素值。</font></p>
 <p><font color="black" size="5">  <strong>两张图片差异越小，其中MSE就越小，PSNR就越大，这就意味着图像质量越好。</strong></font></p>
-<h1 id="二ssim-结构相似性">二、SSIM 结构相似性</h1>
+<h1>二、SSIM 结构相似性</h1>
 <p><font color="black" size="5">  🐦用于<strong>衡量图片的失真程度，也可以用于衡量两张图片之间的相似程度</strong>。</font></p>
 <p><font color="black" size="5">  计算方式：SSIM衡量了图片三个性质，分别是亮度，对比度，结构。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271144301.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271144301.png" style="zoom:80%;">
 <p><font color="black" size="5">  1️⃣其中，<strong>亮度指的是所有像素值灰度的平均值</strong>。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627344.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627344.png" style="zoom:80%;">
 <p><font color="black" size="5">  那么在分别计算好两张图片的亮度之后，可通过下面这个函数计算它们之间的亮度对比：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627497.png" style="zoom:80%;"></p>
-<p><font color="black" size="5">  当且仅当<span class="math inline">\(\textcolor{blue}{\mu_x = \mu_y}\)</span>时，<span class="math inline">\(\textcolor{blue}{l(x,y)}\)</span>能取到最大值1，否则在0~1之间。</font></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627497.png" style="zoom:80%;">
+<p><font color="black" size="5">  当且仅当$\textcolor{blue}{\mu_x = \mu_y}$时，$\textcolor{blue}{l(x,y)}$能取到最大值1，否则在0~1之间。</font></p>
 <p><font color="black" size="5">  2️⃣<strong>对比度，是要计算灰度的标准差</strong>，所以图像x的标准差以及相应的对比函数，如下所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627192.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627192.png" style="zoom:80%;">
 <p><font color="black" size="5">  3️⃣<strong>结构对比，采用的是相关系数，用协方差除以方差的积来表示</strong>:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627842.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627842.png" style="zoom:80%;">
 <p><font color="black" size="5">  所以SSIM的最终表达式为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627083.png" style="zoom:80%;"></p>
-<p><font color="black" size="5">  同样的，当且仅当两个图像之间的亮度，对比度，结构都相同时，<span class="math inline">\(\textcolor{blue}{S(x,y)}\)</span>能取到最大值1，否则在0~1之间。当我们取权重都为1时，SSIM就变成了：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271628364.png" style="zoom:80%;"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{C_1 =(K_1 L)^2 ,K_1 =
-0.01,L}\)</span>为像素的动态范围，8位图像就是255。<span class="math inline">\(\textcolor{blue}{C_2 =(K_2 L)^2 ,K_2 =
-0.03}\)</span>，<span class="math inline">\(\textcolor{blue}{C_3
-=C_2/2}\)</span></font></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271627083.png" style="zoom:80%;">
+<p><font color="black" size="5">  同样的，当且仅当两个图像之间的亮度，对比度，结构都相同时，$\textcolor{blue}{S(x,y)}$能取到最大值1，否则在0~1之间。当我们取权重都为1时，SSIM就变成了：</font></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271628364.png" style="zoom:80%;">
+<p><font color="black" size="5">  其中，$\textcolor{blue}{C_1 =(K_1 L)^2 ,K_1 = 0.01,L}$为像素的动态范围，8位图像就是255。$\textcolor{blue}{C_2 =(K_2 L)^2 ,K_2 = 0.03}$，$\textcolor{blue}{C_3 =C_2/2}$</font></p>
 <p><font color="black" size="5">  在实际使用的时候，SSIM并不是直接对整张图像求平均以及方差，而是采用一个叫做圆对称的高斯加权公式。采用一个大小为11x11，标准差为1.5，和为1的高斯核，作为滑动窗口，求局部的均值，标准差和方差，最后对所有的局部SSIM求均值，得到MSSIM。</font></p>
 <p><font color="black" size="5">  在引入高斯核之后，相应的均值，标准差，协方差公式也进行了相应的修改，权重采用高斯核的参数w：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271651923.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271651923.png" alt=""></p>
 <p><font color="black" size="5">  高斯核带来的一定程度上的模糊，是为了捕捉更高层的几何特征，而不是让比较仅仅停留在像素的尺度上。MSSIM确实不仅可以用来衡量两个图像之间的相似度，也可以用于当作损失去训练模型：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271659863.png" style="zoom:80%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271659863.png" style="zoom:80%;">
 <p><font color="black" size="5">  即图像越不相似，SSIMD的值就越接近为1，可以用作网络的损失函数。</font></p>
-<h1 id="三lpips-学习感知图像块相似度">三、LPIPS
-学习感知图像块相似度</h1>
+<h1>三、LPIPS 学习感知图像块相似度</h1>
 <p><font color="black" size="5">  <strong>LPIPS也可以称作感知损失，用图像的深度特征来衡量两张图片的相似度。</strong></font></p>
-<p><font color="black" size="5">  来源于CVPR2018的一篇论文《The
-Unreasonable Effectiveness of Deep Features as a Perceptual
-Metric》。LPIPS 比传统方法（比如L2/PSNR, SSIM,
-FSIM）更符合人类的感知情况。<strong>LPIPS的值越低表示两张图像越相似，反之，则差异越大</strong>。</font></p>
+<p><font color="black" size="5">  来源于CVPR2018的一篇论文《The Unreasonable Effectiveness of Deep Features as a Perceptual Metric》。LPIPS 比传统方法（比如L2/PSNR, SSIM, FSIM）更符合人类的感知情况。<strong>LPIPS的值越低表示两张图像越相似，反之，则差异越大</strong>。</font></p>
 <p><font color="black" size="5">  将左右的两个图像块和中间的图像块进行比较：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271710109.jpeg"></p>
-<p><font color="black" size="5">  如图表示，每一组有三张图片，由传统的评价标准如L2、SSIM、PSNR等评价结果和人体认为的大不相同，这是传统方法的弊端。如果图片平滑，那么传统的评价方式则大概率会失效。而目前GAN尤其是VAE等生成模型生成结果都过于平滑。
-而最后三行的评价为深度学习的方式，可以看到，通过神经网络（非监督、自监督、监督模型）提取特征的方式，并对特征差异进行计算能够有效进行评价，而且能够和人体评价相似。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271710109.jpeg" alt=""></p>
+<p><font color="black" size="5">  如图表示，每一组有三张图片，由传统的评价标准如L2、SSIM、PSNR等评价结果和人体认为的大不相同，这是传统方法的弊端。如果图片平滑，那么传统的评价方式则大概率会失效。而目前GAN尤其是VAE等生成模型生成结果都过于平滑。 而最后三行的评价为深度学习的方式，可以看到，通过神经网络（非监督、自监督、监督模型）提取特征的方式，并对特征差异进行计算能够有效进行评价，而且能够和人体评价相似。</font></p>
 <p><font color="black" size="5">  <strong>LPIPS的具体计算流程</strong>：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271718579.png"></p>
-<p><font color="black" size="5">  1️⃣把需要对比的图像<span class="math inline">\(\textcolor{blue}{x,x_0}\)</span>输入到网络F当中，这个F可以是简单的VGG或者是Alexnet。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271718579.png" alt=""></p>
+<p><font color="black" size="5">  1️⃣把需要对比的图像$\textcolor{blue}{x,x_0}$输入到网络F当中，这个F可以是简单的VGG或者是Alexnet。</font></p>
 <p><font color="black" size="5">  2️⃣把每一层经过激活函数的输出都拿出来进行Normalize归一化</font></p>
 <p><font color="black" size="5">  3️⃣再经过w层给予一个权重，然后求两个网络各层特征向量之间的L2误差</font></p>
-<p><font color="black" size="5">  4️⃣最后对所有层的误差取平均，得到相似度<span class="math inline">\(\textcolor{blue}{d_0}\)</span>，<strong>图像相似度越低，深度特征之间的差异就越大，LPIPS的输出结果就越大</strong>。</font></p>
-<p><font color="black" size="5">  给定Ground Truth图像参照块<span class="math inline">\(\textcolor{blue}{x}\)</span>和含噪声图像失真块<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，感知相似度度量公式如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271733089.png"></p>
-<p><font color="black" size="5">  两个输入<span class="math inline">\(\textcolor{blue}{x,x_0}\)</span>送入神经网络F（可以为VGG、Alexnet）中进行特征提取，对每个层的输出进行激活后归一化处理，记为<span class="math inline">\(\textcolor{blue}{\hat{y}^l,\hat{y}^l_0 \in
-R^{H_l\times W_l\times C_l}}\)</span>，然后经过w层权重<span class="math inline">\(\textcolor{blue}{w_l}\)</span>点乘后计算L2距离，最后取平均获得距离。</font></p>
+<p><font color="black" size="5">  4️⃣最后对所有层的误差取平均，得到相似度$\textcolor{blue}{d_0}$，<strong>图像相似度越低，深度特征之间的差异就越大，LPIPS的输出结果就越大</strong>。</font></p>
+<p><font color="black" size="5">  给定Ground Truth图像参照块$\textcolor{blue}{x}$和含噪声图像失真块$\textcolor{blue}{x_0}$，感知相似度度量公式如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202311271733089.png" alt=""></p>
+<p><font color="black" size="5">  两个输入$\textcolor{blue}{x,x_0}$送入神经网络F（可以为VGG、Alexnet）中进行特征提取，对每个层的输出进行激活后归一化处理，记为$\textcolor{blue}{\hat{y}<sup>l,\hat{y}</sup>l_0 \in R^{H_l\times W_l\times C_l}}$，然后经过w层权重$\textcolor{blue}{w_l}$点乘后计算L2距离，最后取平均获得距离。</font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -763,8 +754,7 @@ R^{H_l\times W_l\times C_l}}\)</span>，然后经过w层权重<span class="math 
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80psnr-%E5%B3%B0%E5%80%BC%E4%BF%A1%E5%99%AA%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">一、PSNR 峰值信噪比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cssim-%E7%BB%93%E6%9E%84%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">二、SSIM 结构相似性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89lpips-%E5%AD%A6%E4%B9%A0%E6%84%9F%E7%9F%A5%E5%9B%BE%E5%83%8F%E5%9D%97%E7%9B%B8%E4%BC%BC%E5%BA%A6"><span class="toc-number">3.</span> <span class="toc-text">三、LPIPS
-学习感知图像块相似度</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">一、PSNR 峰值信噪比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">二、SSIM 结构相似性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">三、LPIPS 学习感知图像块相似度</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1158,14 +1148,14 @@ R^{H_l\times W_l\times C_l}}\)</span>，然后经过w层权重<span class="math 
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
