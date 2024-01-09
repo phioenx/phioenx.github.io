@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/archives/page/3/index.html">
+<meta property="og:url" content="http://example.com/archives/2024/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -434,159 +434,19 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">
+            <a class="abstract-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">
                 
-                <span class="abstract-title-text">扩散模型——5.Classifier guidance</span>
+                <span class="abstract-title-text">Medical Diffusion Model——4.ALDM</span>
             </a>
             <div class="abstract-content">
-                本篇文章主要是对《Diffusion Models Beat GANs on Image Synthesis》文章的介绍以及笔记总结，另外介绍了该文章所改进的架构，使用了分类器指导思想以及上采样提高图像生成的分辨率。
+                多模态图像在医学图像分析的综合评估中发挥着至关的重要作用，为识别临床重要的生物标志物提供补充信息。然而，在临床实践中，由于扫描成本、有限的扫描时间和安全考虑等原因，获取多种模式可能具有挑战性。在本文中，我们提出了一种基于潜在扩散模型 (LDM) 的模型，该模型利用可切换块(switchable blocks)对3D医学图像进行图像到图像的转换，而无需进行补丁裁剪。3D LDM 与使用目标模态的调节相结合，可以在 3D 中生成高质量的目标模态，克服 2D 生成方法中丢失切片外信息的缺点。可切换块被称为多个可切换空间自适应归一化（MS-SPADE），它动态地将源潜伏转换为目标潜伏的所需风格，以帮助扩散过程。MS-SPADE 块允许我们使用一个模型来处理一种源模态到各种目标的许多翻译任务，从而消除了针对不同场景的许多翻译模型的需要。我们的模型在不同的源-目标模态场景中展示了成功的图像合成，并且在四种不同模态的多模态脑磁共振成像数据集和独立的 IXI 数据集上测试的定量评估中超越了其他模型。我们的模型展示了跨各种模态的成功图像合成，甚至允许一对多模态转换。此外，它在定量评估中优于其他一对一翻译模型。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">
-                
-                <span class="abstract-title-text">扩散模型代码篇1--Gaussian Diffusion</span>
-            </a>
-            <div class="abstract-content">
-                本篇是扩散模型实战代码编写的第一篇，写这篇文章的初衷是在复现DDPM时，有些公式不能在pycharm中很好的用文字表达出来。故想着在markdown上可以把代码与公式给对应起来，方便自己理解与查看。本篇第一篇是将编写扩散模型当中加噪、去噪、训练以及采样所需要的公式或函数。后续将会更新扩散模型所用到的UNet等编写。这个系列也会逐步更新一系列扩散模型的代码，尽请期待。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/12/13">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/27</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
-                
-                <span class="abstract-title-text">扩散模型——4.分数模型（SDEs）</span>
-            </a>
-            <div class="abstract-content">
-                本文依据《Score-Based Generative Modeling through Stochastic Differential Equations》的方法原理以及实验结论进行笔记以及总结。本篇文章先是介绍了何为分数以及基于朗之万动力学的采样过程。对后续的SDE模型的讲解进行一定的铺垫，文章提出了一个随机微分方程（SDE），通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相应的逆时间SDE，通过缓慢去除噪声将先验分布转换回数据分布。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/11/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
-                
-                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
-            </a>
-            <div class="abstract-content">
-                本文依据《Improved Denoising Diffusion Probabilistic Models》的方法原理以及实验结论进行笔记以及总结。本篇文章证明了通过一些修改，DDPM可以更快地采样并实现更好的对数似然，而对样本质量的影响很小。此外，作者还研究了 DDPM 如何随着可用训练计算量的变化而扩展，并发现更多的训练计算会带来更好的样本质量和对数似然。这些结果的结合使DDPM成为生成建模的一个有吸引力的选择，因为它们将良好的对数似然、高质量样本和相当快的采样与基础良好的固定训练目标结合起来，该目标可以通过训练计算轻松扩展。这些结果表明DDPMs是未来研究的一个有希望的方向。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/10/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要介绍扩散模型的加速采样的思想DDIM，本文依据《Denoising Diffusion Implicit Models》的公式推导，方法原理以及实验结论进行笔记以及总结。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
-                
-                <span class="abstract-title-text">扩散模型——1.从DDPM入门</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要介绍扩散模型的框架原理以及生成过程，是以DDPM为主进行介绍，让你对扩散模型有初步的了解。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/10/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/23</span>
+                <div class="abstract-date" title="Last updated: 2024/01/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/02</span>
                 </div>
                 <!-- tags -->
                 
@@ -595,10 +455,6 @@
         <div class="index-post-divider"></div>
     
     <!-- paginator  -->
-    
-        <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/2/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-        </nav>
     
 </main>
 
