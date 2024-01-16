@@ -19,22 +19,58 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、引言   磁共振（MR）和计算机断层扫描（CT）成像在医学诊断和治疗计划中发挥着关键和补充作用。 MR 提供卓越的软组织对比度，而 CT 通常是骨解剖扫描的首选。对于放射治疗，MR 扫描通常用于肿瘤定位和分割，而 CT 扫描提供电子密度信息用于计算放射治疗计划剂量。当前的临床实践通常将 MR 和 CT 作为单独的扫描来满足不同的需求，从而产生额外的成像时间、成像辐射剂量（来自 CT）和医疗费">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型—13.Video LDM">
-<meta property="og:url" content="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/index.html">
+<meta property="og:title" content="Medical Diffusion model——9.FDDM">
+<meta property="og:url" content="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="PhoenixPeng">
+<meta property="og:description" content="一、引言   磁共振（MR）和计算机断层扫描（CT）成像在医学诊断和治疗计划中发挥着关键和补充作用。 MR 提供卓越的软组织对比度，而 CT 通常是骨解剖扫描的首选。对于放射治疗，MR 扫描通常用于肿瘤定位和分割，而 CT 扫描提供电子密度信息用于计算放射治疗计划剂量。当前的临床实践通常将 MR 和 CT 作为单独的扫描来满足不同的需求，从而产生额外的成像时间、成像辐射剂量（来自 CT）和医疗费">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-26T02:04:36.000Z">
-<meta property="article:modified_time" content="2023-12-26T09:50:16.295Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401152104652.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161115466.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160845890.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160849630.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160855238.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160901786.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160903564.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160907646.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160914571.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160918285.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160922133.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160952973.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160955755.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161023464.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161112599.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161114876.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161118367.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161123331.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161124855.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161133753.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161138284.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161139321.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161141233.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161145406.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161150069.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161152606.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161153800.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161454388.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161457407.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161554141.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161555042.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161621993.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161621012.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161637825.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161637470.png">
+<meta property="article:published_time" content="2024-01-15T12:55:49.000Z">
+<meta property="article:modified_time" content="2024-01-16T08:41:50.772Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401152104652.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型—13.Video LDM · PhoenixPeng&#39;s blog</title>
+    <title>Medical Diffusion model——9.FDDM · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -262,7 +298,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型—13.Video LDM</a>
+                <a href="#" class="post-name">Medical Diffusion model——9.FDDM</a>
             </div>
         </div>
     
@@ -308,7 +344,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                扩散模型—13.Video LDM
+                Medical Diffusion model——9.FDDM
             <!-- 404 -->
             
         </h1>
@@ -336,7 +372,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/12/26</span>
+                    <span class="post-intro-time">2024/01/15</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -491,15 +527,236 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401152104652.png"></p>
+<h1 id="一引言">一、引言</h1>
+<p><font color="black" size="5">  磁共振（MR）和计算机断层扫描（CT）成像在医学诊断和治疗计划中发挥着关键和补充作用。
+MR 提供卓越的软组织对比度，而 CT
+通常是骨解剖扫描的首选。对于放射治疗，MR 扫描通常用于肿瘤定位和分割，而
+CT 扫描提供电子密度信息用于计算放射治疗计划剂量。当前的临床实践通常将 MR
+和 CT
+作为单独的扫描来满足不同的需求，从而产生额外的成像时间、成像辐射剂量（来自
+CT）和医疗费用。这些连续采集还会引入 MR/CT
+重合失调，从而影响解剖结构的对齐和定位。获取单一模态（例如MR）并通过数值方法将其转换为另一种模态（CT）（MR-to-CT翻译）的前景可以从根本上解决上述挑战。然而，由于
+MR 和 CT 扫描在图像强度和特征方面存在巨大差异，这种 MR 到 CT
+的转换仍然具有挑战性。</font></p>
+<p><font color="black" size="5">  目前主流的图像翻译方法通常基于生成对抗网络（GAN）或变分自动编码器（VAE)。这些方法在保留解剖结构（高忠实度）方面显示出优势。然而，它们存在许多问题，包括模式崩溃、鉴别器过早收敛或分辨率下降，从而影响翻译图像的质量（低真实感）。最近，扩散模型展示了卓越的生成能力，实现了令人印象深刻的
+Frechet 起始距离分数
+(FID)，用于衡量生成图像的真实度。代表性的扩散框架是去噪扩散概率模型（DDPM），它利用<strong>马尔可夫链蒙特卡罗（MCMC）过程逐步将高斯噪声添加到图像中，然后是映射噪声的学习反向扩散过程回到图像</strong>。然而，尽管具有潜力，扩散模型在医学图像应用中发现了重大挑战，特别是在图像转换过程中保持和维持解剖结构的完整性（低忠实度）。不断添加随机高斯噪声的前向扩散过程逐渐消除高空间频率的结构细节。这些结构信息对于医学诊断/治疗至关重要，并且反向扩散过程很难完全恢复。</font></p>
+<p><font color="black" size="5">  一般来说，扩散模型虽然擅长创建高度逼真的图像，但通常很难保持翻译后的解剖结构的忠实度。在不成对的成像数据集上开发扩散模型尤其困难，这些数据集缺乏良好对应的解剖结构的图像对来作为网络训练的额外线索。然而，在医学领域，未配对的数据集比配对的数据集更普遍且更容易获得。因此，非常需要一种能够从不成对的数据集（无监督学习）中学习准确的图像到图像转换的扩散模型。</font></p>
+<p><font color="black" size="5">  为了解决这一未满足的需求，作者提出了一种新颖的基于扩散模型的方法来实现无监督的图像到图像的翻译。该方法称为<strong>频率解耦扩散模型（FDDM）</strong>，<strong>利用医学图像的解耦空间频率信息来指导保留解剖结构的图像转换。</strong>FDDM由<strong>无监督变频模块</strong>和<strong>基于DDPM的扩散模型组成</strong>。无监督频率转换模块可以基于
+GAN 或 VAE，执行初始 MR 到 CT 转换。基于 GAN 或 VAE
+方法的优缺点，这种转换可以生成高解剖精度（忠实度）的 CT
+图像，但图像质量（真实感）较低。通过变频模块输出两路，一路为高频CT信息（如傅里叶域），另一路为全频CT信息。与解剖结构边界相关的高频
+CT 信息利用了基于 GAN 或 VAE
+的频率转换模块在保留解剖结构方面的优势，可用于调节后续的扩散模型以保留解剖结构。另一方面，<strong>全频
+CT
+被馈送到对应于以下扩散模型的前向扩散过程。前向扩散充当低通滤波器，捕获整体
+CT
+强度和语义内容</strong>。然后，扩散模型将其输出用作反向扩散的起始步骤，<strong>以高频
+CT 信息为条件，逐渐恢复 CT
+图像的中频信息</strong>。与无监督变频模块生成的原始全频CT相比，条件扩散模型生成的新CT提高了真实感和图像质量，同时保留了准确的解剖结构。</font></p>
+<p><font color="black" size="5">  总之，本文的主要贡献是： </font></p>
+<p><font color="black" size="5">  1️⃣引入了一种新颖的频率解耦扩散模型（FDDM），用于无监督的
+MR 到 CT 图像转换。 FDDM 在目标 CT 域中生成高度逼真的图像，同时保留源 MR
+域解剖结构的完整性。
+FDDM利用变频模块的结构保留能力和扩散模型的真实图像生成优势，实现了平移图像的高真实感和高忠实度。
+</font></p>
+<p><font color="black" size="5">  2️⃣理论证明扩散模型的前向扩散过程可以近似为低通滤波器，从频率转换模块提取的高频信息允许额外的解剖结构保存。此外，通过灵活的方案，可以选择性地将变频模块输出的低频和高频CT信息引入到扩散模型中，使模型进一步纠正其在最终平移的CT图像中的残余误差。
+</font></p>
+<p><font color="black" size="5">  3️⃣与现有最先进的方法（包括基于
+GAN、VAE 和其他扩散模型的方法）相比，FDDM 在 MR-toCT
+转换方面表现出了卓越的性能。</font></p>
+<h1 id="二方法">二、方法</h1>
+<p><font color="black" size="5">  给定源 MR 图像 s0 和目标 CT 图像
+x0，我们使用无监督频率转换模块将 MR 图像的高频和全频信息转换为 CT
+图像的对应信息。变频模块可以是基于 GAN 的，也可以是基于 VAE
+的，在结构保存方面表现出色。在 FDDM 的实现中，我们使用了 UNIT，一个基于
+VAE 的框架。随后，将变换后的全频 CT
+图像输入到前向扩散过程中，该过程充当低频信息提取的低通滤波器。扩散模型使用该低频信息作为反向扩散的起始步骤。反向扩散以来自频率转换模块的高频
+CT 信息为条件，生成最终的平移 CT
+图像。在下面的段落中，我们首先描述了扩散模型的基础知识和频率滤波器，并从理论上证明了扩散模型的前向扩散过程起到了低通滤波器的作用。然后我们描述了FDDM使用的基于具有周期一致性的VAE的MR-CT变频模块。继频率转换模块之后，我们介绍了
+FDDM
+中采用的独特、灵活的频率调节方案，以最大限度地提高平移图像的精度并纠正频率转换模块的残余误差。</font></p>
+<h2 id="用于频率解耦的扩散模型和滤波器"><font color="black" size="5">1.用于频率解耦的扩散模型和滤波器</font></h2>
+<p><font color="black" size="5">  接下来，在扩散模型的前向过程中，可以将
+<span class="math inline">\(\textcolor{blue}{x_t}\)</span>
+表示为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161115466.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{z}\)</span>代表高斯白噪声。在频谱中：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160845890.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{\mathcal{F}}\)</span>表示傅里叶变换，<span class="math inline">\(\textcolor{blue}{\mathcal{X}_t(u,v)}\)</span>、<span class="math inline">\(\textcolor{blue}{\mathcal{X}_0(u,v)}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{Z}(u,v)}\)</span>是相应的频域表示。对于高斯白噪声<span class="math inline">\(\textcolor{blue}{\mathcal{Z}(u,v)}\)</span>，期望和方差为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160849630.png"></p>
+<p><font color="black" size="5">  高斯白噪声的自相关函数可以表示为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160855238.png"></p>
+<p><font color="black" size="5">  假设 <span class="math inline">\(\textcolor{blue}{δ(τ_1, τ_2)}\)</span>
+代表狄拉克<span class="math inline">\(\textcolor{blue}{δ}\)</span>函数，高斯白噪声在所有频段上具有均匀的功率。在一般图像中，功率谱密度（PSD）与空间频率成反比：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160901786.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{k}\)</span> 和 <span class="math inline">\(\textcolor{blue}{a}\)</span>
+是缩放/修改因子。当图像中引入噪声时，噪声的 PSD 会与图像的 PSD
+相结合。因此，定义步骤<span class="math inline">\(\textcolor{blue}{t}\)</span>处的信噪比
+(SNR)：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160903564.png"></p>
+<p><font color="black" size="5">  由于<span class="math inline">\(\textcolor{blue}{\alpha_t}\)</span>
+随着扩散步长单调递减，因此当扩散步长<span class="math inline">\(\textcolor{blue}{t}\)</span>增加时，SNR
+会下降。给定阈值 SNR <span class="math inline">\(\textcolor{blue}{\phi}\)</span>，超出特定步骤<span class="math inline">\(\textcolor{blue}{t}\)</span>，仅保留低频信息：</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160907646.png" alt="1705367260219">
+<figcaption aria-hidden="true">1705367260219</figcaption>
+</figure>
+<p><font color="black" size="5">  如果我们将此步骤表示为<span class="math inline">\(\textcolor{blue}{\tilde{T}}\)</span>
+，则前向扩散反映了低通滤波器的效果：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160914571.png"></p>
+<p><font color="black" size="5">  近似地，我们可以将反向扩散视为反向低通滤波器：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160918285.png"></p>
+<p><font color="black" size="5">  对于 FDDM，采用高通滤波器（Sobel
+算子）来提取高频信息。该算子充当离散微分算子，有效计算图像的强度梯度以提取高频分量。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160922133.png" alt="1705368143194">
+<figcaption aria-hidden="true">1705368143194</figcaption>
+</figure>
+<p><font color="black" size="5">  基于用作低通滤波器的正向扩散过程的输出，可以提取低频CT信息作为反向扩散的扩散模型的起始步骤。同时，Sobel滤波器可以提取高频CT信息来调节反向扩散过程以保留解剖结构。在这方面，扩散模型可以仅在
+CT 域上进行训练，而不使用来自 MR
+域的任何信息。然而，由于MR的低频和高频信息与CT的低频和高频信息不匹配，因此我们需要在仅CT扩散模型之前通过另一个频率转换模块将MR的这些信息进一步转换为CT。</font></p>
+<h2 id="变频模块"><font color="black" size="5">2.变频模块</font></h2>
+<p><font color="black" size="5">  由于 MR 和 CT
+在全频谱上具有截然不同的信息，因此我们不能使用仅根据 CT
+信息训练的扩散模型将 MR 转换为 CT。然而，我们可以首先通过频率转换模块将
+MR 转换为 CT，然后从转换后的 CT 图像中提取低频和高频信息，输入到经过 CT
+训练的扩散模型中，以生成微调的 CT
+输出。我们基于广泛使用的具有循环一致性的 VAE
+框架构建了我们的变频模块。具体来说，我们的频率转换模块有两个编码器
+Es、Ex、两个解码器 Ds、Dx 和两个鉴别器
+Diss、Disx，基于两个编码器和两个解码器之间共享潜在空间 L 的假设，如图 2
+所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160952973.png"></p>
+<p><font color="black" size="5">  该潜在空间可以从每个域独立导出，并且可以从该潜在空间重新生成
+MR 和 CT
+的全频图像和高频图像。具体来说，我们假设存在以下函数：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401160955755.png"></p>
+<p><font color="black" size="5">  </font></p>
+<h2 id="通过灵活的频率调节最大限度地减少反向扩散误差"><font color="black" size="5">3.通过灵活的频率调节最大限度地减少反向扩散误差</font></h2>
+<p><font color="black" size="5">  通过变频模块得到CT的全频图像<span class="math inline">\(\textcolor{blue}{x_0}\)</span>和高频图像<span class="math inline">\(\textcolor{blue}{H_{x_0}}\)</span>后，通过<span class="math inline">\(\textcolor{blue}{x_0}\)</span>的前向扩散（低通滤波）进一步得到低频CT图像<span class="math inline">\(\textcolor{blue}{\tilde{x}_T}\)</span>。与传统的扩散模型设置相比，FDDM设计了频率信息调节方案，在反向扩散过程中灵活地引入和去除条件信息<span class="math inline">\(\textcolor{blue}{H_{x_0}}\)</span>，这有助于校正<span class="math inline">\(\textcolor{blue}{H_{x_0}}\)</span>的残余误差。为了通过反向扩散从噪声
+<span class="math inline">\(\textcolor{blue}{x_t}\)</span> 预测<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，<span class="math inline">\(\textcolor{blue}{x_{t−1}}\)</span>通过反向条件分布<span class="math inline">\(\textcolor{blue}{q_σ(x_{t−1}|x_t, x_0)}\)</span>
+生成，并带有中间预测的<span class="math inline">\(\textcolor{blue}{x_0}\)</span>。 <span class="math inline">\(\textcolor{blue}{σ}\)</span>表示调整更新方案的参数。基于DDIM，我们可以定义<span class="math inline">\(\textcolor{blue}{q_σ(x_{t−1}|x_t, x_0)}\)</span>
+为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161023464.png"></p>
+<p><font color="black" size="5">  反向扩散过程<span class="math inline">\(\textcolor{blue}{p^{(t)} _θ (x_{t−1}|x_t)
+}\)</span>是一个可训练的生成过程，它利用了<span class="math inline">\(\textcolor{blue}{q_σ(x_{t−1}|x_t,
+x_0)}\)</span>的知识</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161112599.png"></p>
+<p><font color="black" size="5">  根据方程
+5，我们可以通过以下方程预测给定&nbsp;<span class="math inline">\(\textcolor{blue}{x_t}\)</span> 的 <span class="math inline">\(\textcolor{blue}{x_0}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161114876.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\epsilon_\theta}\)</span>是我们的模型，在其训练过程中，可以引入高频信息<span class="math inline">\(\textcolor{blue}{H_{x_0}}\)</span>作为条件：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161118367.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161123331.png"></p>
+<p><font color="black" size="5">  我们通过以下变分推理目标优化 <span class="math inline">\(\textcolor{blue}{\theta}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161124855.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{[H_{\bar{x}_0}]}\)</span>
+表示<span class="math inline">\(\textcolor{blue}{H_{\bar{x}_0}}\)</span>
+在训练过程中对于模型来说是可选的。具体来说，我们随机放置 Hx0 或 −1
+值（无条件）。我们的反向条件分布包括是否添加高频信息，如下所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161133753.png"></p>
+<p><font color="black" size="5">  我们将 <span class="math inline">\(\textcolor{blue}{\bar{e}_t}\)</span> 和 <span class="math inline">\(\textcolor{blue}{e_t}\)</span> 定义为每个时间步
+<span class="math inline">\(\textcolor{blue}{t}\)</span>的反向扩散过程的误差项。这些术语衡量实际逆过程与我们模型的预测之间的差异，其中<span class="math inline">\(\textcolor{blue}{\bar{e}_t}\)</span>考虑了额外的高频信息<span class="math inline">\(\textcolor{blue}{H_{\bar{x}_0}}\)</span>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161138284.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161139321.png"></p>
+<p><font color="black" size="5">  然后在每一步确定最小误差项 <span class="math inline">\(\textcolor{blue}{e_{min}}\)</span>。由于我们使用高频信息作为条件，因此我们的反向扩散可以近似视为反向低通滤波器。我们假设存在<span class="math inline">\(\textcolor{blue}{\bar{T}}\)</span> ，当&nbsp;<span class="math inline">\(\textcolor{blue}{T}\)</span> &lt; <span class="math inline">\(\textcolor{blue}{\bar{T}}\)</span>时，<span class="math inline">\(\textcolor{blue}{e_t}\)</span>和&nbsp;<span class="math inline">\(\textcolor{blue}{\bar{e}_t}\)</span>
+之间的关系发生变化，如图 3 所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161141233.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161145406.png"></p>
+<p><font color="black" size="5">  在整个反向扩散步骤中，without/with&nbsp;<span class="math inline">\(\textcolor{blue}{H_{\bar{x}_0}}\)</span>
+的总误差定义为&nbsp;<span class="math inline">\(\textcolor{blue}{E}\)</span>
+和 <span class="math inline">\(\textcolor{blue}{\bar{E}}\)</span>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161150069.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{E_{min}}\)</span>是指整个反向扩散过程中误差最小化，如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161152606.png"></p>
+<p><font color="black" size="5">  推导表明，反向扩散过程中存在一个最佳步骤T，超过该步骤，放弃高频条件可以进一步减少平移图像中的误差，可以在测试时优化期间进行定制。总之，整个MR到CT的翻译过程如算法1所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161153800.png"></p>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size="5">  在本文的研究中，采用了 SynthRAD2023
+数据集1，其中包含各种神经影像扫描集合。该数据集总共包括 360 张 3D
+图像，其中 180 张脑部 CT 扫描和 180 张配准的 MR
+扫描来自三个不同的医院。</font></p>
+<p><font color="black" size="5">  <strong>实验设置</strong>，作者随机划分这些图像，留下
+18 对 CT 和 MR 病例作为测试集。其余 162 个配对 MR-CT
+集用于训练。每个病例都被处理为 2D 切片，从而产生 31,142 个 MR 和 31,142
+个 CT 切片用于训练，以及 3,417 个 MR 和 3,417 个 CT
+切片用于测试。为了模拟未配对（无监督）训练，作者重新排列切片并从训练数据集中删除配对信息。所有切片的大小均统一调整为
+256 × 256 像素的分辨率。对于 MR
+图像，我们应用了强度截断，删除了强度值的前 0.5%。对于 CT
+图像，这些图像中的 Hounsfield 单位 (HU) 值被截断为 [-1000, 1000]
+范围。然后所有图像都重新缩放为 [0, 1]。<strong>使用训练 MR 和 CT
+切片来训练频率转换模块</strong>，<strong>而仅使用训练 CT 切片集来训练仅
+CT 扩散模型</strong>。</font></p>
+<h2 id="与其他方法比较"><font color="black" size="5">1.与其他方法比较</font></h2>
+<p><font color="black" size="5">  表 1 对 FDDM
+与其他八种图像转换方法在 FID、SSIM 和 PSNR
+方面进行了定量比较。其中，GcGAN、CycleGAN、RegGAN是基于GAN的方法；
+UNIT和MUNIT是基于VAE的方法； SynDiff、SDEdit 和 EGSDE
+是基于扩散的方法。与 FDDM 相比，基于 GAN 和 VAE 的方法呈现出更差的 FID
+分数（更高的值），显示出这些方法在生成高度逼真的域图像方面面临的挑战。相比之下，这些方法在
+SSIM（一种结构相似性度量）中呈现出与 FDDM 类似的结果，符合 GAN 和 VAE
+擅长保留解剖结构（忠实性）的预期，但仍被 FDDM 超越。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161454388.png"></p>
+<p><font color="black" size="5">  FDDM
+的卓越性能凸显了其通过结合变频模块的结构保持优势和扩散模型的成像真实感优势，巧妙地保持生成图像的真实感和忠实度的能力（图
+4）。与依赖 CycleGAN 生成的 CT 的全频率信息来训练扩散模型的 SynDiff
+方法相比，FDDM 仅使用来自基于 GAN 或基于 VAE 的 MR-CT
+转换网络的选定频率信息，并填充其他信息通过在真实 CT
+图像上训练的扩散模型来获取，以提高图像的真实感。另一方面，证明FDDM灵活的频率调节设计不仅有助于填补缺失的频率信息，而且进一步改善了从变频模块传递过来的频率信息。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161457407.png"></p>
+<h2 id="扩散模型和高频调节的消融研究"><font color="black" size="5">2.扩散模型和高频调节的消融研究</font></h2>
+<p><font color="black" size="5">  FDDM
+集成了一种独特的方法，该方法使用 MR-CT
+频率转换模块输出的高频和低频信息来生成所有频率的最终 CT
+图像。高频和低频信息是扩散过程中关键的调节输入。为了了解这些输入的影响，我们进行了消融研究。表
+2 和图 5 总结了这些消融实验的结果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161554141.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161555042.png"></p>
+<p><font color="black" size="5">  作者首先直接测试了变频模块（无扩散）生成的全频图像的性能，如表
+2 中的 FDDM w/o Diffusion 所示。没有扩散模型，FDDM
+生成的结果更差，这表明 FDDM
+的输出基于VAE的变频模块还可以进一步改进。对于另一项引入扩散模型但去除高频信息调节的消融研究，FID
+显着改善，显示了使用扩散模型生成更真实图像的优势。然而，高频调节消融
+FFDM 的 SSIM 不如完整 FFDM
+模型，这表明使用高频调节保留解剖结构的好处。</font></p>
+<h2 id="前向扩散步骤的影响定制低通滤波器"><font color="black" size="5">3.前向扩散步骤的影响（定制低通滤波器）</font></h2>
+<p><font color="black" size="5">  对于FDDM，虽然扩散模型是用1000个正向和反向扩散步骤进行训练的，但是可以在测试期间定制这样的步骤数，以使扩散模型接受包含不同程度的噪声/信息的输入。我们可以调整前向扩散步骤来定制传递到后续扩散模型的低频信息量，以仅保留来自变频模块的关键和高保真信号以优化输出。过度的前向扩散（低通滤波）可能会导致关键信息的显着丢失，从而影响翻译精度，如图
+6
+所示。而使用太少的前向步骤可能会在扩散模型中引入过多的残余误差。因此，根据表
+3 中详细的测试，我们最终确定在测试时间 ̃ T 期间使用 500
+个步骤是最佳的，从而实现 FID 和 SSIM 之间的平衡。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161621993.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161621012.png"></p>
+<h2 id="高频条件步骤的影响"><font color="black" size="5">4.高频条件步骤的影响</font></h2>
+<p><font color="black" size="5">  理论上，反向扩散存在一个最佳步数T，超过这个步数，包含来自变频模块的不完善的高频信息可能会导致更多的误差，比起去除它。表
+4 中详述的实验表明，添加高频信息进行调节直至步骤 200 可实现 FID 和 SSIM
+之间的最佳平衡。此外，图 7
+提供了对延迟或提前停止添加高频信息的深入了解。这两种情况都会引入更多的错误，识别这个最佳步骤
+T
+对于最小化错误并提高最终生成图像的整体质量和忠实度至关重要。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161637825.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161637470.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  在这项研究中，我们引入了频率解耦扩散模型
+(FDDM)，这是一种在医学成像中进行不配对 MR 到 CT
+图像转换的新方法。通过结合基于 VAE
+的模型在结构保存方面的优势和扩散模型在高逼真图像生成方面的优势，FDDM
+实现了 MR 到 CT 转换的高保真度和真实感。 FDDM
+独特的频率解耦方法使其能够使用可靠的信息来调节扩散模型以保留解剖结构。低成本的测试时间扩散步数调整允许FDDM保留最佳数量的低频信息作为输入，并在某个点停止引入高频条件，以允许扩散模型进一步纠正残余高频误差来自变频模块。
+FDDM 的综合评估证明了其相对于最先进的 GAN、VAE 和扩散模型的优越性能。
+FDDM 可实现高质量、解剖学上准确的 MR 到 CT
+转换，促进更精确的疾病诊断、定位和治疗计划。</font></p>
+
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/</a>
-            <p>发表日期：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">December 26th 2023, 10:04:36 am</a>
-            <p>更新日期：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">December 26th 2023, 5:50:16 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/</a>
+            <p>发表日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">January 15th 2024, 8:55:49 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">January 16th 2024, 4:41:50 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -507,17 +764,12 @@
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/" title="扩散模型——14.VideoComposer">
-                    <div class="nextTitle">扩散模型——14.VideoComposer</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/" title="扩散模型——12.Video Diffusion Model">
-                    <div class="prevTitle">扩散模型——12.Video Diffusion Model</div>
+                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/" title="Medical Diffusion model——8.FGDM">
+                    <div class="prevTitle">Medical Diffusion model——8.FGDM</div>
                 </a>
             
         </li>
@@ -567,6 +819,21 @@
     <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
     <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
     
 </main>
 
@@ -672,7 +939,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E9%A2%91%E7%8E%87%E8%A7%A3%E8%80%A6%E7%9A%84%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%BB%A4%E6%B3%A2%E5%99%A8"><span class="toc-number">2.1.</span> <span class="toc-text">1.用于频率解耦的扩散模型和滤波器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%A2%91%E6%A8%A1%E5%9D%97"><span class="toc-number">2.2.</span> <span class="toc-text">2.变频模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E7%81%B5%E6%B4%BB%E7%9A%84%E9%A2%91%E7%8E%87%E8%B0%83%E8%8A%82%E6%9C%80%E5%A4%A7%E9%99%90%E5%BA%A6%E5%9C%B0%E5%87%8F%E5%B0%91%E5%8F%8D%E5%90%91%E6%89%A9%E6%95%A3%E8%AF%AF%E5%B7%AE"><span class="toc-number">2.3.</span> <span class="toc-text">3.通过灵活的频率调节最大限度地减少反向扩散误差</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83"><span class="toc-number">3.1.</span> <span class="toc-text">1.与其他方法比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%AB%98%E9%A2%91%E8%B0%83%E8%8A%82%E7%9A%84%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">3.2.</span> <span class="toc-text">2.扩散模型和高频调节的消融研究</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E5%90%91%E6%89%A9%E6%95%A3%E6%AD%A5%E9%AA%A4%E7%9A%84%E5%BD%B1%E5%93%8D%E5%AE%9A%E5%88%B6%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text">3.前向扩散步骤的影响（定制低通滤波器）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%A2%91%E6%9D%A1%E4%BB%B6%E6%AD%A5%E9%AA%A4%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">3.4.</span> <span class="toc-text">4.高频条件步骤的影响</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
