@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401221602919.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401221602418.png">
 <meta property="article:published_time" content="2024-01-10T13:27:32.000Z">
-<meta property="article:modified_time" content="2024-01-23T08:59:28.175Z">
+<meta property="article:modified_time" content="2024-01-24T01:08:18.946Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401151010724.png">
@@ -550,7 +550,7 @@ D}}\)</span>，我们在图像上运行尺寸为<span class="math inline">\(\tex
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401231641536.png"></p>
 <p><font color="black" size="5">  2️⃣<font color="blue" size="5"><strong>Temproal
 Encoder</strong></font>受factorized
-transformers的启发，作者<strong>将注意力模块分解为时间编码器和空间解码器</strong>，它们可以受益于高计算效率的远程时空注意力。<strong>时间编码器在同一空间索引中的所有token之间计算时间上的自注意力。</strong>具体来说，它采用未展平的token并将其重塑为<span class="math inline">\(\textcolor{blue}{h_{tmp} \in
+transformers的启发，作者<strong>将注意力模块分解为时间编码器和空间解码器</strong>，它们可以受益于高计算效率的远程时空注意力。<strong>时间编码器计算同一空间索引中的所有token之间的时间维度的自注意力。</strong>具体来说，它采用未展平的token并将其重塑为<span class="math inline">\(\textcolor{blue}{h_{tmp} \in
 R^{[\frac{W}{w}]\cdot[\frac{H}{h}]\cdot[\frac{D}{d}]×L×dim}}\)</span>，其中主要维度是批量维度。然后，它沿时间维度计算自注意力，MLP
 将 token 的维度减少 <span class="math inline">\(2^3\)</span>
 倍，并将其重塑为<span class="math inline">\(\textcolor{blue}{h_{tmp}^l
@@ -559,7 +559,7 @@ R^{[\frac{W}{2^lw}]\cdot[\frac{H}{2^lh}]\cdot[\frac{D}{2^ld}]×L×dim}}\)</span>
 transformer block <span class="math inline">\(\textcolor{blue}{l}\)</span>。</font></p>
 <p><font color="black" size="5">  3️⃣<font color="blue" size="5"><strong>Spatial
 Decoder</strong></font>将时间编码器的输出重塑为<span class="math inline">\(\textcolor{blue}{h_{spt}^l \in
-R^{[\frac{W}{2^lw}]\cdot[\frac{H}{2^lh}]\cdot[\frac{D}{2^ld}]×L×dim}}\)</span>，<strong>空间解码器计算同一空间中所有token之间对空间维度的自注意力时间索引。</strong>然后，对每个空间维度进行2倍上采样，得到<span class="math inline">\(\textcolor{blue}{h_{spt}^l \in
+R^{[\frac{W}{2^lw}]\cdot[\frac{H}{2^lh}]\cdot[\frac{D}{2^ld}]×L×dim}}\)</span>，<strong>空间解码器计算同一时间索引中所有token之间的空间维度的自注意力。</strong>然后，对每个空间维度进行2倍上采样，得到<span class="math inline">\(\textcolor{blue}{h_{spt}^l \in
 R^{L×[\frac{W}{2^{N-l}w}]\cdot[\frac{H}{2^{N-l}h}]\cdot[\frac{D}{2^{N-l}d}]×dim}}\)</span>。最后，我们将最后一块的输出展平并重塑为<span class="math inline">\(\textcolor{blue}{R^{[\frac{W}{w}]\cdot[\frac{H}{h}]\cdot[\frac{D}{d}]×L×dim}}\)</span>，并执行上采样和3D卷积运算以获得调节信号<span class="math inline">\(\textcolor{blue}{c \in R^{W\times H\times
 D}}\)</span>。</font></p>
 <p><font color="black" size="5">  由于 Transformer 可以mask token
@@ -635,7 +635,7 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">http://example.com/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/</a>
             <p>发表日期：<a href="http://example.com/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">January 10th 2024, 9:27:32 pm</a>
-            <p>更新日期：<a href="http://example.com/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">January 23rd 2024, 4:59:28 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">January 24th 2024, 9:08:18 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -644,7 +644,7 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/" title="Medical Diffusion model——6.SynDiff">
+                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="Medical Diffusion model——6.SynDiff">
                     <div class="nextTitle">Medical Diffusion model——6.SynDiff</div>
                 </a>
             
@@ -997,7 +997,50 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1244,7 +1287,7 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1260,8 +1303,26 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD/">扩散模型——16.ADD</a>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1273,19 +1334,19 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1312,7 +1373,7 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">扩散模型——15.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -1324,19 +1385,19 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">扩散模型—13.Video LDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
         </li>
     
         
@@ -1378,13 +1439,13 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/14</span>
-            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
         </li>
     
         
@@ -1432,7 +1493,7 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1--Gaussian Diffusion</a>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
         </li>
     
         
@@ -1476,14 +1537,14 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -1491,9 +1552,19 @@ SADM，并定量和定性地展示了最先进的性能。</font></p>
             扩散模型-图像翻译
         </span>
     
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-实战">

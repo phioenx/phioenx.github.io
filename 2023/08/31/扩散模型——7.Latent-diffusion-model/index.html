@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261145774.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261144113.png">
 <meta property="article:published_time" content="2023-08-31T01:26:34.000Z">
-<meta property="article:modified_time" content="2023-09-27T06:42:00.296Z">
+<meta property="article:modified_time" content="2024-02-28T11:50:18.634Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309260910295.png">
@@ -567,9 +567,9 @@ N}\)</span>。</font></p>
 <p><font color="black" size="5">  该模型由感知损失和patch-based对抗损失组合训练，其目标函数主要由三部分所组成：</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018436.png"></p>
 <ul>
-<li><font color="black" size="5">第一部分（紫色块）就是<strong>感知损失（<span class="math inline">\(L_{rec}\)</span>）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground
+<li><font color="black" size="5">🟣第一部分（紫色块）就是<strong>感知损失（<span class="math inline">\(L_{rec}\)</span>）</strong>，它是通过一个固定的网络（通常使用预训练的VGG16或者VGG19），分别以真实图像（Ground
 Truth）、网络生成结果（Prediciton）作为其输入，得到对应的输出特征：feature_gt、feature_pre，然后使用feature_gt与feature_pre构造损失（通常为L2损失），目的就是最小化feature_gt、feature_pre之间的差异，<strong>逼近真实图像与网络生成结果之间的深层信息</strong>，也就是感知信息，相比普通的L2损失而言，可以增强输出特征的细节信息。</font></li>
-<li><font color="black" size="5">第二部分（绿色块）就是<strong>基于patch的对抗损失（<span class="math inline">\(L_{adv}\)</span>）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，<strong>旨在区分真实图像和重建图像</strong>。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，而是引用来自VQGAN当中的对抗损失）。</font></li>
+<li><font color="black" size="5">🟢第二部分（绿色块）就是<strong>基于patch的对抗损失（<span class="math inline">\(L_{adv}\)</span>）</strong>，它就是引入了GAN当中的判别器，再训练的时候有一个对抗loss对先有的结构进行优化，<strong>旨在区分真实图像和重建图像</strong>。同时也要对判别器的判别loss进行优化（本文未给出具体的对抗损失公式，而是引用来自VQGAN当中的对抗损失）。</font></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181018414.png"></p>
 <blockquote>
@@ -577,10 +577,11 @@ Truth）、网络生成结果（Prediciton）作为其输入，得到对应的�
 L2 或 L1 损失）而引入的模糊。</font></p>
 </blockquote>
 <ul>
-<li><font color="black" size="5">第三部分（黄色块）是<strong>正则化损失项（<span class="math inline">\(L_{reg}\)</span></strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者介绍了两者不同的正则化方法：</font></li>
+<li><font color="black" size="5">🟡第三部分（黄色块）是<strong>正则化损失项（<span class="math inline">\(L_{reg}\)</span></strong>）其目的是<strong>为了避免任意的高方差的潜在空间</strong>，我个人的理解是使得潜在空间不要太过离谱/复杂而导致难以进行去噪。作者介绍了两者不同的正则化方法：</font></li>
 </ul>
 <p><font color="black" size="5"><strong>1)KL-reg:</strong>对学习到的潜在空间施加
-KL 惩罚，类似于VAE；</font></p>
+KL
+惩罚，类似于VAE；当生成的数据偏离预设分布时，KL-regularzation就会通过增加损失函数的值来提醒模型。</font></p>
 <p><font color="black" size="5"><strong>2)VQ-reg</strong>:在解码器内使用矢量量化层（使得空间为离散的）,通过学习|Z|个不同典范的codebook，用矢量量化层正则化潜在空间。（参考VQGAN）；</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309261059880.png"></p>
 <blockquote>
@@ -698,8 +699,8 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/</a>
-            <p>发表日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">八月 31日 2023, 9:26:34 上午</a>
-            <p>更新日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">September 27th 2023, 2:42:00 pm</a>
+            <p>发表日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">August 31st 2023, 9:26:34 am</a>
+            <p>更新日期：<a href="http://example.com/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">February 28th 2024, 7:50:18 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1061,7 +1062,50 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1308,7 +1352,7 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1324,8 +1368,26 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD/">扩散模型——16.ADD</a>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1337,19 +1399,19 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1376,7 +1438,7 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">扩散模型——15.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -1388,19 +1450,19 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">扩散模型—13.Video LDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
         </li>
     
         
@@ -1442,13 +1504,13 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/14</span>
-            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
         </li>
     
         
@@ -1496,7 +1558,7 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1--Gaussian Diffusion</a>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
         </li>
     
         
@@ -1540,14 +1602,14 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -1555,9 +1617,19 @@ Models，它通过预训练好的Autoencoder将图像转为潜在空间上的潜
             扩散模型-图像翻译
         </span>
     
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-实战">

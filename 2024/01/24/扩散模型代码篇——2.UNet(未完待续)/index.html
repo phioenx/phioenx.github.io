@@ -19,20 +19,22 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型——15.Video LCM">
-<meta property="og:url" content="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/index.html">
+    <meta name="description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     in_channels 输入张量的通道   mod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扩散模型代码篇——2.UNet">
+<meta property="og:url" content="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     in_channels 输入张量的通道   mod">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-26T13:05:14.000Z">
-<meta property="article:modified_time" content="2023-12-26T09:53:46.776Z">
+<meta property="article:published_time" content="2024-01-24T00:57:05.000Z">
+<meta property="article:modified_time" content="2024-02-26T07:59:04.089Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型——15.Video LCM · PhoenixPeng&#39;s blog</title>
+    <title>扩散模型代码篇——2.UNet · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -260,7 +262,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型——15.Video LCM</a>
+                <a href="#" class="post-name">扩散模型代码篇——2.UNet</a>
             </div>
         </div>
     
@@ -306,7 +308,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                扩散模型——15.Video LCM
+                扩散模型代码篇——2.UNet
             <!-- 404 -->
             
         </h1>
@@ -334,7 +336,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/12/26</span>
+                    <span class="post-intro-time">2024/01/24</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -489,249 +491,123 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><font color="black" size="5">  </font></p>
+        <h1 id="前言">前言</h1>
+<p><font color="black" size="5">  十分推荐下面两篇关于stable
+diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：</font></p>
+<p><font color="black" size="5">  <a target="_blank" rel="noopener" href="https://nn.labml.ai/zh/diffusion/stable_diffusion/index.html">稳定的扩散
+(labml.ai)</a></font></p>
+<p><font color="black" size="5">  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/613337342">Stable Diffusion
+原理介绍与源码分析（一） - 知乎 (zhihu.com)</a></font></p>
+<h1 id="unet_model">1.UNet_model</h1>
+<h2 id="unet函数的参数介绍"><font color="black" size="5">1、UNet函数的参数介绍：</font></h2>
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><font color="black" size="4">参数</font></th>
+<th style="text-align: center;"><font color="black" size="4">解释</font></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">in_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">输入张量的通道</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">model_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">模型的通道数量</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">out_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">输出张量的通道</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">num_res_blocks</font></td>
+<td style="text-align: center;"><font color="black" size="4">每个下采样的残差块数量</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">attention_resolution</font></td>
+<td style="text-align: center;"><font color="black" size="4">在几倍下采样时进行注意力操作。可以是一个集合、列表或元组。例如，如果其中包含4，那么在4倍下采样时将使用注意力。</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">dropout</font></td>
+<td style="text-align: center;"><font color="black" size="4">dropout的概率</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">channel_mult</font></td>
+<td style="text-align: center;"><font color="black" size="4">UNet每个级别的通道乘积倍数</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">conv_resample</font></td>
+<td style="text-align: center;"><font color="black" size="4">如果为True，则使用学习到的卷积进行上采样和下采样</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">dim</font></td>
+<td style="text-align: center;"><font color="black" size="4">输入图像是1D,2D,3D</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">num_classes</font></td>
+<td style="text-align: center;"><font color="black" size="4">如果指定为整数，则该模型将以num_classes个类别为条件。</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">use_checkpoint</font></td>
+<td style="text-align: center;"><font color="black" size="4">梯度检查点</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">num_heads</font></td>
+<td style="text-align: center;"><font color="black" size="4">每个注意力层中的注意力头数量</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">num_heads_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">如果指定，忽略num_heads,而是使用每个注意力头部的固定通道宽度</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">num_heads_upsample</font></td>
+<td style="text-align: center;"><font color="black" size="4">使用num_heads来设置上采样的头数。但已弃用。</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">use_scale_shift_norm</font></td>
+<td style="text-align: center;"><font color="black" size="4">使用类似FILM的调节机制</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">resblock_updown</font></td>
+<td style="text-align: center;"><font color="black" size="4">使用残差块进行上/下采样</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">use_new_attention_order</font></td>
+<td style="text-align: center;"><font color="black" size="4">使用不同的注意模式，可能会提高效率</font></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><font color="black" size="5">注：上面参数是参考LDM源码当中的UNet所用到的参数。不包含其他扩散模型所用的参数</font></p>
+</blockquote>
+<h2 id="def-init"><font color="black" size="5">2、def
+init：</font></h2>
+<p><font color="black" size="5">  先给一系列参数做定义：</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">self.image_size = image_size</span><br><span class="line">self.in_channels = in_channels</span><br><span class="line">self.model_channels = model_channels</span><br><span class="line">self.out_channels = out_channels</span><br><span class="line">self.num_res_blocks = num_res_blocks</span><br><span class="line">self.attention_resolutions = attention_resolutions</span><br><span class="line">self.dropout = dropout</span><br><span class="line">self.channel_mult = channel_mult</span><br><span class="line">self.conv_resample = conv_resample</span><br><span class="line">self.num_classes = num_classes</span><br><span class="line">self.use_checkpoint = use_checkpoint</span><br><span class="line">self.dtype = th.float16 <span class="keyword">if</span> use_fp16 <span class="keyword">else</span> th.float32</span><br><span class="line">self.num_heads = num_heads</span><br><span class="line">self.num_head_channels = num_head_channels</span><br><span class="line">self.num_heads_upsample = num_heads_upsample</span><br><span class="line">self.predict_codebook_ids = n_embed <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br></pre></td></tr></tbody></table></figure>
+<p><font color="black" size="5">  <strong>时间嵌入：</strong>该部分创建一个包含两个线性层和一个激活函数的神经网络模块，用于将输入数据映射到更高维度的表示。</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">time_embed_dim = model_channels * <span class="number">4</span></span><br><span class="line">self.time_embed = nn.Sequential(</span><br><span class="line">            linear(model_channels, time_embed_dim),</span><br><span class="line">            nn.SiLU(),</span><br><span class="line">            linear(time_embed_dim, time_embed_dim),</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+<h1 id="resblock">2.ResBlock</h1>
+<p><font color="black" size="5">  ResBlock网络结构图如下，它接受两个输入，图像x以及timestep对应的embedding：</font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<h1 id="attention">3.Attention</h1>
+<p><font color="black" size="5">  Stable
+Diffusion的注意力层主要由<font color="blue" size="5"><strong>SpatialTransformer</strong></font>所实现，它在接受图像作为输入时，还使用context
+文本作为condition信息，二者使用Cross Attention进行建模。</font></p>
+<blockquote>
+<p><font color="black" size="5">参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/zqx951102/article/details/108003808?ops_request_misc=&amp;request_id=&amp;biz_id=102&amp;utm_term=SpatialTransformer&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-108003808.142%5Ev99%5Epc_search_result_base8&amp;spm=1018.2226.3001.4187">Spatial
+Transformer Networks 空间变换网络 详解_spatial transformer
+networks.-CSDN博客</a>所介绍的，<strong>SpatialTransformer</strong>是为了使模型具有空间不变性，也就是如果网络能够对经过平移、旋转、缩放及裁剪等操作的图片得到与未经变换前相同的检测结果。则我们就可以说该模型具有空间不变性。具有空间不变性的模型能够得到更准确地分类结果。STN的输入也可以是CNN中间层的feature
+map。</font></p>
+</blockquote>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -793,9 +669,9 @@
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/</a>
-            <p>发表日期：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">December 26th 2023, 9:05:14 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">December 26th 2023, 5:53:46 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
+            <p>发表日期：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 24th 2024, 8:57:05 am</a>
+            <p>更新日期：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">February 26th 2024, 3:59:04 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -803,17 +679,12 @@
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/" title="Medical Diffusion Model——4.ALDM">
-                    <div class="nextTitle">Medical Diffusion Model——4.ALDM</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/" title="扩散模型——14.VideoComposer">
-                    <div class="prevTitle">扩散模型——14.VideoComposer</div>
+                <a href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="图像到图像翻译——2.MUNIT">
+                    <div class="prevTitle">图像到图像翻译——2.MUNIT</div>
                 </a>
             
         </li>
@@ -863,6 +734,21 @@
     <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
     <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
     
 </main>
 
@@ -968,7 +854,8 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#unet_model"><span class="toc-number">2.</span> <span class="toc-text">1.UNet_model</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#unet%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">1、UNet函数的参数介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#def-init"><span class="toc-number">2.2.</span> <span class="toc-text">2、def
+init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#resblock"><span class="toc-number">3.</span> <span class="toc-text">2.ResBlock</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#attention"><span class="toc-number">4.</span> <span class="toc-text">3.Attention</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1142,7 +1029,50 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1389,7 +1319,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1405,8 +1335,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD/">扩散模型——16.ADD</a>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1418,19 +1366,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1457,7 +1405,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">扩散模型——15.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -1469,19 +1417,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">扩散模型—13.Video LDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
         </li>
     
         
@@ -1523,13 +1471,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/14</span>
-            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
         </li>
     
         
@@ -1577,7 +1525,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1--Gaussian Diffusion</a>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
         </li>
     
         
@@ -1621,14 +1569,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -1636,9 +1584,19 @@
             扩散模型-图像翻译
         </span>
     
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-实战">

@@ -19,43 +19,33 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言   医学图像到图像的翻译旨在将图像从一个域转移到另一个域，同时保持结构的完整性。其中一个应用是CBCT到CT的翻译，这对放射治疗应用至关重要。最近，更多的图像翻译方法是基于生成对抗网络(GAN)或变分自编码器(VAE)。CycleGAN 广泛用于医学图像翻译任务，它通过两个相互竞争的神经网络进行学习，间接捕获信息以提供关于源域和目标域分布的隐式表示。然而，这种隐式表示容易学习偏差，包括鉴">
+    <meta name="description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Medical Diffusion model——8.FGDM">
-<meta property="og:url" content="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/index.html">
+<meta property="og:title" content="生成增强ct图像的相关论文1">
+<meta property="og:url" content="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言   医学图像到图像的翻译旨在将图像从一个域转移到另一个域，同时保持结构的完整性。其中一个应用是CBCT到CT的翻译，这对放射治疗应用至关重要。最近，更多的图像翻译方法是基于生成对抗网络(GAN)或变分自编码器(VAE)。CycleGAN 广泛用于医学图像翻译任务，它通过两个相互竞争的神经网络进行学习，间接捕获信息以提供关于源域和目标域分布的隐式表示。然而，这种隐式表示容易学习偏差，包括鉴">
+<meta property="og:description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161723601.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161942469.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170905773.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170906658.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170910592.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170913171.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170915754.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170919018.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170921078.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170928093.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170933319.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170939858.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170941032.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170956308.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170959850.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171009423.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171011457.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171013991.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171016797.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171018126.png">
-<meta property="article:published_time" content="2024-01-15T12:18:41.000Z">
-<meta property="article:modified_time" content="2024-01-17T02:47:27.407Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png">
+<meta property="article:published_time" content="2023-10-09T02:10:39.000Z">
+<meta property="article:modified_time" content="2024-01-12T04:51:42.332Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161723601.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Medical Diffusion model——8.FGDM · PhoenixPeng&#39;s blog</title>
+    <title>生成增强ct图像的相关论文1 · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -283,7 +273,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Medical Diffusion model——8.FGDM</a>
+                <a href="#" class="post-name">生成增强ct图像的相关论文1</a>
             </div>
         </div>
     
@@ -329,7 +319,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Medical Diffusion model——8.FGDM
+                生成增强ct图像的相关论文1
             <!-- 404 -->
             
         </h1>
@@ -357,7 +347,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/01/15</span>
+                    <span class="post-intro-time">2023/10/09</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -512,169 +502,98 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  医学图像到图像的翻译旨在将图像从一个域转移到另一个域，同时保持结构的完整性。其中一个应用是CBCT到CT的翻译，这对放射治疗应用至关重要。最近，更多的图像翻译方法是基于生成对抗网络(GAN)或变分自编码器(VAE)。CycleGAN
-广泛用于医学图像翻译任务，它通过两个相互竞争的神经网络进行学习，间接捕获信息以提供关于源域和目标域分布的隐式表示。然而，这种隐式表示容易学习偏差，包括鉴别器过早收敛和模式崩溃，从而影响合成图像的质量。</font></p>
-<p><font color="black" size="5">  最近，扩散模型被开发为一种新型的生成式AI方法，该方法可以生成具有优异Frechet
-Inception Distance
-(FID)的高质量图像。训练一个具有代表性的扩散模型去噪扩散概率模型(DDPM)，对不同程度的高斯噪声破坏的样本进行去噪。噪声损坏样本由称为前向扩散的马尔可夫链蒙特卡罗
-(MCMC)
-过程生成，通过随着高斯白噪声水平的增加而逐渐破坏图像。然后，基于损坏的图像，DDPM
-通过学习基于 Langevin
-动力学反转前向扩散过程（反向扩散），逐步去噪并将噪声转换为有意义的高质量图像。正向和反向扩散过程帮助DDPM学习图像的底层潜在空间和分布，并从学习的分布生成新的图像。</font></p>
-<p><font color="black" size="5">  考虑到扩散模型可以在全面的真实性和质量方面生成优于基于
-GAN
-的模型的图像，因此将扩散模型应用于医学图像翻译的兴趣不断增长。通过DDPM，我们可能会对源图像域进行正向扩散，并使用学习到的反向扩散将噪声损坏的图像转换为目标图像域，实现直接域平移。这样的策略已经在自然图像翻译中取得了成功，例如猫狗图像翻译，它只需要保留一些与领域无关的特征（姿势、颜色等）。然而，扩散模型在医学图像到图像翻译任务中的应用目前是有限的，因为它对源图像的正向扩散过程导致结构细节损失，这在反向去噪过程中不能完全恢复。翻译(合成)图像的几何和结构完整性对于外科规划和放疗等医疗应用尤其重要，因为医学图像具有丰富的准确的解剖细节，对于这两种程序都是至关重要的。</font></p>
-<p><font color="black" size="5">  为了保留结构信息，一些方法使用配对图像通过将源图像作为条件输入到反向扩散过程中来开发扩散模型，以约束目标域图像的解。然而，这种方法需要具有匹配解剖的精选源图像和目标图像对，由于扫描间解剖运动、成像成本、辐射剂量等，在医学成像中很难获得这些对。</font></p>
-<p><font color="black" size="5">  对于扩散模型，正向扩散过程可以被认为是一个低通滤波器(在第三章节会进行解释)。相比之下，医学图像中的解剖结构轮廓大多嵌入高频信息，通过正向扩散过程进行过滤。对于相同的解剖结构，如果两个图像域/批次之间的差异大多在傅里叶域的中间频率上，我们可能会在条件目标域图像生成之前从源图像域中提取高频信息作为结构。我们可以使用仅通过目标域图像训练的扩散模型来填充中间频率空位。对于CBCT-toCT平移问题，我们定量和定性地分析了CBCT和CT图像在频域上的差异，发现它们之间的主要差异处于中间频率，如图2所示。基于这种频域观测，我们设计了一种<strong>由高通滤波器和低通滤波器(受控正向扩散过程)联合引导的图像平移扩散模型，其中低通滤波器捕获强度和整体语义信息，高通滤波器捕获解剖细节。生成的频率引导扩散模型
-(FGDM)
-以高频信息和低频信息为条件，为医学图像翻译生成中间频率信息。</strong></font></p>
-<p><font color="black" size="5">  与 GAN 或 VAE 相比，FGDM
-提供了额外的好处，因为它仅使用来自目标域的数据来训练扩散模型以学习中间频率的分布。如果源域图像在两个频率端与目标域图像的末尾共享相似的信息，则得到的模型可用于来自不同源域的图像翻译（图
-2）。对源域的松散限制允许自然零样本翻译
-[14]，该模型可以应用于其他领域或分布中的源图像，而无需迁移学习或测试时间重新训练。据我们所知，我们是第一个在解剖水平上实现零样本医学图像翻译的扩散模型的人。本文的主要贡献总结如下：</font></p>
-<p><font color="black" size="5">  1️⃣我们提出了一种频率引导的扩散模型，通过使用低频和高频信息来指导中间频率信号的生成，实现了保留准确解剖信息的医学图像翻译。</font></p>
-<p><font color="black" size="5">  2️⃣我们管理和优化高通和低通滤波器以提取域不变特征信息。具体来说，我们两个滤波器的滤波阈值在测试阶段可以自由调整，以应对不同类型医学图像翻译任务的源域和目标域之间傅立叶空间中的不同域不变区域。</font></p>
-<p><font color="black" size="5">  3️⃣我们的模型在CBCT到CT翻译任务中取得了最好的性能，超过了所有其他最先进的(SOTA)基准模型，包括基于gan的方法、基于VAE和基于扩散的方法。</font></p>
-<h1 id="二方法">二、方法</h1>
-<p><font color="black" size="5">  我们的模型的概述如图 4 所示。FGDM
-可以将不可见的源域数据（CBCT）转换为目标域数据（CT）。对CBCT进行低通滤波和高通滤波，得到低频信息和高频信息作为扩散条件，通过反向扩散过程逐渐产生中频信息，得到最终的CT图像。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161723601.png"></p>
-<h2 id="低通滤波器low-pass-filter"><font color="black" size="5">1.低通滤波器（Low
-Pass Filter）</font></h2>
-<p><font color="black" size="5">  在本节中，我们将展示前向扩散过程可以被视为低通滤波器（LPF）。首先，我们将
-<span class="math inline">\(\textcolor{blue}{s_t(x, y)}\)</span>、<span class="math inline">\(\textcolor{blue}{i(x, y)}\)</span>和 <span class="math inline">\(\textcolor{blue}{z(x, y)}\)</span>
-分别设置为退化图像（在步骤 t
-处）、原始图像和高斯白噪声。我们可以将前向扩散过程视为具有由递减序列
-<span class="math inline">\(\textcolor{blue}{α_{1:t} \in (0,
-1]^T}\)</span>参数化的高斯转移的马尔可夫链。，其中前向过程的一个特殊属性可以从方程
-2 导出为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401161942469.png"></p>
-<p><font color="black" size="5">  相应地，我们可以将 <span class="math inline">\(\textcolor{blue}{s_t}\)</span> 表示为&nbsp;<span class="math inline">\(\textcolor{blue}{s_0}\)</span> 和噪声变量&nbsp;<span class="math inline">\(\textcolor{blue}{z}\)</span>
-的线性组合：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170905773.png"></p>
-<p><font color="black" size="5">  在频域中，可以表示为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170906658.png"></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{S_t(u,v)}\)</span>、<span class="math inline">\(\textcolor{blue}{I(u, v)}\)</span> 和 <span class="math inline">\(\textcolor{blue}{Z(u, v)}\)</span>分别是<span class="math inline">\(\textcolor{blue}{s_t(x, y)}\)</span>、<span class="math inline">\(\textcolor{blue}{i(x, y)}\)</span>和 <span class="math inline">\(\textcolor{blue}{z(x,
-y)}\)</span>的傅里叶变换。高斯白噪声的自相关函数（ACF）可以定义为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170910592.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{τ_1}\)</span> 和 <span class="math inline">\(\textcolor{blue}{τ_2}\)</span>
-表示滞后。在高斯白噪声的情况下，信号<span class="math inline">\(\textcolor{blue}{Z(u,
-v)}\)</span>是均值为零且方差为常数 <span class="math inline">\(\textcolor{blue}{σ^2}\)</span>
-的随机变量：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170913171.png"></p>
-<p><font color="black" size="5">  因此，高斯白噪声的自相关函数为：</font></p>
-<figure>
-<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170915754.png" alt="1705454120334">
-<figcaption aria-hidden="true">1705454120334</figcaption>
-</figure>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{δ(τ_1,
-τ_2)}\)</span>是狄拉克<span class="math inline">\(\textcolor{blue}{δ}\)</span>函数。因此，高斯白噪声的功率在所有频率上都是相同的。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170919018.png"></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  在一般图像中，功率谱密度（PSD）与空间频率的关系如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170921078.png"></p>
-<p><font color="black" size="5">  其中&nbsp;<span class="math inline">\(\textcolor{blue}{k}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{a}\)</span> 是缩放/修改因子，表示
-<span class="math inline">\(\textcolor{blue}{PSD(u, v)_I ∝ \frac{1}
-{∥(u,v)∥}}\)</span> 。当高斯白噪声添加到图像中时，噪声的 PSD
-会添加到图像的 PSD 中。如果<span class="math inline">\(PSD_I\)</span>
-是原始图像的功率，<span class="math inline">\(PSD_Z\)</span>
-是添加的高斯白噪声的功率，则步骤<span class="math inline">\(\textcolor{blue}{t}\)</span>中的信噪比（SNR）可以定义为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170928093.png"></p>
-<p><font color="black" size="5">  从方程19所示，<span class="math inline">\(SNR_t\)</span>随着<span class="math inline">\(\textcolor{blue}{\alpha_t}\)</span>增加。由于&nbsp;<span class="math inline">\(\textcolor{blue}{\alpha_t}\)</span> 是递减序列
-(<span class="math inline">\(\textcolor{blue}{α_t ∝
-\frac{1}{t}}\)</span>)，因此 <span class="math inline">\(SNR_t\)</span>
-和 <span class="math inline">\(\textcolor{blue}{t}\)</span>之间的关系可以建立为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170933319.png"></p>
-<p><font color="black" size="5">  从方程19所示，任何频率<span class="math inline">\(\textcolor{blue}{||(u，v)||}\)</span>处的<span class="math inline">\(SNR_t\)</span>也与该频率处原始信号的功率成正比，并且随着频率的增加而减小。</font></p>
-<p><font color="black" size="5">  因此，随着前向扩散步长 <span class="math inline">\(\textcolor{blue}{t}\)</span>的增加，<span class="math inline">\(SNR_t\)</span>减小，并且较高频率的信号更早受到影响。将<span class="math inline">\(\textcolor{blue}{\phi}\)</span>视为 SNR
-阈值，低于该阈值信息将完全损坏，并且根据低通滤波器所需的频率阈值 <span class="math inline">\(\textcolor{blue}{ψ}\)</span>，存在适当数量的步数
-<span class="math inline">\(\textcolor{blue}{t}\)</span>，超过该步数所有非低频信息都将丢失：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170939858.png"></p>
-<p><font color="black" size="5">  如果我们将这一步&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span> 表示为<span class="math inline">\(\textcolor{blue}{\tilde{T}}\)</span>，则前向扩散等于低通滤波器：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170941032.png"></p>
-<h2 id="高通滤波器high-pass-filter"><font color="black" size="5">2.高通滤波器（High
-Pass Filter）</font></h2>
-<p><font color="black" size="5">  作者使用 Sobel
-算子作为高通滤波器（HPF），它在技术上是一个离散微分算子，它计算图像强度函数的梯度以获得高频信息。具体来说，我们首先将图像分别与水平和垂直Sobel滤波器核<span class="math inline">\(\textcolor{blue}{K_x}\)</span>和<span class="math inline">\(\textcolor{blue}{K_y}\)</span>进行卷积，以获得滤波图像<span class="math inline">\(\textcolor{blue}{G_x}\)</span>和<span class="math inline">\(\textcolor{blue}{G_y}\)</span>。在图像中的每个点，可以使用以下方程组合所得的梯度近似值以给出梯度幅度。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170956308.png"></p>
-<p><font color="black" size="5">  然后通过阈值<span class="math inline">\(\textcolor{blue}{η}\)</span>得到高频信息<span class="math inline">\(\textcolor{blue}{H}\)</span>：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401170959850.png"></p>
-<h2 id="模型训练"><font color="black" size="5">3.模型训练</font></h2>
-<p><font color="black" size="5">  作者选择使用混合扩散模型，去噪扩散GAN
-作为主干网络，它采用一种特殊的 f 散度实例，称为软化反向 Kullback-Leibler
-散度（SRKL）。它能够用不到 8
-个步骤对图像进行采样，从而大大加快推理速度，而原始 DDPM 需要超过 1000
-个步骤。它可以比原始DDPM快数百倍的推理速度实现接近原始DDPM的性能。训练是通过使用对抗性损失来匹配条件去噪模型
-<span class="math inline">\(\textcolor{blue}{p_θ(s_{t−1}|s_t,
-H_η)}\)</span> 和 <span class="math inline">\(\textcolor{blue}{q(s_{t−1}|s_t)}\)</span>
-来制定的，该对抗性损失可最小化每个去噪步骤的发散 Dadv：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171009423.png"></p>
-<p><font color="black" size="5">  SRKL
-是一个与时间相关的判别器，它通过以下方程进行训练：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171011457.png"></p>
-<p><font color="black" size="5">  给定
-SRKL，我们通过以下方式训练条件去噪扩散模型：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171013991.png"></p>
-<h2 id="零样本图像翻译"><font color="black" size="5">4.零样本图像翻译</font></h2>
-<p><font color="black" size="5">  在零样本图像转换中，<strong>模型在训练时仅在目标域数据上进行训练，因为来自源域的图像在训练期间不可用。</strong>该模型需要直接响应来自训练期间未观察到的领域的样本。零样本方法通常通过某种形式的辅助信息将观察到的类和未观察到的类关联起来，而在
-CBCT 到 CT
-图像转换任务中，我们发现它们的低频和高频信息大致相同，主要区别在于中频信息。两种模态/域之间的图像翻译任务的描述如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171016797.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401171018126.png"></p>
-<h1 id="三实验">三、实验</h1>
-<h2 id="数据集和预处理"><font color="black" size="5">1.数据集和预处理</font></h2>
-<p><font color="black" size="5">  <font color="blue" size="5"><strong>头颈数据集：</strong></font>在头颈数据集上训练和测试了
-FGDM。头颈部数据集包含患者特定的 CT 和 CBCT 图像，分为 70 个训练案例、9
-个验证案例和 20 个测试案例，验证数据用于选择最佳性能检查点。
-CBCT图像的体素间距为<span class="math inline">\(0.51×0.51×1.99mm^3\)</span>，CT图像的体素间距为<span class="math inline">\(1.17×1.17×3.00mm^3\)</span>。所有图像均以HU值[-1000,1000]截取，并线性归一化至[0,1]。我们使用带有
-2D 切片的图像作为输入，所有切片大小调整为 192 ×
-192。为了测试，使用开源可变形图像配准工具箱将 CT 与 CBCT
-对齐，并将配准的 CT 图像用作评估图像翻译性能的参考。</font></p>
-<p><font color="black" size="5">  <font color="blue" size="5"><strong>肺部数据集：</strong></font>为了进一步测试我们模型的零样本能力，我们将在头颈
-CT 上训练的模型直接应用于肺部 CBCT 到 CT 的转换任务。我们总共收集了 18
-名患者的肺部 CBCT 和 CT
-图像，这些图像经历了与头颈部数据相同的预处理步骤，包括 HU
-值截取、线性归一化和切片大小调整。与头颈部数据集类似，每个患者的肺部 CT
-也变形配准到相应的 CBCT，作为评估参考。</font></p>
-<p><font color="black" size="5">  <font color="blue" size="5"><strong>处于危险中的器官
-(OAR)
-数据集：</strong></font>为了严格评估在具有挑战性和变化的条件下的性能，我们利用了美国医学物理学家协会
-(AAPM) 胸部自动分割重大挑战的处于危险中的器官 (OAR) 数据集。该数据集来自
-24 名患者，包含配对 CBCT 和解剖学 CT，包括食道、脊髓、心脏和肺。 OARs
-数据集的预处理与头颈数据集和肺部数据集类似，其中涉及将 HU 值截取到
-[-1000, 1000] 范围，然后线性归一化为 [0,1]。使用 2D
-切片作为输入，所有切片大小调整为 192 ×
-192。在评估中包含该数据集有助于进一步评估 FGDM
-在数据分布变化较多的场景中的稳健性和多功能性。</font></p>
-<p><font color="black" size="5">  <font color="blue" size="5"><strong>头部
-MR T1
-数据集：</strong></font>评估中使用的另一个数据集包括从两个不同存储库（中心）获取的头部
-MR T1 图像：神经反馈 Skullstripped (NFBS)1 存储库和 MICCAI 2020
-挑战：癌症传播的解剖脑屏障 (ABCs)2
-存储库。选择该数据集是为了反映跨中心图像翻译的现实需求，其中来自不同机构的数据可能由于不同的成像协议而有所不同，并且需要协调一致以进行集体分析。
-NFBS 数据集包含来自 125 名参与者的结构 T1
-加权和匿名（污损）图像。该集合充当 FGDM 训练的源域数据。 ABCs 数据集包含
-60
-名诊断为胶质母细胞瘤和低级别胶质瘤的患者，作为测试的目标域数据。对于预处理，我们将图像强度剪裁在第
-0 个百分位数和第 99
-个百分位数之间，以消除异常值并标准化图像的动态范围。然后，我们将图像标准化为
-[0,1] 并将所有切片的尺寸调整为 256 × 256。</font></p>
-<h2 id="实施细节"><font color="black" size="5">2.实施细节</font></h2>
-<p><font color="black" size="5">  我们通过标准 Adam
-优化器训练我们的模型，在余弦退火学习率调度器下使用 10−4
-的初始学习率，将最小学习率设置为 10−5。批量大小设置为 8，训练 200 个
-epoch。在我们的模型中，低频和高频的信号提取分别由前向扩散步数 T 和 Sobel
-滤波阈值
-η控制。为了训练一个对频率空间中源图像和目标图像之间的域不变区变化具有鲁棒性的模型，我们在训练过程中将
-η 随机化为 1-25
-的值，以提取不同级别的高频信号进行调节。对于低频信号，这种变化已经在逐步前向扩散过程中建立，我们可以通过改变测试源域图像上的前向扩散步数来直接进行测试时评估。在本研究中，在消融研究部分对这两个参数进行参数化研究后，我们选择
-η 为 10，<span class="math inline">\(\tilde{T}\)</span> 为 4
-作为我们的测试集。我们想指出的是，由于FGDM独特的设计，这种参数化研究是在测试阶段直接进行的，它对不同的数据输入具有高度的适应性和可调性，而不需要任何模型重新训练。所有网络都是使用
-Pytorch 库实现的，我们在 NVIDIA Tesla V100 GPU
-上运行了实验。所有用于比较的方法均使用其官方开源代码
-[4]、[11]、[12]、[22]、[24]、[25]，其中 SDEdit 和 EGSDE 的起始步数为
-200。</font></p>
+        <h1 id="synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</h1>
+<h2 id="一前言"><font color="black" size="5">一、前言</font></h2>
+<h3 id="ce-ct图像概述以及局限"><font color="black" size="5">1.CE-CT图像概述以及局限</font></h3>
+<p><font color="black" size="5">  目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（<strong>CE-CT</strong>）图像做临床诊断，例如肝癌。</font></p>
+<p><font color="black" size="5">  <strong>CE-CT</strong>也称多时相CT图像，它是由身体注入造影剂，再进行CT扫描所获得的。</font></p>
+<p><font color="black" size="5">  注射前的CT图像（<strong>NC-CT</strong>）一般也称作平扫图像，它是无需注射造影剂的CT扫描。</font></p>
+<p><font color="black" size="5">  注射造影剂后获得<strong>CE-CT</strong>图像，可分为三个阶段：动脉期（<strong>ART</strong>）、门静脉期（<strong>PV</strong>）和延迟期（<strong>DL</strong>）。</font></p>
+<p><font color="black" size="5">  简单的来说，不同类型的肝癌的肝脏局灶性病变（FLL）在平扫图像看，看不出什么区别。然而，它们在
+<strong>ART</strong> 和 <strong>PV</strong>
+阶段就能够表现出明显不同的视觉特征，这是放射科医生鉴别肝癌的主要标准。</font></p>
+<p><font color="black" size="5">  虽然<strong>CE-CT</strong>图像对肝癌的诊断有效，但由于造影剂注射和长时间成像，获得<strong>CE-CT</strong>图像会增加患者的身体负担。</font></p>
+<p><font color="black" size="5">  因此，本文的目标就是从
+<strong>NC</strong> 图像合成不同阶段的 <strong>CE-CT</strong>
+图像来解决上述问题。</font></p>
+<h3 id="gan"><font color="black" size="5">2.GAN</font></h3>
+<p><font color="black" size="5">  现有的生成模型有两个缺陷：</font></p>
+<p><font color="black" size="5">  第一：卷积神经网络（CNN）的感受野与其理论大小不一致，导致其捕获全局信息的性能较差。</font></p>
+<p><font color="black" size="5">  第二：在解码过程中，语义特征由深层向浅层传递，这不可避免地会导致信息丢失。</font></p>
+<p><font color="black" size="5">  为了解决上述缺点，作者提出了一种改进的条件生成对抗网络（改进的cGAN）并将其应用于合成高质量的CE-CT图像。更具体地说，为了解决第一个缺点，首先在图像合成任务中引入金字塔池模块（PPM），以提高编码器捕获全局信息的能力。</font></p>
+<p><font color="black" size="5">  除此之外，作者构建了一系列信息流路径（IFP）来连接PPM的输出和每个解码器单元，这可以有效防止解码过程中的信息稀释。此外，为了使解码器有效地集成不同的特征（即从PPM、先前的解码器单元和相应的编码器单元中提取的高级、中级和低级语义信息），我们设计了一种新颖的特征融合模块（FFM）。本文主要的贡献如下：</font></p>
+<p><font color="blue" size="5">  <strong>1）</strong>提出了一种新颖的图像合成框架，它可以从
+NC图像自动合成 ART 和 PV 阶段的 CE-CT 图像。</font></p>
+<p><font color="blue" size="5">  <strong>2）</strong>新设计的生成模型在
+PPM、IFP 和 FFM
+的帮助下，能够有效捕获全局和局部语义信息，并防止解码层中的信息稀释。</font></p>
+<h2 id="二方法"><font color="black" size="5">二、方法</font></h2>
+<h3 id="架构"><font color="black" size="5">1.架构</font></h3>
+<p><font color="black" size="5">  首先，让<span class="math inline">\(x_i\in X\)</span>和<span class="math inline">\(y_i\in
+Y\)</span>分别表示源域图像（NC）和目标域图像（ART或PV阶段的CE-CT图像）当中的训练图像。对于源域中给定的输入图像
+x，提出的改进 cGAN 旨在合成 CE-CT 图像 <span class="math inline">\(\hat{y}\)</span>，该图像应尽可能与真实的 CE-CT
+图像 y
+相似。所提出的改进cGAN由两个模型组成：鉴别器D和生成器G。生成器G以NC图像作为输入并生成相应的CE-CT图像。鉴别器
+D 学习区分其输入的类型：真实的或合成的 CE-CT 图像如图1所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png"></p>
+<p><font color="black" size="5">  首先，NC图像输入到编码器，编码器的前四层是在
+ImageNet 训练集上预训练的 ResNet，之后添加了两个卷积层。</font></p>
+<p><font color="black" size="5">  编码器的输出将被输入到 PPM
+中以形成新的特征向量，该向量将沿着 IFP 传递到解码器中的每个
+FFM。</font></p>
+<p><font color="black" size="5">  合成的 CE-CT 图像&nbsp;<span class="math inline">\(\hat{y}\)</span> 和真实的 CE-CT 图像 y
+将一起输入鉴别器 D。生成器 G 的目的是欺骗鉴别器 D。相反，鉴别器 D
+试图区分其输入的类型：真实的 CE-CT 图像或合成的 CE-CT
+图像。对于生成器G，这个过程可以描述如下:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png"></p>
+<p><font color="black" size="5">  为了稳定训练过程，我们利用带有梯度惩罚的
+WGAN 来训练 GAN 的判别器。判别器D的目标函数可以定义为方程2:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\hat{x}\)</span>是一个新样本，它是通过输入和合成
+CE-CT 图像之间的线性插值生成的</font></p>
+<p><font color="black" size="5">  为了保证生成的CE-CT图像<span class="math inline">\(\hat{y}\)</span>尽可能接近真实的CE-CT图像y，我们采用L1距离作为重建损失，其定义如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png"></p>
+<p><font color="black" size="5">  最后，生成器 G 的目标表述为方程
+4:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png"></p>
+<p><font color="black" size="5">  本文中λ1、λ2、λ3、λ4的系数分别为1、1、5、25。生成器
+G 和鉴别器 D 尝试分别最小化方程 4 和方程 2。</font></p>
+<h3 id="ppm"><font color="black" size="5">2.PPM</font></h3>
+<p><font color="black" size="5">  为了增强编码器捕获不同尺度语义特征的能力，我们将
+PPM
+引入到跨模态医学图像合成任务中。更具体地说，PPM的概述如图2所示，它可以有效地捕获不同尺度的语义信息。PPM的详细介绍可以参见《Pyramid
+scene parsing network》</font></p>
+<h3 id="ffm"><font color="black" size="5">3.FFM</font></h3>
+<p><font color="black" size="5">  语义特征在解码过程中从解码器的深层传递到浅层，这不可避免地导致特征丢失。为了充分利用语义特征，从
+PPM 中提取的特征将沿着 IFP 传递到解码器的每一层。
+IFP是一系列具有不同上采样率的上采样层。为了融合不同层次的特征，作者设计了一种新颖的FFM，如图3所示。从
+PPM
+和之前的解码器单元提取的特征将被馈送到串联层以形成中间特征。中间特征和从编码器单元提取的特征将一起输入注意门以形成最终特征向量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png"></p>
+<h2 id="三实验"><font color="black" size="5">三、实验</font></h2>
+<p><font color="black" size="5">  实验中使用的数据集是内部的对比增强CT数据集，并没有向外公开，使用NC-ART图像对和NC-PV图像对分别用于训练两个模型（即ART模型和PV模型），以分别合成ART图像和PV图像。对于测试，仅使用
+NC 图像作为输入来合成相应的 CE-CT 图像。</font></p>
+<p><font color="black" size="5">  在本文中，结构相似性指数（SSIM）和峰值信噪比（PSNR）用于评估合成图像和真实CE-CT图像之间的差异。为了定量评估合成图像中肿瘤区域的质量，我们计算了估计的CE-CT图像与真实CE-CT图像之间的密度特征的皮尔逊相关系数（PCC），它可以反映合成图像内平均像素密度的比率。病变到肝实质的平均像素密度。</font></p>
+<p><font color="black" size="5">  作者将他们所提出的模型与Pix2pix GAN
+和 Cycle GAN 在从 NC 图像合成 ART 和 PV 阶段的 CE-CT
+图像方面的性能进行了比较。不同的定量结果如下表所展示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png"></p>
+<p><font color="black" size="5">  图4显示了不同的定性结果，这表明从所提出的模型生成的CE-CT图像的FFL最接近真实的CE-CT图像。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png"></p>
+<p><font color="black" size="5">  所提出模型的PCC可视化如图5所示，进一步说明所提出的模型可以学习病变内部平均像素密度与肝实质平均像素密度的比率。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png"></p>
+<p><font color="black" size="5">  最后，作者进行了消融研究，以测试
+PPM、IFP 和提出的 FFM 在合成 CE-CT 图像中的贡献。定量结果如表 2
+所示。“模型 1”是我们的基线模型，编码器和解码器之间使用跳跃连接。
+“模型2”是我们在编码器和解码器之间添加金字塔池化模块。
+“模型3”是我们通过信息流路径在金字塔池化模块和解码器之间添加跳过连接。
+“建议模型”是完整模型。定量结果表明，通过引入 PPM、IFP 和提出的 FFM，在
+PSNR 和 SSIM 评分方面提高了合成 CE-CT 图像的质量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png"></p>
+<h1 id="contrast-phase-classification-with-a-generative-adversarial-network">《Contrast
+Phase Classification with a Generative Adversarial Network》</h1>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -998,394 +917,24 @@ Pytorch 库实现的，我们在 NVIDIA Tesla V100 GPU
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<h1 id="总结">总结</h1>
+<p><font color="black" size="5">  第一篇文章讲的是提出了一种改进的
+cGAN，它可以从 NC 图像生成高质量的 CE-CT
+图像，而无需注射造影剂。定量和定性实验结果表明，所提出的模型在
+PSNR、SSIM 和 PCC
+评分方面优于对比模型。除此之外，还进行了消融研究，分析金字塔池化模型、信息流路径和特征融合模型在合成
+CE-CT
+图像中的有效性。然而，为了获得ART和PV阶段的CE-CT图像，需要训练两个生成器模型，这增加了训练时间。作者也提出了未来会尝试通过生成器从
+NC 图像合成不同阶段的 CE-CT 图像。</font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/</a>
-            <p>发表日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">January 15th 2024, 8:18:41 pm</a>
-            <p>更新日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">January 17th 2024, 10:47:27 am</a>
+            <p>原文链接：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
+            <p>发表日期：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">October 9th 2023, 10:10:39 am</a>
+            <p>更新日期：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 12th 2024, 12:51:42 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1394,16 +943,16 @@ Pytorch 库实现的，我们在 NVIDIA Tesla V100 GPU
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/" title="Medical Diffusion model——9.FDDM">
-                    <div class="nextTitle">Medical Diffusion model——9.FDDM</div>
+                <a href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="BFNs——Bayesian Flow Networks">
+                    <div class="nextTitle">BFNs——Bayesian Flow Networks</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/" title="Medical Diffuison model——7.MIDiffusion">
-                    <div class="prevTitle">Medical Diffuison model——7.MIDiffusion</div>
+                <a href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/" title="Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation">
+                    <div class="prevTitle">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</div>
                 </a>
             
         </li>
@@ -1573,9 +1122,10 @@ Pytorch 库实现的，我们在 NVIDIA Tesla V100 GPU
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8low-pass-filter"><span class="toc-number">2.1.</span> <span class="toc-text">1.低通滤波器（Low
-Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8high-pass-filter"><span class="toc-number">2.2.</span> <span class="toc-text">2.高通滤波器（High
-Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">2.3.</span> <span class="toc-text">3.模型训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%B6%E6%A0%B7%E6%9C%AC%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91"><span class="toc-number">2.4.</span> <span class="toc-text">4.零样本图像翻译</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">1.数据集和预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%BB%86%E8%8A%82"><span class="toc-number">3.2.</span> <span class="toc-text">2.实施细节</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network"><span class="toc-number">1.</span> <span class="toc-text">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ce-ct%E5%9B%BE%E5%83%8F%E6%A6%82%E8%BF%B0%E4%BB%A5%E5%8F%8A%E5%B1%80%E9%99%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.CE-CT图像概述以及局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gan"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.GAN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ppm"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.PPM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ffm"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.FFM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.3.</span> <span class="toc-text">三、实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#contrast-phase-classification-with-a-generative-adversarial-network"><span class="toc-number">2.</span> <span class="toc-text">《Contrast
+Phase Classification with a Generative Adversarial Network》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1749,7 +1299,50 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1996,7 +1589,7 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -2012,8 +1605,26 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD/">扩散模型——16.ADD</a>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -2025,19 +1636,19 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -2064,7 +1675,7 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">扩散模型——15.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -2076,19 +1687,19 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">扩散模型—13.Video LDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
         </li>
     
         
@@ -2130,13 +1741,13 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/14</span>
-            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
         </li>
     
         
@@ -2184,7 +1795,7 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1--Gaussian Diffusion</a>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
         </li>
     
         
@@ -2228,14 +1839,14 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -2243,9 +1854,19 @@ Pass Filter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-lin
             扩散模型-图像翻译
         </span>
     
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-实战">

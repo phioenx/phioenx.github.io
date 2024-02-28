@@ -449,18 +449,102 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/10/14/Bayesian-Flow-Networks/">
+            <a class="abstract-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
                 
-                <span class="abstract-title-text">BFNs——Bayesian Flow Networks</span>
+                <span class="abstract-title-text">常见的图像评价指标</span>
             </a>
             <div class="abstract-content">
-                起初接触到这篇论文，还是我导师早上七点给我发的文章里面介绍的。但是为了自身更好的理解还是整理到了自身博客里面。本文介绍了
+                在看论文的实验当中总是会看到一些比较常见的图像评价指标，如：PSNR,SSIM,LPIPS。但总是看一遍忘一遍具体含义，加上之后的实验当中也可能需要这些指标去做评估，所以本文主要介绍这些常见的图像评价指标，并附上实验代码。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/10/31">
+                <div class="abstract-date" title="Last updated: 2024/02/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/27</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">
+                
+                <span class="abstract-title-text">扩散模型——8.Consistency Models</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型极大地推进了图像、音频和视频生成领域的发展，但它们依赖于迭代采样过程，导致生成缓慢。为了克服这个限制，我们提出了一致性模型，这是一个新的模型系列，通过直接将噪声映射到数据来生成高质量的样本。它们通过设计支持快速一步生成，同时仍然允许多步采样以牺牲计算量来换取样本质量。它们还支持零样本数据编辑，例如图像修复、着色和超分辨率，而无需对这些任务进行明确的培训。一致性模型可以通过提取预先训练的扩散模型来训练，也可以作为独立的生成模型来训练。通过大量实验，我们证明它们在一步采样和少步采样方面优于扩散模型的现有蒸馏技术。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/12/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/14</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/11/02/PredNet/">
+                
+                <span class="abstract-title-text">PredNet</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要是对《Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning》本文探索了视频序列中未来帧的预测作为学习视觉世界结构的无监督学习规则。提出了一种名为预测神经网络（“PredNet”）的架构，其灵感来自神经科学文献中的“预测编码”概念。这些网络学习预测视频序列中的未来帧，网络中的每一层都进行本地预测，并且仅将这些预测的偏差转发到后续网络层。我们表明，这些网络能够稳健地学习预测合成（渲染）对象的运动，并且在此过程中，网络学习内部表示，这些内部表示对于解码潜在对象参数（例如姿势）非常有用，这些参数支持以更少的时间进行对象识别。实验结果表明预测代表了无监督学习的强大框架，允许对对象和场景结构进行隐式学习。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/11/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/02</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
+                
+                <span class="abstract-title-text">BFNs——Bayesian Flow Networks</span>
+            </a>
+            <div class="abstract-content">
+                起初接触到这篇论文，还是我导师早上七点给我发的文章里面介绍的。但是为了自身更好的理解还是整理到了自身博客里面。本文介绍了一个新型的生成模型架构，但是类似于扩散模型
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/02/02">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/14</span>
                 </div>
                 <!-- tags -->
@@ -477,7 +561,7 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">
+            <a class="abstract-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
                 
                 <span class="abstract-title-text">生成增强ct图像的相关论文1</span>
             </a>
@@ -516,92 +600,8 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/15">
+                <div class="abstract-date" title="Last updated: 2024/01/30">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/07</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">
-                
-                <span class="abstract-title-text">Medical diffusion model——2.Med-DDPM</span>
-            </a>
-            <div class="abstract-content">
-                本文提出了一种利用扩散模型进行像素级可控 3D 医学图像合成的创新方法。该方法将分割掩模合并到扩散过程中，从而能够生成高分辨率、语义引导的 3D 医学图像。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/09">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/23</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">
-                
-                <span class="abstract-title-text">Medical diffusion model——1.Medfusion</span>
-            </a>
-            <div class="abstract-content">
-                在本文中，作者提出了 Medfusion，一种用于医学图像的条件潜在 DDPM。通过使用来自眼科、放射学和组织病理学的图像，将基于 DDPM 的模型与基于 GAN 的模型进行比较，并证明 DDPM 在所有相关指标上都击败了GAN。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/10/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
-                
-                <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
-            </a>
-            <div class="abstract-content">
-                本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，Latent Diffusion Models通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
                 </div>
                 <!-- tags -->
                 
@@ -972,7 +972,50 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1219,7 +1262,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 32
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1235,8 +1278,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD/">扩散模型——16.ADD</a>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1248,19 +1309,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1287,7 +1348,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Video-LCM/">扩散模型——15.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -1299,19 +1360,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.Video-LDM/">扩散模型—13.Video LDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
         </li>
     
         
@@ -1353,13 +1414,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/14</span>
-            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks/">BFNs——Bayesian Flow Networks</a>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
         </li>
     
         
@@ -1407,7 +1468,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/27</span>
-            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%871/">扩散模型代码篇1--Gaussian Diffusion</a>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
         </li>
     
         
@@ -1451,14 +1512,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -1466,9 +1527,19 @@
             扩散模型-图像翻译
         </span>
     
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-实战">
