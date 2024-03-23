@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成增强ct图像的相关论文1">
+<meta property="og:url" content="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="《Synthesizing Contrast-enhanced Computed Tomography Images with an Improved Conditional Generative Adversarial Network》 一、前言 1.CE-CT图像概述以及局限   目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（CE-CT）图像做临床诊断，例如肝癌。   CE-CT也称">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192028205.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192100916.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192119392.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192124200.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200846914.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200851908.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200910854.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200912184.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200926612.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200951251.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201010114.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201013429.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201031742.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201025066.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201041552.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201059428.png">
+<meta property="article:published_time" content="2023-10-09T02:10:39.000Z">
+<meta property="article:modified_time" content="2024-03-20T03:06:54.877Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>生成增强ct图像的相关论文1 · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">生成增强ct图像的相关论文1</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                生成增强ct图像的相关论文1
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2023/10/09</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</h1>
+<h2 id="一前言"><font color="black" size="5">一、前言</font></h2>
+<h3 id="ce-ct图像概述以及局限"><font color="black" size="5">1.CE-CT图像概述以及局限</font></h3>
+<p><font color="black" size="5">  目前在临床实践中广泛应用的是对比增强计算机断层扫描CT（<strong>CE-CT</strong>）图像做临床诊断，例如肝癌。</font></p>
+<p><font color="black" size="5">  <strong>CE-CT</strong>也称多时相CT图像，它是由身体注入造影剂，再进行CT扫描所获得的。</font></p>
+<p><font color="black" size="5">  注射前的CT图像（<strong>NC-CT</strong>）一般也称作平扫图像，它是无需注射造影剂的CT扫描。</font></p>
+<p><font color="black" size="5">  注射造影剂后获得<strong>CE-CT</strong>图像，可分为三个阶段：动脉期（<strong>ART</strong>）、门静脉期（<strong>PV</strong>）和延迟期（<strong>DL</strong>）。</font></p>
+<p><font color="black" size="5">  简单的来说，不同类型的肝癌的肝脏局灶性病变（FLL）在平扫图像看，看不出什么区别。然而，它们在
+<strong>ART</strong> 和 <strong>PV</strong>
+阶段就能够表现出明显不同的视觉特征，这是放射科医生鉴别肝癌的主要标准。</font></p>
+<p><font color="black" size="5">  虽然<strong>CE-CT</strong>图像对肝癌的诊断有效，但由于造影剂注射和长时间成像，获得<strong>CE-CT</strong>图像会增加患者的身体负担。</font></p>
+<p><font color="black" size="5">  因此，本文的目标就是从
+<strong>NC</strong> 图像合成不同阶段的 <strong>CE-CT</strong>
+图像来解决上述问题。</font></p>
+<h3 id="gan"><font color="black" size="5">2.GAN</font></h3>
+<p><font color="black" size="5">  现有的生成模型有两个缺陷：</font></p>
+<p><font color="black" size="5">  第一：卷积神经网络（CNN）的感受野与其理论大小不一致，导致其捕获全局信息的性能较差。</font></p>
+<p><font color="black" size="5">  第二：在解码过程中，语义特征由深层向浅层传递，这不可避免地会导致信息丢失。</font></p>
+<p><font color="black" size="5">  为了解决上述缺点，作者提出了一种改进的条件生成对抗网络（改进的cGAN）并将其应用于合成高质量的CE-CT图像。更具体地说，为了解决第一个缺点，首先在图像合成任务中引入金字塔池模块（PPM），以提高编码器捕获全局信息的能力。</font></p>
+<p><font color="black" size="5">  除此之外，作者构建了一系列信息流路径（IFP）来连接PPM的输出和每个解码器单元，这可以有效防止解码过程中的信息稀释。此外，为了使解码器有效地集成不同的特征（即从PPM、先前的解码器单元和相应的编码器单元中提取的高级、中级和低级语义信息），我们设计了一种新颖的特征融合模块（FFM）。本文主要的贡献如下：</font></p>
+<p><font color="blue" size="5">  <strong>1）</strong>提出了一种新颖的图像合成框架，它可以从
+NC图像自动合成 ART 和 PV 阶段的 CE-CT 图像。</font></p>
+<p><font color="blue" size="5">  <strong>2）</strong>新设计的生成模型在
+PPM、IFP 和 FFM
+的帮助下，能够有效捕获全局和局部语义信息，并防止解码层中的信息稀释。</font></p>
+<h2 id="二方法"><font color="black" size="5">二、方法</font></h2>
+<h3 id="架构"><font color="black" size="5">1.架构</font></h3>
+<p><font color="black" size="5">  首先，让<span class="math inline">\(x_i\in X\)</span>和<span class="math inline">\(y_i\in
+Y\)</span>分别表示源域图像（NC）和目标域图像（ART或PV阶段的CE-CT图像）当中的训练图像。对于源域中给定的输入图像
+x，提出的改进 cGAN 旨在合成 CE-CT 图像 <span class="math inline">\(\hat{y}\)</span>，该图像应尽可能与真实的 CE-CT
+图像 y
+相似。所提出的改进cGAN由两个模型组成：鉴别器D和生成器G。生成器G以NC图像作为输入并生成相应的CE-CT图像。鉴别器
+D 学习区分其输入的类型：真实的或合成的 CE-CT 图像如图1所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091123375.png"></p>
+<p><font color="black" size="5">  首先，NC图像输入到编码器，编码器的前四层是在
+ImageNet 训练集上预训练的 ResNet，之后添加了两个卷积层。</font></p>
+<p><font color="black" size="5">  编码器的输出将被输入到 PPM
+中以形成新的特征向量，该向量将沿着 IFP 传递到解码器中的每个
+FFM。</font></p>
+<p><font color="black" size="5">  合成的 CE-CT 图像&nbsp;<span class="math inline">\(\hat{y}\)</span> 和真实的 CE-CT 图像 y
+将一起输入鉴别器 D。生成器 G 的目的是欺骗鉴别器 D。相反，鉴别器 D
+试图区分其输入的类型：真实的 CE-CT 图像或合成的 CE-CT
+图像。对于生成器G，这个过程可以描述如下:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091129648.png"></p>
+<p><font color="black" size="5">  为了稳定训练过程，我们利用带有梯度惩罚的
+WGAN 来训练 GAN 的判别器。判别器D的目标函数可以定义为方程2:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091130944.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\hat{x}\)</span>是一个新样本，它是通过输入和合成
+CE-CT 图像之间的线性插值生成的</font></p>
+<p><font color="black" size="5">  为了保证生成的CE-CT图像<span class="math inline">\(\hat{y}\)</span>尽可能接近真实的CE-CT图像y，我们采用L1距离作为重建损失，其定义如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091133367.png"></p>
+<p><font color="black" size="5">  最后，生成器 G 的目标表述为方程
+4:</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091134444.png"></p>
+<p><font color="black" size="5">  本文中λ1、λ2、λ3、λ4的系数分别为1、1、5、25。生成器
+G 和鉴别器 D 尝试分别最小化方程 4 和方程 2。</font></p>
+<h3 id="ppm"><font color="black" size="5">2.PPM</font></h3>
+<p><font color="black" size="5">  为了增强编码器捕获不同尺度语义特征的能力，我们将
+PPM
+引入到跨模态医学图像合成任务中。更具体地说，PPM的概述如图2所示，它可以有效地捕获不同尺度的语义信息。PPM的详细介绍可以参见《Pyramid
+scene parsing network》</font></p>
+<h3 id="ffm"><font color="black" size="5">3.FFM</font></h3>
+<p><font color="black" size="5">  语义特征在解码过程中从解码器的深层传递到浅层，这不可避免地导致特征丢失。为了充分利用语义特征，从
+PPM 中提取的特征将沿着 IFP 传递到解码器的每一层。
+IFP是一系列具有不同上采样率的上采样层。为了融合不同层次的特征，作者设计了一种新颖的FFM，如图3所示。从
+PPM
+和之前的解码器单元提取的特征将被馈送到串联层以形成中间特征。中间特征和从编码器单元提取的特征将一起输入注意门以形成最终特征向量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091141011.png"></p>
+<h2 id="三实验"><font color="black" size="5">三、实验</font></h2>
+<p><font color="black" size="5">  实验中使用的数据集是内部的对比增强CT数据集，并没有向外公开，使用NC-ART图像对和NC-PV图像对分别用于训练两个模型（即ART模型和PV模型），以分别合成ART图像和PV图像。对于测试，仅使用
+NC 图像作为输入来合成相应的 CE-CT 图像。</font></p>
+<p><font color="black" size="5">  在本文中，结构相似性指数（SSIM）和峰值信噪比（PSNR）用于评估合成图像和真实CE-CT图像之间的差异。为了定量评估合成图像中肿瘤区域的质量，我们计算了估计的CE-CT图像与真实CE-CT图像之间的密度特征的皮尔逊相关系数（PCC），它可以反映合成图像内平均像素密度的比率。病变到肝实质的平均像素密度。</font></p>
+<p><font color="black" size="5">  作者将他们所提出的模型与Pix2pix GAN
+和 Cycle GAN 在从 NC 图像合成 ART 和 PV 阶段的 CE-CT
+图像方面的性能进行了比较。不同的定量结果如下表所展示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091452235.png"></p>
+<p><font color="black" size="5">  图4显示了不同的定性结果，这表明从所提出的模型生成的CE-CT图像的FFL最接近真实的CE-CT图像。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091457191.png"></p>
+<p><font color="black" size="5">  所提出模型的PCC可视化如图5所示，进一步说明所提出的模型可以学习病变内部平均像素密度与肝实质平均像素密度的比率。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091500804.png"></p>
+<p><font color="black" size="5">  最后，作者进行了消融研究，以测试
+PPM、IFP 和提出的 FFM 在合成 CE-CT 图像中的贡献。定量结果如表 2
+所示。“模型 1”是我们的基线模型，编码器和解码器之间使用跳跃连接。
+“模型2”是我们在编码器和解码器之间添加金字塔池化模块。
+“模型3”是我们通过信息流路径在金字塔池化模块和解码器之间添加跳过连接。
+“建议模型”是完整模型。定量结果表明，通过引入 PPM、IFP 和提出的 FFM，在
+PSNR 和 SSIM 评分方面提高了合成 CE-CT 图像的质量。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202310091502189.png"></p>
+<h1 id="virtual-contrast-enhancement-for-ct-scans-of-abdomen-and-pelvis">《Virtual
+contrast enhancement for CT scans of abdomen and pelvis》</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192028205.png"></p>
+<h2 id="一介绍"><font color="black" size="5">一、介绍</font></h2>
+<p><font color="black" size="5">  造影剂通常用于增强图像的诊断测试，例如磁共振成像（MRI）和计算机断层扫描（CT）,以突出显示血管、器官和其他结构。然而注射造影剂药物可能会给患者带来高风险。例如初次接触时的过敏反应、药理毒性不良反应、突破性反应、造影剂诱导的肾毒性等等。因此本文尝试<strong>采取直接从非造影CT生成虚拟造影增强CT</strong>该方案。</font></p>
+<p><font color="black" size="5">  但生成虚拟造影增强CT是存在很大的挑战，具体体现在如下几个方面：</font></p>
+<p><font color="black" size="5">  <strong>1. 增强前和增强后 CT
+扫描之间的错位：</strong>在临床评估中，每隔一段时间注射造影剂后获得造影后CT图像。姿势运动高度影响重复对比前和对比后增强
+CT 对的对齐。在增强前和增强后 CT
+对之间观察到两种主要类型的错位。第一种类型是脊状运动，与患者身体在特定方向上的位置移动有关。这种脊状运动可以通过增强的相关系数最大化通过仿射变换来对齐。第二类属于由身体运动（如肠道蠕动）和运动伪影引起的随机呼吸差异。器官位置和方向的变化很难通过图像配准方法来解决。由于基于人工智能的方法是数据驱动的，因此该偏差使任务具有挑战性，特别是在每像素的监督下。</font></p>
+<p><font color="black" size="5">  <strong>2.腹部和骨盆 CT
+扫描的复杂性：</strong>腹部和骨盆区域包含比大脑、脊柱和四肢更复杂的器官结构。从非对比域到对比后域的合成，从有限的数据中提取丰富的特征很容易导致模型过度拟合。</font></p>
+<p><font color="black" size="5">  本文提出了一种<strong>双路径生成对抗网络（GAN），通过保留纹理和增强像素强度，直接从非造影
+CT 合成虚拟造影增强
+CT。</strong>本文的主要贡献概括为以下三个方面：</font></p>
+<p><font color="black" size="5">  1️⃣从腹部和骨盆区域的非造影 CT
+自动生成动脉期、门静脉期和延迟期的虚拟造影增强 CT
+扫描。这是第一个探索所有三个对比阶段的工作。作者收集了腹部和骨盆区域 CT
+扫描数据集用于训练和测试，包括临床实践中常用的动脉期、门脉期和延迟期的造影前和造影后
+CT。</font></p>
+<p><font color="black" size="5">  2️⃣如图 2
+所示，本文提出了一种具有高分辨率生成器的基于双路径 GAN
+的框架。<strong>高分辨率层应用于生成器并跨多分辨率表示交换信息以进行高分辨率图像合成。</strong>为了利用重复的对比前和对比后增强
+CT
+对的错位，与每像素损失相比，应用感知损失来更好地处理错位，这可以学习对比的语义差异通过比较实际和虚拟对比增强
+CT 图像之间的高级特征表示来识别区域。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192100916.png" alt="image-20240319210027844">
+<figcaption aria-hidden="true">image-20240319210027844</figcaption>
+</figure>
+<p><font color="black" size="5">  3️⃣为了进一步改进增强细节，作者还设计了一种双路径训练模式，以同时学习<strong>全局路径网络的对比度增强区域</strong>和<strong>局部路径网络的细粒度细节之间的相关性</strong>。提出了一种自监督模式，通过采用大型公共国家肺部筛查试验（NLST）数据集（National，2011）来生成具有丰富特征提取的预训练模型，而无需额外注释。预训练模型有助于克服模型在有限数据下的过拟合问题。实验结果证明了直接从非造影
+CT 合成虚拟造影增强 CT 的最先进性能。</font></p>
+<h2 id="二方法-1"><font color="black" size="5">二、方法</font></h2>
+<p><font color="black" size="5">  如图2所示，本文提出了一种基于双路径
+GAN 的框架，从非造影 CT 生成虚拟造影增强
+CT。<strong>全局路径以三个连续的 CT
+切片作为输入来提取全局结构特征并输出一个虚拟对比 CT
+切片</strong>，<strong>而局部路径则以从 CT
+图像中划分出的四个块来提取详细的纹理特征。</strong></font></p>
+<h3 id="虚拟造影ct合成框架"><font color="black" size="5">1.
+虚拟造影CT合成框架</font></h3>
+<p><font color="black" size="5">  <strong>本文遵循条件生成对抗网络（cGAN）来学习从输入图像到输出图像的映射。</strong>对于具有轻微像素错位的细粒度对比度
+CT
+增强，我们的目标是通过结合像素级映射和域自适应来解决该问题。<strong>生成器
+G 学习非增强 CT 图像 <span class="math inline">\(\textcolor{blue}{x}\)</span> 和实际对比增强 CT
+图像 <span class="math inline">\(\textcolor{blue}{c}\)</span>&nbsp;之间的映射</strong>。通过根据<span class="math inline">\(\textcolor{blue}{x}\)</span>预测像素的对比度增强水平来合成虚拟对比度CT
+<span class="math inline">\(\textcolor{blue}{c'}\)</span>，同时<strong>训练鉴别器D以区分实际对比度增强CT图像<span class="math inline">\(\textcolor{blue}{c}\)</span>和虚拟对比度CT图像<span class="math inline">\(\textcolor{blue}{c'}\)</span>。</strong></font></p>
+<p><font color="black" size="5">  该框架的目标函数如下所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192119392.png"></p>
+<p><font color="black" size="5">  其中生成器 G
+旨在最小化目标，而判别器 D 则最大化目标。</font></p>
+<p><font color="black" size="5">  <strong>生成器：</strong>生成的增强
+CT 需要保留非增强 CT 的结构，并与实际增强 CT 一样突出显示身体结构。
+U-net是一个编码器-解码器网络，可用于图像合成。然而，<strong>跳跃连接、下采样和最大池化层会导致虚拟对比增强
+CT
+缺乏细节和过度平滑。</strong>因此，作者应用强大的骨干高分辨率网络（HRNet）通过跨多分辨率表示交换信息来保持高分辨率。图
+3 显示编码器网络通过多层反向传播来保留高分辨率特征和高语义特征。卷积块
+<span class="math inline">\(\textcolor{blue}{L(i)}\)</span> 与所有先前层
+<span class="math inline">\(\textcolor{blue}{L(i-k)}\)</span> 连接，其中
+<span class="math inline">\(\textcolor{blue}{k}\)</span> 在 <span class="math inline">\(\textcolor{blue}{(1, i-1)}\)</span>
+范围内。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403192124200.png"></p>
+<p><font color="black" size="5">  编码器网络包含卷积块 <span class="math inline">\(\textcolor{blue}{L_d}\)</span>，因为 <span class="math inline">\(\textcolor{blue}{d}\)</span> 指的是 <span class="math inline">\(\textcolor{blue}{L_d}\)</span>
+每个块中的网络深度（即网络层）。当前的卷积层 <span class="math inline">\(\textcolor{blue}{L_d(i)}\)</span>
+集成了先前层的特征。每个卷积块由 2 × 2 最大池化层、3 × 3
+内核大小的双卷积层和批量归一化组成，并以整流线性单元（ReLu）作为激活函数。在本文中，实现了五个卷积块。解码器网络采用跳跃连接策略，从高层到低层逐渐组合特征。为了保留非造影
+CT 的 CT
+图像结构，将输入图像与输出特征图连接起来，然后使用卷积层来优化图像强度级别的权重。</font></p>
+<p><font color="black" size="5">  <strong>判别器：</strong>如图3所示，判别器由以下部分组成：四个卷积（Conv）块，通道大小为（64、128、256、512），特征大小为（256×256、128×128、64×64、32×32）。每个块包含一个
+2D Conv 层，后面跟着一个 BatchNorm 层和斜率为 0.2 的 LeakyReLu。 Conv
+层将最后一个 Conv 块的特征展平为一维向量。将非造影 CT 域映射到虚拟造影
+CT 域可以被视为强度回归任务。通过比较以下两个特征图，应用 MSE 和
+BCEwithlogits 损失来优化鉴别器：（1）从输入 CT 中提取的特征图与实际增强
+CT 相连接，标记为 1； (2) 从输入 CT 中提取的特征图与虚拟 CT
+连接，标记为零。</font></p>
+<h3 id="使用预训练网络的感知损失"><font color="black" size="5">2.
+使用预训练网络的感知损失</font></h3>
+<p><font color="black" size="5">  <strong>预训练模型：</strong>提出了一种新颖的自监督训练策略来训练预训练模型，以进行丰富的语义和强度感知特征提取。如图4所示，首先，应用四级图像强度变换。非造影
+CT 图像乘以四个强度系数 (α) 级别 [0.5、1.0、1.5、2.0]，表示为四个类别
+[0、1、2、3]。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200846914.png"></p>
+<p><font color="black" size="5">  其次，引入借口任务训练来对这四个强度级别进行分类。主干网络结构与生成器相同，后面是三个全连接层和一个用于强度级别分类的
+Softmax 层。最后，排除最后三个全连接层。应用来自大型公共 NLST
+数据集（National，2011）的腹部和骨盆区域 CT
+进行训练，无需额外注释。这种预训练模型对强度方差敏感，可以提取丰富的对比度感知特征。损失函数如式（2）所示。
+</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200851908.png"></p>
+<p><font color="black" size="5">  其中，对于输入 CT 切片 <span class="math inline">\(\textcolor{blue}{c_j}\)</span>，通过乘以系数<span class="math inline">\(\textcolor{blue}{i}\)</span>将其转换为<span class="math inline">\(\textcolor{blue}{K}\)</span> 个图像强度 <span class="math inline">\(\textcolor{blue}{I}\)</span> 级别。分类网络 <span class="math inline">\(\textcolor{blue}{F(⋅ ∣I)}\)</span>
+学习强度特征。图像强度变换 <span class="math inline">\(\textcolor{blue}{G(c_j∣I)}\)</span> 将输入 CT
+变换为四个图像强度级别。</font></p>
+<p><font color="black" size="5">  <strong>感知损失：</strong>在图像风格转换中非常流行，它通过在特征级别测量图像之间内容和风格的感知差异来提供准确的结果。每像素目标函数（MSE
+和
+L1）可能会误导模型关注图像之间的结构偏差。相反，感知损失通过计算所有平方误差之和的平均值来衡量与高级特征的差异，并且比每像素损失更稳健。受人类视觉对图像强度变化的高度敏感性的启发，我们通过预训练模型比较多层特征图，应用感知损失来学习内容信息</font></p>
+<p><font color="black" size="5">  预训练模型从虚拟和实际对比 CT
+中提取特征。输入 CT 在最后四个卷积块处以 2 × 、 4 × 、 8 × 和 16 ×
+因子进行下采样。感知热图是通过对虚拟和实际对比 CT
+之间的特征水平差异进行平均而生成的，如图 5 所示。虚拟和实际对比 CT
+之间的对比区域在肾脏区域的感知热图中突出显示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200910854.png"></p>
+<p><font color="black" size="5">  生成器的目标函数描述为等式：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200912184.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{λ_1}\)</span> 是权重 MSE
+损失的超参数（在训练中设置为 1），<span class="math inline">\(\textcolor{blue}{j}\)</span> 指的是 (1, 4)
+范围内的第 <span class="math inline">\(\textcolor{blue}{j}\)</span>
+个卷积块</font></p>
+<h3 id="双路径培养方案"><font color="black" size="5">3.
+双路径培养方案</font></h3>
+<p><font color="black" size="5">  作者强调<strong>必须保留器官和增强区域的整体结构，以及血管和软组织的局部对比度增强细节</strong>。提出了双路径训练模式，允许网络同时学习局部和全局特征表示之间的相关性。全局路径的输入CT
+<span class="math inline">\(\textcolor{blue}{x}\)</span>（大小为N ×
+N）被分为四个小补丁[x1, x2, x3, x4]，局部路径的大小为<span class="math inline">\(\textcolor{blue}{N∕2 ×
+N∕2}\)</span>。从本地路径生成的四个虚拟 CT patches被组合为虚拟对比 CT
+<span class="math inline">\(\textcolor{blue}{c_{local}}\)</span>。全局路径生成虚拟造影CT图像<span class="math inline">\(\textcolor{blue}{c_{local}}\)</span>。生成器的最终目标函数结合了双路径的损耗，如式（4）所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200926612.png"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{λ_2}\)</span>和<span class="math inline">\(\textcolor{blue}{λ_3}\)</span>是调整双路网络权重的超参数（设置为0.6和0.4），<span class="math inline">\(\textcolor{blue}{G*}\)</span>指式（3）&nbsp;</font></p>
+<h2 id="三实验-1"><font color="black" size="5">三、实验</font></h2>
+<h3 id="数据的收集与预处理"><font color="black" size="5">1.
+数据的收集与预处理</font></h3>
+<p><font color="black" size="5">  <strong>Dataset
+collection：</strong>CT 检查使用双源多探测器 CT（Somatom Force 双源
+CT，西门子医疗解决方案，福希海姆，德国）进行。患者仰卧于手术台上。首先，使用
+192 × 0.6mm 的探测器配置、90 kVp 的管电流、277 mAs
+的质量参考，在吸气屏气时获得从肝顶到髂嵴的腹部预对比成像。静脉注射非离子造影剂350mg/ml（每公斤体重1.5ml，流速4ml/s）后，在腹腔干水平的腹主动脉开始推注追踪，阈值为100HU
+。使用基于衰减的管电流调制（CARE Dose 4D，西门子）获得扫描。</font></p>
+<p><font color="black" size="5">  该数据集包括动脉期、门脉期和延迟期的造影后的CT和造影前
+CT。共有 65
+名患者被分配参加该研究。训练和验证中，动脉期48例（5457张CT片），门脉期59例（6269张CT片），延迟期55例（5928张CT片）。选取5例（5名患者）590张CT片进行推断。</font></p>
+<p><font color="black" size="5">  <strong>Data
+processing：</strong>对比前和对比后CT扫描的数据处理和配对选择策略介绍如下。</font></p>
+<p><font color="black" size="5">  相应的CT片对选择：对比前后CT片配对的步骤如下。
+(1)根据表格位置选择相应的CT图像；
+(2)为同一病例、轴平面上同一台位置的CT切片分配唯一的ID。</font></p>
+<p><font color="black" size="5">  逐像素对齐：由于身体运动引起的CT错位，需要对CT图像对之间的错配进行校准，这极大地影响了优化过程。基于增强的相关系数最大化，采用仿射和平移变换来对齐对比前和对比后的
+CT 图像。此外，排除了错位非常大（大于 6
+个像素）的情况。选择具有最大重叠结构的造影前和造影后 CT 成对</font></p>
+<p><font color="black" size="5">  窗口大小选择：CT图像中应用亨斯菲尔德单位（HU）来表示测量的衰减系数的线性变换。
+HU 值范围从 1000（空气）到大约
+2000（非常致密的骨骼）。为了更好地分析腹部和骨盆区域，窗口宽度和窗口级别分别设置为
+400 和 30。</font></p>
+<h3 id="实施细节"><font color="black" size="5">2. 实施细节</font></h3>
+<p><font color="black" size="5">  <strong>Pretrained
+model：</strong>预训练模型采用了来自大型公共国家肺部筛查测试 (NLST)
+数据集的 41,589 个低剂量 CT 切片。通过应用 [0.5, 1.0, 1.5, 2.0] 系数，将
+CT 图像转换为四个 CT
+图像强度级别。训练的学习率设置为1e-4，并在8个epoch后下降0.1，由Adam优化器更新。总训练包括使用
+Pytorch 1.0 和 Python 2.7 在 GeForce GTX 1080 GPU 上进行 10
+个周期，批量大小为 2。</font></p>
+<p><font color="black" size="5">  <strong>Model training：</strong>CT
+大小调整为 256 × 256。三个连续的 CT 切片 (256 × 256 × 3) 模拟三个 RGB
+通道作为全局路径网络的输入。对于当前切片前后没有相邻切片的 CT
+扫描，将复制当前切片以填充空白。图2显示CT图像（256×256×3）被分为四个块（128×128×3）作为局部路径的输入。生成器由五个卷积块组成，输出维度设置为
+[32, 64, 128, 256, 512]。解码器网络遵循 U-Net 跳跃连接。最后一层的 32
+个通道与输入连接，后面是两个卷积层。生成器由预训练模型的权重初始化。对训练集和验证集应用
+5 倍验证，以选择给出最佳结果的超参数设置。训练期间，生成器的学习率设置为
+5e-5，鉴别器的学习率设置为 2e-4，40 个 epoch 后学习率降低 0.1，总共 50
+个 epoch，批量大小为 2。权重衰减设置为 5e-4。应用 Adam
+优化器用于优化。</font></p>
+<h3 id="放射科医生评估"><font color="black" size="5">3.
+放射科医生评估</font></h3>
+<p><font color="black" size="5">  如图 6
+所示，我们的框架和现有最先进方法（即不成对的图像到图像传输方法 CycleGAN&nbsp;
+和无监督对比损失 基于 GAN
+Park）的虚拟对比度增强结果。由两名放射科医生根据整体图像质量、器官和血管的图像质量和对比度增强进行盲目评估。成对的预增强
+CT 和实际增强 CT 以及预增强 CT 和虚拟增强 CT
+用于评估。定性评级基于5点李克特量表，评价分数为差1)、次优(2)、可接受(3)、良好(4)和优秀(5)。由于不同时相的虚拟增强CT图像需要模拟器官和血管的对比增强，与非增强CT图像相比，分数可以认为是“1”：与非增强CT图像没有明显变化，“2”
+：为轻度虚拟对比度增强，“3”：为中等虚拟对比度增强，“4”：为良好虚拟对比度增强，“5”：为非常好的虚拟对比度增强。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403200951251.png"></p>
+<p><font color="black" size="5">  放射科医生对"ours"的结果的平均评估为“3”（见图
+6）。请注意，对于动脉期，该框架是通过主要突出动脉血管结构的 CT
+图像进行训练的。因此，随着观察到动脉的对比度增强更多，评估分数稍高。我们的方法在所有评估方面都优于
+CycleGAN)和 ContrastiveGAN 。尽管基于对比损失的 GAN
+在动脉期和门脉期取得了与我们提出的方法相当的结果，但由于延迟期需要详细的对比增强尿路区域，我们的方法在生成更精确的结果方面远远超过了其他两种方法细节增强和更高的图像质量。</font></p>
+<h3 id="与最先进的方法相比"><font color="black" size="5">4.
+与最先进的方法相比</font></h3>
+<p><font color="black" size="5">  对四个指标的定量评估用于比较虚拟和实际的对比增强
+CT。</font></p>
+<p><font color="black" size="5">  1️⃣<strong>峰值信噪比 (PSNR)
+：</strong>测量体素方面的差异。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>结构相似度指数（SSIM）：</strong>根据非局部结构相似度评估图像质量。</font></p>
+<p><font color="black" size="5">  3️⃣<strong>平均绝对误差
+(MSE)</strong> 和<strong>空间不均匀性
+(SNU)</strong>：测量对比度增强精度。</font></p>
+<p><font color="black" size="5">  表 1
+显示了所提出方法的性能，并与动脉期 (AP)、门静脉期 (PP) 和延迟期 (DP)
+的最新技术进行了比较。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201010114.png"></p>
+<p><font color="black" size="5">  与 CycleGAN 和 ContrastiveGAN
+相比，所提出的方法在某些阶段的 PSNR 和 SSIM
+性能略低。然而，PSNR和SSIM不能单独代表对比度增强区域的性能。 SNU 和 MSE
+计算虚拟图像的对比度质量，并证明我们的方法在所有对比度增强阶段都优于其他方法。图
+7 更好地体现了所提出方法的优点。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201013429.png"></p>
+<p><font color="black" size="5">  图 7 显示了"ours"提出的框架（图
+7(e)）与对比 GAN（图 7(c)）和 CycleGAN（图
+7(d)）相比的对比度增强细节。在动脉期观察到动脉血管结构主要增强。在门脉期，可观察到器官实质和静脉血管结构（如门静脉和肝静脉）。在延迟阶段，当器官和血管逐渐消失时，尿液中造影剂的排泄会突出尿路。</font></p>
+<p><font color="black" size="5">  与其他方法相比，我们的结果更清晰并且没有像素化。非增强组织更加清晰可见。所提出的像素级映射显示了生成细粒度增强区域的优势。
+CycleGAN 和 Contrastive GAN
+在细节方面表现出较差的增强效果，或者无法预测虚拟对比 CT
+增强效果，尤其是在门脉期和延迟期。</font></p>
+<h3 id="消融研究"><font color="black" size="5">5. 消融研究</font></h3>
+<p><font color="black" size="5">  本节描述感知损失、双路径训练模式和判别器的消融研究。定量和定性评价如表2和图8所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201031742.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201025066.png"></p>
+<blockquote>
+<p><font color="black" size="5">注：(a) 对比前 CT。 (b) 实际的对比增强
+CT。 (c) 没有鉴别器的虚拟增强 CT。 (d) 仅进行全局路径训练的虚拟增强 CT。
+(e) 无知觉损失的虚拟增强 CT。 (f) 拟议的虚拟增强 CT。</font></p>
+</blockquote>
+<p><font color="black" size="5">  
+<strong>对抗性监督的有效性：</strong>每像素 MSE 和 L1
+损失可能会忽略高频特征和过度平滑的纹理细节。在表 2
+所示的所有评估指标上，对抗性监督优于没有判别器的模型，特别是对于 MSE 和
+SNU。如图8所示，与没有鉴别器的方法（图8（c））相比，我们提出的方法（图8（f））在虚拟对比CT上显示出更准确的强度增强和更高的分辨率。</font></p>
+<p><font color="black" size="5">  <strong>感知损失的有效性：</strong>表
+2
+显示，所提出的模型在所有评估指标上都优于没有感知损失的模型。与没有感知损失的情况相比（图8（d）），图8（f）显示出更好的增强效果和更少的伪影，证明了通过虚拟和实际增强CT之间的特征级别差异进行内容学习的好处。</font></p>
+<p><font color="black" size="5">  <strong>双路径方案的有效性：</strong>实验评估有和没有双路径训练方案的模型。图
+8 显示，在具有和不具有双路径模式的模型生成的虚拟增强 CT
+中，主动脉得到了很好的增强。然而，图 8(e)
+显示仅使用全局路径网络训练的模型未充分增强肾脏区域（由红色箭头突出显示）。图
+8（f）展示了双路径模式的虚拟对比 CT
+成功突出了详细的肾脏区域。表2表明，在所有评估分数上，使用双路径训练模式训练的模型都显着优于仅使用全局路径网络的模型，尤其是对于SNU。</font></p>
+<p><font color="black" size="5">  此外，1️⃣图 9 显示了基线模型（图
+9(i)）、2️⃣具有预训练权重和感知损失的建议模型（图
+9(ii)）以及3️⃣具有预训练权重、感知损失的建和双路径策略的模型（图
+9(iii))。</font></p>
+<p><font color="black" size="5">  训练损失（图9（i）上图）表明基线网络很难收敛，需要提前停止。</font></p>
+<p><font color="black" size="5">  图9（ii）上图证实了使用预训练权重初始化的模型，感知损失很容易收敛并有效地学习对比增强特征。通过使用预训练模型、感知损失和双路径策略进行训练（图
+9(iii) 上图），模型表现出更好的收敛性。</font></p>
+<p><font color="black" size="5">  所提出模型的验证损失显示验证和训练之间的差距很小（图
+9(ii) 和 (iii) 下图）。图 9(iii) 显示通过训练 50 个
+epoch，损失曲线很好地收敛。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201041552.png" alt="image-20240320104137829">
+<figcaption aria-hidden="true">image-20240320104137829</figcaption>
+</figure>
+<h3 id="剩下的挑战"><font color="black" size="5">6.
+剩下的挑战</font></h3>
+<p><font color="black" size="5">  图10将虚拟对比CT合成的剩余局限性总结为以下三个方面：（1）<strong>增强效果差、斑片状、不充分，即对比度不足</strong>；
+(2) <strong>不必要的增强，出现伪影</strong>； (3)
+<strong>不应对区域进行增强。</strong></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201059428.png"></p>
+<p><font color="black" size="5">  两个主要挑战导致了这些限制：首先，<strong>非增强-增强CT对会对生理运动的错位会严重影响增强的准确性</strong>，尤其是在延迟期。尽管前置步骤排除了具有较大错位的
+CT 对，并应用仿射变换将错位限制在 3
+个像素内，但一些剩余的错位仍然与伪影和不必要的增强相关。其次，<strong>腹部和骨盆区域由复杂的器官和解剖结构组成。缺乏训练样本会导致一些虚拟造影CT的增强效果不满意或没有细节增强。</strong></font></p>
+<h1 id="总结">总结</h1>
+<p><font color="black" size="5">  第一篇文章讲的是提出了一种改进的
+cGAN，它可以从 NC 图像生成高质量的 CE-CT
+图像，而无需注射造影剂。定量和定性实验结果表明，所提出的模型在
+PSNR、SSIM 和 PCC
+评分方面优于对比模型。除此之外，还进行了消融研究，分析金字塔池化模型、信息流路径和特征融合模型在合成
+CE-CT
+图像中的有效性。然而，为了获得ART和PV阶段的CE-CT图像，需要训练两个生成器模型，这增加了训练时间。作者也提出了未来会尝试通过生成器从
+NC 图像合成不同阶段的 CE-CT 图像。</font></p>
+<p><font color="black" size="5">  第二篇则是通过基于 GAN
+的框架直接从腹部和骨盆的非对比 CT 扫描生成虚拟对比增强 CT
+的概念。提出了一种双路径训练策略来保持高级结构特征和局部纹理特征，以产生具有细节的真实虚拟对比CT。使用对比感知预训练模型进行感知损失，以比较虚拟对比
+CT 和实际对比增强 CT
+之间的特征水平差异。所提出的框架成功地预测了虚拟增强CT密度，同时保留了非增强图像的结构信息，并取得了良好的性能，并在临床应用中展现了良好的潜力。</font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/</a>
+            <p>发表日期：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">October 9th 2023, 10:10:39 am</a>
+            <p>更新日期：<a href="http://example.com/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">March 20th 2024, 11:06:54 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="BFNs——Bayesian Flow Networks">
+                    <div class="nextTitle">BFNs——Bayesian Flow Networks</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/" title="Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation">
+                    <div class="prevTitle">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#synthesizing-contrast-enhanced-computed-tomography-images-with-an-improved-conditional-generative-adversarial-network"><span class="toc-number">1.</span> <span class="toc-text">《Synthesizing
+Contrast-enhanced Computed Tomography Images with an Improved
+Conditional Generative Adversarial Network》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ce-ct%E5%9B%BE%E5%83%8F%E6%A6%82%E8%BF%B0%E4%BB%A5%E5%8F%8A%E5%B1%80%E9%99%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.CE-CT图像概述以及局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gan"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.GAN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ppm"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.PPM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ffm"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.FFM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.3.</span> <span class="toc-text">三、实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#virtual-contrast-enhancement-for-ct-scans-of-abdomen-and-pelvis"><span class="toc-number">2.</span> <span class="toc-text">《Virtual
+contrast enhancement for CT scans of abdomen and pelvis》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95-1"><span class="toc-number">2.2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E9%80%A0%E5%BD%B1ct%E5%90%88%E6%88%90%E6%A1%86%E6%9E%B6"><span class="toc-number">2.2.1.</span> <span class="toc-text">1.
+虚拟造影CT合成框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%A2%84%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C%E7%9A%84%E6%84%9F%E7%9F%A5%E6%8D%9F%E5%A4%B1"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.
+使用预训练网络的感知损失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E8%B7%AF%E5%BE%84%E5%9F%B9%E5%85%BB%E6%96%B9%E6%A1%88"><span class="toc-number">2.2.3.</span> <span class="toc-text">3.
+双路径培养方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C-1"><span class="toc-number">2.3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E6%94%B6%E9%9B%86%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">2.3.1.</span> <span class="toc-text">1.
+数据的收集与预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%BB%86%E8%8A%82"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 实施细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BE%E5%B0%84%E7%A7%91%E5%8C%BB%E7%94%9F%E8%AF%84%E4%BC%B0"><span class="toc-number">2.3.3.</span> <span class="toc-text">3.
+放射科医生评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E6%9C%80%E5%85%88%E8%BF%9B%E7%9A%84%E6%96%B9%E6%B3%95%E7%9B%B8%E6%AF%94"><span class="toc-number">2.3.4.</span> <span class="toc-text">4.
+与最先进的方法相比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">2.3.5.</span> <span class="toc-text">5. 消融研究</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%A9%E4%B8%8B%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">2.3.6.</span> <span class="toc-text">6.
+剩下的挑战</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 37
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

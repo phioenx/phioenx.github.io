@@ -431,78 +431,21 @@
         
         
             
-            
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/">
+            <a class="abstract-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">
                 
-                <span class="abstract-title-text">扩散模型——14.VideoComposer</span>
+                <span class="abstract-title-text">扩散模型——11.DiT</span>
             </a>
             <div class="abstract-content">
-                对可控性的追求作为视觉内容创作的更高标准，在可定制的图像合成方面取得了显着的进步。然而，由于时间动态的巨大变化和跨帧时间一致性的要求，实现可控视频合成仍然具有挑战性。基于合成生成的范式，这项工作提出了VideoComposer，它允许用户灵活地根据文本条件、空间条件，更重要的是时间条件来合成视频。具体来说，考虑到视频数据的特性，作者引入压缩视频的运动矢量作为显式控制信号，以提供有关时间动态的指导。此外，作者开发了一个时空条件编码器（STC-encoder），它作为一个统一的接口，可以有效地整合顺序输入的空间和时间关系，通过它，模型可以更好地利用时间条件，从而实现更高的交互性。 - 框架一致性。大量的实验结果表明，VideoComposer 能够以各种形式（例如文本描述、草图序列、参考视频，甚至简单的手工动作）在合成视频中同时控制空间和时间模式。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/12/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
-                
-                <span class="abstract-title-text">扩散模型——12.Video Diffusion Model</span>
-            </a>
-            <div class="abstract-content">
-                生成时间上一致的高保真视频是生成式建模研究中的一个重要里程碑。我们通过提出一个视频生成的扩散模型，显示出非常有前途的初步结果，朝着这一里程碑取得了进展。我们的模型是标准图像扩散架构的自然扩展，它可以从图像和视频数据中进行联合训练，我们发现这可以减少小批量梯度的方差并加快优化速度。为了生成长时间和更高分辨率的视频，我们引入了一种新的条件采样技术，用于空间和时间视频扩展，其性能优于以前提出的方法。我们提出了一个大型文本条件视频生成任务的第一个结果，以及视频预测和无条件视频生成的既定基准的最先进的结果。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
-                
-                <span class="abstract-title-text">扩散模型——11.LCM-LoRA</span>
-            </a>
-            <div class="abstract-content">
-                
-一、前言
+                一、前言
 
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/30">
+                <div class="abstract-date" title="Last updated: 2024/03/19">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/21</span>
                 </div>
                 <!-- tags -->
@@ -700,6 +643,62 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2023/11/15">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
+                
+                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
+            </a>
+            <div class="abstract-content">
+                本文依据《Improved Denoising Diffusion Probabilistic Models》的方法原理以及实验结论进行笔记以及总结。本篇文章证明了通过一些修改，DDPM可以更快地采样并实现更好的对数似然，而对样本质量的影响很小。此外，作者还研究了 DDPM 如何随着可用训练计算量的变化而扩展，并发现更多的训练计算会带来更好的样本质量和对数似然。这些结果的结合使DDPM成为生成建模的一个有吸引力的选择，因为它们将良好的对数似然、高质量样本和相当快的采样与基础良好的固定训练目标结合起来，该目标可以通过训练计算轻松扩展。这些结果表明DDPMs是未来研究的一个有希望的方向。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/10/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">
+                
+                <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要介绍扩散模型的加速采样的思想DDIM，本文依据《Denoising Diffusion Implicit Models》的公式推导，方法原理以及实验结论进行笔记以及总结。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/09/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
                 </div>
                 <!-- tags -->
                 
@@ -989,7 +988,35 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1264,7 +1291,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 35
+        Total : 37
         </div>
         <!-- search  -->
         
@@ -1278,6 +1305,18 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
@@ -1356,25 +1395,25 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/">扩散模型——14.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
         </li>
     
         
@@ -1422,7 +1461,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
         </li>
     
         

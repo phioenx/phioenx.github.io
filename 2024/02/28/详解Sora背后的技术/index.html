@@ -1,0 +1,2639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="本文将深入探讨OpenAI最新发布的Sora模型。Sora可以通过文本生成长达一分钟的长视频，而Sora模型不仅仅是一个视频生成器，它还代表了一种全新的数据驱动物理引擎，能够在虚拟世界中模拟现实世界的复杂现象。   Sora模型的出现，标志着AI在视频生成领域的一次重大飞跃。它不仅能够生成逼真的视频内容，还能够模拟物理世界中的物体运动和交互，这对于电影制作、游戏开发、虚拟现实以及未来可能的通用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解Sora视频生成大模型背后的技术">
+<meta property="og:url" content="http://example.com/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="本文将深入探讨OpenAI最新发布的Sora模型。Sora可以通过文本生成长达一分钟的长视频，而Sora模型不仅仅是一个视频生成器，它还代表了一种全新的数据驱动物理引擎，能够在虚拟世界中模拟现实世界的复杂现象。   Sora模型的出现，标志着AI在视频生成领域的一次重大飞跃。它不仅能够生成逼真的视频内容，还能够模拟物理世界中的物体运动和交互，这对于电影制作、游戏开发、虚拟现实以及未来可能的通用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191056760.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403202019743.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201653748.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191130484.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191554214.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191626300.png">
+<meta property="article:published_time" content="2024-02-28T12:19:32.000Z">
+<meta property="article:modified_time" content="2024-03-20T12:43:00.165Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191056760.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>详解Sora视频生成大模型背后的技术 · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">详解Sora视频生成大模型背后的技术</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                详解Sora视频生成大模型背后的技术
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/02/28</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p><font color="black" size="5">  本文将深入探讨OpenAI最新发布的Sora模型。Sora可以通过文本生成长达一分钟的长视频，而Sora模型不仅仅是一个视频生成器，它还代表了一种全新的数据驱动物理引擎，能够在虚拟世界中模拟现实世界的复杂现象。</font></p>
+<p><font color="black" size="5">  Sora模型的出现，标志着AI在视频生成领域的一次重大飞跃。它不仅能够生成逼真的视频内容，还能够模拟物理世界中的物体运动和交互，这对于电影制作、游戏开发、虚拟现实以及未来可能的通用人工智能（AGI）研究都有着深远的影响。</font></p>
+<p><font color="black" size="5">  该技术报告聚焦于两点：</font></p>
+<p><font color="black" size="5">  1️⃣Sora这个模型，把所有类型的视频数据转换成统一的表示，然后去实现一个大规模的大模型训练。</font></p>
+<p><font color="black" size="5">  2️⃣对Sora能力的局限性评估</font></p>
+<p><font color="black" size="5">  该篇没有提到训练的细节以及源码</font></p>
+<h1 id="一turning-visual-data-into-patches">一、Turning visual data into
+patches</h1>
+<p><font color="black" size="5">  第一部分主要讲的是<strong>将输入视频数据转换成patches</strong>。将输入的视频数据（可以看成是<span class="math inline">\(\textcolor{blue}{x \in R^{D \times H \times
+W}}\)</span>的若干帧图像）到编码器当中，通过编码器将视频的原素材压缩到低维的向量空间，然后将低维的潜在表示分解为<strong>时空（spacetime）
+patches</strong>，这些patches最终会被flatten成一维向量，送入diffusion
+model。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191056760.png"></p>
+<p><font color="black" size="5">  这里的把潜在表示分解为时空
+patches的方式可能是依据ViViT。</font></p>
+<p><font color="black" size="5">  第一种，从输入数据中均匀采样n个帧，使用与ViT相同的方法独立地嵌入每个2D帧，并将所有这些token连接在一起</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403202019743.png" alt="image-20240320201951403">
+<figcaption aria-hidden="true">image-20240320201951403</figcaption>
+</figure>
+<p><font color="black" size="5">  第二种，把输入的视频划分成若干个tuplet，每个tuplet会当作成一个token，经过spatial
+temperal
+attention进行空间和时间建模获得有效的视频表征token，即上面灰色block部分。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403201653748.png"></p>
+<p><font color="black" size="5">  这样做的一个好处是可以允许不同分辨率的输入。</font></p>
+<h1 id="二video-compression-network">二、Video compression network</h1>
+<p><font color="black" size="5">  上面提到的编码器部分，也就是图中的（Visual
+encoder）是一个预训练好的自动编码器，它是由视频数据输入单独训练的一个模型。该模型的输入是原始的视频，而输出则是低维的向量空间。同样地，在输出之前会有个解码器部分，将低维的向量空间映射回像素空间。</font></p>
+<h1 id="三spacetime-latent-patches">三、Spacetime latent patches</h1>
+<p><font color="black" size="5">  在LLM大语言模型当中输入是一个个token（单词），然后根据当前的token或者是句子去预测它下个token。而在视频当中没有token这个概念，于是Sora就是将时空
+pathces类比成LLM当中的token。</font></p>
+<h1 id="四scaling-transformers-for-video-generation">四、Scaling
+transformers for video generation</h1>
+<p><font color="black" size="5">  Sora
+其实是一个扩散模型与transform的结合（DiT） 。它通过给定输入的noisy
+patches（以及文本提示等条件信息），去训练来预测原始的“干净”Patches。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191130484.png"></p>
+<p><font color="black" size="5">  由于Transformer的引入，我们可以增大视频生成模型。报告中还展示了随着训练的进行，具有固定种子和输入的视频样本的比较。随着训练计算的增加，训练的时间足够长的时候，样本质量显著提高。</font></p>
+<p><font color="red" size="5"><strong>Sora
+的模型架构</strong></font></p>
+<p><font color="black" size="5">  SORA = [VAE encoder + DiT（DDPM）+
+VAE decoder +CLIP]</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191554214.png"></p>
+<p><font color="black" size="5">  SORA模型训练流程：</font></p>
+<p><font color="black" size="5">  <strong>Step1：</strong>使用DALLE
+3（CLIP）把文本和视频对&lt;text, video&gt;联系起来；</font></p>
+<p><font color="black" size="5">  <strong>Step2：</strong>视频数据
+通过VAE 编码器压缩成低维空间表示，再切分为Patches</font></p>
+<p><font color="black" size="5">  <strong>Step3：</strong>基于Diffusion
+Transformer从图像语义生成，完成从文本语义到图像语义进行映射；</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403191626300.png"></p>
+<p><font color="black" size="5">  🟠DiT 首先将每个patch空间表示Noised
+Latent输入到第一层网络，以此将空间输入转换为tokens序列。再结合当前的时间步<span class="math inline">\(\textcolor{blue}{t}\)</span>，label<span class="math inline">\(\textcolor{blue}{y}\)</span>进行嵌入之后，一起送到DiT
+Block模块</font></p>
+<p><font color="black" size="5">  🟢将标准基于ViT的patch和Position
+Embedding
+应用于所有输入token，最后将输入token由Transformer进行处理</font></p>
+<p><font color="black" size="5">  🟡DiT还会处理额外信息，例如时间步长、类别标签，文本语义等</font></p>
+<p><font color="black" size="5">  <strong>Step4：</strong>DiT生成的低维空间表示，通过VAE解码器恢复成像素级的视频数据</font></p>
+<h1 id="五variable-durations-resolution-aspect-ratios">五、Variable
+durations resolution， aspect ratios</h1>
+<p><font color="black" size="5">  过去的图像和视频生成方法通常是将视频调整其大小、裁剪或修剪为标准大小，例如，分辨率为
+256x256 的 4
+秒视频。但作者发现，相反，以原始视频大小对数据进行训练有几个好处：</font></p>
+<p><font color="black" size="5">  1️⃣<strong>采样灵活性：</strong>Sora
+可以对宽屏 1920x1080p 视频、垂直 1080x1920
+视频以及介于两者之间的所有视频进行采样。这使 Sora
+可以直接以原始纵横比为不同设备创建内容。它还使我们能够在以全分辨率生成之前以较小的尺寸快速制作内容原型
+- 所有这些都使用相同的模型。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>改进的取景和构图：</strong>作者根据经验发现，以原始纵横比对视频进行训练可以改善构图和取景。将
+Sora
+与另一个版本的模型进行了比较，该模型将所有训练视频裁剪为正方形，这是训练生成模型时的常见做法。在方形裁剪上训练的模型（左）有时会生成视频，其中主体仅部分可见。相比之下，Sora（右）的视频改善了取景。简单的来说就是如果你将截断的视频丢到模型当中进行训练，那么生成的视频也会是截断的。</font></p>
+<p><font color="black" size="5">  由此，我们可以知道Sora支持不同长度、不同分辨率的输入支持，并且会使用这些数据进行训练，从而保证推理时在不同长度和分辨率上的效果。</font></p>
+<p><font color="black" size="5">  但是不同的分辨率输入在训练时可能会带来大量的<strong>计算负载不均衡</strong>，从而导致训练缓慢。有人从openai的reference中推测出，它可能使用了google的NaVit的技术降低了计算量，支持动态输入。</font></p>
+<p><font color="black" size="5">  </font></p>
+<h1 id="六语言理解能力">六、语言理解能力</h1>
+<p><font color="black" size="5">  训练文本到视频生成系统需要<strong>大量带有相应文本标题的视频（Text-Video
+Pairs）</strong>。这里是应用了DALL·E
+3到视频。首先训练一个高度描述性的字幕器模型，然后使用它为训练集中的所有视频生成文本字幕。对高度描述性视频字幕的培训可以提高文本保真度以及视频的整体质量。</font></p>
+<p><font color="black" size="5">  与DALL·E 3相似，<strong>利用
+LLM优化Prompt</strong>，例如使用GPT
+将简短的用户提示转换为更长的详细字幕，然后发送到视频模型。这使 Sora
+能够准确遵循用户提示生成高质量的视频。</font></p>
+<h1 id="七prompting-with-images-and-videos">七、Prompting with images
+and videos</h1>
+<p><font color="black" size="5">  除了文本，还可以用图像或视频使 Sora
+能够执行各种图像和视频编辑任务——创建完美循环的视频、为静态图像制作动画、在时间上向前或向后扩展视频等。</font></p>
+<h1 id="八新兴的仿真功能">八、新兴的仿真功能</h1>
+<p><font color="black" size="5">  视频模型在大规模训练时表现出许多有趣的涌现能力。这些功能使
+Sora
+能够模拟物理世界中人、动物和环境的某些方面。这些属性的出现对3D、物体等没有任何明确的归纳偏差——它们纯粹是尺度现象。</font></p>
+<p><font color="black" size="5">  <strong>3D 一致性。</strong>Sora
+可以生成具有动态相机运动的视频。随着摄像机的移动和旋转，人物和场景元素在三维空间中始终如一地移动。</font></p>
+<p><font color="black" size="5">  <strong>远距离相干性和物体持久性。</strong>
+视频生成系统面临的一个重大挑战是在对长视频进行采样时保持时间一致性。我们发现，Sora通常（尽管并非总是）能够有效地对短期和长期依赖关系进行建模。例如，我们的模型可以保留人、动物和物体，即使它们被遮挡或离开框架。同样，它可以在单个样本中生成同一角色的多个镜头，从而在整个视频中保持它们的外观。</font></p>
+<p><font color="black" size="5">  <strong>与世界互动。</strong>Sora
+有时可以以简单的方式模拟影响世界状态的动作。例如，画家可以在画布上留下新的笔触，这些笔触会随着时间的推移而持续存在，或者一个人可以吃汉堡并留下咬痕。</font></p>
+<p><font color="black" size="5">  <strong>模拟数字世界。</strong>Sora还能够模拟人工过程，例如视频游戏。Sora
+可以同时通过基本策略控制 Minecraft
+中的玩家，同时还可以高保真地渲染世界及其动态。这些功能可以通过提示 Sora
+提及“Minecraft”来零触发</font></p>
+<h1 id="九局限性">九、局限性</h1>
+<p><font color="black" size="5">  Sora
+目前作为模拟器表现出许多局限性。例如，它不能准确地模拟许多基本相互作用的物理特性，比如玻璃破碎。</font></p>
+<h1 id="十总结">十、总结</h1>
+<p><font color="black" size="5"><strong>1️⃣内容上：</strong></font></p>
+<ul>
+<li><p><font color="black" size="5">  最大支持60秒高保真视频生成，支持短视频前后扩展，即可保持视频连续，并扩展时长</font></p></li>
+<li><p><font color="black" size="5">  支持基于视频+文本视频编辑，一句话改变原视频，彻底改变视频创作方式</font></p></li>
+</ul>
+<p><font color="black" size="5">2️⃣<strong>技术上：</strong></font></p>
+<ul>
+<li><font color="black" size="5">  将视频压缩为空间时间块（Spacetime
+patches），使用Diffusion Transformer作为主干网络建模；</font></li>
+<li><font color="black" size="5">  由于将视频信息压缩为lower-dimensional
+latent space， 可支持不同尺寸、时间、分辨率的直接生成</font></li>
+</ul>
+<p><font color="black" size="5">3️⃣<strong>数据工程：</strong></font></p>
+<ul>
+<li><font color="black" size="5">  使用DALL·E 3
+进行视频文本标注</font></li>
+<li><font color="black" size="5">  利用GPT4将用户输入的简短提示词，填充为复杂细节文本</font></li>
+</ul>
+<p><font color="black" size="5">4️⃣<strong>其他：</strong></font></p>
+<ul>
+<li><font color="black" size="5">  物理交互的细节仍有缺陷，如玻璃破碎与水流，雪地脚印无法生成等；</font></li>
+</ul>
+<p><font color="black" size="5">  OpenAI做Sora这个工作不是为了纯粹的抓人眼球，更多是偏向于学习视觉，理解世界的一个目标</font></p>
+<p><font color="black" size="5">  <strong>Sora能力的总结：</strong></font></p>
+<p><font color="black" size="5">  Text-to-video：文生视频</font></p>
+<p><font color="black" size="5">  Image-to-video：图生视频</font></p>
+<p><font color="black" size="5">  Video-to-video：改变源视频风格or场景</font></p>
+<p><font color="black" size="5">  Extending video in
+time：视频拓展（前后双向）</font></p>
+<p><font color="black" size="5">  Image generation：图片生成（size
+最高达到 2048x2048）</font></p>
+<p><font color="black" size="5">  Generate video in any format：From
+1920 x 1920 to 1080 x 1920 视频输出比例定义</font></p>
+<p><font color="black" size="5">  Simulate virtual
+worlds：链接虚拟世界，游戏视频场景生成</font></p>
+<p><font color="black" size="5">  Create a
+video：长达60s的视频并保持人物，场景一致性</font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">http://example.com/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/</a>
+            <p>发表日期：<a href="http://example.com/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">February 28th 2024, 8:19:32 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">March 20th 2024, 8:43:00 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/" title="扩散模型实战——3.训练ControlNet去控制SD">
+                    <div class="nextTitle">扩散模型实战——3.训练ControlNet去控制SD</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="扩散模型代码篇——2.UNet">
+                    <div class="prevTitle">扩散模型代码篇——2.UNet</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80turning-visual-data-into-patches"><span class="toc-number">1.</span> <span class="toc-text">一、Turning visual data into
+patches</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cvideo-compression-network"><span class="toc-number">2.</span> <span class="toc-text">二、Video compression network</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89spacetime-latent-patches"><span class="toc-number">3.</span> <span class="toc-text">三、Spacetime latent patches</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9Bscaling-transformers-for-video-generation"><span class="toc-number">4.</span> <span class="toc-text">四、Scaling
+transformers for video generation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94variable-durations-resolution-aspect-ratios"><span class="toc-number">5.</span> <span class="toc-text">五、Variable
+durations resolution， aspect ratios</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E8%AF%AD%E8%A8%80%E7%90%86%E8%A7%A3%E8%83%BD%E5%8A%9B"><span class="toc-number">6.</span> <span class="toc-text">六、语言理解能力</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83prompting-with-images-and-videos"><span class="toc-number">7.</span> <span class="toc-text">七、Prompting with images
+and videos</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E6%96%B0%E5%85%B4%E7%9A%84%E4%BB%BF%E7%9C%9F%E5%8A%9F%E8%83%BD"><span class="toc-number">8.</span> <span class="toc-text">八、新兴的仿真功能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">9.</span> <span class="toc-text">九、局限性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E6%80%BB%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text">十、总结</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 37
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

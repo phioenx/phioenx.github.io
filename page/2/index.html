@@ -449,6 +449,62 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion model——9.FDDM</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型在生成用于医学图像翻译的高质量图像以帮助疾病诊断、定位和治疗方面已表现出巨大的潜力。然而，当前的扩散模型在实现忠实的图像转换（可以准确地保留医学图像的解剖结构）方面取得的成功有限，特别是对于不配对的数据集。保留结构和解剖细节对于可靠的医疗诊断和治疗计划至关重要，因为结构不匹配可能导致疾病误识别和治疗错误。在这项研究中，我们引入了频率解耦扩散模型（FDDM），这是一种新颖的框架，可以在翻译过程中解耦傅里叶域中医学图像的频率分量，以实现结构保留的高质量图像转换。 FDDM应用无监督频率转换模块将源医学图像转换为特定于频率的输出，然后使用特定于频率的信息来指导后续的扩散模型以实现最终的源到目标图像转换。我们使用公共大脑 MR 到 CT 翻译数据集对 FDDM 进行了广泛的评估，显示了其相对于其他基于 GAN、VAE 和扩散的模型的优越性能。评估的指标包括FID、峰值信噪比 (PSNR) 和结构相似性指数测量 (SSIM)。 FDDM的 FID 为 29.88，不到第二好的一半。这些结果证明了 FDDM 在生成高度真实的目标域图像同时保持翻译解剖结构的忠实度方面的能力。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/01/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
+                
+                <span class="abstract-title-text">Medical Diffusion model——8.FGDM</span>
+            </a>
+            <div class="abstract-content">
+                最近，扩散模型已经成为一种优越的生成模型，可以产生高质量和逼真的图像。然而，对于医学图像翻译，现有的扩散模型缺乏准确保留结构信息，因为源域图像的结构细节在正向扩散过程中丢失，不能通过学习的反向扩散完全恢复，而解剖结构的完整性在医学图像中非常重要。例如，图像翻译中的错误可能会扭曲、移位甚至删除结构和肿瘤，导致诊断不正确，治疗不足。使用配对源图像和目标图像与匹配解剖进行训练和调节扩散模型会有所帮助。然而，这种配对数据很难获得且成本高昂，并且还可能会降低开发模型对分布外测试数据的鲁棒性。我们提出了一种频率引导的扩散模型(FGDM)，该模型使用频域滤波器来指导扩散模型进行结构保持图像平移。基于其设计，FGDM 允许零样本学习，因为它可以仅在来自目标域的数据上进行训练，并直接用于源到目标域翻译，而无需在训练期间暴露于源域数据。我们在不同解剖部位的三个锥束 CT (CBCT) 到 CT 翻译任务以及跨机构 MR 成像翻译任务上评估了它。FGDM在FID、峰值信噪比 (PSNR) 和结构相似性指数度量 (SSIM) 指标方面优于最先进的方法（基于GAN、基于VAE 和基于扩散的），显示出其在零样本医学图像翻译中显着优势。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/02/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
                 
                 <span class="abstract-title-text">Medical Diffuison model——7.MIDiffusion</span>
@@ -553,66 +609,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
-                
-                <span class="abstract-title-text">视频扩散模型——6.Video LCM</span>
-            </a>
-            <div class="abstract-content">
-                一致性模型在高效图像生成方面表现出了强大的能力，并允许在几个采样步骤内进行合成，从而减轻了扩散模型中的高计算成本。然而，在更具挑战性和资源消耗的视频生成中，一致性模型的探索仍然较少。在本报告中，我们提出了 VideoLCM 框架来填补这一空白，该框架利用图像生成的一致性模型的概念，以最少的步骤有效地合成视频，同时保持高质量。 VideoLCM 基于现有的潜在视频扩散模型，并结合了用于训练潜在一致性模型的一致性蒸馏技术。实验结果揭示了我们的 VideoLCM 在计算效率、保真度和时间一致性方面的有效性。值得注意的是，VideoLCM 只需四个采样步骤即可实现高保真、流畅的视频合成，展示了实时合成的潜力。我们希望VideoLCM能够作为后续研究的简单而有效的基线。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/31">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/">
-                
-                <span class="abstract-title-text">扩散模型——14.VideoComposer</span>
-            </a>
-            <div class="abstract-content">
-                对可控性的追求作为视觉内容创作的更高标准，在可定制的图像合成方面取得了显着的进步。然而，由于时间动态的巨大变化和跨帧时间一致性的要求，实现可控视频合成仍然具有挑战性。基于合成生成的范式，这项工作提出了VideoComposer，它允许用户灵活地根据文本条件、空间条件，更重要的是时间条件来合成视频。具体来说，考虑到视频数据的特性，作者引入压缩视频的运动矢量作为显式控制信号，以提供有关时间动态的指导。此外，作者开发了一个时空条件编码器（STC-encoder），它作为一个统一的接口，可以有效地整合顺序输入的空间和时间关系，通过它，模型可以更好地利用时间条件，从而实现更高的交互性。 - 框架一致性。大量的实验结果表明，VideoComposer 能够以各种形式（例如文本描述、草图序列、参考视频，甚至简单的手工动作）在合成视频中同时控制空间和时间模式。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/12/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -987,7 +987,35 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1262,7 +1290,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 35
+        Total : 37
         </div>
         <!-- search  -->
         
@@ -1276,6 +1304,18 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
@@ -1354,25 +1394,25 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/">扩散模型——14.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
         </li>
     
         
@@ -1420,7 +1460,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
         </li>
     
         

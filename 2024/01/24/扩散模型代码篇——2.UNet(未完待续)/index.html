@@ -19,15 +19,15 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     in_channels 输入张量的通道   mod">
+    <meta name="description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     image_size 图像尺寸   in_chan">
 <meta property="og:type" content="article">
 <meta property="og:title" content="扩散模型代码篇——2.UNet">
 <meta property="og:url" content="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     in_channels 输入张量的通道   mod">
+<meta property="og:description" content="前言   十分推荐下面两篇关于stable diffusion代码详解相关的博客和文章，它们对SD源码作了十分详细的介绍：   稳定的扩散 (labml.ai)   Stable Diffusion 原理介绍与源码分析（一） - 知乎 (zhihu.com) 1.UNet_model 1、UNet函数的参数介绍：        参数 解释     image_size 图像尺寸   in_chan">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-24T00:57:05.000Z">
-<meta property="article:modified_time" content="2024-02-26T07:59:04.089Z">
+<meta property="article:modified_time" content="2024-03-02T02:07:27.615Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
@@ -513,72 +513,90 @@ diffusion代码详解相关的博客和文章，它们对SD源码作了十分详
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">image_size</font></td>
+<td style="text-align: center;"><font color="black" size="4">图像尺寸</font></td>
+</tr>
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">in_channels</font></td>
-<td style="text-align: center;"><font color="black" size="4">输入张量的通道</font></td>
+<td style="text-align: center;"><font color="black" size="4">输入特征图的通道数</font></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">model_channels</font></td>
-<td style="text-align: center;"><font color="black" size="4">模型的通道数量</font></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><font color="blue" size="4">out_channels</font></td>
-<td style="text-align: center;"><font color="black" size="4">输出张量的通道</font></td>
+<td style="text-align: center;"><font color="black" size="4">模型基础通道数</font></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><font color="blue" size="4">num_res_blocks</font></td>
-<td style="text-align: center;"><font color="black" size="4">每个下采样的残差块数量</font></td>
+<td style="text-align: center;"><font color="blue" size="4">out_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">输出特征图的通道数</font></td>
 </tr>
 <tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">num_res_blocks</font></td>
+<td style="text-align: center;"><font color="black" size="4">每个下采样阶段的残差块数量</font></td>
+</tr>
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">attention_resolution</font></td>
 <td style="text-align: center;"><font color="black" size="4">在几倍下采样时进行注意力操作。可以是一个集合、列表或元组。例如，如果其中包含4，那么在4倍下采样时将使用注意力。</font></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">dropout</font></td>
 <td style="text-align: center;"><font color="black" size="4">dropout的概率</font></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">channel_mult</font></td>
-<td style="text-align: center;"><font color="black" size="4">UNet每个级别的通道乘积倍数</font></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><font color="blue" size="4">conv_resample</font></td>
-<td style="text-align: center;"><font color="black" size="4">如果为True，则使用学习到的卷积进行上采样和下采样</font></td>
+<td style="text-align: center;"><font color="black" size="4">UNet每个级别的模型通道乘积倍数</font></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><font color="blue" size="4">dim</font></td>
-<td style="text-align: center;"><font color="black" size="4">输入图像是1D,2D,3D</font></td>
+<td style="text-align: center;"><font color="blue" size="4">conv_resample</font></td>
+<td style="text-align: center;"><font color="black" size="4">如果为True，则在上采样和下采样使用卷积</font></td>
 </tr>
 <tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">dim</font></td>
+<td style="text-align: center;"><font color="black" size="4">使用卷积的维度，输入图像可以是1D,2D,3D</font></td>
+</tr>
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">num_classes</font></td>
 <td style="text-align: center;"><font color="black" size="4">如果指定为整数，则该模型将以num_classes个类别为条件。</font></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">use_checkpoint</font></td>
 <td style="text-align: center;"><font color="black" size="4">梯度检查点</font></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">num_heads</font></td>
 <td style="text-align: center;"><font color="black" size="4">每个注意力层中的注意力头数量</font></td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;"><font color="blue" size="4">num_heads_channels</font></td>
-<td style="text-align: center;"><font color="black" size="4">如果指定，忽略num_heads,而是使用每个注意力头部的固定通道宽度</font></td>
-</tr>
 <tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">num_heads_channels</font></td>
+<td style="text-align: center;"><font color="black" size="4">注意力头维度大小，如果指定，忽略num_heads,而是使用每个注意力头部的固定通道宽度</font></td>
+</tr>
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">num_heads_upsample</font></td>
 <td style="text-align: center;"><font color="black" size="4">使用num_heads来设置上采样的头数。但已弃用。</font></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">use_scale_shift_norm</font></td>
 <td style="text-align: center;"><font color="black" size="4">使用类似FILM的调节机制</font></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;"><font color="blue" size="4">resblock_updown</font></td>
 <td style="text-align: center;"><font color="black" size="4">使用残差块进行上/下采样</font></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;"><font color="blue" size="4">use_new_attention_order</font></td>
 <td style="text-align: center;"><font color="black" size="4">使用不同的注意模式，可能会提高效率</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">use_spatial_transformer</font></td>
+<td style="text-align: center;"><font color="black" size="4">是否使用Spatial
+transformer</font></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><font color="blue" size="4">transformer_depth</font></td>
+<td style="text-align: center;"><font color="black" size="4">Spatial
+transformer当中使用Transformer的层数</font></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><font color="blue" size="4">context_dim</font></td>
+<td style="text-align: center;"><font color="black" size="4">文本条件的维度大小</font></td>
 </tr>
 </tbody>
 </table>
@@ -587,12 +605,21 @@ diffusion代码详解相关的博客和文章，它们对SD源码作了十分详
 </blockquote>
 <h2 id="def-init"><font color="black" size="5">2、def
 init：</font></h2>
-<p><font color="black" size="5">  先给一系列参数做定义：</font></p>
+<p><font color="black" size="5">  1️⃣先给一系列参数做定义：</font></p>
 <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">self.image_size = image_size</span><br><span class="line">self.in_channels = in_channels</span><br><span class="line">self.model_channels = model_channels</span><br><span class="line">self.out_channels = out_channels</span><br><span class="line">self.num_res_blocks = num_res_blocks</span><br><span class="line">self.attention_resolutions = attention_resolutions</span><br><span class="line">self.dropout = dropout</span><br><span class="line">self.channel_mult = channel_mult</span><br><span class="line">self.conv_resample = conv_resample</span><br><span class="line">self.num_classes = num_classes</span><br><span class="line">self.use_checkpoint = use_checkpoint</span><br><span class="line">self.dtype = th.float16 <span class="keyword">if</span> use_fp16 <span class="keyword">else</span> th.float32</span><br><span class="line">self.num_heads = num_heads</span><br><span class="line">self.num_head_channels = num_head_channels</span><br><span class="line">self.num_heads_upsample = num_heads_upsample</span><br><span class="line">self.predict_codebook_ids = n_embed <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br></pre></td></tr></tbody></table></figure>
-<p><font color="black" size="5">  <strong>时间嵌入：</strong>该部分创建一个包含两个线性层和一个激活函数的神经网络模块，用于将输入数据映射到更高维度的表示。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>时间嵌入：</strong>该部分创建一个包含两个线性层和一个激活函数的神经网络模块，用于将输入数据映射到更高维度的表示。</font></p>
 <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">time_embed_dim = model_channels * <span class="number">4</span></span><br><span class="line">self.time_embed = nn.Sequential(</span><br><span class="line">            linear(model_channels, time_embed_dim),</span><br><span class="line">            nn.SiLU(),</span><br><span class="line">            linear(time_embed_dim, time_embed_dim),</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
-<h1 id="resblock">2.ResBlock</h1>
+<p><font color="black" size="5">  3️⃣<strong>条件嵌入：</strong>当num_classes=None时，不添加条件嵌入</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> self.num_classes <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(self.num_classes, <span class="built_in">int</span>):</span><br><span class="line">        self.label_emb = nn.Embedding(num_classes, time_embed_dim)</span><br><span class="line">    <span class="keyword">elif</span> self.num_classes == <span class="string">"continuous"</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"setting up linear c_adm embedding layer"</span>)</span><br><span class="line">        self.label_emb = nn.Linear(<span class="number">1</span>, time_embed_dim)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError()</span><br></pre></td></tr></tbody></table></figure>
+<p><font color="black" size="5">  4️⃣下采样阶段的编码块定义：首先定义输入3x3卷积，这些模块被封装在TimestepEmbedSequential模块中，因为不同模块具有不同的正向函数的输入，例如卷积只通过特征图，而残差块接受特征图和时间嵌入，有时候还可以设计接受条件嵌入。TimestepEmbedSequential模块可跳转到第二部分。</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">self.input_blocks = nn.ModuleList([</span><br><span class="line">            TimestepEmbedSequential(</span><br><span class="line">                conv_nd(dims, in_channels, model_channels, <span class="number">3</span>, padding=<span class="number">1</span>)</span><br><span class="line">            )])</span><br></pre></td></tr></tbody></table></figure>
+<p><font color="black" size="5">  接下来就是定义下采样阶段所需要的模块，例如，不同模型通道的等级下，所需添加ResBlock的数量（num_res_blocks），最后不要忘了将模型通道数更新成ResBlock输出的通道数，作为下一层的输入通道，ResBlock模块的具体细节可跳转到第三部分。</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">self._feature_size = model_channels</span><br><span class="line"><span class="comment"># 记录下采样阶段每一层的模型通道数，方便后续的跳跃连接</span></span><br><span class="line">input_block_chans = [model_channels]    </span><br><span class="line">ch = model_channels      <span class="comment"># 初始模型通道</span></span><br><span class="line">ds = <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> level, mult <span class="keyword">in</span> <span class="built_in">enumerate</span>(channel_mult):</span><br><span class="line">       <span class="keyword">for</span> nr <span class="keyword">in</span> <span class="built_in">range</span>(self.num_res_blocks[level]):</span><br><span class="line">           layers = [</span><br><span class="line">               ResBlock(</span><br><span class="line">                        ch,</span><br><span class="line">                        time_embed_dim,</span><br><span class="line">                        dropout,</span><br><span class="line">                        out_channels=mult * model_channels,</span><br><span class="line">                        dims=dims,</span><br><span class="line">                        use_checkpoint=use_checkpoint,</span><br><span class="line">                        use_scale_shift_norm=use_scale_shift_norm,</span><br><span class="line">                )</span><br><span class="line">            ]</span><br><span class="line">            ch = mult * model_channels</span><br></pre></td></tr></tbody></table></figure>
+<h1 id="timestepembedsequential模块">2.TimestepEmbedSequential模块</h1>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TimestepBlock</span>(nn.Module):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Any module where forward() takes timestep embeddings as a second argument.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, emb</span>):</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Apply the module to `x` given `emb` timestep embeddings.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用于具有不同输入模块的顺序模块</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TimestepEmbedSequential</span>(nn.Sequential, TimestepBlock):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    A sequential module that passes timestep embeddings to the children that</span></span><br><span class="line"><span class="string">    support it as an extra input.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># x：输入数据 emb：时间嵌入 context：文本嵌入</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, emb, context=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># 遍历模型中的每一层</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self:</span><br><span class="line">            <span class="comment"># 如果当前层是TimestepBlock类型的层，则传入x和emb</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, TimestepBlock):</span><br><span class="line">                x = layer(x, emb)</span><br><span class="line">            <span class="comment"># 如果当前层是SpatialTransformer类型的层，则传入x和contex</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="built_in">isinstance</span>(layer, SpatialTransformer):</span><br><span class="line">                x = layer(x, context)</span><br><span class="line">            <span class="comment"># 如果是其他类型的层，则只传入x</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                x = layer(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></tbody></table></figure>
+<h1 id="resblock">3.ResBlock</h1>
 <p><font color="black" size="5">  ResBlock网络结构图如下，它接受两个输入，图像x以及timestep对应的embedding：</font></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ResBlock</span>(<span class="title class_ inherited__">TimestepBlock</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        channels,</span></span><br><span class="line"><span class="params">        emb_channels,</span></span><br><span class="line"><span class="params">        dropout,</span></span><br><span class="line"><span class="params">        out_channels=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        use_conv=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        use_scale_shift_norm=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        dims=<span class="number">2</span>,</span></span><br><span class="line"><span class="params">        use_checkpoint=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        up=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        down=<span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    </span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.channels = channels</span><br><span class="line">        self.emb_channels = emb_channels</span><br><span class="line">        self.dropout = dropout</span><br><span class="line">        self.out_channels = out_channels <span class="keyword">or</span> channels</span><br><span class="line">        self.use_conv = use_conv</span><br><span class="line">        self.use_checkpoint = use_checkpoint</span><br><span class="line">        self.use_scale_shift_norm = use_scale_shift_norm</span><br><span class="line"></span><br><span class="line">        self.in_layers = nn.Sequential(</span><br><span class="line">            normalization(channels),</span><br><span class="line">            nn.SiLU(),</span><br><span class="line">            conv_nd(dims, channels, self.out_channels, <span class="number">3</span>, padding=<span class="number">1</span>),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.updown = up <span class="keyword">or</span> down</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> up:</span><br><span class="line">            self.h_upd = Upsample(channels, <span class="literal">False</span>, dims)</span><br><span class="line">            self.x_upd = Upsample(channels, <span class="literal">False</span>, dims)</span><br><span class="line">        <span class="keyword">elif</span> down:</span><br><span class="line">            self.h_upd = Downsample(channels, <span class="literal">False</span>, dims)</span><br><span class="line">            self.x_upd = Downsample(channels, <span class="literal">False</span>, dims)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.h_upd = self.x_upd = nn.Identity()</span><br><span class="line"></span><br><span class="line">        self.emb_layers = nn.Sequential(</span><br><span class="line">            nn.SiLU(),</span><br><span class="line">            linear(</span><br><span class="line">                emb_channels,</span><br><span class="line">                <span class="number">2</span> * self.out_channels <span class="keyword">if</span> use_scale_shift_norm <span class="keyword">else</span> self.out_channels,</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line">        self.out_layers = nn.Sequential(</span><br><span class="line">            normalization(self.out_channels),</span><br><span class="line">            nn.SiLU(),</span><br><span class="line">            nn.Dropout(p=dropout),</span><br><span class="line">            zero_module(</span><br><span class="line">                conv_nd(dims, self.out_channels, self.out_channels, <span class="number">3</span>, padding=<span class="number">1</span>)</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.out_channels == channels:</span><br><span class="line">            self.skip_connection = nn.Identity()</span><br><span class="line">        <span class="keyword">elif</span> use_conv:</span><br><span class="line">            self.skip_connection = conv_nd(</span><br><span class="line">                dims, channels, self.out_channels, <span class="number">3</span>, padding=<span class="number">1</span></span><br><span class="line">            )</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.skip_connection = conv_nd(dims, channels, self.out_channels, <span class="number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -671,13 +698,18 @@ map。</font></p>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
             <p>发表日期：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 24th 2024, 8:57:05 am</a>
-            <p>更新日期：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">February 26th 2024, 3:59:04 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">March 2nd 2024, 10:07:27 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/" title="详解Sora视频生成大模型背后的技术">
+                    <div class="nextTitle">详解Sora视频生成大模型背后的技术</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -855,7 +887,7 @@ map。</font></p>
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
                 <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#unet_model"><span class="toc-number">2.</span> <span class="toc-text">1.UNet_model</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#unet%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">1、UNet函数的参数介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#def-init"><span class="toc-number">2.2.</span> <span class="toc-text">2、def
-init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#resblock"><span class="toc-number">3.</span> <span class="toc-text">2.ResBlock</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#attention"><span class="toc-number">4.</span> <span class="toc-text">3.Attention</span></a></li></ol>
+init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#timestepembedsequential%E6%A8%A1%E5%9D%97"><span class="toc-number">3.</span> <span class="toc-text">2.TimestepEmbedSequential模块</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#resblock"><span class="toc-number">4.</span> <span class="toc-text">3.ResBlock</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#attention"><span class="toc-number">5.</span> <span class="toc-text">3.Attention</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1044,7 +1076,35 @@ init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1319,7 +1379,7 @@ init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 35
+        Total : 37
         </div>
         <!-- search  -->
         
@@ -1333,6 +1393,18 @@ init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
@@ -1411,25 +1483,25 @@ init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.VideoComposer/">扩散模型——14.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.LVDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型—13.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/25</span>
-            <a class="archive-post-title" href="/2023/12/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.Video-Diffusion-Model(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——12.Video Diffusion Model</a>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/21</span>
-            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.LCM-LoRA(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——11.LCM-LoRA</a>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
         </li>
     
         
@@ -1477,7 +1549,7 @@ init：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
-            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">生成增强ct图像的相关论文1</a>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
         </li>
     
         
