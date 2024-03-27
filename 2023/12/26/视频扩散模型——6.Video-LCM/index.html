@@ -22,7 +22,7 @@
     <meta name="description" content="一、引言   最近，视频生成领域在合成逼真和时间连贯的视频内容方面取得了巨大进步，特别是随着扩散模型的发展。传统的基于扩散的方法，例如 videoLDM、Make-A-Video和 ModelScopeT2V，通过将额外的时间层合并到现有的图像扩散模型 [30, 31] 中来处理时间动态，已经取得了显着的性能在视频中。然而，这些基于扩散的方法不可避免地需要大量采样步骤来在推理过程中合成视频，例如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="视频扩散模型——6.Video LCM">
-<meta property="og:url" content="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
+<meta property="og:url" content="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="一、引言   最近，视频生成领域在合成逼真和时间连贯的视频内容方面取得了巨大进步，特别是随着扩散模型的发展。传统的基于扩散的方法，例如 videoLDM、Make-A-Video和 ModelScopeT2V，通过将额外的时间层合并到现有的图像扩散模型 [30, 31] 中来处理时间动态，已经取得了显着的性能在视频中。然而，这些基于扩散的方法不可避免地需要大量采样步骤来在推理过程中合成视频，例如">
 <meta property="og:locale" content="zh_CN">
@@ -30,8 +30,16 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401301618379.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401301635177.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401301643187.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403231617585.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241248289.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241251634.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241253244.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241258834.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241300397.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241301725.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241302949.png">
 <meta property="article:published_time" content="2023-12-26T13:05:14.000Z">
-<meta property="article:modified_time" content="2024-01-31T08:34:49.928Z">
+<meta property="article:modified_time" content="2024-03-24T05:08:22.046Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401301603151.png">
@@ -522,298 +530,75 @@ VideoLCM
 学生模型。为了学习自我一致性，施加损失来约束两个学生模型的输出保持一致。整个一致性蒸馏是在潜在空间中进行的，为了便于呈现，省略了条件指导。教师模型是视频扩散模型，学生模型与教师模型共享相同的网络结构，并使用教师模型的参数进行初始化。</font></p>
 <p><font color="black" size="5">  在VideoLCM当中，应用DDIM作为ODE的求解器<span class="math inline">\(\textcolor{blue}{\Psi}\)</span>去估计<span class="math inline">\(\textcolor{blue}{\hat{x}_{t_n}}\)</span>:</font></p>
 <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401301643187.png"></p>
-<p><font color="black" size="5">  其中c表示条件输入，可以是文本到视频生成中的文本提示或组合视频合成任务中的多个组合信号。由于无分类器指导对于合成高质量内容至关重要，因此我们还在一致性蒸馏阶段利用无分类器指导，并使用因子
-w 来控制指导规模：</font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{c}\)</span>表示条件输入，可以是文本到视频生成中的文本提示或组合视频合成任务中的多个组合信号。由于无分类器指导对于合成高质量内容至关重要，因此我们还在一致性蒸馏阶段利用无分类器指导，并使用因子
+<span class="math inline">\(\textcolor{blue}{w}\)</span>
+来控制指导规模：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403231617585.png"></p>
+<p><font color="black" size="5">  在LCM中，<span class="math inline">\(\textcolor{blue}{w}\)</span>是可变的，可以馈入网络进行调制，但这改变了初始网络的结构，因为需要添加编码<span class="math inline">\(\textcolor{blue}{w}\)</span>的模块。为了保持一致性模型的初始参数和设计与教师扩散模型一致，我们用固定的<span class="math inline">\(\textcolor{blue}{w}\)</span>值来训练一致性模型，例如9.0。请注意，无分类器指导仅适用于训练中的教师扩散模型，在一致性模型的推理过程中不需要。</font></p>
+<p><font color="black" size="5">  VideoLCM
+是一种与文本到视频生成和合成视频合成兼容的即插即用技术。在推理阶段，我们可以对
+4∼6 个 LCM
+步骤进行采样，以在文本到视频的生成上产生合理的结果。对于合成视频合成，以合成深度视频任务为例，2∼4步就足够了，有时甚至1步。</font></p>
+<h1 id="三实验">三、实验</h1>
+<h2 id="实验设置"><font color="black" size="5">1.实验设置</font></h2>
+<p><font color="black" size="5">  <strong>数据集：</strong>本文在两个广泛使用的数据集（即
+WebVid10M 和 LAION5B ）上训练视频一致性模型。 WebVid10M
+是一个视频文本数据集，包含大约 1070
+万个视频。为了进一步增强时间多样性并提高视觉质量，我们还利用约 1M
+内部视频文本数据来训练 VideoLCM。 LAION-5B
+是一个图像文本数据集，用于提供高质量的视觉文本对应。</font></p>
+<p><font color="black" size="5">  <strong>实施细节：</strong>本文直接利用
+TF-T2V中现有的预训练视频扩散模型作为教师模型，并在一致性蒸馏过程中固定网络参数。
+TFT2V
+是一种利用无文本视频来扩展视频扩散模型的技术，可应用于主流的文本到视频生成和组合视频合成框架。一致性模型的模型结构与教师扩散模型相同，并用教师的模型参数进行初始化。采用学习率为1e-5的AdamW优化器来训练VideoLCM。我们实验中使用的
+EMA 率为 0.95。我们对 16 帧进行采样，并从每个源视频中裁剪 448 × 256
+的中心区域作为模型输入。 VideoLCM 中使用的训练损失默认为 Huber
+损失。整个网络在 4 个 NVIDIA A100 GPU 上进行训练（1 个用于图像，3
+个用于视频），需要大约 4k
+次训练迭代才能产生相对可靠的视频生成结果。</font></p>
+<h2 id="时间效率"><font color="black" size="5">2.时间效率</font></h2>
+<p><font color="black" size="5">  作者将他们所提出的 VideoLCM
+测量文本到视频合成所需的推理时间，并将其与基线方法进行比较，比较结果如表
+1 所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241248289.png"></p>
+<p><font color="black" size="5">  从结果中，可以观察到，VideoLCM仅需要
+4 个 LCM 步骤进行推理，因此它比具有 50 个 DDIM
+步骤的基线方法要快得多。值得注意的是，除了迭代去噪之外，推理成本还包括文本特征编码、潜在代码解码等。此外，我们注意到与基线相比，VideoLCM
+在高分辨率生成上节省了更多时间。例如，生成 16 × 256 × 256
+尺寸的视频可节省 50 秒（即 60 秒 – 10 秒），而 16x448x256 则可节省 88
+秒。上述比较证明了该方法的高效率。</font></p>
+<h2 id="推理步骤的消融研究"><font color="black" size="5">3.推理步骤的消融研究</font></h2>
+<p><font color="black" size="5">  在图 3
+中展示了文本转视频任务中不同推理步骤的实验可视化。结果表明，当采样步长太小时，例如step
+=
+1，生成的视频会变得模糊，许多细节无法准确表示，并且无法保留对象的时间结构。随着迭代步数的增加，视觉质量逐渐提高，并且可以更好地保持时间结构。例如，当使用4∼6步时，可以获得与DDIM的50步相当的结果，同时显着减少采样步骤并提高生成速度。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241251634.png"></p>
+<p><font color="black" size="5">  此外，作者还对合成深度到视频合成进行了消融研究。如图
+4 所示，我们观察到只需几个步骤，例如 1
+步，生成的结果就可以显示良好的视觉质量。随着步长的增加，许多细节变得更加明显。我们将这种现象归因于这样一个事实：与文本到视频生成相比，组合深度到视频合成可以利用额外的结构化控制信息，从而降低了从纯噪声中预测视频的难度，并能够以更少的时间实现高质量的结果。根据经验，我们发现2∼4步可以产生相对稳定的成分合成含量。文本到视频和合成视频生成的结果证明了所提出的
+VideoLCM 的有效性，在质量和速度之间实现了良好的平衡。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241253244.png"></p>
+<h2 id="更多的定性结果"><font color="black" size="5">4.更多的定性结果</font></h2>
+<p><font color="black" size="5">  为了全面展示VideoLCM方法在处理各种视频生成任务方面的能力，在图
+5 中提供了额外的可视化示例。这些结果是通过 4 个 LCM
+步骤生成的。从可视化结果来看，很明显，VideoLCM在视觉质量和时间连续性方面取得了令人印象深刻的生成结果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241258834.png"></p>
+<p><font color="black" size="5">  在图中。在图 6 到 8 中，展示了使用 4
+个采样步骤生成合成视频的更多结果，包括合成深度到视频合成（图
+6）、合成草图到视频合成（图 7）和合成视频修复（图 8）。 </font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241300397.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241301725.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241302949.png"></p>
+<p><font color="black" size="5">  这些定性结果证明了稳定的生成质量，并突出了我们的方法根据输入条件的可控性。</font></p>
+<h2 id="限制"><font color="black" size="5">5.限制</font></h2>
+<p><font color="black" size="5">  在VideoLCM中，探索了一致性模型在视频生成任务中的应用，包括文本到视频生成和合成视频合成。然而，存在一定的局限性：1）该方法依赖于强大的教师模型作为蒸馏目标。
+2）一致性蒸馏过程需要对模型进行微调。虽然一致性蒸馏只需要少量的训练步骤，但当教师模型的训练数据不可用或来自不同领域时，可能会导致结果不令人满意。
+3）尽管我们的方法将推理步骤减少到4∼6，但仍然没有实现像图像生成一样的实时视频生成。探索更加稳定、高效的视频生成算法，同时保证生成视频内容的高质量，是未来一个有前景的方向。</font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  在这项工作中，作者提出了 VideoLCM
+框架，将潜在一致性模型扩展到视频生成领域。该方法利用现有的潜在视频扩散模型，并采用一致性蒸馏技术来实现高效、快速的视频合成。实验结果证明了我们方法的有效性，只需四个步骤即可实现高保真视频合成，与需要大约
+50 个 DDIM
+步骤的先前方法相比，展示了其实时合成潜力。希望VideoLCM能够作为后续研究工作的简单而有效的基线。</font></p>
 <p><font color="black" size="5">  </font></p>
 
     </article>
@@ -821,9 +606,9 @@ w 来控制指导规模：</font></p>
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
-            <p>发表日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">December 26th 2023, 9:05:14 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 31st 2024, 4:34:49 pm</a>
+            <p>原文链接：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/</a>
+            <p>发表日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">December 26th 2023, 9:05:14 pm</a>
+            <p>更新日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">March 24th 2024, 1:08:22 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1011,7 +796,7 @@ w 来控制指导规模：</font></p>
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cvideolcm"><span class="toc-number">2.</span> <span class="toc-text">二、VideoLCM</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cvideolcm"><span class="toc-number">2.</span> <span class="toc-text">二、VideoLCM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1.实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E6%95%88%E7%8E%87"><span class="toc-number">3.2.</span> <span class="toc-text">2.时间效率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%E6%AD%A5%E9%AA%A4%E7%9A%84%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">3.3.</span> <span class="toc-text">3.推理步骤的消融研究</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E7%9A%84%E5%AE%9A%E6%80%A7%E7%BB%93%E6%9E%9C"><span class="toc-number">3.4.</span> <span class="toc-text">4.更多的定性结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6"><span class="toc-number">3.5.</span> <span class="toc-text">5.限制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1495,8 +1280,6 @@ w 来控制指导规模：</font></p>
         
         
         
-        
-        
     
     
     
@@ -1532,13 +1315,13 @@ w 来控制指导规模：</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1601,7 +1384,7 @@ w 来控制指导规模：</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">视频扩散模型——6.Video LCM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
         </li>
     
         
@@ -1613,7 +1396,7 @@ w 来控制指导规模：</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型—3.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型——3.LVDM</a>
         </li>
     
         
@@ -1765,14 +1548,14 @@ w 来控制指导规模：</font></p>
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
@@ -1790,14 +1573,14 @@ w 来控制指导规模：</font></p>
             扩散模型
         </span>
     
-        <span class="sidebar-category-name" data-categories="视频扩散模型">
-            <span class="iconfont-archer">&#xe60a;</span>
-            视频扩散模型
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-实战">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-实战
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
         </span>
     
     </div>
