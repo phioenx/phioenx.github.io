@@ -19,25 +19,35 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言   计算机视觉中的许多问题旨在将图像从一个领域转换到另一个领域，包括超分辨率、着色、修复、属性迁移和风格迁移。因此，这种跨域图像到图像的翻译设置受到了极大的关注。当数据集包含配对示例时，可以通过条件生成模型或简单回归模型来解决这个问题。在这项工作中，我们关注的是当这种监督不可用时更具挑战性的环境。在许多场景中，感兴趣的跨域映射是多模式的。例如，由于天气、时间、照明等原因，冬季场景">
+    <meta name="description" content="一、介绍   扩散模型是强大的深度生成模型，适用于内容创建中的各种任务，包括图像到图像生成、文本到图像生成和 3D对象生成等。与这些在图像中的成功应用相比，生成高质量视频仍然面临着重大挑战，这主要归因于视频的复杂性和高维性，这些视频在高分辨率帧中包含复杂的时空信息。   同时，研究人员揭示了骨干网络革命对于扩散模型成功的重要性。依赖于卷积神经网络（CNN）的 U-Net在图像和视频生成工作中占据">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图像到图像翻译——2.MUNIT">
-<meta property="og:url" content="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
+<meta property="og:title" content="视频扩散模型——7.Latte">
+<meta property="og:url" content="http://example.com/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言   计算机视觉中的许多问题旨在将图像从一个领域转换到另一个领域，包括超分辨率、着色、修复、属性迁移和风格迁移。因此，这种跨域图像到图像的翻译设置受到了极大的关注。当数据集包含配对示例时，可以通过条件生成模型或简单回归模型来解决这个问题。在这项工作中，我们关注的是当这种监督不可用时更具挑战性的环境。在许多场景中，感兴趣的跨域映射是多模式的。例如，由于天气、时间、照明等原因，冬季场景">
+<meta property="og:description" content="一、介绍   扩散模型是强大的深度生成模型，适用于内容创建中的各种任务，包括图像到图像生成、文本到图像生成和 3D对象生成等。与这些在图像中的成功应用相比，生成高质量视频仍然面临着重大挑战，这主要归因于视频的复杂性和高维性，这些视频在高分辨率帧中包含复杂的时空信息。   同时，研究人员揭示了骨干网络革命对于扩散模型成功的重要性。依赖于卷积神经网络（CNN）的 U-Net在图像和视频生成工作中占据">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261456119.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261505242.png">
-<meta property="article:published_time" content="2024-01-24T00:56:36.000Z">
-<meta property="article:modified_time" content="2024-01-26T08:16:20.777Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241409331.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403260840181.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403260854991.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261051347.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261107276.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261500394.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261510568.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261539162.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261544317.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261550490.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261549600.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261600097.png">
+<meta property="article:published_time" content="2024-03-23T07:42:05.000Z">
+<meta property="article:modified_time" content="2024-03-27T09:41:28.380Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261456119.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241409331.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>图像到图像翻译——2.MUNIT · PhoenixPeng&#39;s blog</title>
+    <title>视频扩散模型——7.Latte · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -265,7 +275,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">图像到图像翻译——2.MUNIT</a>
+                <a href="#" class="post-name">视频扩散模型——7.Latte</a>
             </div>
         </div>
     
@@ -311,7 +321,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                图像到图像翻译——2.MUNIT
+                视频扩散模型——7.Latte
             <!-- 404 -->
             
         </h1>
@@ -339,7 +349,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/01/24</span>
+                    <span class="post-intro-time">2024/03/23</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -494,688 +504,266 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261456119.png"></p>
-<p><font color="black" size="5">  </font></p>
-<h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  计算机视觉中的许多问题旨在将图像从一个领域转换到另一个领域，包括超分辨率、着色、修复、属性迁移和风格迁移。因此，这种跨域图像到图像的翻译设置受到了极大的关注。当数据集包含配对示例时，可以通过条件生成模型或简单回归模型来解决这个问题。在这项工作中，我们关注的是当这种监督不可用时更具挑战性的环境。在许多场景中，感兴趣的跨域映射是多模式的。例如，由于天气、时间、照明等原因，冬季场景在夏季可能有多种可能的出现。不幸的是，现有技术通常假设确定性
-或单峰映射。因此，他们无法捕获可能输出的完整分布。即使通过注入噪声使模型变得随机，网络通常也会学会忽略它。</font></p>
-<p><font color="black" size="5">  在本文中，作者提出了多模式无监督图像到图像翻译（MUNIT）问题的原则框架。如图
-1（a）所示，我们的框架做出了几个假设。我们<strong>首先假设图像的潜在空间可以分解为内容空间和风格空间</strong>。我们进一步假设不同领域中的图像共享共同的<strong>内容空间</strong>，但不共享<strong>风格空间</strong>。为了将图像转换到目标域，我们将其<strong>内容编码</strong>与目标风格空间中的随机<strong>风格编码</strong>重新组合（图
-1 (b)）。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261505242.png"></p>
-<p><font color="black" size="5">  内容编码对翻译过程中应保留的信息进行编码，而风格编码表示输入图像中未包含的剩余变体。通过对不同风格的代码进行采样，我们的模型能够产生多样化和多模式的输出。大量的实验证明了我们的方法在多模态输出分布建模方面的有效性，以及与最先进的方法相比其卓越的图像质量。此外，内容和风格空间的分解允许我们的框架执行示例引导的图像翻译，其中翻译输出的风格由目标域中用户提供的示例图像控制。</font></p>
-<h1 id="二munit">二、MUNIT</h1>
-<h1 id="假设"><font color="black" size="5">1.假设</font></h1>
-<p><font color="black" size="5">  令<span class="math inline">\(\textcolor{blue}{x_1 \in
-\mathcal{X}_1}\)</span>和<span class="math inline">\(\textcolor{blue}{x_2 \in
-\mathcal{X}_2}\)</span>为来自两个不同图像域的图像。在无监督的图像到图像转换设置中，我们获得从两个边缘分布<span class="math inline">\(\textcolor{blue}{p(x_1)}\)</span> 和<span class="math inline">\(\textcolor{blue}{p(x_2)}\)</span>中抽取的样本，而无需访问联合分布<span class="math inline">\(\textcolor{blue}{p(x_1,
-x_2)}\)</span>。我们的目标是使用学习的图像到图像转换模型<span class="math inline">\(\textcolor{blue}{p(x_{1→2}|x_1)}\)</span> 和 <span class="math inline">\(\textcolor{blue}{p(x_{2→1}|x_2)}\)</span>来估计两个条件
-<span class="math inline">\(\textcolor{blue}{p(x_2|x_1)}\)</span> 和
-<span class="math inline">\(\textcolor{blue}{p(x_1|x_2)}\)</span>，其中
-<span class="math inline">\(\textcolor{blue}{x_{1→2}}\)</span> 是将<span class="math inline">\(\textcolor{blue}{x_1}\)</span>转换为<span class="math inline">\(\textcolor{blue}{\mathcal{X}_2}\)</span>生成的样本（与<span class="math inline">\(\textcolor{blue}{x_{2→1}}\)</span>类似）。一般来说，
-<span class="math inline">\(\textcolor{blue}{p(x_2|x_1)}\)</span> 和
-<span class="math inline">\(\textcolor{blue}{p(x_1|x_2)}\)</span>是复杂的多模态分布，在这种情况下，确定性翻译模型不能很好地工作。</font></p>
-<p><font color="black" size="5">  为了解决这个问题，我们做出了部分共享的潜在空间假设。具体来说，我们假设每个图像
-xi ∈ Xi 是根据两个域共享的内容潜在代码 c ∈ C
-和特定于各个域的风格潜在代码 si ∈ Si
-生成的。换句话说，联合分布中的一对对应图像 (x1, x2) 由 x1 = G1<em>(c,
-s1) 和 x2 = G2</em>(c, s2) 生成，其中 c、s1、s2 来自某些先验分布和
-G1<em>、G2</em> 是底层生成器。我们进一步假设 G1* 和 G2*
-是确定性函数，并且具有它们的逆编码器 E* 1 = (G1<em>)−1 和 E</em> 2=
-(G2*)−1。我们的目标是通过神经网络学习底层的生成器和编码器功能。请注意，尽管编码器和解码器是确定性的，但由于
-s2 的依赖性，p(x2|x1) 是连续分布。</font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403241409331.png"></p>
+<h1 id="一介绍">一、介绍</h1>
+<p><font color="black" size="5">  扩散模型是强大的深度生成模型，适用于内容创建中的各种任务，包括图像到图像生成、文本到图像生成和
+3D对象生成等。与这些在图像中的成功应用相比，生成高质量视频仍然面临着重大挑战，这主要归因于<strong>视频的复杂性和高维性，这些视频在高分辨率帧中包含复杂的时空信息</strong>。</font></p>
+<p><font color="black" size="5">  同时，研究人员揭示了骨干网络革命对于扩散模型成功的重要性。依赖于卷积神经网络（CNN）的
+U-Net在图像和视频生成工作中占据了突出的地位。相反，一方面，<strong>DiT
+和 U-ViT 将 ViT&nbsp;
+的架构调整为用于图像生成的扩散模型，并取得了良好的性能</strong>。此外，DiT
+已经证明 UNet
+的归纳偏差对于潜在扩散模型的性能并不重要。<strong>另一方面，基于注意力的架构提供了一种直观的选项，用于捕获视频中的远程上下文关系。</strong>因此，一个非常自然的问题出现了：基于
+Transformer 的潜在扩散模型能否增强真实视频的生成？</font></p>
+<p><font color="black" size="5">  在本文中，作者将提出了一种<strong>用于视频生成的新型Latent
+Diffusion Transformer，即 Latte，它采用video
+Transformer作为骨干。</strong> Latte
+采用预先训练的变分自动编码器将输入视频编码为潜在空间中的特征，其中从编码特征中提取token。然后应用一系列
+Transformer
+块对这些令牌进行编码。考虑到空间和时间信息之间的固有差异以及从输入视频中提取的大量token，如图2所示，Latte从分解输入视频的空间和时间维度的角度设计了四种高效的基于Transformer的模型变体。</font></p>
+<p><font color="black" size="5">  用于视频生成的基于 Transformer
+的潜在扩散模型可能会表现出不同的特征，因此需要确定该架构的最佳设计选择。因此，在本文中进行了全面的消融分析，<strong>包括视频剪辑patch嵌入、模型变体、时间步长类信息注入、时间位置嵌入和学习策略。</strong>该分析使
+Latte 能够生成具有时间连贯内容的逼真视频（见图
+1），并在四个标准视频生成基准上实现最先进的性能，包括
+FaceForensics、SkyTimelapse、UCF101和 Taichi-HD 。值得注意的是，Latte
+的性能远远优于最先进的技术，实现了最佳的FVD、FID和IS 。此外， Latte
+还能够扩展到文本到视频生成任务，与当前的 T2V
+模型相比，它也取得了可比的结果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403260840181.png"></p>
+<h1 id="二方法">二、方法</h1>
+<p><font color="black" size="5">  本文仍然是沿用stable
+diffusion的训练以及推理框架，并延续DiT的思想，去训练具有学习的逆过程协方差
+<span class="math inline">\(\textcolor{blue}{Σ_θ}\)</span>
+的扩散模型，优化完整的 <span class="math inline">\(\textcolor{blue}{D_{KL}}\)</span>
+项，从而使用完整的 <span class="math inline">\(\textcolor{blue}{L}\)</span>（表示为 <span class="math inline">\(\textcolor{blue}{L_{vlb}}\)</span>）进行训练。</font></p>
+<p><font color="black" size="5">  LDM 扩展到视频生成：</font></p>
+<p><font color="black" size="5">  1️⃣编码器 E
+用于将每个视频帧压缩到潜在空间中； </font></p>
+<blockquote>
+<p><font color="bule" size="5"><strong>Latte使用的是SD的一个二维autoencoder，不是将整个视频进行压缩，而是对视频的每一帧进行压缩，帧数是不变的</strong>。</font></p>
+</blockquote>
+<p><font color="black" size="5">  2️⃣扩散过程在视频的潜在空间中运行，以对<strong>潜在的空间和时间信息</strong>进行建模。</font></p>
+<p><font color="black" size="5">  在这项工作中，<span class="math inline">\(\textcolor{blue}{ε_θ}\)</span> 是用 Transformer
+实现的。通过使用 <span class="math inline">\(\textcolor{blue}{L_{simple}}\)</span>和&nbsp;<span class="math inline">\(\textcolor{blue}{L_{vlb}}\)</span>
+来训练所有模型。</font></p>
+<h2 id="latte的模型变体"><font color="black" size="5">1.Latte的模型变体</font></h2>
+<p><font color="black" size="5">  Latte 的模型变体如图 2
+所示，提出了四种 Latte 模型变体来有效捕获视频中的时空信息。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403260854991.png"></p>
+<p><font color="SkyBlue" size="5">  👩‍🏭<strong>Variant
+1：</strong></font><font color="black" size="5">如图 2 (a)
+所示，该Variant 1的 Transformer 主干包括两种不同类型的 Transformer
+块：空间 Transformer 块和时间 Transformer
+块。<strong>前者专注于仅捕获共享相同时间索引的token之间的空间信息，而后者以“交错融合”的方式捕获跨时间维度的时间信息。</strong></font></p>
+<p><font color="black" size="5">  假设在潜在空间 <span class="math inline">\(\textcolor{blue}{V_L ∈ R^{F×H×W×C}}\)</span>
+中有一个视频剪辑。首先将 <span class="math inline">\(\textcolor{blue}{V_L}\)</span>
+转换为token序列，表示为 <span class="math inline">\(\textcolor{blue}{\hat{z}∈
+R^{n_f×n_h×n_w×d}}\)</span>。这里 <span class="math inline">\(\textcolor{blue}{F}\)</span> 、&nbsp;<span class="math inline">\(\textcolor{blue}{H}\)</span> 、&nbsp;<span class="math inline">\(\textcolor{blue}{W}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{C}\)</span>
+分别表示潜在空间中视频帧的数量、视频帧的高度、宽度和通道。潜在空间中视频剪辑内的token总数为<span class="math inline">\(\textcolor{blue}{n_f × n_h × n_w}\)</span>，<span class="math inline">\(\textcolor{blue}{d}\)</span>
+分别表示每个标记的维度。时空位置嵌入&nbsp;<span class="math inline">\(\textcolor{blue}{p}\)</span> 被合并到<span class="math inline">\(\textcolor{blue}{\hat{z}}\)</span>&nbsp;中。最后，我们得到
+<span class="math inline">\(\textcolor{blue}{z = \hat{z} + p}\)</span>
+作为 Transformer 主干的输入。</font></p>
+<p><font color="black" size="5">  再将&nbsp;<span class="math inline">\(\textcolor{blue}{z}\)</span> 重塑为 <span class="math inline">\(\textcolor{blue}{z_s ∈ R^{n_f×t×d}}\)</span>
+作为空间 Transformer 块的输入以捕获空间信息。这里，<span class="math inline">\(\textcolor{blue}{t = n_h × n_w}\)</span>
+表示每个时间索引的token数。随后，包含空间信息的 <span class="math inline">\(\textcolor{blue}{z_s}\)</span> 被重塑为<span class="math inline">\(\textcolor{blue}{z_t ∈ R^{t×n_f×d}}\)</span>
+，作为时间 Transformer 块的输入，用于捕获时间信息。</font></p>
+<p><font color="LightSeaGreen" size="5">  👩🏻‍🌾<strong>Variant
+2：</strong></font><font color="black" size="5">与Variant 1
+中的时间“交错融合”设计相反，<strong>该变体利用“后期融合”方法来组合时空信息</strong>。如图
+2 (b) 所示，Variant 2由与Variant 1相同数量的 Transformer
+块组成。与Variant 1 类似，空间 Transformer 块和时间 Transformer
+块的输入形状分别为 <span class="math inline">\(\textcolor{blue}{z_s ∈
+R^{n_f×t×d}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{z_t ∈
+R^{t×n_f×d}}\)</span>。</font></p>
+<p><font color="MediumPurple" size="5">  🧙‍♀️<strong>Variant
+3：</strong></font><font color="black" size="5">Variant 1 和Variant 2
+主要关注 Transformer 块的因式分解。<strong>Variant 3 侧重于分解
+Transformer 块中的多头注意力</strong>。如图 2 (c)
+所示，该变体最初仅在空间维度上计算自注意力，然后是时间维度。因此，每个
+Transformer 块都会捕获空间和时间信息。与变体 1 和变体 2
+类似，空间多头自注意力和时间多头自注意力的输入分别为<span class="math inline">\(\textcolor{blue}{z_s ∈ R^{n_f×t×d}}\)</span> 和
+<span class="math inline">\(\textcolor{blue}{z_t ∈
+R^{t×n_f×d}}\)</span>。</font></p>
+<p><font color="Lightpink" size="5">  💂🏻‍♀️<strong>Variant
+4：</strong></font><font color="black" size="5">在此变体中，将多头注意力（MHA）分解为两个组件，每个组件利用一半的注意力头，如图
+2（d）所示。使用不同的组件在空间和时间维度上分别处理token。这些不同分量的输入形状分别为<span class="math inline">\(\textcolor{blue}{z_s ∈ R^{n_f×t×d}}\)</span> 和
+<span class="math inline">\(\textcolor{blue}{z_t ∈
+R^{t×n_f×d}}\)</span>。一旦计算出两个不同的注意力操作，就将&nbsp;<span class="math inline">\(\textcolor{blue}{z_t ∈ R^{t×n_f×d}}\)</span>
+重塑为<span class="math inline">\(\textcolor{blue}{z^{\prime}_t ∈
+R^{n_f×t×d}}\)</span>。然后将&nbsp;<span class="math inline">\(\textcolor{blue}{z^{\prime}_t}\)</span> 添加到
+<span class="math inline">\(\textcolor{blue}{z_s}\)</span>，用作
+Transformer 块中下一个模块的输入。</font></p>
+<p><font color="black" size="5">  在 Transformer
+主干之后，沿同DiT一样，通过采用标准线性解码器去解码视频token，再进行重塑操作来<strong>导出预测噪声和预测协方差</strong>。两个输出的形状与输入的形状相同<span class="math inline">\(\textcolor{blue}{V_L ∈
+R^{F×H×W×C}}\)</span>。</font></p>
+<h2 id="latte的实证分析"><font color="black" size="5">2.Latte的实证分析</font></h2>
+<p><font color="black" size="5">  对 Latte
+中的关键组件进行了全面的实证分析，旨在发现将 Transformer
+集成为视频生成的潜在扩散模型中的骨干的最佳实践。</font></p>
+<h3 id="潜在视频剪辑patch-embedding"><font color="black" size="5">2.1
+潜在视频剪辑patch embedding</font></h3>
+<p><font color="black" size="5">  为了嵌入视频剪辑，作者探索了以下两种方法来分析在token中集成时间信息的必要性，即<strong>均匀帧patch嵌入</strong>和<strong>压缩帧patch嵌入</strong>。</font></p>
+<p><font color="black" size="5">  1️⃣<strong>均匀帧patch嵌入：</strong>如图
+3 (a) 所示，将
+ViT中的patch嵌入技术分别应用于每个视频帧。具体地，当从每个视频帧提取非重叠图像块时<span class="math inline">\(\textcolor{blue}{n_f}\)</span>、<span class="math inline">\(\textcolor{blue}{n_h}\)</span>和<span class="math inline">\(\textcolor{blue}{n_w}\)</span>等价于<span class="math inline">\(\textcolor{blue}{F}\)</span>、<span class="math inline">\(\textcolor{blue}{\frac{H}{h}}\)</span>和<span class="math inline">\(\textcolor{blue}{\frac{W}{w}}\)</span>。这里，<span class="math inline">\(\textcolor{blue}{h}\)</span>和<span class="math inline">\(\textcolor{blue}{w}\)</span>分别表示image
+patch的高度和宽度。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261051347.png"></p>
+<p><font color="black" size="5">  2️⃣<strong>压缩帧patch嵌入：</strong>第二种方法是<strong>通过将
+ViT
+patch嵌入扩展到时间维度来对潜在视频片段中的时间信息进行建模</strong>，如图
+3 (b) 所示。沿着时间维度以&nbsp;<span class="math inline">\(\textcolor{blue}{s}\)</span>
+的步幅提取tubes，然后将它们映射到token。这里，与非重叠均匀帧patch嵌入相比，<span class="math inline">\(\textcolor{blue}{n_f}\)</span>相当于&nbsp;<span class="math inline">\(\textcolor{blue}{\frac{F}{s}}\)</span>
+。与前者相比，<strong>该方法在patch嵌入阶段本质上融合了时空信息。</strong>请注意，在使用压缩帧patch嵌入方法的情况下，额外的步骤需要集成
+3D
+转置卷积以对输出潜在视频进行时间上采样，遵循标准线性解码器和重塑操作。</font></p>
+<h3 id="timestep-class-信息注入"><font color="black" size="5">2.2
+Timestep-class 信息注入</font></h3>
+<p><font color="black" size="5">  本文探索了两种将Timestep或class信息集成到模型中的方法。第一种方法是<strong>将其视为token，作者将这种方法称为all
+tokens</strong>。第二种方法类似于<strong>自适应层归一化（AdaLN）</strong>。采用线性回归根据输入&nbsp;<span class="math inline">\(\textcolor{blue}{c}\)</span> 计算 <span class="math inline">\(\textcolor{blue}{γ_c}\)</span> 和 <span class="math inline">\(\textcolor{blue}{β_c}\)</span>，得出方程 <span class="math inline">\(\textcolor{blue}{AdaLN (h, c) = γ_cLayerNorm(h) +
+β_c}\)</span>，其中&nbsp;<span class="math inline">\(\textcolor{blue}{h}\)</span> 表示 Transformer
+块内的隐藏嵌入。此外，我们还对&nbsp;<span class="math inline">\(\textcolor{blue}{\alpha_c}\)</span>
+进行回归，该回归直接应用于 Transformer 块内的任何残差连接 (RCs)
+之前，从而得到 <span class="math inline">\(\textcolor{blue}{RCs(h, c) =
+α_ch + AdaLN (h,
+c)}\)</span>。<strong>将此称为可扩展自适应层归一化（S-AdaLN）</strong>。
+S-AdaLN的架构如图4a所示</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261107276.png"></p>
+<h3 id="时间位置嵌入"><font color="black" size="5">2.3
+时间位置嵌入</font></h3>
+<p><font color="black" size="5">  时间位置嵌入使模型能够理解时间信号。本文探索了两种方法将时间位置嵌入注入到模型中：1️⃣<strong>绝对位置编码方法结合了不同频率的正弦和余弦函数，使模型能够识别每个帧的精确位置视频序列</strong>；2️⃣<strong>相对位置编码方法采用旋转位置嵌入（RoPE）使模型能够掌握连续帧之间的时间关系</strong>。</font></p>
+<h3 id="通过学习策略增强视频生成"><font color="black" size="5">2.4
+通过学习策略增强视频生成</font></h3>
+<p><font color="black" size="5">  为了确保生成的视频展现出最佳的视觉质量，同时保持时间一致性。本文探讨了结合两种额外的学习策略（即<strong>使用预训练模型进行学习</strong>和<strong>使用图像-视频联合训练进行学习</strong>）是否可以提高生成视频的质量。</font></p>
+<p><font color="black" size="5">  1️⃣<strong>使用预训练模型进行学习：</strong>预训练的图像生成模型已经了解了世界的样子。因此，有许多视频生成工作将其模型建立在预先训练的图像生成模型上，以了解世界如何运动。然而，这些工作主要建立在潜在扩散模型中的
+U-Net 上。基于 Transformer 的潜在扩散模型的必要性值得探讨。</font></p>
+<p><font color="black" size="5">  具体方法：作者从 ImageNet
+上预先训练的 DiT 模型初始化
+Latte。<strong>但直接从预训练的DiT模型初始化会遇到参数缺失或不兼容的问题</strong>。为了解决这些问题，在预训练的
+DiT 中，位置嵌入 <span class="math inline">\(\textcolor{blue}{p ∈
+R^{n_h×n_w×d}}\)</span>
+应用于每个token。然而，在Latte中，token数是预训练 DiT 模型的&nbsp;<span class="math inline">\(\textcolor{blue}{n_f}\)</span>
+倍。（视频生成相比图像多一个时间维度）因此，作者在时间上将位置嵌入从&nbsp;<span class="math inline">\(\textcolor{blue}{p ∈ R^{n_h×n_w×d}}\)</span>
+复制到<span class="math inline">\(\textcolor{blue}{p ∈
+R^{n_f×n_h×n_w×d}}\)</span> 次。此外，预训练的 DiT
+包括标签嵌入层，类别数量为 1000。然而，与 ImageNet
+相比，所使用的视频数据集要么缺乏标签信息，要么包含的类别数量明显较少。由于Latte的目标是无条件和类条件视频生成，DiT
+中的原始标签嵌入层不适合这项任务，因此作者选择直接丢弃 DiT
+中的标签嵌入并应用零初始化。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>通过图像-视频联合训练进行学习：</strong>基于
+CNN
+的视频扩散模型的先前工作提出了一种联合图像视频训练策略，可以极大地提高生成视频的质量。作者也探讨这种训练策略是否也可以提高基于
+Transformer
+的视频扩散模型的性能。为了实现视频和图像生成的同步训练，我们将从同一数据集中随机选择的视频帧附加到所选视频的末尾，并且每个帧都是独立采样的。为了确保我们的模型能够生成连续的视频，在时间模块中使用与视频内容相关的token来对时间信息进行建模，而帧token被排除在外。</font></p>
+<h1 id="三实验">三、实验</h1>
+<h2 id="实验设置"><font color="black" size="5">1.实验设置</font></h2>
+<p><font color="black" size="5">  <strong>数据集：</strong>Latte主要在四个公共数据集上进行综合实验：FaceForensics、SkyTimelapse、UCF101和
+Taichi-HD。本文除了 UCF101 之外，对所有数据集使用训练分割。对于
+UCF101，同时使用训练和测试分割。使用特定的采样间隔从这些数据集中提取 16
+帧视频片段，每帧大小调整为 256×256 分辨率以进行训练。</font></p>
+<p><font color="black" size="5">  <strong>评估指标：</strong>在定量比较的评估中，采用三个评估指标：FVD、FID
+和 IS。主要关注点是 FVD，因为其基于图像的对应 FID
+更符合人类的主观判断。遵循 StyleGAN-V 引入的评估指南，通过分析 2,048
+个视频剪辑（每个视频剪辑包含 16 帧）来计算 FVD 分数。仅使用 IS 来评估
+UCF101 的生成质量，因为它利用 UCF101 微调的 C3D 模型。</font></p>
+<p><font color="black" size="5">  <strong>baseline：</strong>Latte与最近的方法进行比较以定量评估结果，包括
+MoCoGAN、VideoGPT、MoCoGAN-HD、DIGAN、 StyleGAN-V、PVDM、MoStGAN-V和
+LVDM。</font></p>
+<p><font color="black" size="5">  <strong>Latte配置：</strong>一系列 N
+个 Transformer 块用于构建 Latte 模型，每个 Transformer 块的隐藏维度为
+D，具有 N 个多头注意力。效仿ViT，在本文中设置具有不同参数数量的 Latte
+的四种配置，如表4所示。 </font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261500394.png"></p>
+<p><font color="black" size="5">  <strong>实施细节：</strong>使用具有恒定学习率
+1 × 10−4 的 AdamW
+优化器来训练所有模型。水平翻转是唯一采用的数据增强。遵循生成建模工作中的常见做法，在整个训练过程中维持
+Latte 权重的指数移动平均值 (EMA)，采用 0.9999
+的衰减率。所有报告的结果均直接从 EMA 模型获得。Latte借用了stable
+diffusion 1.4 中预训练的变分自动编码器。</font></p>
+<h2 id="消融实验"><font color="black" size="5">2.消融实验</font></h2>
+<p><font color="black" size="5">  在本节中，使用FaceForensics
+数据集上在Latte的不同变体进行实验，其中包括模型变体、视频采样间隔、模型大小对模型性能的影响。</font></p>
+<p><font color="black" size="5">  1️⃣<strong>视频剪辑patch嵌入：</strong>Latte研究了第
+2.1
+节中详述的两种视频剪辑patch嵌入方法的影响。在图6e中，<strong>压缩帧patch嵌入方法的性能明显落后于均匀帧patch嵌入方法。</strong>这一发现与视频理解方法
+ViViT
+获得的结果相矛盾。作者推测，使用压缩帧补丁嵌入方法会导致时空信号丢失，这使得
+Transformer 主干很难学习视频的分布。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261510568.png"></p>
+<p><font color="black" size="5">  2️⃣<strong>Timestep-class信息注入：</strong>如图
+6f 所示，<strong>S-AdaLN 的性能明显优于all
+tokens</strong>。作者认为这种差异可能源于以下事实：all
+tokens仅向模型的输入层引入时间步长或标签信息，这可能面临在整个模型中有效传播的挑战。相比之下，S-AdaLN
+以更自适应的方式为每个 Transformer
+块将时间步长或标签信息编码到模型中。这种信息传输方法似乎更有效，可能有助于实现卓越的性能和更快的模型收敛。</font></p>
+<p><font color="black" size="5">  3️⃣<strong>时间位置嵌入：</strong>图6b说明了两种不同时间位置嵌入方法对模型性能的影响。<strong>采用绝对位置嵌入方法往往会比其他方法产生稍微更好的结果</strong>。</font></p>
+<p><font color="black" size="5">  4️⃣<strong>通过学习策略增强视频生成：</strong>如图
+6c 所示，可以观察到<strong>训练的初始阶段极大地受益于 ImageNet
+上的模型预训练，从而能够在视频数据集上快速实现高质量的性能。然而，随着迭代次数的增加，使用预训练模型初始化的模型的性能趋于稳定在一定水平附近，这比使用随机初始化的模型要差得多。</strong></font></p>
+<p><font color="black" size="5">  这种现象可以用两个因素来解释：1）<strong>ImageNet
+上的预训练模型提供了良好的表示</strong>，这可能有助于模型在早期阶段快速收敛；
+2）<strong>ImageNet和FaceForensics之间的数据分布存在显着差异</strong>，这使得模型很难将在ImageNet上学到的知识适应FaceForensics。如表1和表2所示，<strong>图像视频联合训练（“Latte+IMG”）导致FID和FVD显着提高</strong>。沿时间轴将额外的随机采样帧与视频连接起来，使模型能够在每个批次中容纳更多示例，这可以增加训练模型的多样性。</font></p>
+<p><font color="black" size="5">  5️⃣<strong>视频采样间隔：</strong>该实验旨在探索各种采样率，从每个训练视频构建
+16
+帧剪辑。如图6a所示，在训练过程中，<strong>早期使用不同采样率的模型之间存在显着的性能差距。然而，随着训练迭代次数的增加，性能逐渐变得一致，这表明不同的采样率对模型性能影响很小。</strong>我们选择视频采样间隔为
+3，以确保生成的视频具有合理的连续性，以进行与最先进技术的比较实验。</font></p>
+<p><font color="black" size="5">  6️⃣<strong>Model
+variants：</strong>实验还评估了 Latte
+的模型变体，为了确保公平的比较，所有不同模型的参数计数相等，并且从头开始训练所有模型。结果如图
+6d 所示，<strong>随着迭代次数的增加，Variants 1
+表现最好</strong>。值得注意的是，与其他三个模型变体相比，Variants 4
+的浮点运算 (FLOP) 大约为四分之一，如表 3 所示。 因此，Variants 4
+在四个变体中表现最差也就不足为奇了。</font></p>
+<p><font color="black" size="5">  在Variants 2 中，一半的 Transformer
+块最初用于空间建模，然后剩下的一半用于时间建模。<strong>这种划分可能会导致后续时间建模过程中空间建模能力的丧失，最终影响性能。</strong>因此，与仅使用多头注意力（Variants
+3）相比，采用完整的 Transformer
+块（包括多头注意力、层范数和多线性投影）在建模时间信息方面可能更有效。</font></p>
+<p><font color="black" size="5">  7️⃣<strong>model
+size：</strong>如表4所示。训练了四个不同大小的 Latte 模型。
+FaceForensics 数据集上的 4（XL、L、B 和 S）。图 8
+清楚地说明了随着训练迭代次数的增加，相应的 FVD
+的进展。可以清楚地观察到，<strong>增加模型大小通常与显着的性能改进相关，这在DiT图像生成工作中也已指出</strong>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261539162.png"></p>
+<h2 id="与sota进行比较"><font color="black" size="5">3.与sota进行比较</font></h2>
+<p><font color="black" size="5">  基于上一节的消融研究。可以获得基于
+Transformer 的潜在视频扩散模型的最佳实践（即<strong>模型Variants
+1</strong>、<strong>均匀帧patch嵌入</strong>、<strong>S-AdaLN</strong>
+和绝<strong>对位置嵌入方法</strong>、<strong>图像视频联合训练</strong>）。在这些最佳实践下使用
+Latte 与当前最先进的技术进行比较。</font></p>
+<p><font color="black" size="5">  <strong>定性结果：</strong>图 5
+展示了 Latte 在 UCF101、Taichi-HD、FaceForensics 和 SkyTimelapse
+上的视频合成结果。
+Latte方法在所有场景中始终如一地提供逼真的高分辨率视频生成结果（256x256
+像素）。这包括捕捉人脸的运动和处理运动员的重大转变。值得注意的是，Latte擅长在具有挑战性的
+UCF101
+数据集中合成高质量视频，而其他比较方法常常无法完成这项任务。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261544317.png"></p>
+<p><font color="black" size="5">  <strong>定量结果：</strong>在表2展示了Latte和其他对比方法的定量结果。Latte在所有数据集上都显着优于以前的工作，这表明Latte在视频生成方面的优越性。在表1报告
+FaceForensics 上的 FID 和 UCF101 上的 IS
+来评估视频帧质量。Latte表现出出色的性能，FID 值为 3.87，IS 值为
+73.31，显着超过其他方法的能力。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261550490.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261549600.png"></p>
+<h2 id="扩展到文本到视频生成"><font color="black" size="5">4.扩展到文本到视频生成</font></h2>
+<p><font color="black" size="5">  为了探索Latte的潜在能力，作者将
+Latte 扩展到文本到视频生成。采用图2（a）所示的方法来构建Latte
+T2V模型。并利用预训练模型可以促进模型训练。因此，作者利用预训练的
+PixArt-α（512 × 512 分辨率）的权重来初始化 Latte T2V 模型中空间
+Transformer 块的参数。由于常用视频数据集 WebVid-10M的分辨率低于 512 ×
+512，因此在LAVIE中提出的高分辨率视频数据集 Vimeo25M
+上训练Latte模型。作者在这两个数据集的子集上训练 T2V 模型，其中包含大约
+330,000 个文本视频对。在图 7 中的视觉质量方面与最近的 T2V 模型
+VideoFusion和 VideoLDM 进行了比较。它表明 Latte 可以生成可比较的 T2V
+结果。此外，选择 2,048 个采样视频来计算 FVD 和 FID 分数。所得的 FVD 和
+FID 值分别为 328.20 和 50.72。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403261600097.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  这项工作提出了
+Latte，一种简单且通用的视频扩散方法，它采用视频 Transformer
+作为生成视频的骨干。为了提高生成的视频质量，论文当中还确定了所提出模型的最佳实践，包括剪辑patch嵌入、模型变体、Timesteps-class信息注入、时间位置嵌入和学习策略。综合实验表明，Latte
+在四个标准视频生成基准测试中取得了最先进的结果。此外，与当前的 T2V
+方法相比，还获得了可比的文本到视频结果。Latte 可以为未来有关将基于
+Transformer
+的骨干网集成到视频生成扩散模型以及其他模式的研究提供宝贵的见解。</font></p>
 <p><font color="black" size="5">  </font></p>
 
     </article>
@@ -1183,9 +771,9 @@ s2 的依赖性，p(x2|x1) 是连续分布。</font></p>
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
-            <p>发表日期：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 24th 2024, 8:56:36 am</a>
-            <p>更新日期：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 26th 2024, 4:16:20 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">http://example.com/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/</a>
+            <p>发表日期：<a href="http://example.com/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">March 23rd 2024, 3:42:05 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">March 27th 2024, 5:41:28 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1193,17 +781,12 @@ s2 的依赖性，p(x2|x1) 是连续分布。</font></p>
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="扩散模型代码篇——2.UNet">
-                    <div class="nextTitle">扩散模型代码篇——2.UNet</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="图像到图像翻译——1.UNIT">
-                    <div class="prevTitle">图像到图像翻译——1.UNIT</div>
+                <a href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/" title="扩散模型实战——3.训练ControlNet去控制SD">
+                    <div class="prevTitle">扩散模型实战——3.训练ControlNet去控制SD</div>
                 </a>
             
         </li>
@@ -1373,7 +956,11 @@ s2 的依赖性，p(x2|x1) 是连续分布。</font></p>
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cmunit"><span class="toc-number">2.</span> <span class="toc-text">二、MUNIT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%87%E8%AE%BE"><span class="toc-number">3.</span> <span class="toc-text">1.假设</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#latte%E7%9A%84%E6%A8%A1%E5%9E%8B%E5%8F%98%E4%BD%93"><span class="toc-number">2.1.</span> <span class="toc-text">1.Latte的模型变体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#latte%E7%9A%84%E5%AE%9E%E8%AF%81%E5%88%86%E6%9E%90"><span class="toc-number">2.2.</span> <span class="toc-text">2.Latte的实证分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91patch-embedding"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.1
+潜在视频剪辑patch embedding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#timestep-class-%E4%BF%A1%E6%81%AF%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2
+Timestep-class 信息注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E4%BD%8D%E7%BD%AE%E5%B5%8C%E5%85%A5"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3
+时间位置嵌入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%E5%A2%9E%E5%BC%BA%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">2.2.4.</span> <span class="toc-text">2.4
+通过学习策略增强视频生成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1.实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">2.消融实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8Esota%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="toc-number">3.3.</span> <span class="toc-text">3.与sota进行比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%88%B0%E6%96%87%E6%9C%AC%E5%88%B0%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">3.4.</span> <span class="toc-text">4.扩展到文本到视频生成</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
