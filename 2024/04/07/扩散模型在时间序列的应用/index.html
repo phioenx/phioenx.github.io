@@ -19,28 +19,56 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言   许多计算机视觉问题可以表现为图像到图像的转换问题，将一个域中的图像映射到另一个域中的相应图像。例如，超分辨率可以被认为是一个将低分辨率图像映射到对应的高分辨率图像的问题；彩色化可以被视为将灰度图像映射到相应的彩色图像的问题。该问题可以在监督和无监督学习环境中进行研究。在监督设置中，可以使用不同域中的成对对应图像。在无监督设置中，我们只有两组独立的图像，其中一组由一个域中的图像组成，">
+    <meta name="description" content="一、介绍   扩散模型在时间序列方向上的应用，主要包含时间序列预测、时间序列插补、时间序列生成。   1️⃣时间序列预测：给定观察到的历史时间序列，去预测未来的时间序列。   2️⃣时间序列插补：由于数据收集失败和人为错误等原因，观测到的时间序列有时不完整，因此采用时间序列插补来填补缺失值。   3️⃣时间序列生成：生成更多与观测周期具有相似特征的时间序列样本。   针对这三个方面，本文总结了目前">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图像到图像翻译——1.UNIT">
-<meta property="og:url" content="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/index.html">
+<meta property="og:title" content="扩散模型在时间序列的应用">
+<meta property="og:url" content="http://example.com/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言   许多计算机视觉问题可以表现为图像到图像的转换问题，将一个域中的图像映射到另一个域中的相应图像。例如，超分辨率可以被认为是一个将低分辨率图像映射到对应的高分辨率图像的问题；彩色化可以被视为将灰度图像映射到相应的彩色图像的问题。该问题可以在监督和无监督学习环境中进行研究。在监督设置中，可以使用不同域中的成对对应图像。在无监督设置中，我们只有两组独立的图像，其中一组由一个域中的图像组成，">
+<meta property="og:description" content="一、介绍   扩散模型在时间序列方向上的应用，主要包含时间序列预测、时间序列插补、时间序列生成。   1️⃣时间序列预测：给定观察到的历史时间序列，去预测未来的时间序列。   2️⃣时间序列插补：由于数据收集失败和人为错误等原因，观测到的时间序列有时不完整，因此采用时间序列插补来填补缺失值。   3️⃣时间序列生成：生成更多与观测周期具有相似特征的时间序列样本。   针对这三个方面，本文总结了目前">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401240919415.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261045541.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261103144.png">
-<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT.assets\1706239189350.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261123508.png">
-<meta property="article:published_time" content="2024-01-24T00:56:09.000Z">
-<meta property="article:modified_time" content="2024-01-26T07:14:50.460Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071059706.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071635153.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071641572.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071655387.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071700256.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071706397.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071711807.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071715479.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071554976.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071554751.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071604178.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071605090.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071608368.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071611971.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071622451.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404090939413.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081105744.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081106403.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081542784.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091019070.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091019434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081628621.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081015045.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081034760.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091058325.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091828176.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091740225.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404080838082.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091815980.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091839971.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091741209.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091823350.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091821918.png">
+<meta property="article:published_time" content="2024-04-07T02:39:36.000Z">
+<meta property="article:modified_time" content="2024-04-09T10:40:43.030Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401240919415.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071059706.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>图像到图像翻译——1.UNIT · PhoenixPeng&#39;s blog</title>
+    <title>扩散模型在时间序列的应用 · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -268,7 +296,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">图像到图像翻译——1.UNIT</a>
+                <a href="#" class="post-name">扩散模型在时间序列的应用</a>
             </div>
         </div>
     
@@ -314,7 +342,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                图像到图像翻译——1.UNIT
+                扩散模型在时间序列的应用
             <!-- 404 -->
             
         </h1>
@@ -342,7 +370,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/01/24</span>
+                    <span class="post-intro-time">2024/04/07</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -497,279 +525,238 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401240919415.png"></p>
-<h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  许多计算机视觉问题可以表现为图像到图像的转换问题，将一个域中的图像映射到另一个域中的相应图像。例如，超分辨率可以被认为是一个将低分辨率图像映射到对应的高分辨率图像的问题；彩色化可以被视为将灰度图像映射到相应的彩色图像的问题。该问题可以在监督和无监督学习环境中进行研究。在监督设置中，可以使用不同域中的成对对应图像。在无监督设置中，我们只有两组独立的图像，其中一组由一个域中的图像组成，另一组由另一个域中的图像组成
--
-不存在配对示例来显示如何将图像转换为另一个域中的相应图像。由于缺乏相应的图像，无监督图像到图像翻译（UNIT）问题被认为更困难，但它更适用，因为训练数据收集更容易。</font></p>
-<p><font color="black" size="5">  从概率建模的角度分析图像翻译问题时，关键的挑战是<strong>学习不同领域图像的联合分布</strong>。在无监督设置中，这两个集合由来自两个不同域中的两个边缘分布的图像组成，任务是使用这些图像推断联合分布。耦合理论指出，存在无限组联合分布，通常可以达到给定的边际分布。因此，从边际分布推断联合分布是一个非常不适定的问题。为了解决不适定问题，我们需要<strong>对联合分布的结构进行额外的假设</strong>。</font></p>
-<p><font color="black" size="5">  为此，作者提出<strong>共享潜在空间假设</strong>，<strong>假设不同域中的一对对应图像可以映射到共享潜在空间中的相同潜在表示</strong>。基于这个假设，作者提出了一个基于生成对抗网络（GAN）和变分自动编码器（VAE）的
-UNIT 框架。我们使用 VAE-GAN
-对每个图像域进行建模。对抗训练目标与权重共享约束相互作用，权重共享约束强制共享潜在空间，以生成两个域中的相应图像，而变分自动编码器将翻译后的图像与各自域中的输入图像相关联。我们将所提出的框架应用于各种无监督图像到图像翻译问题，并取得了高质量的图像翻译结果。我们还将其应用于领域适应问题，并在基准数据集上实现了最先进的精度。共享潜在空间假设在耦合
-GAN 中用于联合分布学习。在这里，我们扩展了针对 UNIT 问题的 Coupled GAN
-工作。我们还注意到，一些当代作品提出了循环一致性约束假设，它假设存在循环一致性映射，以便源域中的图像可以映射到目标域中的图像，并且这目标域中的翻译图像可以映射回源域中的原始图像。在本文中，我们表明共享潜在空间约束意味着循环一致性约束。</font></p>
-<h1 id="二假设">二、假设</h1>
-<p><font color="black" size="5">  设<span class="math inline">\(\textcolor{blue}{\mathcal{X}_1}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{X}_2}\)</span>为两个图像域。在有监督的图像到图像转换中，我们得到从联合分布<span class="math inline">\(\textcolor{blue}{P_{\mathcal{X}_1,\mathcal{X}_2}
-(x_1, x_2)}\)</span> 中抽取的样本 <span class="math inline">\(\textcolor{blue}{(x_1,
-x_2)}\)</span>。在无监督图像到图像的转换中，我们获得从边缘分布<span class="math inline">\(\textcolor{blue}{P_{\mathcal{X}_1} (x_1)}\)</span>
-和<span class="math inline">\(\textcolor{blue}{P_{\mathcal{X}_2}
-(x_2)}\)</span>
-中抽取的样本。由于无限组可能的联合分布可以产生给定的边际分布，因此在没有额外假设的情况下，我们无法从边际样本中推断出任何有关联合分布的信息。</font></p>
-<p><font color="black" size="5">  作者提出共享潜在空间假设，如图 1
-所示。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261045541.png"></p>
-<p><font color="black" size="5">  我们假设对于任何给定的图像对<span class="math inline">\(\textcolor{blue}{x_1}\)</span>和<span class="math inline">\(\textcolor{blue}{x_2}\)</span>，在共享潜在空间中存在一个共享潜在表示<span class="math inline">\(\textcolor{blue}{z}\)</span> ，并假设存在函数
-<span class="math inline">\(\textcolor{blue}{E^*_1}\)</span>、<span class="math inline">\(\textcolor{blue}{E^*_2}\)</span>、<span class="math inline">\(\textcolor{blue}{G^*_1}\)</span>和<span class="math inline">\(\textcolor{blue}{G^*_2}\)</span>
-，这样，给定联合分布中的一对对应图像<span class="math inline">\(\textcolor{blue}{(x_1,X_2)}\)</span>，我们有<span class="math inline">\(\textcolor{blue}{z=E^*_1(x_1)=E^*_2(x_2)}\)</span>
-，相反<span class="math inline">\(\textcolor{blue}{x_1 =
-G^*_1(z)}\)</span> 和<span class="math inline">\(\textcolor{blue}{x_2 =
-G^*_2(z)}\)</span> 。</font></p>
-<p><font color="black" size="5">  在该模型中，从<span class="math inline">\(\textcolor{blue}{\mathcal{X}_1}\)</span>
-映射到<span class="math inline">\(\textcolor{blue}{\mathcal{X}_2}\)</span>的函数
-<span class="math inline">\(\textcolor{blue}{x_2 =
-F^*_{1→2}(x_1)}\)</span> 可以由组合<span class="math inline">\(\textcolor{blue}{F^*_{1→2}(x_1) =
-G_2^*(E^*_1(x_1))}\)</span> 表示。类似地，<span class="math inline">\(\textcolor{blue}{x_1 =
-F^*_{2→1}(x_2)=G_1^*(E^*_2(x_2))}\)</span>。那么UNIT问题就变成了学习<span class="math inline">\(\textcolor{blue}{F^*_{1→2}}\)</span>和<span class="math inline">\(\textcolor{blue}{F^*_{2→1}}\)</span>的问题。我们注意到，<span class="math inline">\(\textcolor{blue}{F^*_{1→2}}\)</span>和<span class="math inline">\(\textcolor{blue}{F^*_{2→1}}\)</span>存在的必要条件是循环一致性约束：<span class="math inline">\(\textcolor{blue}{x_1 =
-F^*_{2→1}(F^*_{1→2}(x_1))}\)</span>和<span class="math inline">\(\textcolor{blue}{x_2 =
-F^*_{1→2}(F^*_{2→1}(x_2))}\)</span>。我们可以通过翻译回翻译后的输入图像来重建输入图像。换句话说，所提出的共享潜在空间假设意味着循环一致性假设（但反之则不然）。</font></p>
-<p><font color="black" size="5">  为了实现共享潜在空间假设，进一步假设一个共享的中间表示
-h，使得生成一对对应图像的过程承认以下形式：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261103144.png"></p>
-<p><font color="black" size="5">  因此，我们有 <span class="math inline">\(\textcolor{blue}{G_1^* ≡ G^*_{L,1} ◦
-G^*_H}\)</span> 和<span class="math inline">\(\textcolor{blue}{G_2^* ≡
-G^*_{L,2} ◦ G^*_H}\)</span>，其中 <span class="math inline">\(\textcolor{blue}{G^*_H}\)</span> 是将<span class="math inline">\(\textcolor{blue}{z}\)</span>映射到 <span class="math inline">\(\textcolor{blue}{h}\)</span>的常见高级生成函数，<span class="math inline">\(\textcolor{blue}{G^*_{L,1}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{G^*_{L,2}}\)</span> 是将<span class="math inline">\(\textcolor{blue}{h}\)</span>映射到的低级生成函数分别为<span class="math inline">\(\textcolor{blue}{x_1}\)</span>和 <span class="math inline">\(\textcolor{blue}{x_2}\)</span>。</font></p>
-<p><font color="black" size="5">  在多域图像翻译的情况下（例如，晴天和雨天图像翻译），<span class="math inline">\(\textcolor{blue}{z}\)</span>可以被视为场景的紧凑的高级表示（“前面有车，后面有树”），<span class="math inline">\(\textcolor{blue}{h}\)</span>可以是通过<span class="math inline">\(\textcolor{blue}{G^*_H}\)</span>考虑<span class="math inline">\(\textcolor{blue}{z}\)</span>的特定实现（“汽车/树占据以下像素”），并且<span class="math inline">\(\textcolor{blue}{G^*_{L,1}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{G^*_{L,2}}\)</span>将是每种模态中的实际的图像形成函数（“树是郁郁葱葱的绿色”）在晴天区域，但在雨天区域为深绿色”）。假设<span class="math inline">\(\textcolor{blue}{h}\)</span>还允许我们用<span class="math inline">\(\textcolor{blue}{E_1^* ≡ E^*_{L,1} ◦
-E^*_H}\)</span> 和 <span class="math inline">\(\textcolor{blue}{E_2^* ≡
-E^*_{L,2} ◦ E^*_H}\)</span> 表示<span class="math inline">\(\textcolor{blue}{E^*_1}\)</span>和<span class="math inline">\(\textcolor{blue}{E^*_2}\)</span>。在下一节中，我们将讨论如何在提议的
-UNIT 框架中实现上述想法。</font></p>
-<h1 id="三框架">三、框架</h1>
-<p><font color="black" size="5">  本文提出的模型框架如图 1
-所示，基于变分自动编码器 (VAE) 和生成对抗网络 (GAN)
-。它由6个子网络组成：包括两个域图像编码器<span class="math inline">\(\textcolor{blue}{E_1}\)</span>和<span class="math inline">\(\textcolor{blue}{E_2}\)</span>，两个域图像生成器<span class="math inline">\(\textcolor{blue}{G_1}\)</span>和<span class="math inline">\(\textcolor{blue}{G_2}\)</span>，以及两个域对抗鉴别器<span class="math inline">\(\textcolor{blue}{D_1}\)</span>和<span class="math inline">\(\textcolor{blue}{D_2}\)</span>。使用 CNN 表示<span class="math inline">\(\textcolor{blue}{E_1}\)</span>，<span class="math inline">\(\textcolor{blue}{E_2}\)</span>，<span class="math inline">\(\textcolor{blue}{G_1}\)</span>和<span class="math inline">\(\textcolor{blue}{G_2}\)</span>，并使用权重共享约束实现共享潜在空间假设，其中<span class="math inline">\(\textcolor{blue}{E_1}\)</span>和<span class="math inline">\(\textcolor{blue}{E_2}\)</span>中最后几层（高层层）的连接权重是相连的（用虚线表示）并且<span class="math inline">\(\textcolor{blue}{G_1}\)</span>和<span class="math inline">\(\textcolor{blue}{G_2}\)</span>中前几层（高层）的连接权重是相连的。这里，&nbsp;
-<span class="math inline">\(\textcolor{blue}{\tilde{x}^{1→1}_1}\)</span>
-和<span class="math inline">\(\textcolor{blue}{\tilde{x}^{2→2}_2}\)</span>
-是自重建图像，<span class="math inline">\(\textcolor{blue}{\tilde{x}^{1→2}_1}\)</span>
-和<span class="math inline">\(\textcolor{blue}{\tilde{x}^{2→1}_2}\)</span>是域翻译图像。
-<span class="math inline">\(\textcolor{blue}{D_1}\)</span>和<span class="math inline">\(\textcolor{blue}{D_2}\)</span>是各自领域的对抗性判别器，负责评估翻译后的图像是否真实。</font></p>
-<p><img src="C:\Users\PhoenixPeng\blog\source_posts\图像到图像翻译——1.UNIT.assets\1706239189350.png"></p>
-<p><font color="black" size="5">  有多种方法可以解释子网络的角色，我们在表
-1 中进行了总结。我们的框架一次性学习两个方向的翻译。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202401261123508.png"></p>
-<p><font color="black" size="5">  <font color="blue" size="5"><strong>VAE：</strong></font>编码器-生成器对<span class="math inline">\(\textcolor{blue}{\{E_1,G_1\}}\)</span>构成<span class="math inline">\(\textcolor{blue}{\mathcal{X}_1}\)</span>域的
-VAE，称为 VAE1。对于输入图像<span class="math inline">\(\textcolor{blue}{x_1 \in
-\mathcal{X}_1}\)</span>，VAE1 首先通过编码器<span class="math inline">\(\textcolor{blue}{E_1}\)</span>将<span class="math inline">\(\textcolor{blue}{x_1}\)</span>映射到潜在空间 Z
-中的编码，然后通过生成器 <span class="math inline">\(\textcolor{blue}{G_1}\)</span>解码该编码的随机扰动版本以重建输入图像。我们假设潜在空间
-Z
-中的分量是条件独立的并且具有单位方差的高斯分布。在我单位矩阵。重建图像为<span class="math inline">\(\textcolor{blue}{\tilde{x}^{1→1}_1 = G_1(z_1 ∼
-q_1(z_1|x_1))}\)</span>。请注意，这里滥用了该符号，因为我们将<span class="math inline">\(\textcolor{blue}{q_1(z_1|x_1)}\)</span>的分布视为
-<span class="math inline">\(\textcolor{blue}{N(E_{μ,1}(x_1),
-I)}\)</span> 的随机向量并从中采样。类似地，<span class="math inline">\(\textcolor{blue}{\{E_2,G_2\}}\)</span>构成<span class="math inline">\(\textcolor{blue}{\mathcal{X}_2}\)</span>的
-VAE2，其中编码器<span class="math inline">\(\textcolor{blue}{E_2}\)</span>输出平均向量 <span class="math inline">\(\textcolor{blue}{E_{μ,2}(x2)}\)</span>
-且潜在编码<span class="math inline">\(\textcolor{blue}{E_2}\)</span>的分布由<span class="math inline">\(\textcolor{blue}{q_2(z_2|x_2)≡ N (z_2|
-E_{μ,2}(x_2),I)}\)</span>。重建图像为<span class="math inline">\(\textcolor{blue}{\tilde{x}^{2→2}_2 = G_2(z_2 ∼
-q_2(z_2|x_2))}\)</span>。</font></p>
-<p><font color="black" size="5">  利用重新参数化技巧，不可微采样操作可以使用辅助随机变量重新参数化为可微操作。这种重新参数化技巧允许我们使用反向传播来训练
-VAE。令<span class="math inline">\(\textcolor{blue}{η}\)</span>为具有多元高斯分布的随机向量：
-<span class="math inline">\(\textcolor{blue}{η ∼ N (η|0, I)}\)</span>。
-<span class="math inline">\(\textcolor{blue}{z_1 ∼
-q_1(z_1|x_1)}\)</span> 和<span class="math inline">\(\textcolor{blue}{z_2 ∼ q_2(z_2|x_2)}\)</span>
-的采样操作可以分别通过 <span class="math inline">\(\textcolor{blue}{z_1
-= E_{μ,1}(x_1) + η}\)</span>和 <span class="math inline">\(\textcolor{blue}{z_2 = E_{μ,2}(x_2) + η
-}\)</span>来实现。</font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+        <h1 id="一介绍">一、介绍</h1>
+<p><font color="black" size="5">  扩散模型在时间序列方向上的应用，主要包含<strong>时间序列预测、时间序列插补、时间序列生成。</strong></font></p>
+<p><font color="black" size="5">  1️⃣<strong>时间序列预测：</strong>给定观察到的历史时间序列，去预测未来的时间序列。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>时间序列插补：</strong>由于数据收集失败和人为错误等原因，观测到的时间序列有时不完整，因此采用时间序列插补来填补缺失值。</font></p>
+<p><font color="black" size="5">  3️⃣<strong>时间序列生成：</strong>生成更多与观测周期具有相似特征的时间序列样本。</font></p>
+<p><font color="black" size="5">  针对这三个方面，本文总结了目前几乎所有的基于扩散的时间序列应用模型，如下表所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071059706.png"></p>
+<p><font color="black" size="5">  基本上，用于时间序列应用的基于扩散的方法是从三个基本公式发展而来的，包括<strong>去噪扩散概率模型（DDPM）、基于分数的生成模型（SGM）和随机微分方程（SDE）</strong>。</font></p>
+<h2 id="ddpm"><font color="black" size="5">1.DDPM</font></h2>
+<p><font color="black" size="5">  DDPM
+通过两个马尔可夫链实现前向和后向过程。令原始观测数据为&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{x^0}\)</span>，其中0表示数据未受到扩散过程中注入的噪声的影响。</font></p>
+<p><font color="black" size="5">  前向马尔可夫链使用扩散转移核将&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{x^0}\)</span>
+变换为扰动数据序列 <span class="math inline">\(\textcolor{DodgerBlue}{x^1, x^2, ...,
+x^K}\)</span>，扩散转移核为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071635153.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{α_k ∈ (0, 1)}\)</span>
+是超参数，表示每一步噪声水平变化的方差，<span class="math inline">\(\textcolor{DodgerBlue}{\mathcal{N} (x; μ,
+Σ)}\)</span> 是表示 <span class="math inline">\(\textcolor{DodgerBlue}{x}\)</span>
+的高斯分布，其分别具有平均值 <span class="math inline">\(\textcolor{DodgerBlue}{μ}\)</span> 和协方差 <span class="math inline">\(\textcolor{DodgerBlue}{Σ}\)</span>。之后，可以通过以下方式直接从&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{x^0}\)</span> 获得 <span class="math inline">\(\textcolor{DodgerBlue}{x^k}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071641572.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{DodgerBlue}{\tilde{\alpha}_k :=
+∏^k_{i=1} α_i}\)</span>。因此，<span class="math inline">\(\textcolor{DodgerBlue}{x^k
+=\sqrt{\tilde{\alpha}_k} x^0 +
+\sqrt{1-\tilde{\alpha}_k}\epsilon}\)</span>且<span class="math inline">\(\textcolor{DodgerBlue}{\epsilon ∼ N (0,
+I)}\)</span>。通常，我们设计<span class="math inline">\(\textcolor{DodgerBlue}{\tilde{\alpha}_K ≈
+0}\)</span> 使得<span class="math inline">\(\textcolor{DodgerBlue}{q(x^K) := ∫
+q(x^K|x^0)q(x^0)dx^0 ≈ N
+(x^K;0,I)}\)</span>，这意味着后向过程的起点可以是任意标准高斯噪声。</font></p>
+<p><font color="black" size="5">  后向转移核由参数化神经网络建模：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071655387.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>
+表示可学习参数。现在，剩下的问题是如何估计<span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>。基本上，目标是最大化似然目标函数，以便观察到由
+<span class="math inline">\(\textcolor{DodgerBlue}{p_\theta(x^0)}\)</span>
+估计的训练样本&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{x^0}\)</span>
+的概率最大化。此任务是通过最小化估计的负对数似然 <span class="math inline">\(\textcolor{DodgerBlue}{E[− \log
+p_θ(x^0)]}\)</span> ，即</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071700256.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{DodgerBlue}{x^{0:K}}\)</span>表示序列
+<span class="math inline">\(\textcolor{DodgerBlue}{x^0,...,x^K}\)</span>。</font></p>
+<p><font color="black" size="5">  在DDPM当中提出，可以将方程（3）中的协方差矩阵
+<span class="math inline">\(\textcolor{DodgerBlue}{Σ_θ(x^k, k)}\)</span>
+简化为常数相关矩阵<span class="math inline">\(\textcolor{DodgerBlue}{σ^2_kI}\)</span>，其中<span class="math inline">\(\textcolor{DodgerBlue}{σ^2_ k}\)</span>
+控制噪声水平，并且可能在不同的扩散步骤中变化。此外，他们将均值重写为可学习噪声项的函数：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071706397.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{ζ(k)
+=\frac{1−α_k}{\sqrt{1-\tilde{\alpha}_k}}}\)</span> ，<span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>是一个噪声匹配网络，用于预测对应于输入
+<span class="math inline">\(\textcolor{DodgerBlue}{x^k}\)</span>
+和&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{k}\)</span>
+的数据。凭借方程（2）中的属性， 进一步简化目标函数为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071711807.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{δ(k) =
+\frac{(1−α_k)^2}{2σ^2_kα_k(1-\tilde{\alpha}_k)}}\)</span>
+是一个正值权重，可以将其丢弃以在实践中产生更好的性能。</font></p>
+<p><font color="black" size="5">  最终，通过消除 <span class="math inline">\(\textcolor{DodgerBlue}{x^K∼N(x^K;0,I)}\)</span>
+中的噪声来生成样本。更具体地说，对于 <span class="math inline">\(\textcolor{DodgerBlue}{k=K−1,K−2,...,0,}\)</span></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071715479.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{z∼N
+(0,I)}\)</span>（对于&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{k=K−1,...,1}\)</span>），并且<span class="math inline">\(\textcolor{DodgerBlue}{z=0}\)</span>&nbsp;（对于<span class="math inline">\(\textcolor{DodgerBlue}{k=0}\)</span>）。</font></p>
+<h1 id="二时间序列预测">二、时间序列预测</h1>
+<h2 id="问题表述"><font color="black" size="5">1.问题表述</font></h2>
+<p><font color="black" size="5">  考虑多元时间序列<span class="math inline">\(\textcolor{DodgerBlue}{X^0=\{x_1^0,x_2^0,...,x_T^0|x_i^0
+\in
+R^D\}}\)</span>，其中0表示数据在扩散过程中不受扰动。预测任务是给定历史信息&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X_c^0=\{x_1^0,x_2^0,...,x^0_{t_0-1}\}}\)</span>
+的情况下去预测&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X_p^0=\{x^0_{t_0},x^0_{t_0+1},...,x^0_T\}}\)</span>。因此&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X_c^0}\)</span>
+称为上下文窗口，而&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X_p^0}\)</span>
+称为预测区间。而在基于扩散模型中，问题被表述为学习预测区间内数据的联合概率分布：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071554976.png"></p>
+<p><font color="black" size="5">  一些文献还考虑了协变量在预测中的作用。<strong>协变量是可能随时间影响变量行为的附加信息</strong>，例如季节性波动和天气变化。在预测中纳入协变量通常有助于加强对驱动数据时间趋势和模式的因素的识别。协变量的预测问题表述为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071554751.png"></p>
+<p><font color="black" size="5">  其中&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{c_{1:T}}\)</span>
+表示所有时间点的协变量，并假设整个时期已知。</font></p>
+<p><font color="black" size="5">  为了满足训练的目的，可以从完整的训练数据中随机采样上下文窗口，然后是预测窗口。这个过程可以看作是在整个时间线上应用一个大小为&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{T}\)</span>
+的移动窗口。然后，可以利用样本进行目标函数的优化。预测未来时间序列通常是通过扩散模型对应的生成过程来实现的。</font></p>
+<h2 id="timegrad"><font color="black" size="5">2.TimeGrad</font></h2>
+<p><font color="black" size="5">  基于扩散的预测第一个值得注意的工作是
+Rasul 等人提出的 TimeGrad。 TimeGrad 由 DDPM
+模型发展而来，<strong>首先在每个预测时间点向数据注入噪声，然后通过以历史时间序列为条件的后向转移核（类似式3）逐渐去噪</strong>。为了对历史信息进行编码，TimeGrad
+近似式 (18) 中的条件分布：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071604178.png"></p>
+<p><font color="black" size="5">  其中</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071605090.png"></p>
+<p><font color="black" size="5">  是使用可以保留历史时间信息的
+LSTM（或 GRU等 RNN 模块计算的隐藏状态，<span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>
+包含整体条件分布及其 RNN 组件的可学习参数。</font></p>
+<p><font color="black" size="5">  TimeGrad
+的目标函数采用负对数似然的形式，如下所示</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071608368.png"></p>
+<p><font color="black" size="5">  其中对于每个 <span class="math inline">\(\textcolor{DodgerBlue}{t \in [t_0,T], -\log
+p_\theta(x_t^0|h_{t-1})}\)</span> 的目标函数为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071611971.png"></p>
+<p><font color="black" size="5">  上下文窗口用于生成隐藏状态<span class="math inline">\(\textcolor{DodgerBlue}{h_{t_0−1}}\)</span>
+作为训练过程的起点。</font></p>
+<p><font color="black" size="5">  在训练过程中，通过随机采样最小化负对数似然目标函数来估计参数<span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>。然后，逐步生成未来的时间序列。假设完整时间序列的最后一个时间点是<span class="math inline">\(\textcolor{DodgerBlue}{\tilde{T}}\)</span>。第一步是根据最后一个可用的上下文窗口导出隐藏状态<span class="math inline">\(\textcolor{DodgerBlue}{h_{\tilde{T}}}\)</span>
+。接下来，以与 DDPM 类似的方式预测下一个时间点<span class="math inline">\(\textcolor{DodgerBlue}{\tilde{T}+1}\)</span>
+的观测值：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404071622451.png"></p>
+<p><font color="black" size="5">  预测的 <span class="math inline">\(\textcolor{DodgerBlue}{x^k_{\tilde{T}+1}}\)</span>
+应反馈给 RNN 模块以获得 <span class="math inline">\(\textcolor{DodgerBlue}{h_{\tilde{T}+1}}\)</span>
+，然后再预测下一个时间点。将重复采样过程，直到达到未来时间序列的所需长度。</font></p>
+<h1 id="三时间序列插补">三、时间序列插补</h1>
+<p><font color="black" size="5">  在现实世界的问题设置中，通常会遇到缺失值的挑战。在采集时间序列数据时，采集条件可能会随着时间的推移而发生变化，这使得很难保证观测的完整性。此外，传感器故障、人为失误等事故也可能导致历史记录丢失。时间序列数据中的缺失值通常会对分析和预测的准确性产生负面影响，因为缺乏部分观察使得推论和结论在未来的概括中很脆弱。<strong>时间序列插补旨在填补不完整时间序列数据中的缺失值。</strong></font></p>
+<h2 id="问题表述-1"><font color="black" size="5">1.问题表述</font></h2>
+<p><font color="black" size="5">  给定多元时间序列<span class="math inline">\(\textcolor{DodgerBlue}{X^0=\{x_1^0,x_2^0,...,x_T^0|x_i^0
+\in R^D\}}\)</span>，其中<span class="math inline">\(\textcolor{DodgerBlue}{X^0 \in R^{D \times
+T}}\)</span>，<span class="math inline">\(\textcolor{DodgerBlue}{D}\)</span>是特征的数量，<span class="math inline">\(\textcolor{DodgerBlue}{T}\)</span>是<span class="math inline">\(\textcolor{DodgerBlue}{[1,T]}\)</span>期间的时间点的数量。在这里假设存在一个不完整的观测矩阵，需要通过探索一些观察数据中的信息来预测缺失数据的值。将观测的数据表示表示为<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span>，将缺失数据表示为<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}}\)</span>。然后，插补任务是找到条件概率分布<span class="math inline">\(\textcolor{DodgerBlue}{q(X^0_{ms}|X^0_{ob})}\)</span>。</font></p>
+<p><font color="black" size="5">  出于实际目的，对不完整矩阵&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+进行零填充，使得所有缺失项都被分配为 0。此外，构造一个零一矩阵<span class="math inline">\(\textcolor{DodgerBlue}{M \in R^{D \times
+T}}\)</span> 作为掩码来表示缺失值的位置。更具体地，当<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>中的相应值缺失时，<span class="math inline">\(\textcolor{DodgerBlue}{M}\)</span>中的元素为0，否则为1。</font></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}}\)</span> 与&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+具有相同的尺寸。在训练过程中，随机选择&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+中实际观测数据的一小部分作为缺失数据的真实值，其余观测数据作为预测的条件。引入训练掩码<span class="math inline">\(\textcolor{DodgerBlue}{M^\prime \in R^{D \times
+T}}\)</span> 以获得&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span> 和 <span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}}\)</span>。它是通过将
+1 分配给与&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+中剩余观察数据相对应的条目来构造的。然后，<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span>计算为&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob} = M^{\prime}
+\bigodot X_0}\)</span>，<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}}\)</span>
+计算为<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}=(M-M^\prime)
+\bigodot
+X_0}\)</span>，其中表示逐元素矩阵乘法。另一方面，在预测过程中，所有实际观测到的数据都被用作条件，即<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob} = M \bigodot
+X_0}\)</span>。</font></p>
+<h2 id="csdi"><font color="black" size="5">2.CSDI</font></h2>
+<p><font color="black" size="5">  基于条件分数的扩散模型插补（CSDI）是基于扩散的时间序列插补的开创性工作。</font></p>
+<p><font color="black" size="5">  CSDI采用自监督的训练方式，手动mask掉一部分观测值然后补全这部分。如图所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404090939413.png"></p>
+<p><font color="black" size="5">  在左边的绿白色矩形中，绿色为观测值，白色为缺失值。如果直接用绿色和白色来建模条件概率，显然是没法训练的，因为不知道白色部分的
+Ground
+Truth。作者将观测值再mask掉一部分，如左下角蓝白红矩形所示。其中，红白条纹为mask的缺失值，蓝色为剩余的观测值，之后将缺失值进行加噪后送入到网络当中，再将观测值作为条件和时间步长一起送入。</font></p>
+<p><font color="black" size="5">  CSDI将扩散和逆过程应用于缺失数据矩阵<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ms}}\)</span>，相应地，后向转移核被细化为以<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span>为条件的概率分布：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081105744.png"></p>
+<p><font color="black" size="5">  其中，</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081106403.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{X^k_{ms} =
+\sqrt{\tilde{\alpha}_k}X^0_{ms}+ \sqrt{1-\tilde{\alpha}_k}}\)</span>
+。这里的方差项与 DDPM 中的版本不同。以前，方差项是用一些预先指定的常数
+<span class="math inline">\(\textcolor{DodgerBlue}{σ_k}\)</span>
+定义的，其中 <span class="math inline">\(\textcolor{DodgerBlue}{k = 1,
+2, ..., K}\)</span>，这意味着方差被视为超参数。然而，CSDI
+定义了一个带有参数 <span class="math inline">\(\textcolor{DodgerBlue}{θ}\)</span> 的可学习版本
+<span class="math inline">\(\textcolor{DodgerBlue}{σ_θ}\)</span>。CSDI
+的目标函数由下式给出：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081542784.png"></p>
+<p><font color="black" size="5">  噪声匹配网络 <span class="math inline">\(\textcolor{DodgerBlue}{θ}\)</span> 默认采用
+DiffWave
+架构。但把里面的卷积结构给替换成了捕获时空特征的Transformer结构（由多头注意力层、全连接层和层归一化组成）。如下图所示，其中包含Temporal
+Transformer Layer 和 Feature Transformer Layer
+分别提取时空特征。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091019070.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091019434.png"></p>
+<p><font color="black" size="5">  训练后，通过与 DDPM
+相同的方式生成缺失值的目标矩阵来完成插补。采样过程中的<span class="math inline">\(\textcolor{DodgerBlue}{X^0_{ob}}\)</span>
+与原始时间序列矩阵&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+的零填充版本相同，其中所有缺失值都被分配为
+0。采样过程的起点是随机高斯插补目标<span class="math inline">\(\textcolor{DodgerBlue}{X^K_{ms} ∼ N
+(0,I)}\)</span>。然后，对于 <span class="math inline">\(\textcolor{DodgerBlue}{k = K − 1, ...,
+1}\)</span>，算法计算：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081628621.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{Z ∼ N (0, I)，k = K − 1,
+..., 1}\)</span>，且 <span class="math inline">\(\textcolor{DodgerBlue}{Z = 0，k =
+0}\)</span>。</font></p>
+<h2 id="sssd"><font color="black" size="5">3.SSSD</font></h2>
+<p><font color="black" size="5">  结构化状态空间扩散（SSSD）结合条件扩散模型和状态空间模型，用于解决缺失值插补和长程依赖问题。</font></p>
+<p><font color="black" size="5">  SSSD论文当中把插补场景按照随机缺失（RM）、随机块缺失（RMB）和完全随机缺失。随机缺失可能取决于观测到的特征，而随机块缺失还取决于要估算的特征的真实值。在完全随机缺失的情况下就不需要依赖特征值。</font></p>
+<p><font color="black" size="5">  1️⃣<strong>RM：</strong>在整个输入样本的所有通道中，按照均匀分布随机采样作为输入掩码的零项。RM考虑的是单个时间步长而不是连续时间步长块。</font></p>
+<p><font color="black" size="5">  2️⃣<strong>RMB：</strong>根据缺失比例将序列划分为连续时间步长的片段。之后在每个通道随机采样一个片段作为插补目标。</font></p>
+<p><font color="black" size="5">  3️⃣<strong>BM：</strong>一大段连续的缺失。在所有通道上选取一个共同的片段作为插补目标；</font></p>
+<p><font color="black" size="5">  4️⃣<strong>TF：</strong>可以视为BM的特殊情况，其中插补区域跨越<span class="math inline">\(\textcolor{DodgerBlue}{t}\)</span>个时间步长的连续区域，其中<span class="math inline">\(\textcolor{DodgerBlue}{t}\)</span>表示位于序列最末端的所有通道的预测范围。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081015045.png"></p>
+<p><font color="black" size="5">  🔵代表实际序列；⚪代表作为真实的条件；🔘代表特定通道当中需要插补的时间步长；🟢浅绿色和深绿色分别表示不同分位下的两种预测带。🟠预测带中随机采样的一个样本</font></p>
+<p><font color="black" size="5">  SSSD的生成目标是整个时间序列矩阵<span class="math inline">\(\textcolor{DodgerBlue}{X^0 \in R^{D \times
+T}}\)</span>，而不是专门代表缺失值的矩阵。其中<span class="math inline">\(\textcolor{DodgerBlue}{D}\)</span>表示特征或通道数，<span class="math inline">\(\textcolor{DodgerBlue}{T}\)</span>表示时间步数。为了满足训练目的，<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>也进行了补零处理。在这种情况下，条件信息来自级联矩阵<span class="math inline">\(\textcolor{DodgerBlue}{X^0_c = Concat(X^0 \bigodot
+M_c,M_c)}\)</span>，其中<span class="math inline">\(\textcolor{DodgerBlue}{M_c \in \{0,1\}^{D \times
+T}}\)</span>是指示作为条件的观测值的位置的零一矩阵。只有当<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>中对应的值已知时，<span class="math inline">\(\textcolor{DodgerBlue}{M_c}\)</span>中的元素才能为1代表作为条件化的值，而0则是代表要估算的值。</font></p>
+<blockquote>
+<p><font color="black" size="5"><strong>结构化状态空间模型（s4）:</strong></font></p>
+<p><font color="black" size="5">  它可有效地捕获时间序列数据中的长期依赖性。从本质上讲，该形式利用了线性状态空间转移方程，通过
+<span class="math inline">\(\textcolor{Crimson}{N}\)</span> 维隐藏状态
+<span class="math inline">\(\textcolor{Crimson}{x(t)}\)</span>
+将一维输入序列 <span class="math inline">\(\textcolor{Crimson}{u(t)}\)</span>连接到一维输出序列<span class="math inline">\(\textcolor{Crimson}{y(t)}\)</span>。明确地，该转移方程为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404081034760.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{Crimson}{A、B、C、D}\)</span>
+是转移矩阵。离散化后，输入和输出之间的关系可以写成卷积运算，可以在 GPU
+上进行有效评估。</font></p>
+<p><font color="black" size="5">  根据 HiPPO
+理论，捕获长期依赖性的能力与 <span class="math inline">\(\textcolor{Crimson}{A ∈ R^{N×N}}\)</span>
+的特定初始化有关。HiPPO尝试将当前看到的所有输入信号压缩为系数向量，它使用矩阵<span class="math inline">\(\textcolor{Crimson}{A}\)</span>构建一个"可以很好地捕获最近的token并衰减旧的token"状态表示。</font></p>
+<p><font color="black" size="5">  而结构化状态空间序列模型（S4），通过将上述
+SSM
+块的多个copy与适当的归一化层、变压器风格的点式全连接层堆叠起来层，在各种序列分类任务上展示了出色的性能。</font></p>
+</blockquote>
+<p><font color="black" size="5">  模型结构：将原始DiffWave中的双向空洞卷积层用S4层代替，即在加入扩散embedding后，在每个残差块中使用S4作为扩散层。同时，在与条件信息相加后引入第二个S4层。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091058325.png"></p>
+<blockquote>
+<p><font color="black" size="5">  DiffWave的模型架构：</font></p>
+<p><font color="black" size="5">  DiffWave模型包括堆叠的N个残差层，残差通道数为C
+，这些残差层被分为m 个blocks，每个block包含<span class="math inline">\(n=\frac{N}{m}\)</span>
+层。每个残差层使用一个内核大小为3的双向空洞卷积，在每个block中的每一层上进行2倍膨胀，即<span class="math inline">\([ 1 , 2 , 4 , · · · ,
+2^{n-1}]\)</span>。最后对所有残差层的输出进行跳跃连接。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091828176.png"></p>
+</blockquote>
+<p><font color="black" size="5">  训练过程：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091740225.png"></p>
+<p><font color="black" size="5">  训练过程中使用的目标函数有两种选择。与其他方法类似，目标函数可以是
+DDPM 目标函数的简单条件变体：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404080838082.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{DodgerBlue}{\theta}\)</span>
+默认构建在结构化状态空间模型上。目标函数的另一种选择仅使用已知数据进行计算，其数学表达式为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091815980.png"></p>
+<p><font color="black" size="5">  根据SSSD的说法，第二个目标函数在实践中通常是更好的选择。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091839971.png"></p>
+<p><font color="black" size="5">  推理过程：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091741209.png"></p>
+<p><font color="black" size="5">  为了进行预测，SSSD
+采用通常的采样算法，并应用于&nbsp;<span class="math inline">\(\textcolor{DodgerBlue}{X^0}\)</span>
+中的未知条目，即<span class="math inline">\(\textcolor{DodgerBlue}{(1-M_c) \bigodot
+X^0}\)</span> 。</font></p>
+<p><font color="black" size="5">  下图给出了PTB -
+XL填补任务中部分模型在BM情景下的填补结果。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091823350.png" alt="image-20240409182310041">
+<figcaption aria-hidden="true">image-20240409182310041</figcaption>
+</figure>
+<p><font color="black" size="5">  与 SSSD
+一起提出的一个有趣的观点是插补模型也可以应用于预测任务。这是因为未来时间序列可以被视为
+X0 右侧的一长串缺失值。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202404091821918.png"></p>
+<h1 id="四时间序列生成">四、时间序列生成</h1>
+<p><font color="black" size="5">  时间序列生成是指创建类似于现实世界时间序列的合成数据的过程。由于时间序列数据的特征在于其时间依赖性，因此生成过程通常需要从过去的信息中学习潜在的模式和趋势。</font></p>
+<h2 id="问题表述-2"><font color="black" size="5">1.问题表述</font></h2>
+<p><font color="black" size="5">  对于多元时间序列<span class="math inline">\(\textcolor{DodgerBlue}{X^0=\{x_1^0,x_2^0,...,x_T^0|x_i^0
+\in R^D\}}\)</span>，时间序列生成问题旨在通过在时间点<span class="math inline">\(\textcolor{DodgerBlue}{t \in [2,
+T]}\)</span>处生成的观测值<span class="math inline">\(\textcolor{DodgerBlue}{x^0_{t}}\)</span>，并考虑先前的历史数据<span class="math inline">\(\textcolor{DodgerBlue}{x^0_{1:t-1}}\)</span>来合成时间序列<span class="math inline">\(\textcolor{DodgerBlue}{x^0_{1:T}}\)</span>。相应地，目标分布为<span class="math inline">\(\textcolor{DodgerBlue}{t ∈
+[2,T]}\)</span>的条件密度<span class="math inline">\(\textcolor{DodgerBlue}{q(x_t^0 |
+x^0_{1:t-1})}\)</span>，相关的生成过程涉及对观测时段内所有时间点<span class="math inline">\(\textcolor{DodgerBlue}{x_t}\)</span>的递归采样。</font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -1230,9 +1217,9 @@ q_1(z_1|x_1)}\)</span> 和<span class="math inline">\(\textcolor{blue}{z_2 ∼ q
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/</a>
-            <p>发表日期：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 24th 2024, 8:56:09 am</a>
-            <p>更新日期：<a href="http://example.com/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">January 26th 2024, 3:14:50 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">http://example.com/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/</a>
+            <p>发表日期：<a href="http://example.com/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">April 7th 2024, 10:39:36 am</a>
+            <p>更新日期：<a href="http://example.com/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">April 9th 2024, 6:40:43 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1240,17 +1227,12 @@ q_1(z_1|x_1)}\)</span> 和<span class="math inline">\(\textcolor{blue}{z_2 ∼ q
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="图像到图像翻译——2.MUNIT">
-                    <div class="nextTitle">图像到图像翻译——2.MUNIT</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="扩散模型——16.ADD">
-                    <div class="prevTitle">扩散模型——16.ADD</div>
+                <a href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/" title="视频扩散模型——7.Latte">
+                    <div class="prevTitle">视频扩散模型——7.Latte</div>
                 </a>
             
         </li>
@@ -1420,7 +1402,7 @@ q_1(z_1|x_1)}\)</span> 和<span class="math inline">\(\textcolor{blue}{z_2 ∼ q
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%81%87%E8%AE%BE"><span class="toc-number">2.</span> <span class="toc-text">二、假设</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E6%A1%86%E6%9E%B6"><span class="toc-number">3.</span> <span class="toc-text">三、框架</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ddpm"><span class="toc-number">1.1.</span> <span class="toc-text">1.DDPM</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E9%A2%84%E6%B5%8B"><span class="toc-number">2.</span> <span class="toc-text">二、时间序列预测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A1%A8%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">1.问题表述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#timegrad"><span class="toc-number">2.2.</span> <span class="toc-text">2.TimeGrad</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%8F%92%E8%A1%A5"><span class="toc-number">3.</span> <span class="toc-text">三、时间序列插补</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A1%A8%E8%BF%B0-1"><span class="toc-number">3.1.</span> <span class="toc-text">1.问题表述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#csdi"><span class="toc-number">3.2.</span> <span class="toc-text">2.CSDI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sssd"><span class="toc-number">3.3.</span> <span class="toc-text">3.SSSD</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90"><span class="toc-number">4.</span> <span class="toc-text">四、时间序列生成</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A1%A8%E8%BF%B0-2"><span class="toc-number">4.1.</span> <span class="toc-text">1.问题表述</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
