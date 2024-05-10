@@ -434,6 +434,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion model——9.FDDM</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型在生成用于医学图像翻译的高质量图像以帮助疾病诊断、定位和治疗方面已表现出巨大的潜力。然而，当前的扩散模型在实现忠实的图像转换（可以准确地保留医学图像的解剖结构）方面取得的成功有限，特别是对于不配对的数据集。保留结构和解剖细节对于可靠的医疗诊断和治疗计划至关重要，因为结构不匹配可能导致疾病误识别和治疗错误。在这项研究中，我们引入了频率解耦扩散模型（FDDM），这是一种新颖的框架，可以在翻译过程中解耦傅里叶域中医学图像的频率分量，以实现结构保留的高质量图像转换。 FDDM应用无监督频率转换模块将源医学图像转换为特定于频率的输出，然后使用特定于频率的信息来指导后续的扩散模型以实现最终的源到目标图像转换。我们使用公共大脑 MR 到 CT 翻译数据集对 FDDM 进行了广泛的评估，显示了其相对于其他基于 GAN、VAE 和扩散的模型的优越性能。评估的指标包括FID、峰值信噪比 (PSNR) 和结构相似性指数测量 (SSIM)。 FDDM的 FID 为 29.88，不到第二好的一半。这些结果证明了 FDDM 在生成高度真实的目标域图像同时保持翻译解剖结构的忠实度方面的能力。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/01/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
                 
                 <span class="abstract-title-text">Medical Diffusion model——8.FGDM</span>
@@ -490,18 +518,18 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
+            <a class="abstract-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">
                 
                 <span class="abstract-title-text">Medical Diffusion model——6.SynDiff</span>
             </a>
             <div class="abstract-content">
-                通过源到目标模态转换对缺失图像进行插补可以促进医学成像中的下游任务。合成目标图像的一种普遍方法涉及通过生成对抗网络（GAN）进行一次性映射。然而，隐式表征图像分布的 GAN 模型可能会受到样本保真度和多样性有限的影响。在这里，我们提出了一种基于对抗扩散建模的新方法 SynDiff，以提高医学图像合成的可靠性。为了捕获图像分布的直接关联，SynDiff 利用条件扩散过程逐步将噪声和源图像映射到目标图像上。为了在推理过程中快速准确地进行图像采样，大的扩散步骤与反向扩散方向上的对抗性投影相结合。为了能够对不成对的数据集进行训练，设计了一种循环一致的架构，它具有两个耦合的扩散过程来合成目标给定源和源给定目标。据报道，在多对比 MRI 和 MRI-CT 翻译中，SynDiff 相对于竞争性 GAN 和扩散模型的实用性进行了广泛的评估。我们的演示表明，SynDiff 在定性和定量方面都比竞争基线提供了卓越的性能。
+                通过源到目标模态转换对缺失图像进行插补可以促进医学成像中的下游任务。合成目标图像的一种普遍方法涉及通过生成对抗网络（GAN）进行一次性映射。然而，隐式表征图像分布的 GAN 模型可能会受到样本保真度和多样性有限的影响。在本文当中提出了一种基于对抗扩散建模的新方法——SynDiff，以提高医学图像合成的可靠性。为了捕获图像分布的直接关联，SynDiff 利用条件扩散过程逐步将噪声和源图像映射到目标图像上。为了在推理过程中快速准确地进行图像采样，大的扩散步骤与反向扩散方向上的对抗性投影相结合。为了能够对不成对的数据集进行训练，设计了一种循环一致的架构，它具有两个耦合的扩散过程来合成目标给定源和源给定目标。在多对比 MRI 和 MRI-CT 翻译中，SynDiff 相对于竞争性 GAN 和扩散模型的实用性进行了广泛的评估。论文演示表明，SynDiff 在定性和定量方面都比竞争基线提供了卓越的性能。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/31">
+                <div class="abstract-date" title="Last updated: 2024/05/08">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
                 </div>
                 <!-- tags -->
@@ -602,6 +630,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">
+                
+                <span class="abstract-title-text">视频扩散模型——5.GEN-1</span>
+            </a>
+            <div class="abstract-content">
+                本文将介绍的是由Runway公司推出的一款名为GEN-1模型，它可以由来改变视频或电影的视觉风格。Runway在其官方网站上发布了各种视频风格转换的演示视频（据说贵公司只在演示视频做的好，但实际效果很一般。。。）。而GEN-2也已经问世，但对于官方只发布了GEN-1相关的论文，所以这次就好介绍关于GEN-1的技术。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/05/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">
                 
                 <span class="abstract-title-text">视频扩散模型——4.VideoComposer</span>
@@ -613,7 +669,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/19">
+                <div class="abstract-date" title="Last updated: 2024/05/09">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
                 </div>
                 <!-- tags -->
@@ -641,64 +697,8 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/24">
+                <div class="abstract-date" title="Last updated: 2024/04/23">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">
-                
-                <span class="abstract-title-text">视频扩散模型——1.Video Diffusion Model</span>
-            </a>
-            <div class="abstract-content">
-                生成时间上一致的高保真视频是生成式建模研究中的一个重要里程碑。我们通过提出一个视频生成的扩散模型，显示出非常有前途的初步结果，朝着这一里程碑取得了进展。我们的模型是标准图像扩散架构的自然扩展，它可以从图像和视频数据中进行联合训练，我们发现这可以减少小批量梯度的方差并加快优化速度。为了生成长时间和更高分辨率的视频，我们引入了一种新的条件采样技术，用于空间和时间视频扩展，其性能优于以前提出的方法。我们提出了一个大型文本条件视频生成任务的第一个结果，以及视频预测和无条件视频生成的既定基准的最先进的结果。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/04/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">
-                
-                <span class="abstract-title-text">扩散模型——11.DiT</span>
-            </a>
-            <div class="abstract-content">
-                本文将介绍DiT，来自《Scalable Diffusion Models with Transformers》，文章探索了一类基于Transformers架构的新型扩散模型。该方法使用训练图像的潜在扩散模型，用对潜在补丁（Latent patch）进行操作的Transformers替换常用的 U-Net 主干网。通过以 Gflops 衡量的前向传递复杂度来分析扩散变压器 (DiT) 的可扩展性。我们发现，通过增加Transformers的深度/宽度或增加输入令牌数量，具有较高 Gflops 的 DiT 始终具有较低的 FID。除了拥有良好的可扩展性之外，我们最大的 DiT-XL/2 模型在类条件 ImageNet 512×512 和 256×256 基准上的表现优于所有先前的扩散模型，在后者上实现了 2.27 的最先进的 FID。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/21</span>
                 </div>
                 <!-- tags -->
                 
@@ -709,7 +709,7 @@
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/3/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><a class="extend next" rel="next" href="/archives/page/3/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1013,7 +1013,43 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1340,7 +1376,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 40
+        Total : 42
         </div>
         <!-- search  -->
         
@@ -1354,6 +1390,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/10</span>
@@ -1387,13 +1429,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1411,13 +1453,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
         </li>
     
         
@@ -1429,7 +1471,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1457,6 +1499,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
             <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
         </li>
     
         

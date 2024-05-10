@@ -22,7 +22,7 @@
     <meta name="description" content="PhoenixPeng">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/archives/2023/08/index.html">
+<meta property="og:url" content="http://example.com/archives/2024/05/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="PhoenixPeng">
 <meta property="og:locale" content="zh_CN">
@@ -434,103 +434,19 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
+            <a class="abstract-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">
                 
-                <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
+                <span class="abstract-title-text">视频扩散模型——9.Tunnel Try-on</span>
             </a>
             <div class="abstract-content">
-                本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，Latent Diffusion Models通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。
+                视频试戴是一项具有挑战性的任务，在以前的作品中没有得到很好的解决。主要障碍在于保留服装的细节并同时对连贯的动作进行建模。面对这些困难，我们通过提出一个名为“隧道试穿”的基于扩散的框架来解决视频试穿问题。核心思想是在输入视频中挖掘一个“对焦隧道”，在服装区域周围提供特写镜头。我们放大了隧道中的区域，以更好地保留服装的细节。为了生成连贯的运动，我们首先利用卡尔曼滤波在对焦隧道中构建平滑的裁剪，并将隧道的位置嵌入注入注意力层，以提高生成视频的连续性。此外，我们还开发了一种环境编码器，用于提取隧道外部的上下文信息作为补充线索。借助这些技术，Tunnel Try-on 保留了服装的精细细节，并合成了稳定流畅的视频。Tunnel Try-on 展示了重大进步，可以被视为在视频中应用虚拟试妆的商业级的首次尝试。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">
-                
-                <span class="abstract-title-text">PITI:图像翻译任务+预训练扩散模型</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要是对《Pretraining is All You Need for Image-to-Image Translation》文章的介绍以及笔记总结，介绍了一个简单而通用的框架，将预训练的力量带到了各种图像到图像的翻译任务中。通过对抗性扩散上采样器和归一化无分类器指导等技术的增强，完整模型 PITI 显着提高了最先进的合成质量，尤其是在具有挑战性的场景中。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/29</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">
-                
-                <span class="abstract-title-text">扩散模型——6.Classifier-free guidance</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要是对《Classifier-free diffusion guidance》文章的介绍以及笔记总结，介绍了Classifier-free针对Classifier Guidance遇到的问题提出了一个无需分类器就能使得FID与IS到达权衡的一个思想。并与其进行对比，再针对饱和度问题进行探讨。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/11</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">
-                
-                <span class="abstract-title-text">扩散模型——5.Classifier guidance</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要是对《Diffusion Models Beat GANs on Image Synthesis》文章的介绍以及笔记总结，另外介绍了该文章所改进的架构，使用了分类器指导思想以及上采样提高图像生成的分辨率。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/09/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
+                <div class="abstract-date" title="Last updated: 2024/05/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/08</span>
                 </div>
                 <!-- tags -->
                 

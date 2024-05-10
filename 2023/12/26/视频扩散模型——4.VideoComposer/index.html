@@ -45,7 +45,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312251619156.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312251622313.png">
 <meta property="article:published_time" content="2023-12-26T11:53:25.000Z">
-<meta property="article:modified_time" content="2024-03-19T00:41:39.415Z">
+<meta property="article:modified_time" content="2024-05-09T08:29:11.520Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202312251012337.png">
@@ -572,7 +572,7 @@ masks）来遮盖视频，并强制模型根据可观察信息预测遮盖区域
 <p><font color="black" size="5">  具体来说，首先将由两个二维卷积和平均池层组成的轻量级空间架构应用于输入序列，<strong>旨在提取局部空间信息</strong>。随后，将得到的条件序列输入时间
 Transformer 层以进行时间建模。通过这种方式，STC
 编码器有助于时间线索的显式嵌入，为不同的输入提供统一的条件接口，从而增强帧间一致性。<strong>注意，我们是要沿着时间维度重复单个图像和单个草图的空间条件，以确保它们与时间条件的一致性</strong>，从而促进条件融合过程。</font></p>
-<p><font color="black" size="5">  经过<strong>STC-encoder</strong>处理的条件序列都与<span class="math inline">\(\textcolor{blue}{z_t}\)</span>具有相同的空间形状，然后通过逐元素加法进行合并。最后，将合并的条件序列与<span class="math inline">\(\textcolor{blue}{z_t}\)</span>沿通道维度连接起来作为控制信号。对于一系列嵌入序列的文本和风格条件，利用交叉注意机制来注入文本和风格指导。</font></p>
+<p><font color="black" size="5">  经过<strong>STC-encoder</strong>处理的条件序列都与<span class="math inline">\(\textcolor{blue}{z_t}\)</span>具有相同的空间形状，然后<strong>通过逐元素加法进行合并。最后，将合并的条件序列与<span class="math inline">\(\textcolor{blue}{z_t}\)</span>沿通道维度连接起来作为控制信号</strong>。对于一系列嵌入序列的文本和风格条件，利用交叉注意机制来注入文本和风格指导。</font></p>
 <h2 id="训练和推理"><font color="black" size="5">3.
 训练和推理</font></h2>
 <p><font color="black" size="5">  🔶<strong>两阶段训练策略：</strong>尽管VideoComposer可以通过LDM的预训练进行初始化，这在一定程度上减轻了训练难度，但该模型仍然难以学习同时处理时间动态并合成来自多个合成的视频内容。为了解决这个问题，我们利用两阶段训练策略来优化
@@ -675,7 +675,7 @@ VideoComposer 令人印象深刻的创造力。</font></p>
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/</a>
             <p>发表日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">December 26th 2023, 7:53:25 pm</a>
-            <p>更新日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">March 19th 2024, 8:41:39 am</a>
+            <p>更新日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">May 9th 2024, 4:29:11 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -684,8 +684,8 @@ VideoComposer 令人印象深刻的创造力。</font></p>
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/" title="视频扩散模型——6.Video LCM">
-                    <div class="nextTitle">视频扩散模型——6.Video LCM</div>
+                <a href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/" title="视频扩散模型——5.GEN-1">
+                    <div class="nextTitle">视频扩散模型——5.GEN-1</div>
                 </a>
             
         </li>
@@ -1089,7 +1089,43 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1416,7 +1452,7 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 40
+        Total : 42
         </div>
         <!-- search  -->
         
@@ -1430,6 +1466,12 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/10</span>
@@ -1463,13 +1505,13 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1487,13 +1529,13 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
         </li>
     
         
@@ -1505,7 +1547,7 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
         </li>
     
         
@@ -1533,6 +1575,12 @@ VideoComposer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
             <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
         </li>
     
         
