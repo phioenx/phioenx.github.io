@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、介绍   图1.在 VideoCrafter1 中开源了两个用于视频生成的扩散模型。文本到视频 （T2V） 模型将文本提示作为输入，并相应地生成视频。另一方面，图像到视频 （I2V） 模型接受图像、文本提示或两者作为视频生成的输入。    文本到视频（T2V）模型，Make-A-Video 和 Imagen Video是级联模型，而大多数其他作品，如LVDM,Magic Video、Model">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视频扩散模型——12.VideoCrafter1">
+<meta property="og:url" content="http://example.com/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="一、介绍   图1.在 VideoCrafter1 中开源了两个用于视频生成的扩散模型。文本到视频 （T2V） 模型将文本提示作为输入，并相应地生成视频。另一方面，图像到视频 （I2V） 模型接受图像、文本提示或两者作为视频生成的输入。    文本到视频（T2V）模型，Make-A-Video 和 Imagen Video是级联模型，而大多数其他作品，如LVDM,Magic Video、Model">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201504392.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201141467.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201141255.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200801162.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200909733.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200926672.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200928413.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201010332.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1.assets\image-20240520104221493.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201050537.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201510708.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201143577.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201146951.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201149706.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201454357.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201512852.png">
+<meta property="article:published_time" content="2024-05-17T03:46:53.000Z">
+<meta property="article:modified_time" content="2024-05-20T07:22:01.199Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201504392.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>视频扩散模型——12.VideoCrafter1 · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">视频扩散模型——12.VideoCrafter1</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                视频扩散模型——12.VideoCrafter1
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/05/17</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="一介绍">一、介绍</h1>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201504392.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图1.</strong></font><font size="5">在
+VideoCrafter1 中开源了两个用于视频生成的扩散模型。文本到视频 （T2V）
+模型将文本提示作为输入，并相应地生成视频。另一方面，图像到视频 （I2V）
+模型接受图像、文本提示或两者作为视频生成的输入。</font></p>
+</blockquote>
+<p><font color="black" size="5">  文本到视频（T2V）模型，Make-A-Video
+和 Imagen Video是级联模型，而大多数其他作品，如LVDM,Magic
+Video、ModelScope和 Align your latents
+都是基于SD的模型。<strong>这些模型通过合并时间层来确保帧之间的时间一致性，从而将SD框架扩展到视频。空间层参数继续自预训练的
+SD UNet。</strong></font></p>
+<p><font color="black" size="5">  成功的 T2I
+模型的蓬勃发展和下游任务的进步在很大程度上可以归因于社区内的开源环境。SD
+是一个关键的基础，因为它是使用巨大的计算能力在大量文本-图像对上训练的。对于大多数学术研究小组来说，与此相关的成本往往令人望而却步。相比之下，在T2V领域，Make-AVideo
+和Imagen Video 展示了有希望的视频结果，但它们都不是开源的。Gen-2、Pika
+Labs 和 Moonvalley&nbsp;
+等几家初创公司可以生成高质量的视频，但研究人员仍然无法访问他们的模型以进行进一步探索。</font></p>
+<p><font color="black" size="5">  目前，存在几种开源 T2V 模型，即
+ModelScope、Hotshot-XL、AnimateDiff&nbsp; 和 Zeroscope V2 XL。发布的
+ModelScope 型号只能生成分辨率为 256 × 256
+的视频，图像质量不理想。Zeroscope V2 XL
+通过在一小部分视频上进行调整来提高其视觉质量，但其生成的视频中仍然存在闪烁和可见噪点。Hotshot-XL
+旨在将 SDXL 扩展到视频模型中，并生成具有 8 帧和 512 × 512 分辨率的
+gif。AnimateDiff 建议将时间模块与 LORA SD
+模型的空间模块相结合。由于时态模块是在 Webvid-10M 上训练的，因此
+AnimateDiff 的原始 T2V 模型的结果很差。与高质量的 LORA
+模型相结合，可以生成高质量的视频。然而，范围在风格和概念构成能力方面受到LORA模型的限制。目前仍然缺乏能够生成高分辨率和高质量视频的开源通用
+T2V 基础模型。</font></p>
+<p><font color="black" size="5">  最近，Pika Labs 和 Gen-2
+发布了他们的图像到视频 （I2V）
+模型，旨在通过提示对给定图像进行动画处理，同时保留其内容和结构。这种技术仍处于早期阶段，因为生成的运动是有限的，并且通常存在可见的伪影。唯一的开源通用
+I2V 基础模型 I2VGen-XL 在 ModelScope
+中发布。此模型使用图像嵌入来替换文本嵌入，以优化预训练的 T2V
+模型。但是，它不满足内容保留约束。生成的视频与给定图像中的语义含义相匹配，但不严格遵循参考内容和结构。因此，开源社区迫切需要一个好的
+I2V 模型。</font></p>
+<p><font color="black" size="5">  在这项工作中，作者介绍了两种用于高质量视频生成的扩散模型：<strong>一种用于文本到视频（T2V）生成，另一种用于图像到视频（I2V）生成。</strong>T2V
+模型以 SD 2.1 为基础，将时间注意力层合并到 SD UNet
+中以捕获时间一致性。并且采用图像和视频联合训练策略来防止概念遗忘。训练数据集包括
+LAION COCO 600M、Webvid10M 和 10M 高分辨率采集视频数据集。T2V
+型号可以生成分辨率为 1024 × 576 且持续时间为 2 秒的视频。另一方面，I2V
+模型基于 T2V
+模型，接受文本和图像输入。使用CLIP提取图像嵌入，并通过交叉注意力注入SD
+UNet，类似于文本嵌入的注入。I2V 模型在 LAION COCO 600M 和 Webvid10M
+上进行训练。作者的想法是通过发布这些模型，旨在为开源社区做出重大贡献，使研究人员和从业者能够在他们的工作基础上进一步推进视频生成领域。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201141467.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201141255.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2.</strong></font><font size="5">与
+Gen-2、Pika Labs、I2VGen-XL 和 Zeroscope-XL 的视觉比较。</font></p>
+</blockquote>
+<h1 id="二方法">二、方法</h1>
+<h2 id="videocrafter1-text-to-video-model"><font color="black" size="5">1.
+VideoCrafter1: Text-to-Video Model</font></h2>
+<p><font color="black" size="5">  <strong>结构概述：</strong>VideoCrafter
+T2V模型是一个潜在视频扩散模型（LVDM），由两个关键组件组成：<strong>视频VAE和视频潜在扩散模型</strong>，如图3所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200801162.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图3.</strong></font><font size="5">VideoCrafter1
+中视频扩散模型的框架：在自动编码器的潜在空间中训练视频UNet。以FPS为条件来控制生成视频的运动速度。对于
+T2V 模型，只有文本提示通过交叉注意力输入空间转换器，而对于 I2V
+模型，文本和图像提示都作为输入。</font></p>
+</blockquote>
+<p><font color="black" size="5">  视频VAE负责减小样本尺寸，使后续的扩散模型更加紧凑和高效。<strong><font color="CornflowerBlue" size="5">首先，将视频数据&nbsp;<span class="math inline">\(\textcolor{blue}{x_0}\)</span> 输入VAE编码器&nbsp;<span class="math inline">\(\textcolor{blue}{\mathcal{E}}\)</span>
+，将其投射到视频潜在表示&nbsp;<span class="math inline">\(\textcolor{blue}{z_0}\)</span>
+中，该视频潜在表示&nbsp;<span class="math inline">\(\textcolor{blue}{z_0}\)</span>
+具有较低的数据维度和压缩的视频表示。然后，可以通过VAE解码器&nbsp;<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>
+将视频潜在映射射回重建的视频&nbsp;<span class="math inline">\(\textcolor{blue}{x^{\prime}_0}\)</span>
+中。</font></strong>之后采用来自稳定扩散模型的预训练VAE作为视频VAE，并在不提取时间信息的情况下单独投影每一帧。获得视频潜在表示&nbsp;<span class="math inline">\(\textcolor{blue}{z_0}\)</span> 后，通过以下方式对
+<span class="math inline">\(\textcolor{blue}{z_0}\)</span>
+进行扩散过程：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200909733.png"></p>
+<p><font color="black" size="5">  其中&nbsp;<span class="math inline">\(\textcolor{blue}{T}\)</span>
+是扩散时间步长的数量，<span class="math inline">\(\textcolor{blue}{\beta_t}\)</span>
+是时间步长&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>
+处的噪声水平。因此，可以在任意时间步长&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>
+处获得一系列嘈杂的视频潜在表示&nbsp;<span class="math inline">\(\textcolor{blue}{z_t}\)</span>。</font></p>
+<p><font color="black" size="5">  为了执行去噪过程，学习了去噪器U-Net来估计其输入被加噪后潜在表示中的噪声，经过渐进式去噪过程后，具有噪声的潜在样本变成干净的视频潜在，最终可以被VAE解码器解码为像素空间中生成的视频。</font></p>
+<p><font color="black" size="5">  <strong>去噪 3D U-Net：</strong>如图
+3 所示，去噪 U-Net 是一种 3D U-Net
+架构，由一堆具有跳跃连接的基本时空块组成。每个模块由卷积层、spatial
+transformers （ST） 和 temporal transformers （TT）
+组成，其中</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200926672.png"></p>
+<p><font color="black" size="5">  去噪器的控制信号包括语义控制（如文本提示）和运动速度控制（如视频fps）。我们可以通过交叉注意力注入语义控制：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405200928413.png"></p>
+<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{\varphi_i(z_t) \in R^{N \times
+d^i_\epsilon}}\)</span>表示<strong>潜在表示的 spatially flattened
+tokens，</strong><span class="math inline">\(\textcolor{blue}{\phi}\)</span>&nbsp;表示Clip
+文本编码器，<span class="math inline">\(\textcolor{blue}{y}\)</span>
+表示输入文本提示。fps 的运动速度控制是通过 FPS
+embedder实现的。该embedder与时间步长embedder具有相同的结构。<font color="DarkCyan" size="5"><strong>具体来说，FPS或时间步长使用
+sinusoidal embedding 将其投影到embedding
+vector当中。然后将该向量输入到两层
+MLP中，以将正弦嵌入映射到学习嵌入。随后，通过逐元素加法融合时间步长嵌入和
+FPS
+嵌入。最后将融合嵌入添加到卷积特征中，以调节中间特征。</strong></font></font></p>
+<h2 id="videocrafter1-image-to-video-model"><font color="black" size="5">2.
+VideoCrafter1: Image-to-Video Model</font></h2>
+<p><font color="black" size="5">  文本提示为内容生成提供了高度灵活的控制，但它们主要关注语义级规范，而不是详细的外观。<strong>在
+I2V
+模型中，是将额外的条件输入（即图像提示）集成到视频扩散模型中，该模型有望根据提供的图像合成动态视觉内容。</strong>对于文本到视频的扩散模型，条件文本嵌入空间在确定最终输出视频的视觉内容方面起着至关重要的作用。为了以兼容的方式为视频模型提供图像信息，必须将图像投影到文本对齐的嵌入空间中。学习这种具有丰富细节的嵌入，有助于以提高视觉保真度。图
+4 显示了为扩散模型配备图像条件分支的图示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201010332.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图4.</strong></font><font size="5">图像条件分支的图示。U-Net
+主干功能 <span class="math inline">\(F_{in}\)</span>
+通过双交叉注意力层处理文本和图像嵌入，其输出融合为 <span class="math inline">\(F_{out}\)</span>。</font></p>
+</blockquote>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  <strong>文本对齐的图像嵌入：</strong>由于文本嵌入是使用预训练的
+CLIP
+文本编码器构建的，因此本文使用其图像编码器从输入图像中提取图像特征。<strong>尽管来自
+CLIP 图像编码器的全局语义token <span class="math inline">\(\textcolor{blue}{f_{cls}}\)</span>
+与图像标题很好地对齐，但它主要在语义级别表示视觉内容，而捕获细节的能力较差。</strong>受现有视觉调节工作的启发，作者利用了CLIP图像ViT最后一层的full
+patch visual tokens <span class="math inline">\(\textcolor{blue}{F_{vis}
+= \{f_i\}^K_{i=0}}\)</span>，它包含了有关图像的更丰富的信息。</font></p>
+<p><font color="black" size="5">  为了促进与文本嵌入的对齐，利用可学习的投影网络（Projection
+Net）&nbsp;<span class="math inline">\(\textcolor{blue}{\mathcal{P}}\)</span>
+将 <span class="math inline">\(\textcolor{blue}{F_{vis}}\)</span>
+转换为目标图像嵌入 <span class="math inline">\(\textcolor{blue}{F_{img}
+=
+\mathcal{P}(F_{vis})}\)</span>，<strong>使视频模型主干能够有效地处理图像特征。然后使用文本嵌入
+<span class="math inline">\(\textcolor{blue}{F_{text}}\)</span>和图像嵌入&nbsp;<span class="math inline">\(\textcolor{blue}{F_{img}}\)</span>
+通过双交叉注意力层计算 U-Net 中间特征&nbsp;<span class="math inline">\(\textcolor{blue}{F_{in}}\)</span>
+</strong>：</font></p>
+<figure>
+<img src="C:\Users\PhoenixPeng\blog\source_posts\视频扩散模型——12.VideoCrafter1.assets\image-20240520104221493.png" alt="image-20240520104221493">
+<figcaption aria-hidden="true">image-20240520104221493</figcaption>
+</figure>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{Q = F_{in}W_q}\)</span>，<span class="math inline">\(\textcolor{blue}{K_{text} =
+F_{text}W_k}\)</span>，<span class="math inline">\(\textcolor{blue}{V_{text} =
+F_{text}W_v}\)</span>，<span class="math inline">\(\textcolor{blue}{K_{img} =
+F_{img}W^′_k}\)</span>，<span class="math inline">\(\textcolor{blue}{V_{img} =
+F_{img}W^′_v}\)</span>。请注意，对图像交叉注意力使用与文本交叉注意力相同的query。因此，每个交叉注意力层只新添加了两个参数矩阵
+<span class="math inline">\(\textcolor{blue}{W^′_k}\)</span>、<span class="math inline">\(\textcolor{blue}{W^′_v}\)</span>。图 5
+分别比较了以全局语义token和采用的丰富视觉token为条件的生成视频的视觉保真度。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201050537.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图5.</strong></font><font size="5">图像条件文本到视频生成比较。（a）
+条件图像输入。（b） 以全局语义token为条件的生成。（c） 生成有条件的full
+patch visual
+tokens。使用的文本提示是“一个有着五颜六色头发的美丽女孩”。</font></p>
+</blockquote>
+<h1 id="三实验">三、实验</h1>
+<h2 id="implementation-details"><font color="black" size="5">1.
+Implementation Details</font></h2>
+<p><font color="black" size="5">  <strong>Dataset：</strong>作者采用图像和视频联合训练策略进行模型训练。使用的图像数据集是
+LAION COCO，这是一个大型文本-图像数据集，由 6 亿个为公开可用的 Web
+图像生成的高质量标题组成。对于视频数据集，利用公开的WebVid-10M，这是一个大型短视频数据集，其文本描述来自素材网站，提供多样化和丰富的内容。此外，作者编译了一个大规模的高质量视频数据集，其中包含1000万个分辨率大于1280×720的视频，用于T2V模型的训练。</font></p>
+<p><font color="black" size="5">  <strong>Training
+Scheme：</strong>&nbsp;为了训练 T2V 模型，作者采用了 Stable Diffusion
+中使用的训练策略，即从低分辨率到高分辨率的训练。我们首先以 256 × 256
+的分辨率训练从图像模型扩展的视频模型，以进行 80K 迭代，批处理大小为
+256。接下来，从 256 × 256 模型恢复，并使用分辨率为512x320
+的视频对其进行微调，以进行136K的迭代，批大小为 128。最后，我们以 1024 ×
+576 的分辨率对模型进行 45K 迭代微调，批大小为 64。对于 I2V
+模型，最初训练从图像嵌入到用于交叉注意力的嵌入空间的映射。随后，我们修复了文本和图像嵌入的映射，并微调了视频模型以改善对齐方式。</font></p>
+<p><font color="black" size="5">  <strong>Evaluation
+Metrics：</strong>作者使用EvalCrafter（评估视频生成模型的基准）来评估视频质量以及文本和视频之间的对齐情况。EvalCrafter
+在VideoCrafter1、Gen-2、Pika Labs 和 ModelScope
+之间进行比较，同时考虑了定量指标和用户研究。在表 1 和图 6
+中列出了主要结果。VideoCrafter1的 T2V
+模型在开源模型中实现了最佳的视觉质量和视频质量。为了进行定性评估，会在图
+2、7 和 9 中提供了几个视觉示例进行说明。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201510708.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图6.</strong></font><font size="5">来自用户研究的原始评级。</font></p>
+</blockquote>
+<p><font color="black" size="5">  <strong>Relations to
+Floor33：</strong>作者在一个名为 Floor33 的 Discord
+频道上部署了这两个开源模型，用户只需输入提示即可在线探索模型的功能。并且增加了一个可选功能，提示扩展，以丰富用户提示中的信息。</font></p>
+<h2 id="性能评估"><font color="black" size="5">2. 性能评估</font></h2>
+<p><font color="black" size="5">  <strong>Text-to-Video
+Results：</strong>作者将他们的 T2V 模型与 Gen-2 和 Pika Labs
+等商业模型以及开源模型 I2VGen-XL 进行了比较。由于 I2VGen-XL
+是图像到视频的模型，作者首先使用 SDXL 生成图像，然后使用 I2VGen-XL
+创建视频。结果如图 2 和图 7 所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201143577.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201146951.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图7.</strong></font><font size="5">与
+Gen-2、Pika Labs、I2VGen-XL 和 Zeroscope-XL 的视觉比较。</font></p>
+</blockquote>
+<p><font color="black" size="5">  如表 1
+所示，VideoCrafter1模型在视觉质量和文本对齐方面优于开源 T2V
+模型。VideoCrafter1模型在训练过程中鼓励大型物体移动，与其他模型相比，生成的视频中的运动更明显。然而，较大的运动有时会在时间一致性中引入误差。图
+2 和图 7
+也证明了与开源模型相比，VideoCrafter1在视觉质量和概念构图方面的优势。Zeroscope的图像质量不尽如人意，因为它有时无法生成内容或产生重复网格等伪影。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201149706.png"></p>
+<p><font color="black" size="5">  Gen-2 和 Pika Labs
+始终如一地生成具有高美学分数的视频，并且在结果中抑制了噪点。然而，Gen-2
+偶尔会在概念构成方面遇到困难，如图 7
+中的两个示例所示，其结果过于平滑。Pika Labs
+表现出最佳的文本对齐性能，但并不总是生成正确的样式，如图 7
+中的第二个示例所示。</font></p>
+<p><font color="black" size="5">  作者还比较了 VideoCrafter
+版本之间的差异，如图 8
+和表1所示。VideoCrafter今年在视觉质量、文本-视频对齐、时间一致性和运动质量方面都有很好的进展。并且VideoCrafter的最新版本（23.10）达到了与Pika
+Lab
+相同的质量，这证明了VideoCrafter的训练方式和数据集的好处。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201454357.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图8.</strong></font><font size="5">不同
+VideoCrafter
+文本到视频版本之间视觉质量的视觉比较。提示分别是“漫威电影风格，超级可爱的暹罗猫作为寿司厨师”，“戴着粗花呢帽子和眼镜的聪明阅读报纸，霍华德霍奇金风格”和“手持相机，政治家在讲台上发表演讲”。比较视频将在我们的
+Github 上发布。</font></p>
+</blockquote>
+<p><font color="black" size="5">  <strong>图像到视频的结果：</strong>作者根据现有的最先进的图像到视频方法评估了VideoCrafter1，包括两个开源条件视频扩散模型和两个商业产品演示。VideoComposer
+是最近发布的合成视频生成模型，支持文本-图像到视频合成。I2VGenXL
+是一个开源的图像到视频生成项目。Pika&nbsp; 和 Gen-2
+是商业公司开发的知名文本到视频生成产品，它们也支持图像到视频应用。</font></p>
+<p><font color="black" size="5">  视觉比较结果如图 9
+所示。我们可以观察到，Pika、Gen-2
+和VideoCrafter1对条件图像的视觉保真度比 VideoComposer 和 I2VGen-XL
+要好。尽管第一帧与输入图像几乎相同，但 VideoComposer
+存在严重的时间不一致问题，其中后续帧会转换为完全不同的外观。I2VGen-XL表现出良好的时间一致性和运动幅度，但外观与条件图像有明显偏差。Pika实现了最佳的视觉保真度和时间一致性;然而，它通常呈现出非常微妙的运动幅度。相比之下，Gen-2
+可以产生令人满意的运动幅度和视觉保真度，但其性能不稳定，即有时会遇到时间漂移问题（如在汽车外壳中）。VideoCrafter1的
+I2V
+模型在这些情况下表现出更好的性能，具有良好的时间一致性和运动幅度，以及可接受的视觉保真度。然而，VideoCrafter1的I2V模型仍然存在一些局限性，例如成功率，面部伪像不理想等，需要进一步改进。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405201512852.png" alt="image-20240520151246807">
+<figcaption aria-hidden="true">image-20240520151246807</figcaption>
+</figure>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  本文介绍了两种用于视频生成的扩散模型。一种是文本到视频生成模型，能够生成分辨率为
+1024 × 576 的高质量、高分辨率、电影质量的视频。它在开源 T2V
+模型中提供最佳质量。另一种是图像到视频生成模型，这是第一个开源的通用 I2V
+基础模型，可以保留给定参考图像的内容和结构。</font></p>
+<p><font color="black" size="5">  现有的开源模型仅代表起点。持续时间、分辨率和运动质量的改进对于未来的发展仍然至关重要。具体来说，两种型号的当前持续时间限制为
+2
+秒;将其延长到更长的时间会更有益。这可以通过使用额外的帧进行训练和开发帧插值模型来实现。至于分辨率，采用空间放大模块或与ScaleCrafter
+合作是一种很有前途的策略。此外，通过利用更高质量的数据，可以提高运动和视觉质量</font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">http://example.com/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/</a>
+            <p>发表日期：<a href="http://example.com/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">May 17th 2024, 11:46:53 am</a>
+            <p>更新日期：<a href="http://example.com/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">May 20th 2024, 3:22:01 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/" title="视频扩散模型——13.VideoCrafter2">
+                    <div class="nextTitle">视频扩散模型——13.VideoCrafter2</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/" title="视频扩散模型--10.FLATTEN">
+                    <div class="prevTitle">视频扩散模型--10.FLATTEN</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#videocrafter1-text-to-video-model"><span class="toc-number">2.1.</span> <span class="toc-text">1.
+VideoCrafter1: Text-to-Video Model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#videocrafter1-image-to-video-model"><span class="toc-number">2.2.</span> <span class="toc-text">2.
+VideoCrafter1: Image-to-Video Model</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#implementation-details"><span class="toc-number">3.1.</span> <span class="toc-text">1.
+Implementation Details</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0"><span class="toc-number">3.2.</span> <span class="toc-text">2. 性能评估</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 47
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span>
+            <a class="archive-post-title" href="/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/">视频扩散模型——8.ControlVideo</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span>
+            <a class="archive-post-title" href="/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">扩散模型在时间序列的应用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">视频扩散模型——7.Latte</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span>
+            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型——3.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
