@@ -22,7 +22,7 @@
     <meta name="description" content="一、介绍   在当今的数字时代，短视频已成为一种占主导地位的娱乐形式。这些视频的编辑和艺术渲染具有相当打的实际意义。目前，扩散模型的最新进展使用户能够通过自然语言提示方便地操作图像，从而彻底改变了图像编辑。尽管在图像领域取得了这些进步，但视频处理仍然带来了独特的挑战，尤其是在确保自然运动与时间一致性方面。   时间相关运动可以通过在广泛的视频数据集上训练视频模型或在单个视频上微调重构的图像模型来学">
 <meta property="og:type" content="article">
 <meta property="og:title" content="视频扩散模型--11.FRESCO">
-<meta property="og:url" content="http://example.com/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/index.html">
+<meta property="og:url" content="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="一、介绍   在当今的数字时代，短视频已成为一种占主导地位的娱乐形式。这些视频的编辑和艺术渲染具有相当打的实际意义。目前，扩散模型的最新进展使用户能够通过自然语言提示方便地操作图像，从而彻底改变了图像编辑。尽管在图像领域取得了这些进步，但视频处理仍然带来了独特的挑战，尤其是在确保自然运动与时间一致性方面。   时间相关运动可以通过在广泛的视频数据集上训练视频模型或在单个视频上微调重构的图像模型来学">
 <meta property="og:locale" content="zh_CN">
@@ -50,8 +50,8 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405211639277.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405211712993.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405211722584.png">
-<meta property="article:published_time" content="2024-05-14T12:49:19.000Z">
-<meta property="article:modified_time" content="2024-05-21T10:53:09.879Z">
+<meta property="article:published_time" content="2024-05-15T12:49:19.000Z">
+<meta property="article:modified_time" content="2024-05-21T12:17:11.583Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405150907060.png">
@@ -361,7 +361,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/05/14</span>
+                    <span class="post-intro-time">2024/05/15</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -776,9 +776,9 @@ translation使用批次中的所有帧相互引导，从而通过参考图 11
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">http://example.com/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/</a>
-            <p>发表日期：<a href="http://example.com/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">May 14th 2024, 8:49:19 pm</a>
-            <p>更新日期：<a href="http://example.com/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">May 21st 2024, 6:53:09 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/</a>
+            <p>发表日期：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">May 15th 2024, 8:49:19 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">May 21st 2024, 8:17:11 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -787,16 +787,16 @@ translation使用批次中的所有帧相互引导，从而通过参考图 11
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/" title="视频扩散模型--10.FLATTEN">
-                    <div class="nextTitle">视频扩散模型--10.FLATTEN</div>
+                <a href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/" title="视频扩散模型——12.VideoCrafter1">
+                    <div class="nextTitle">视频扩散模型——12.VideoCrafter1</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/" title="Medical-Diffusion-model——10.ContourDiff">
-                    <div class="prevTitle">Medical-Diffusion-model——10.ContourDiff</div>
+                <a href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/" title="视频扩散模型--10.FLATTEN">
+                    <div class="prevTitle">视频扩散模型--10.FLATTEN</div>
                 </a>
             
         </li>
@@ -1617,12 +1617,6 @@ State-of-the-Art 方法</span></a></li><li class="toc-item toc-level-2"><a class
         
         
         
-        
-        
-        
-        
-        
-        
     
     
     
@@ -1645,14 +1639,14 @@ State-of-the-Art 方法</span></a></li><li class="toc-item toc-level-2"><a class
             
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/17</span>
-            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/17</span>
-            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
         </li>
     
         
@@ -1663,8 +1657,8 @@ State-of-the-Art 方法</span></a></li><li class="toc-item toc-level-2"><a class
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span>
-            <a class="archive-post-title" href="/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
         </li>
     
         
@@ -1951,14 +1945,14 @@ State-of-the-Art 方法</span></a></li><li class="toc-item toc-level-2"><a class
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">

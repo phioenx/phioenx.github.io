@@ -434,7 +434,7 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">
+            <a class="abstract-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">
                 
                 <span class="abstract-title-text">视频扩散模型——13.VideoCrafter2</span>
             </a>
@@ -445,8 +445,8 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/17</span>
+                <div class="abstract-date" title="Last updated: 2024/05/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/18</span>
                 </div>
                 <!-- tags -->
                 
@@ -490,12 +490,12 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">
+            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">
                 
-                <span class="abstract-title-text">视频扩散模型--10.FLATTEN</span>
+                <span class="abstract-title-text">视频扩散模型--11.FRESCO</span>
             </a>
             <div class="abstract-content">
-                文本到视频编辑旨在根据文本提示编辑源视频的视觉外观。此任务的一个主要挑战是确保编辑视频中的所有帧在视觉上保持一致。最近的工作将先进的文本到图像扩散模型应用于这项任务，将U-Net中的2D空间注意力膨胀为时空注意力。虽然可以通过时空注意添加时间上下文，但它可能会为每个patch引入一些不相关的信息，从而导致编辑的视频不一致。在本文中，作者首次将光流引入扩散模型U-Net的注意力模块中，以解决文本到视频编辑的不一致问题。该方法 FLATTEN 强制跨不同帧的同一流路上的patch在注意力模块中相互关注，从而提高编辑视频的视觉一致性。此外，该方法是免训练的，可以无缝集成到任何基于扩散的文本到视频编辑方法中，并提高其视觉一致性。在现有的文本到视频编辑基准上的实验结果表明，我们提出的方法实现了新的最先进的性能。特别是，该方法在保持编辑视频的视觉一致性方面表现出色。
+                文本到图像扩散模型的显著功效激发了人们对其在视频领域的潜在应用的广泛探索。零样本方法旨在将图像扩散模型扩展到视频中，而无需模型训练。最近的方法主要集中在将帧间对应关系纳入注意机制。但是，在确定在何处处理有效特征时施加的软约束有时可能不够充分，从而导致时间不一致。在本文中，引入了FRESCO，帧内对应关系以及帧间通信，以建立更强大的时空约束。此增强功能可确保跨帧对语义相似的内容进行更一致的转换。除了单纯的注意力引导之外，该方法还涉及对特征的显式更新，以实现与输入视频的高度时空一致性，从而显着提高最终翻译视频的视觉连贯性。大量的实验证明了我们提出的框架在产生高质量、连贯视频方面的有效性，标志着对现有零样本方法的显着改进。
             </div>
             <!-- read more -->
             
@@ -518,19 +518,19 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">
+            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">
                 
-                <span class="abstract-title-text">视频扩散模型--11.FRESCO</span>
+                <span class="abstract-title-text">视频扩散模型--10.FLATTEN</span>
             </a>
             <div class="abstract-content">
-                文本到图像扩散模型的显著功效激发了人们对其在视频领域的潜在应用的广泛探索。零样本方法旨在将图像扩散模型扩展到视频中，而无需模型训练。最近的方法主要集中在将帧间对应关系纳入注意机制。但是，在确定在何处处理有效特征时施加的软约束有时可能不够充分，从而导致时间不一致。在本文中，引入了FRESCO，帧内对应关系以及帧间通信，以建立更强大的时空约束。此增强功能可确保跨帧对语义相似的内容进行更一致的转换。除了单纯的注意力引导之外，该方法还涉及对特征的显式更新，以实现与输入视频的高度时空一致性，从而显着提高最终翻译视频的视觉连贯性。大量的实验证明了我们提出的框架在产生高质量、连贯视频方面的有效性，标志着对现有零样本方法的显着改进。
+                文本到视频编辑旨在根据文本提示编辑源视频的视觉外观。此任务的一个主要挑战是确保编辑视频中的所有帧在视觉上保持一致。最近的工作将先进的文本到图像扩散模型应用于这项任务，将U-Net中的2D空间注意力膨胀为时空注意力。虽然可以通过时空注意添加时间上下文，但它可能会为每个patch引入一些不相关的信息，从而导致编辑的视频不一致。在本文中，作者首次将光流引入扩散模型U-Net的注意力模块中，以解决文本到视频编辑的不一致问题。该方法 FLATTEN 强制跨不同帧的同一流路上的patch在注意力模块中相互关注，从而提高编辑视频的视觉一致性。此外，该方法是免训练的，可以无缝集成到任何基于扩散的文本到视频编辑方法中，并提高其视觉一致性。在现有的文本到视频编辑基准上的实验结果表明，我们提出的方法实现了新的最先进的性能。特别是，该方法在保持编辑视频的视觉一致性方面表现出色。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/14</span>
+                <div class="abstract-date" title="Last updated: 2024/05/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/15</span>
                 </div>
                 <!-- tags -->
                 
@@ -1333,12 +1333,6 @@
         
         
         
-        
-        
-        
-        
-        
-        
     
     
     
@@ -1361,14 +1355,14 @@
             
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/17</span>
-            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/17</span>
-            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
         </li>
     
         
@@ -1379,8 +1373,8 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span>
-            <a class="archive-post-title" href="/2024/05/14/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
         </li>
     
         
@@ -1667,14 +1661,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
-            <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
