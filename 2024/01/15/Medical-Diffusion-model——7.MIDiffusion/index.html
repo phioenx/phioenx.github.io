@@ -19,38 +19,30 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、介绍   现有的视频生成工作利用了不同类型的生成模型，包括 GAN、VAE、自回归模型和归一化流。特别是，GAN 在图像生成方面取得了巨大成功，因此将其扩展到具有专用时间设计的视频生成当中取得了出色的结果。然而，GAN 存在模式崩溃和训练不稳定问题，这使得基于 GAN 的方法难以扩展以处理复杂且多样化的视频分布。最近，TATS提出了一种自回归方法，利用 VQGAN 和 Transformer">
+    <meta name="description" content="一、引言   为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。虽然基于 GAN 的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="视频扩散模型——3.LVDM">
-<meta property="og:url" content="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/index.html">
+<meta property="og:title" content="Medical Diffuison model——7.MIDiffusion">
+<meta property="og:url" content="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、介绍   现有的视频生成工作利用了不同类型的生成模型，包括 GAN、VAE、自回归模型和归一化流。特别是，GAN 在图像生成方面取得了巨大成功，因此将其扩展到具有专用时间设计的视频生成当中取得了出色的结果。然而，GAN 存在模式崩溃和训练不稳定问题，这使得基于 GAN 的方法难以扩展以处理复杂且多样化的视频分布。最近，TATS提出了一种自回归方法，利用 VQGAN 和 Transformer">
+<meta property="og:description" content="一、引言   为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。虽然基于 GAN 的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181659792.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181700521.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202402231134134.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110938983.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110943405.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110945926.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110948029.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181730108.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181634774.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182004307.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182053104.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182055328.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182105210.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182106840.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182107021.png">
-<meta property="article:published_time" content="2023-12-26T02:04:36.000Z">
-<meta property="article:modified_time" content="2024-04-23T01:58:50.081Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181850644.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406211035805.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406221518253.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240904695.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240925573.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240930266.png">
+<meta property="article:published_time" content="2024-01-15T09:27:39.000Z">
+<meta property="article:modified_time" content="2024-06-24T01:32:20.572Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181659792.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>视频扩散模型——3.LVDM · PhoenixPeng&#39;s blog</title>
+    <title>Medical Diffuison model——7.MIDiffusion · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -278,7 +270,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">视频扩散模型——3.LVDM</a>
+                <a href="#" class="post-name">Medical Diffuison model——7.MIDiffusion</a>
             </div>
         </div>
     
@@ -324,7 +316,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                视频扩散模型——3.LVDM
+                Medical Diffuison model——7.MIDiffusion
             <!-- 404 -->
             
         </h1>
@@ -352,7 +344,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/12/26</span>
+                    <span class="post-intro-time">2024/01/15</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -507,179 +499,130 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一介绍">一、介绍</h1>
-<p><font color="black" size="5">  现有的视频生成工作利用了不同类型的生成模型，包括
-GAN、VAE、自回归模型和归一化流。特别是，GAN
-在图像生成方面取得了巨大成功，因此将其扩展到具有专用时间设计的视频生成当中取得了出色的结果。然而，GAN
-存在模式崩溃和训练不稳定问题，这使得基于 GAN
-的方法难以扩展以处理复杂且多样化的视频分布。最近，TATS提出了一种自回归方法，利用
-VQGAN 和 Transformer
-来合成长视频。但生成保真度和分辨率（128×128）仍有很大提升空间。</font></p>
-<p><font color="black" size="5">  为了克服这些限制，本文作者利用扩散模型（DM）。然而，直接将
-DM
-扩展到视频合成需要大量的计算资源。此外，大多数文本到视频生成模型尚未向公众开放，这阻碍了该领域的研究进展。为了解决这些问题，本文作者设计了
-LVDM，<strong>这是一种在视频潜在空间中有效的视频扩散模型</strong>，并通过简单的基本
-LVDM
-模型实现了最先进的结果。此外，<strong>为了进一步生成长距离视频，作者引入了分层
-LVDM
-框架，可以将视频扩展到远远超出训练长度的范围</strong>。然而，生成长视频往往会遇到性能下降的问题。为了缓解这个问题，作者还提出了<strong>条件潜在扰动</strong>和<strong>无条件指导</strong>，这可以有效减缓性能随着时间的推移而下降。最终，该框架在短视频和长视频生成方面超越了许多以前的作品，并在三个数据集上建立了新的最先进的性能。作为扩展，我们还提供文本到视频生成的附加结果。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181659792.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181700521.png"></p>
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png"></p>
+<h1 id="一引言">一、引言</h1>
+<p><font color="black" size="5">  为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，<strong>基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。</strong>虽然基于
+GAN
+的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数据稀缺时，使循环一致性训练的平衡复杂化。当目标模式的样本数量很少时，这个问题变得更加明显。</font></p>
+<p><font color="black" size="5">  最近的研究揭示了基于分数的生成模型优于基于GAN的模型。Muzaffer等引入了SynDiff，这是一个具有循环一致性和双重扩散的框架，用于增强语义对齐。尽管如此，这种方法需要双倍的计算开销，需要预训练生成器来评估相关的源图像，并要求源域数据，这与零样本学习范式不同。同时，Meng等建议利用扩散模型（称为SDEdit）通过零样本学习实现图像翻译。与基于GAN的模型相比，SDEdit通过其简化的模型配置和更直接的损失函数表现出优势。然而，在跨模态翻译上下文中出现了
+SDEdit
+的局限性。它是在基于扰动的制导下预测的，该制导固有地假设原始模态和目标模态都可以均匀地受到噪声的影响。这种假设在跨模态图像翻译中通常被证明是无效的，例如，从
+MRI PDw 过渡到 T1 成像。</font></p>
+<p><font color="black" size="5">  为了解决零样本学习在跨模态翻译中带来的障碍，<strong>本文的方法利用统计特征的同质性来调节为零样本跨模态图像翻译量身定制的扩散模型。该策略利用了原点和目标模态之间的联系，利用它们的局部统计特征，通过扩散范式实现跨模态图像转换。</strong>图
+1 说明了统计特征驱动扩散模型（LMI：Locale-based Mutual
+Information），该模型对跨模态图像分割执行零样本图像翻译。本文介绍的是一个无监督的零样本学习框架，能够在以前看不见的模式中导航翻译。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181850644.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图1：</strong></font><font color="black" size="5">原理图显示了用于零样本跨模态分割的
+LMI
+引导扩散。蓝色和橙色等值线是源分布和目标分布。橙色等值线中的蓝点表示源分布中源数据点的目标数据点（蓝色等值线中的橙色点）。LMIDiffusion
+使用显式统计特征 （LMI）
+来导航下一步（黄点），从头到尾提供连续指导（黄点）。最后，可以使用仅在目标模态上训练的任意分割方法对翻译后的图像进行分割。</font></p>
+</blockquote>
 <h1 id="二方法">二、方法</h1>
-<p><font color="black" size="5">  <strong>首先通过Video
-autoencoder将视频样本压缩到低维潜在空间。作者设计了一种统一的视频扩散模型，它可以在一个网络的潜在空间中执行无条件生成和条件视频生成</strong>。这使得该模型能够将生成的视频自回归地自动扩展至任意长度。然而，自回归模型只会随着时间的推移而出现性能下降的问题。为了进一步提高生成的长视频的一致性并缓解质量下降问题，作者提出了分层潜在视频扩散模型，首先稀疏地生成视频专利，然后插入中间潜在视频。作者还提出了条件潜在扰动和无条件指导来解决长视频生成中的性能下降问题。</font></p>
-<h2 id="video-autoencoder"><font color="black" size="5">1. Video
-Autoencoder</font></h2>
-<p><font color="black" size="5">  该框架使用轻量级3D自动编码器来压缩视频，其中包括编码器<span class="math inline">\(\textcolor{blue}{\mathcal{E}}\)</span>和解码器<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>。它们都使用了3D卷积层。给予一段视频<span class="math inline">\(\textcolor{blue}{x_0 \sim
-p_{data}(x_0)}\)</span>，其中<span class="math inline">\(\textcolor{blue}{x_0 \in R^{H \times W \times L
-\times 3}}\)</span>。编码器<span class="math inline">\(\textcolor{blue}{\mathcal{E}}\)</span>将其编码为潜在表示<span class="math inline">\(\textcolor{blue}{z_0 = \mathcal{E}(x_0)}\)</span>,
-其中<span class="math inline">\(\textcolor{blue}{z_0 \in R^{h \times w
-\times l \times c}}\)</span>, <span class="math inline">\(\textcolor{blue}{h = H/f_s, w=W/f_s,
-l=L/f_t}\)</span>。<span class="math inline">\(\textcolor{blue}{f_s}\)</span>和<span class="math inline">\(\textcolor{blue}{f_t}\)</span>是空间和时间下采样因子。解码器<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>将<span class="math inline">\(\textcolor{blue}{z_0}\)</span>解码为重构样本<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，即<span class="math inline">\(\textcolor{blue}{x_0
-=&nbsp;\mathcal{D}(z_0)}\)</span>。为了确保autoencoder在时间上平移等变，遵循TATS在所有三维卷积中使用重复填充（repeat
-padding）</font></p>
-<p><font color="black" size="5">  训练目标包括<strong>重建损失<span class="math inline">\(\textcolor{blue}{\mathcal{L}_{rec}}\)</span>和对抗损失<span class="math inline">\(\textcolor{blue}{\mathcal{L}_{adv}}\)</span>。</strong>重建损失<span class="math inline">\(\textcolor{blue}{\mathcal{L}_{rec}}\)</span>由像素级均方误差（MSE）损失和感知级
-LPIPS损失组成。对抗性损失则<strong>用于消除通常由像素级重建损失引起的重建模糊</strong>，进一步提高重建的真实感。综上所述，<span class="math inline">\(\textcolor{blue}{\mathcal{E}}\)</span>和<span class="math inline">\(\textcolor{blue}{\mathcal{D}}\)</span>的总体训练目标是</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202402231134134.png"></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\mathcal{ψ}}\)</span>是对抗训练中使用的判别器。</font></p>
-<h2 id="lvdm用于短视频生成"><font color="black" size="5">2.
-LVDM用于短视频生成</font></h2>
-<p><font color="black" size="5">  在得到一个预训练好的视频自动编码器以后，对视频潜在空间进行<strong>扩散和去噪</strong>。给定一个已经经过压缩的潜在编码<span class="math inline">\(\textcolor{blue}{z_0 \sim
-p_{data}(z_0)}\)</span>，扩散模型以在T个时间步中从纯高斯噪声<span class="math inline">\(\textcolor{blue}{z_T \sim
-\mathcal{N}(z_T;0,I)}\)</span>开始生成潜在样本，产生一组噪声潜在变量，即<span class="math inline">\(\textcolor{blue}{z_1,...,z_T}\)</span>。前向扩散过程根据预定义的variance
-schedule<span class="math inline">\(\textcolor{blue}{\beta_1,...,\beta_T}\)</span>逐渐向<span class="math inline">\(\textcolor{blue}{z_0}\)</span>添加噪声</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110938983.png"></p>
-<p><font color="black" size="5">  最终，数据点 <span class="math inline">\(\textcolor{blue}{z_T}\)</span>
-变得与纯高斯噪声无法区分。为了从 <span class="math inline">\(\textcolor{blue}{z_T}\)</span> 恢复 <span class="math inline">\(\textcolor{blue}{z_0}\)</span>
-，扩散模型通过以下方式学习逆向过程：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110943405.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{θ}\)</span>
-是参数化神经网络，通常是图像合成中常用的 U-Net，用于预测 <span class="math inline">\(\textcolor{blue}{μ_θ(z_t, t)}\)</span>和 <span class="math inline">\(\textcolor{blue}{Σ_θ(z_t,
-t)}\)</span>。在实践中，我们通过以下方式参数化 <span class="math inline">\(\textcolor{blue}{μ_θ(z_t, t)}\)</span></font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110945926.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{\epsilon_θ(z_t, t)}\)</span>
-最终被会估计。我们简单地设置 <span class="math inline">\(\textcolor{blue}{Σ_θ(z_t,t)=β^2_tI}\)</span>。训练目标是变分界限的简化版本：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403110948029.png"></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\epsilon}\)</span>是从对角高斯分布得出的。</font></p>
-<p><font color="black" size="5">  <strong>视频生成：</strong>为了在 3D
-潜在空间中对视频样本进行建模，遵循VDM（视频扩散模型），利用时空分解的 3D
-U-Net 架构来估计 。具体来说，我们使用形状为 1 × 3 × 3 的纯空间 3D
-卷积，并在部分层中添加时间注意力。我们研究两种注意力：<strong>联合时空自注意力（joint
-spatial-temporal
-self-attention）</strong>和<strong>分解时空自注意力（factorized
-spatial-temporal
-self-attention）</strong>。我们观察到，与分解的注意力相比，应用联合时空注意力并没有表现出显着的好处，同时增加了模型的复杂性并有时在随机位置引入点状伪影。因此，我们在实验中<strong>使用分解的时空注意力</strong>作为默认设置。我们使用自适应组归一化将时间步嵌入注入归一化模块中，以控制通道尺度和偏差参数，这也被证明有利于提高样本保真度。</font></p>
-<h2 id="分层lvdm用于长视频生成"><font color="black" size="5">3.
-分层LVDM用于长视频生成</font></h2>
-<p><font color="black" size="5">  上述框架只能生成短视频，其长度由训练时输入的帧数决定。因此，作者提出了一种条件潜在扩散模型，它可以以自回归的方式产生以先前潜在代码为条件的未来潜在代码，以促进长视频的生成。我们进一步提出了几种减轻自回归生成中的误差累积问题的技术。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181730108.png"></p>
-<p><font color="black" size="5">  <strong>自回归潜在预测（Autoregressive
-Latent Prediction）:</strong>考虑一段短裁剪潜在向量<span class="math inline">\(\textcolor{blue}{z_t=\{z^i_t\}^l_{i=i}}\)</span>其中，
-<span class="math inline">\(\textcolor{blue}{z_t^i \in R^{h \times w
-\times c}}\)</span>并且 <span class="math inline">\(\textcolor{blue}{l}\)</span>
-是裁剪潜在向量数。作者的想法是以前的潜在代码为条件来预测未来的潜在代码。对于裁剪潜在代码中的每个视频帧，我们沿着通道维度添加一个额外的二进制掩码来指示它是条件帧，还是要预测的帧，并根据掩码将<span class="math inline">\(\textcolor{blue}{z^i_t}\)</span>替换为<span class="math inline">\(\textcolor{blue}{z^i_0}\)</span>，得到</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403181634774.png"></p>
-<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{m_t=\{m^i\}^l_{i=1}, m^i \in R^{h
-\times w \times 1}
-}\)</span>是二元掩码。通过随机将不同的二进制掩码设置为1或0，可以训练扩散模型来联合执行无条件视频生成和条件视频预测。具体来说，当将二进制裁剪<span class="math inline">\(\textcolor{blue}{m}\)</span>中的所有掩膜设置为0，以进行无条件扩散模型训练。在推理阶段，我们将前<span class="math inline">\(\textcolor{blue}{k}\)</span>个二进制掩码<span class="math inline">\(\textcolor{blue}{\{m^i\}^l_{i=1}}\)</span>设置为1，将剩余的<span class="math inline">\(\textcolor{blue}{\{m^i\}^l_{i=k+1}}\)</span>设置为0。</font></p>
-<p><font color="black" size="5">  <strong>分层潜在生成（Hierarchical
-Latent
-Generation）：</strong>以自回归方式生成视频存在因时间累积误差而导致质量下降的风险。因此，作者利用一种通用策略，即<strong>分层生成</strong>来缓解这个问题。具体来说，<strong>首先在稀疏帧上训练自回归视频生成模型以形成视频的基本故事情节，然后训练另一个插值模型来填充丢失的帧</strong>。插值模型的训练与自回归模型类似，只是我们将每两个稀疏帧之间的中间帧的二进制掩码设置为零。</font></p>
-<p><font color="black" size="5">  <strong>条件潜在扰动（Conditional
-Latent
-Perturbation）</strong>。虽然上述分层生成方式可以减少自回归步骤的数量来克服退化问题，但是为了产生足够长的视频样本，更多的预测步骤是必不可少的。因此，作者提出条件扰动来减轻前一代步骤引起的条件误差。<strong>具体来说，我们不是直接以<span class="math inline">\(\textcolor{blue}{z_0}\)</span>为条件，而是使用任意时间<span class="math inline">\(\textcolor{blue}{s}\)</span>处的噪声潜在代码 <span class="math inline">\(\textcolor{blue}{z_s}\)</span>（可以通过（3）计算）作为训练期间的条件，即
-<span class="math inline">\(\textcolor{blue}{\{z^i_t\}^k_{i=1}←\{z^i_s\}^k_{i=1}}\)</span>。这意味着我们还在条件帧上执行扩散过程。</strong>为了保留条件信息，使用最大阈值<span class="math inline">\(\textcolor{blue}{s_{max}}\)</span>
-将时间步限制在较小的噪声水平。在采样过程中，固定噪声水平用于在自回归预测期间持续添加噪声。条件潜在扰动受到条件噪声增强的启发，条件噪声增强已在级联扩散模型中提出，以提高超分辨率扩散模型的性能。我们将其扩展到视频预测，并且我们是第一个证明其在生成长视频样本方面的有效性的人。</font></p>
-<p><font color="black" size="5">  无条件指导：另一种缓解自回归视频生成质量下降的补充技术是利用无条件分数来指导条件生成过程。由于自回归生成过程中的累积误差不会影响无条件分数，因此将该分数引入长视频生成中可以提高采样视频的多样性和保真度。由于上述联合训练技术，我们可以使用一个网络来估计无条件分数<span class="math inline">\(\textcolor{blue}{u}\)</span>和条件分数<span class="math inline">\(\textcolor{blue}{c}\)</span>。通过将<span class="math inline">\(\textcolor{blue}{\tilde{z}}\)</span>中的所有二进制映射<span class="math inline">\(\textcolor{blue}{\{m^i\}^l_{i=1}}\)</span>
-归零，我们得到<span class="math inline">\(\textcolor{blue}{u}\)</span>。通过将<span class="math inline">\(\textcolor{blue}{\tilde{z}}\)</span>中的前&nbsp;<span class="math inline">\(\textcolor{blue}{k}\)</span> 个二进制映射<span class="math inline">\(\textcolor{blue}{\{m^i\}^k_{i=1}}\)</span>设置为
-1，并将其余的 <span class="math inline">\(\textcolor{blue}{\{m^i\}^l_{i=k+1}}\)</span>设置为零，我们得到<span class="math inline">\(\textcolor{blue}{c}\)</span>。请注意，由于自回归预测时的误差累积，条件分数可能会超出模型学习的分布。因此，我们建议利用无条件分数来指导预测采样过程:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182004307.png"></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{w}\)</span>是引导强度。该公式被称为无分类器指导，以避免为类条件扩散模型训练单独的分类器。作者扩展了这个想法来指导帧条件扩散模型生成更长的视频。</font></p>
+<h2 id="用于跨模态图像翻译的扩散模型"><font color="black" size="5">1.用于跨模态图像翻译的扩散模型</font></h2>
+<p><font color="black" size="5">  跨模态图像翻译可以通过分数匹配框架来解决，该框架用于生成基于源数据
+<span class="math inline">\(\textcolor{blue}{G}\)</span>
+的目标数据（表示为 <span class="math inline">\(\textcolor{blue}{F}\)</span>）。然后使用扰动源域<span class="math inline">\(\textcolor{blue}{G}\)</span>来调节逐步扩散过程。然而，当从图像翻译的零样本学习的角度来看时，在学习阶段仍然无法访问来自源域的数据。然而，据推测，源模式和目标模式之间的局部统计属性具有相似性。最大化互信息（MI）已被验证为一种有效的策略，可以使神经结构具有模拟非线性映射的能力。为了捕捉这些用于图像翻译的共享表示，作者建议使用互相信息作为指导对去噪过程中的局部统计特征进行建模。</font></p>
+<h2 id="局部引导互信息"><font color="black" size="5">2.局部引导互信息</font></h2>
+<p><font color="black" size="5">  为了从数据集中提取语义信息以进行调节，有必要将原始数据转换为MI封装的统计特征。给定图像
+<span class="math inline">\(\textcolor{blue}{X}\)</span>，对于位置 <span class="math inline">\(\textcolor{blue}{i}\)</span>处的点 <span class="math inline">\(\textcolor{blue}{x_i \in
+X}\)</span>，可以通过&nbsp;<span class="math inline">\(\textcolor{blue}{x_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{\delta_{x_i}}\)</span>
+的概率密度函数 （PDF）<span class="math inline">\(\textcolor{blue}{p_{δ_{x_i}}(·)}\)</span> 捕获
+<span class="math inline">\(\textcolor{blue}{i}\)</span>
+处的局部统计信息。</font></p>
+<p><font color="black" size="5">  关于位于 <span class="math inline">\(\textcolor{blue}{x_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{\delta_{x_i}}\)</span>
+内的其他数据点(表示为 <span class="math inline">\(\textcolor{blue}{x_j}\)</span>)，它的统计特征可以通过
+PDF：<span class="math inline">\(\textcolor{blue}{p_{δ_{x_j}}(·)}\)</span>确定，其中&nbsp;<span class="math inline">\(\textcolor{blue}{j}\)</span> 是&nbsp;<span class="math inline">\(\textcolor{blue}{\delta_i}\)</span> 的一个元素。在
+点<span class="math inline">\(\textcolor{blue}{x_i}\)</span>
+处从图像&nbsp;<span class="math inline">\(\textcolor{blue}{X}\)</span>
+到图像&nbsp;<span class="math inline">\(\textcolor{blue}{Y}\)</span>
+的局部互信息（LMI） 通过以下方式定义：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406211035805.png"></p>
+<p><font color="black" size="5">  作者采用方程 1
+作为指导，以调节扩散的每个训练步骤。这是通过在分数网络的整个训练步骤中评估
+<span class="math inline">\(\textcolor{blue}{LMI(x_0,y_t)、t \in
+[0,T]}\)</span>来实现的。</font></p>
+<p><font color="black" size="5">  <strong>性质1：</strong>&nbsp;在<span class="math inline">\(i\)</span>处位置从<span class="math inline">\(\textcolor{blue}{X}\)</span>&nbsp;到&nbsp;<span class="math inline">\(\textcolor{blue}{Y}\)</span>&nbsp;的LMI上界为：<span class="math inline">\(\textcolor{blue}{LMI_\delta(x_i,y_i) \leq
+LMI_\delta(x_i,x_i)}\)</span>，这是点<span class="math inline">\(\textcolor{blue}{x_i}\)</span>处<span class="math inline">\(\textcolor{blue}{X}\)</span>&nbsp;和<span class="math inline">\(\textcolor{blue}{Y}\)</span>之间的最佳信息匹配。</font></p>
+<p><font color="black" size="5">  <strong>性质2：</strong>LMIDiffusion
+生成的翻译误差为 <span class="math inline">\(\textcolor{blue}{\lim\limits_{∆LMI→0} ∆E\hat{F} =
+0}\)</span>。</font></p>
+<p><font color="black" size="5">  在补充部分，作者证明了性质 1 和
+2。性质 1 强调 LMI 在以下条件下达到统计全等：<span class="math inline">\(\textcolor{blue}{p_δ(X)=p_δ(Y ), ∀δ \in
+X}\)</span>。因此，在整个训练迭代过程中，LMI 在训练步骤中始终在 <span class="math inline">\(\textcolor{blue}{X_0}\)</span> 和 <span class="math inline">\(\textcolor{blue}{X_t}\)</span>
+之间的相同位置达到峰值。然而，当 <span class="math inline">\(\textcolor{blue}{p_δ(X) \neq
+p_δ(Y)}\)</span>时，LMI 在&nbsp;<span class="math inline">\(\textcolor{blue}{j}\)</span> 处达到局部最大值，该
+<span class="math inline">\(\textcolor{blue}{j}\)</span> 位于&nbsp;<span class="math inline">\(\textcolor{blue}{y_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{δ_{y_i}}\)</span>
+中。通过将迭代互信息计算转换为基于张量的运算，可以加快 MI
+确定的过程。在GPU上执行时，这种张量操作可以通过内存复制和并行缩减等技术进一步受益于速度增强。</font></p>
+<h2 id="通过lmi调节扩散"><font color="black" size="5">3.通过LMI调节扩散</font></h2>
+<p><font color="black" size="5">  在训练阶段，可以通过将数据点（表示为&nbsp;<span class="math inline">\(\textcolor{blue}{F}\)</span> ）与其扰动对应物
+<span class="math inline">\(\textcolor{blue}{F_t}\)</span> 之间的 LMI
+合并到分数网络（符号为 <span class="math inline">\(\textcolor{blue}{s_θ}\)</span>）中来指导噪声扰动过程。这是通过将分数匹配的训练目标调整为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406221518253.png"></p>
+<p><font color="black" size="5">  在采样阶段，我们可以将建议的条件算子集成到
+SDE 中：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240904695.png"></p>
+<p><font color="black" size="5">  并使用朴素的 Euler-Maruyama
+求解器来积分
+SDE。采样图像可以通过专为目标域图像分割而设计的工具直接分割。</font></p>
 <h1 id="三实验">三、实验</h1>
-<h2 id="实验设置"><font color="black" size="5">1. 实验设置</font></h2>
-<p><font color="black" size="5">  <strong>数据集：</strong>本文在
-UCF-101、Sky Time-lapse 和 Taichi 上评估我们的方法。在这些数据集上以
-<span class="math inline">\(256^2\)</span>
-分辨率训练所有模型，以实现无条件视频生成。用于训练的短视频是在一个视频的随机位置以帧步幅为
-1 选择的。对于Taichi，选择帧步幅为 4
-的剪辑（即选择一帧后跳过三帧），以使人体运动更加动态。由于UCF-101和Taichi中的视频数量有限，我们采用完整数据集进行训练。对于
-Sky Time-lapse
-数据集，我们仅在其训练分割上训练模型。所有模型都是在无条件设置下训练的，没有提供指导信息，例如类别标签。</font></p>
-<p><font color="black" size="5">  <strong>评估指标：</strong>为了定量评估，使用短视频和长视频生成中常用的
-FVD 和
-KVD。具体来说，我们计算了2048个16帧的真假视频的FVD和KVD，我们将其称为<span class="math inline">\(FVD_{16}\)</span>和<span class="math inline">\(KVD_{16}\)</span>，用于短视频评估。短视频生成的所有结果都是在十次运行中计算的，并报告其平均值和标准差。对于长视频评估，我们在每个非重叠
-16 帧剪辑中的 512 个样本中估计 FVD 和 KVD，并报告 1 次运行中计算的 1024
-帧的 FVD 曲线，称为 <span class="math inline">\(FVD_{1024}\)</span>。</font></p>
-<p><font color="black" size="5">  <strong>baseline：</strong>我们将我们的方法与七个竞争基线进行了比较，包括基于
-GAN 的方法：TGANv2 、DiGAN 、MoCoGAN-HD&nbsp; 和长视频 GAN 、自回归模型 TATS
-以及大多数最近基于扩散的模型，包括视频扩散模型（VDM）和MCVD。</font></p>
-<p><font color="black" size="5">  <strong>实施细节：</strong>分别使用空间和时间下采样因子
-8 和 4。首先训练一个 3D
-自动编码器，然后固定其权重，然后开始在短视频剪辑上训练无条件
-LVDM。之后，LVDM 预测和 LVDM 插值模型从无条件模型恢复。</font></p>
-<h2 id="效率比较"><font color="black" size="5">2. 效率比较</font></h2>
-<p><font color="black" size="5">  为了证明该方法的训练和采样效率，作者将他们的方法与两个像素空间视频扩散模型进行比较，包括表
-1 中的 VDM 和 MCVD在 UCF-101 数据集上。</font></p>
-<p><font color="black" size="5">  我们使用基本的无条件视频扩散模型来实现
-VDM，以合成低分辨率视频（16 帧，分辨率为 <span class="math inline">\(64^2\)</span>），并使用视频超分辨率扩散模型来将空间分辨率提升到
-<span class="math inline">\(256^2\)</span>。我们按照其官方设置来训练
-MCVD，除了我们将其缩放到分辨率 <span class="math inline">\(256^2\)</span>。当使用相似的时间和模型参数数量进行训练时，我们的方法比它们实现了更好的
-FVD。</font></p>
-<h2 id="短视频生成"><font color="black" size="5">3.
-短视频生成</font></h2>
-<p><font color="black" size="5">  <strong>定量结果：</strong>在表1中，作者分别在
-Sky-Timelapse、UCF-101 和 Taichi
-上与之前的方法进行了定量比较。LVDM大大优于以前最先进的方法。具体来说，在Sky-Timelapse数据集上，作者在<span class="math inline">\(256^2\)</span>分辨率下将FVD从116.5降低到95.18。此外，在高分辨率性能比较也超过了<span class="math inline">\(128^2\)</span>分辨率下FVD中最先进的方法。在
-UCF-101 和 taichi 数据集上，LVDM在 2562
-分辨率下实现了新的最先进结果，而该FVD 与 <span class="math inline">\(128^2\)</span> 分辨率下的最佳结果相当。LVDM 在 UCF
-上优于基于扩散的方法 MCVD -101 关于 FVD 和分辨率。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182053104.png"></p>
-<p><font color="black" size="5">  <strong>定性结果：</strong>在图 4
-中，展示了LVDM与 DIGAN和 TATS 的视觉比较。我们观察到，DIGAN
-生成的样本在许多样本中表现出类似坐标的伪影，TATS
-倾向于生成内容扁平且缺乏多样性的样本，而LVDM
-可以合成具有高保真度和多样性的视频样本。</font></p>
-<figure>
-<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182055328.png" alt="image-20240318205452373">
-<figcaption aria-hidden="true">image-20240318205452373</figcaption>
-</figure>
-<h2 id="长视频生成"><font color="black" size="5">4.
-长视频生成</font></h2>
-<p><font color="black" size="5">  <strong>与最先进方法的比较：</strong>将
-LVDM 与 TATS 进行比较，以在 UCF-101 和 Sky Timelapse 数据集上生成 1024
-帧的长视频。 LVDM 和 TATS
-都试验了纯自回归预测模型（自回归）以及预测模型与插值模型（分层）的组合。图5和图6分别给出了定性和定量比较结果。请注意，TATS
-不提供 UCF-101
-上的分层检查点。在天空延时摄影中，我们比较了分层设置下的两种方法。与
-TATS 相比，我们的方法随着时间的推移实现了较低的 FVD
-分数和较慢的质量退化。具体来说，在挑战 UCF-101 时，我们的 LVDM
-自回归随着时间的推移质量下降速度比 TATS 自回归要慢得多。我们的 LVDM
-分层结构进一步显着缓解了质量下降问题。在 Sky Timelapse
-上，随着时间的推移，两种方法都会出现轻微的质量下降，而我们的方法具有更好的生成性能。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182105210.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182106840.png"></p>
-<p><font color="black" size="5">  <strong>条件潜在扰动：</strong>图7（a）显示了条件潜在扰动的消融结果。我们可以观察到它可以减缓性能下降的趋势，特别是当帧数大于512时，证明了它在长视频生成上的有效性。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202403182107021.png"></p>
-<p><font color="black" size="5">  <strong>无条件指导：</strong>此外，还探索了无条件指导，试图通过利用无条件分数以指导强度指导自回归条件生成来减轻自回归生成的质量下降。图7（b）表明该技术有效地缓解了长视频生成的质量下降。</font></p>
-<h1 id="四文本到图像生成的扩展">四、文本到图像生成的扩展</h1>
-<p><font color="black" size="5">  除了无条件视频生成之外，作者还将该方法扩展到更可控的文本到视频生成。并将模型扩展到十亿级参数，并在
-WebVid 数据集的 200
-万个子集上训练LVDM模型。为了有效地学习视频生成模型，一种自然的想法是利用预先训练的文本到图像模型来重用空间内容生成能力并继续学习视频数据集上的运动动力学。因此，我们使用预先训练的稳定扩散权重来初始化模型的空间参数，包括空间卷积和空间注意力。我们将时间模块（包括多层时间自注意力）初始化为恒等映射，以保持空间生成性能。文本到视频的结果如图
-1 所示。</font></p>
-<h1 id="五总结">五、总结</h1>
-<p><font color="black" size="5">  在这项工作中，作者设计了一种高效的基于
-DM
-的视频生成框架，该框架显着降低了数据维度并加快了训练和采样速度。并且还设计了分层框架可以有效地生成超过一千帧的长视频。凭借其更好的建模能力，LVDM在短视频和长视频生成设置下的各种数据集上取得了最先进的结果。作者进一步证明了无条件引导和条件潜在扰动在减少自回归延长视频长度期间引起的累积误差方面的有效性。作者还提供了开放域文本到视频生成模型的扩展。</font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  <strong>数据集：</strong>&nbsp;作者利用IXI
+dataset，该数据集包含来自健康受试者的 600
+张预对齐多模态图像。并且承担PD和T1w模式之间的翻译任务。从IXI数据集的一个子集中，制定了一个由300个切片（从100个受试者中抽取）组成的训练集和一个由75个切片（从25名受试者中抽取）组成的测试集。</font></p>
+<p><font color="black" size="5">  <strong>实验：</strong>&nbsp;本文将
+LMIDiffusion（无监督）与基于少样本学习的 CycleGAN（监督）翻译模型、基于
+GAN 反转的方法（无监督）和基于扩散的方法 SDEdit （零样本监督学习与基于
+SDE 的扰动引导）进行了比较。1️⃣本实验中的
+<strong>CycleGAN（受监督）将被允许同时查看完整的目标域数据集和源域数据集的一小群</strong>（约占数据集
+IXI 数据集的
+11%）。2️⃣第二个基线是基<strong>于GAN反转的方法（无监督）。允许
+StyleGAN2-ADA
+查看目标域训练数据。在经过训练的StyleGAN2-ADA的潜在空间中，通过5000个反演优化步骤来执行域外引导生成。</strong>在生成步骤中引入了一个额外的网络进行反演。3️⃣<strong>SDEdit（无监督）使用分布扰动引导进行扩散。</strong>LMIDiffusion的分数网络结构与类似UNet的分数匹配网络相同，后者通过学习率为3e
+− 4的Adam优化器进行优化。该模型在具有四个 Tesla V100 GPU 的 NVIDIA DGX
+Station 上进行了训练，迭代次数超过 300K。对于分割后端，作者采用了
+K-Means（5
+个聚类）算法，该算法专门针对目标模态进行训练。随后对从上述各种方法获得的翻译结果进行了分割。</font></p>
+<p><font color="black" size="5">  <strong>结果：</strong>图 2
+显示了各种模型的翻译和分割结果。底部行提供了基于翻译图像的分割结果的清晰说明。值得注意的是，从
+LMIDiffusion
+转换派生的分割与分割基本事实密切相关。虽然使用在目标图像上训练的方法进行直接分割对于源域图像不可行，但在翻译后的图像上产生了值得称赞的分割结果。<strong>LMIDiffusion翻译的结果不仅提供了与翻译靶点
+（PDw） 的最大相似性，而且还保留了原始模态 （T1w）
+的优越解剖学特征。</strong>尽管 CycleGAN
+使用监督（少镜头）数据进行训练，但它无法生成高质量的图像。这一缺点可归因于基于GAN的模型难以辨别源模态和目标模态之间的关系，因为来自两个领域的训练数据有限。另一方面虽然
+SDEdit 确实在 PDw
+域中生成图像，但它损害了原始域的解剖特征，使其在零镜头图像分割方面效果较差。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240925573.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2：</strong></font><font color="black" size="5">对不同模型的翻译结果进行定性评估。前两行显示目标和原始模态图像，以及
+ROI 的特写镜头，然后是 CycleGAN、StyleGAN、SDEdit 和 LMIDiffusion
+的转换。随后的一行显示使用 3 个聚类 K-Means 方法进行分割的 ROI
+中的二值化分割结果，该方法仅在目标模态上进行训练。</font></p>
+</blockquote>
+<p><font color="black" size="5">  在表 1 中给出了基于不同模型计算的
+Dice 分数、PSNR 和 SSIM 值。很明显，LMIDiffusion 的Dice 得分为 0.88 ±
+0.05。紧随其后的是基于 CycleGAN 的方法，得分为 0.85 ± 0.07。SDEdit
+技术表现出次优性能，Dice 得分为
+0.82。相比之下，GAN反演方法（StyleGAN）的结果为0.66，强调了其在跨模态图像翻译方面的挑战。在翻译质量指标方面，LMIDiffusion
+处于领先地位，PSNR 和 SSIM 值分别为 20.22 和 SSIM 为 0.69。CycleGAN
+紧随其后，PSNR 为 18.88，SSIM 为 0.27，而 SDEdit 报告的 PSNR 为
+15.96，SSIM 为
+0.50。StyleGAN方法与其较低的Dice分数一致，PSNR最低，为10.15，SSIM为0.06，进一步证明了GAN反演方法在零样本图像转换任务中的局限性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240930266.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  本文提出了一种应用于跨模态图像分割的零样本跨模态图像平移新方法。对于零样本学习的挑战，本文的方法在翻译质量和零样本分割性能方面优于现有的基于
+GAN
+和基于扩散的方法。结果表明，所提出的LMI引导扩散是一种很有前途的基于零样本学习方式的跨模态图像平移分割方法。通过引入单样本或少样本学习来改进扩散引导的LMI计算，可以潜在地提高模型的性能。</font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/</a>
-            <p>发表日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">十二月 26日 2023, 10:04:36 上午</a>
-            <p>更新日期：<a href="http://example.com/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">April 23rd 2024, 9:58:50 am</a>
+            <p>原文链接：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/</a>
+            <p>发表日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">January 15th 2024, 5:27:39 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">June 24th 2024, 9:32:20 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -688,16 +631,16 @@ DM
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/" title="视频扩散模型——4.VideoComposer">
-                    <div class="nextTitle">视频扩散模型——4.VideoComposer</div>
+                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/" title="Medical Diffusion model——8.FGDM">
+                    <div class="nextTitle">Medical Diffusion model——8.FGDM</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/" title="视频扩散模型——1.Video Diffusion Model">
-                    <div class="prevTitle">视频扩散模型——1.Video Diffusion Model</div>
+                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/" title="Medical Diffusion model——6.SynDiff">
+                    <div class="prevTitle">Medical Diffusion model——6.SynDiff</div>
                 </a>
             
         </li>
@@ -867,12 +810,7 @@ DM
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#video-autoencoder"><span class="toc-number">2.1.</span> <span class="toc-text">1. Video
-Autoencoder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lvdm%E7%94%A8%E4%BA%8E%E7%9F%AD%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">2.2.</span> <span class="toc-text">2.
-LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B1%82lvdm%E7%94%A8%E4%BA%8E%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">2.3.</span> <span class="toc-text">3.
-分层LVDM用于长视频生成</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1. 实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E6%AF%94%E8%BE%83"><span class="toc-number">3.2.</span> <span class="toc-text">2. 效率比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%AD%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">3.3.</span> <span class="toc-text">3.
-短视频生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">3.4.</span> <span class="toc-text">4.
-长视频生成</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%96%87%E6%9C%AC%E5%88%B0%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E7%9A%84%E6%89%A9%E5%B1%95"><span class="toc-number">4.</span> <span class="toc-text">四、文本到图像生成的扩展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E8%B7%A8%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E7%9A%84%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.用于跨模态图像翻译的扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%BC%95%E5%AF%BC%E4%BA%92%E4%BF%A1%E6%81%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.局部引导互信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87lmi%E8%B0%83%E8%8A%82%E6%89%A9%E6%95%A3"><span class="toc-number">2.3.</span> <span class="toc-text">3.通过LMI调节扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1116,34 +1054,7 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
         
         
         
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -1528,7 +1439,7 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 47
+        Total : 46
         </div>
         <!-- search  -->
         
@@ -1544,6 +1455,30 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">05/18</span>
             <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
         </li>
@@ -1556,14 +1491,14 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
         </li>
     
         
@@ -1598,38 +1533,8 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">02/29</span>
-            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
             <span class="archive-post-date">02/28</span>
             <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1647,7 +1552,7 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
@@ -1686,19 +1591,19 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型——3.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
         </li>
     
         
@@ -1839,6 +1744,11 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1850,24 +1760,19 @@ LVDM用于短视频生成</span></a></li><li class="toc-item toc-level-2"><a cla
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
         </span>
     
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

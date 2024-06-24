@@ -19,20 +19,30 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="PhoenixPeng">
-<meta property="og:type" content="website">
-<meta property="og:title" content="PhoenixPeng的领域">
-<meta property="og:url" content="http://example.com/categories/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91/index.html">
+    <meta name="description" content="一、引言   基于扩散的模型可以通过文本提示生成多样化的高质量图像和视频。它还带来了从这些生成先验中编辑真实世界视觉内容的巨大机会。   为了编辑真实图像，可以利用确定性DDIM进行图像噪声inversion，然后，反转噪声在目标提示的条件下逐渐生成编辑后的图像。基于这个线路，在交叉注意力引导、即插即用功能和优化方面提出了几种方法。   通过生成先验作为上述图像编辑方法处理视频存在许多挑战。首先，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视频扩散模型——5.FateZero">
+<meta property="og:url" content="http://example.com/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="PhoenixPeng">
+<meta property="og:description" content="一、引言   基于扩散的模型可以通过文本提示生成多样化的高质量图像和视频。它还带来了从这些生成先验中编辑真实世界视觉内容的巨大机会。   为了编辑真实图像，可以利用确定性DDIM进行图像噪声inversion，然后，反转噪声在目标提示的条件下逐渐生成编辑后的图像。基于这个线路，在交叉注意力引导、即插即用功能和优化方面提出了几种方法。   通过生成先验作为上述图像编辑方法处理视频存在许多挑战。首先，">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111556718.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111604782.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111605026.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111633248.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112039913.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112041280.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112105032.png">
+<meta property="article:published_time" content="2024-06-11T01:34:41.000Z">
+<meta property="article:modified_time" content="2024-06-24T01:36:19.935Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111556718.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>PhoenixPeng&#39;s blog</title>
+    <title>视频扩散模型——5.FateZero · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -222,6 +232,8 @@
         }
     </script>
     
+        <body class="post-body">
+    
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -251,6 +263,17 @@
     </div>
     <!-- toggle banner for post layout -->
     
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">视频扩散模型——5.FateZero</a>
+            </div>
+        </div>
+    
 </header>
 
         <!-- fixed footer -->
@@ -277,24 +300,74 @@
 
 
 
+    height:50vh;
+
 ">
     
     <!-- 主页  -->
     
+        
+    <!-- 404页  -->
+    
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+                视频扩散模型——5.FateZero
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+                
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/06/11</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -424,65 +497,204 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main index-page">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="一引言">一、引言</h1>
+<p><font color="black" size="5">  基于扩散的模型可以通过文本提示生成多样化的高质量图像和视频。它还带来了从这些生成先验中编辑真实世界视觉内容的巨大机会。</font></p>
+<p><font color="black" size="5">  为了编辑真实图像，可以利用确定性DDIM进行图像噪声inversion，然后，反转噪声在目标提示的条件下逐渐生成编辑后的图像。基于这个线路，在交叉注意力引导、即插即用功能和优化方面提出了几种方法。</font></p>
+<p><font color="black" size="5">  通过生成先验作为上述图像编辑方法处理视频存在许多挑战。首先，<strong>没有公开的通用文本到视频模型</strong>。因此，基于图像模型的框架可能比基于视频模型的框架更有价值，这要归功于社区中的各种开源图像模型。<strong>然而，文本到图像模型缺乏对时间感知信息的考虑</strong>，例如运动和3D形状理解。将图像编辑方法直接应用于视频将显示正面闪烁。其次，虽然可以通过关键帧或图集编辑使用以前的视频编辑方法，但这些方法仍然需要图集学习，关键帧选择和每个提示的调整。此外，虽然它们在属性和样式编辑方面可能效果很好，但形状编辑仍然是一个巨大的挑战
+。最后，如上所述，当前的编辑方法使用 DDIM
+进行反转，然后通过新提示进行降噪。<strong>然而，在视频反演中，<span class="math inline">\(\textcolor{blue}{T}\)</span>步进的反转噪声可能会因为误差累积而破坏原始视频的运动和结构。</strong></font></p>
+<p><font color="black" size="5">  在本文中，作者提出了FateZero，这是一种简单而有效的零镜头视频编辑方法，因为我们不需要针对每个目标提示单独训练，也没有用户特定的mask。与图像编辑不同，视频编辑需要保持编辑视频的时间一致性，这是原始训练的文本到图像模型无法学习的。本文通过使用两种新颖的设计来解决这个问题。首先，不是仅仅依靠反转和生成，而是采用不同的方法，<strong>在反转过程的每一步都存储所有的自我和交叉注意力图</strong>。<strong>这使得能够随后在
+DDIM
+的去噪步骤中替换它们</strong>。具体来说，作者发现这些自注意力块存储了更好的运动信息，交叉注意力可以用作空间上自我注意力混合的阈值掩码。这种注意力混合操作可以保持原始结构不变。此外，作者将自我注意力块改革为时空注意力块，以使外观更加一致。并且该框架支持使用预先训练的文本到图像模型直接编辑真实世界视频的样式和属性。此外，在获得视频扩散模型后，该方法在测试时显示出比简单的DDIM反演更好的对象编辑能力。大量的实验证明了所提出的方法在视频和图像编辑方面的优势。</font></p>
+<h1 id="二方法">二、方法</h1>
+<h2 id="预备知识"><font color="black" size="5">1.预备知识</font></h2>
+<p><font color="SkyBlue" size="5">  <strong>DDIM
+inversion：</strong></font><font color="black" size="5">在推理过程中，采用确定性DDIM采样将随机噪声<span class="math inline">\(\textcolor{blue}{z_T}\)</span>转换为干净的潜在<span class="math inline">\(\textcolor{blue}{z_0}\)</span>，其时间步长为<span class="math inline">\(\textcolor{blue}{t:T→1}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111556718.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\alpha_t}\)</span>是噪声
+scheduling的参数。</font></p>
+<p><font color="black" size="5">  基于扩散过程的常微分方程极限分析，提出DDIM
+inversion，以<span class="math inline">\(\textcolor{blue}{t:T→1}\)</span>的步长将干净的潜在<span class="math inline">\(\textcolor{blue}{z_0}\)</span>映射回噪声潜在<span class="math inline">\(\textcolor{blue}{\hat{z}_T}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111604782.png"></p>
+<p><font color="black" size="5">  使得倒置的潜在&nbsp;<span class="math inline">\(\textcolor{blue}{\hat{z}_T}\)</span>
+可以重建一个潜在 <span class="math inline">\(\textcolor{blue}{\hat{z}_0(p_{src})=
+DDIM(\hat{z}_T,p_{src})}\)</span> ，类似于无分类器指导尺度 <span class="math inline">\(\textcolor{blue}{s_{cfg} = 1}\)</span> 的干净潜在
+<span class="math inline">\(\textcolor{blue}{z_0}\)</span>。最近，图像编辑方法使用一个较大的无分类器指导尺度<span class="math inline">\(\textcolor{blue}{s_{cfg} ≫
+1}\)</span>将潜在变量编辑为<span class="math inline">\(\textcolor{blue}{\hat{z}_0(p_{edit})=
+DDIM(\hat{z}_T,p_{edit})}\)</span>
+（图3（a）中的第二行），其中并行进行<span class="math inline">\(\textcolor{blue}{\hat{z}_0(p_{src})}\)</span>的重建以提供注意力约束。（图3（a）中的第一行）。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111605026.png" alt="image-20240611160535448">
+<figcaption aria-hidden="true">image-20240611160535448</figcaption>
+</figure>
+<blockquote>
+<p><font color="Blue" size="5"><strong>图3：</strong></font><font size="5">使用稳定扩散的零样本局部属性编辑（猫→老虎）。与之前中工作中的<strong>Reconstruction
+Attention Fusion（a）</strong>相比，本文的<strong>Inversion Attention
+Fusion（b）</strong>提供了更准确的结构指导和编辑能力，如右侧所示。</font></p>
+</blockquote>
+<h2 id="fatezero视频编辑"><font color="black" size="5">2.FateZero视频编辑</font></h2>
+<p><font color="black" size="5">  如图 2
+所示，<strong>作者使用预训练的文本到图像模型（即 Stable
+Diffusion）作为基础模型</strong>，其中包含一个用于 <span class="math inline">\(\textcolor{blue}{T}\)</span> 时间步长去噪的
+UNet。本文没有直接利用以重建注意力为指导的潜在编辑的常规管道，而是对视频编辑进行了以下几项关键修改。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406111633248.png"></p>
+<blockquote>
+<p><font color="Blue" size="5"><strong>图2：</strong></font><font size="5"><strong>方法的概述：</strong>输入是用户提供的源提示
+<span class="math inline">\(p_{src}\)</span>、目标提示 <span class="math inline">\(p_{edit}\)</span> 和干净的潜在 <span class="math inline">\(z = {z^1,z^2,...,z^n}\)</span>&nbsp;由具有数字帧 <span class="math inline">\(n\)</span>的视频序列中的输入源视频<span class="math inline">\(x =
+{x^1,x^2,...,x^n}\)</span>编码所获得的。<strong>在左边</strong>，首先使用DDIM
+inversion 通道将视频反转为噪声潜在<span class="math inline">\(z_T\)</span>，使用源提示<span class="math inline">\(p_{src}\)</span>和膨胀的3D U-Net <span class="math inline">\(ε_θ\)</span>。在每个inversion 时间步长 <span class="math inline">\(t\)</span> 期间，存储时空自我注意力映射 <span class="math inline">\(s^{src}_t\)</span> 和交叉注意力映射 <span class="math inline">\(c^{src}_t\)</span> 。在DDIM
+denoising的编辑阶段，将潜在<span class="math inline">\(z_T\)</span>降噪回干净的图像<span class="math inline">\(\hat{z}_0\)</span>，条件是目标提示。在每个去噪时间步长<span class="math inline">\(t\)</span>，使用所提出的Attention Blending
+Block将<span class="math inline">\(ε_θ\)</span>中的注意力图<span class="math inline">\((s^{edit}_t,
+c^{edit}_t)\)</span>与存储的注意力图<span class="math inline">\((s^{src}_t，c^{src}_t)\)</span>融合在一起。<strong>右图：</strong>具体来说，将未编辑的单词（例如，道路和乡村）的交叉注意力图
+<span class="math inline">\(c^{edit}_t\)</span>
+替换为它们的源交叉注意力图 <span class="math inline">\(c^{src}_t\)</span>。此外，将反转 <span class="math inline">\(s^{src}_t\)</span> 和编辑 <span class="math inline">\(s^{edit}_t\)</span>
+期间的自注意力映射与从交叉注意力 <span class="math inline">\(c^{src}_t\)</span>
+获得的自适应空间掩码混合在一起，该掩码表示用户想要编辑的区域。</font></p>
+</blockquote>
+<p><font color="OrangeRed" size="5">  1️⃣<strong>Inversion Attention
+Fusion：</strong></font><font color="black" size="5">使用反转噪声（inverted
+noise）进行直接编辑会导致帧不一致，这可能归因于两个因素。首先，式（2）和式（3）中讨论的DDIM的可逆性质只在小步长的极限内成立。然而，目前对
+50 个 DDIM
+去噪步骤的要求会导致每个后续步骤的错误累积。其次，使用大型无分类器引导
+<span class="math inline">\(\textcolor{blue}{s_{cfg} ≫ 1}\)</span>
+可以提高去噪的编辑能力，但较大的编辑自由度会导致相邻帧不一致。因此，以前的方法需要优化文本嵌入或其他正则化。</font></p>
+<p><font color="black" size="5">  虽然这些问题在单帧编辑的上下文中看起来微不足道，但在处理视频时它们可能会被放大，因为即使是帧之间的微小差异也会沿着时间索引加重。</font></p>
+<p><font color="black" size="5">  为了缓解这些问题，本文的框架在Inversion步骤（方程（3））中使用了注意力图，因为在Inversion期间向UNet提供了源提示<span class="math inline">\(\textcolor{blue}{p_{src}}\)</span>和初始潜在 <span class="math inline">\(\textcolor{blue}{z_0}\)</span>。形式上，在Inversion过程中，存储每个时间步长&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>
+的中间自注意力映射(self-attention maps) <span class="math inline">\(\textcolor{blue}{[s^{src}_t]^T_{t=1}}\)</span>、交叉注意力映射(cross-attention
+maps) <span class="math inline">\(\textcolor{blue}{[c^{src}_t]^T_{t=1}}\)</span>，最终的潜在特征映射
+<span class="math inline">\(\textcolor{blue}{z_T}\)</span> 为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112039913.png"></p>
+<p><font color="black" size="5">  其中，DDIM-INV代表式（3）中讨论的DDIM
+Inversion
+通道。在编辑阶段，我们可以通过融合反转的注意力来获得要去除的噪声：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112041280.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{p_{edit}}\)</span>
+表示修改后的提示。在函数 ATT-FUSION
+中，<strong>注入提示中未更改部分的交叉注意力映射</strong>，类似于
+Prompt-to-Prompt。此外，<strong>还替换了自注意力图，以在样式和属性编辑过程中保留原始结构和运动。</strong></font></p>
+<p><font color="black" size="5">  图3显示了本文的注意力融合方法与图像编辑中简单反转然后生成的典型方法之间的简单数据集的比较示例。<strong>在Inversion
+过程中的交叉注意力图捕捉了源图像中猫的轮廓和姿势</strong>，但重建过程中的图有明显的差异。在视频中，注意力一致性可能会影响时间一致性，如图
+8
+所示。这是因为时空自注意力图代表了帧之间的对应关系，而现有视频扩散模型的时间建模能力并不令人满意。</font></p>
+<p><font color="OrangeRed" size="5">  2️⃣<strong>Attention Map
+Blending：</strong></font><font color="black" size="5">反演时间注意力融合在局部损耗编辑中可能不足，如图
+4 中的图像示例所示。在第三列中，用 <span class="math inline">\(\textcolor{blue}{s^{src}}\)</span> 替换 <span class="math inline">\(\textcolor{blue}{s^{edit}∈R^{hw×hw}}\)</span>自注意力编辑会带来不必要的结构泄漏，并且生成的图像在可视化中具有令人不快的混合伪影。另一方面，如果我们在
+DDIM
+去噪管道中保持编辑，背景和西瓜的结构会发生不必要的变化，并且原始兔子的姿势也会丢失。受交叉注意力图提供图像语义布局这一事实的启发，如图4的第二行所示，通过将编辑词的交叉注意力图在反转过程中阈值化为常数τ，从而获得二元掩码<span class="math inline">\(M_t\)</span>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406112105032.png"></p>
+<blockquote>
+<p><font color="Blue" size="5"><strong>图4：</strong></font><font size="5"><strong>使用稳定扩散的零镜头形状编辑（兔子→老虎）中的混合自我注意力研究。</strong>第四列和第五列：忽视自我关注无法保留原有的结构和背景，幼稚的替换会导致伪影。第三列：使用交叉注意力贴图（第二行）混合自注意力，从具有相似姿势的目标文本中获取新形状，并从输入帧中获得背景。</font></p>
+</blockquote>
+<p><font color="black" size="5">  然后，将编辑阶段 <span class="math inline">\(s^{edit}_t\)</span> 和反演阶段 ssrc t
+的自注意力映射与二元掩码 Mt 混合，如图 2
+所示。从形式上讲，注意力图融合实现为</font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">http://example.com/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/</a>
+            <p>发表日期：<a href="http://example.com/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">June 11th 2024, 9:34:41 am</a>
+            <p>更新日期：<a href="http://example.com/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">June 24th 2024, 9:36:19 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/" title="扩散模型——12.ADD">
+                    <div class="nextTitle">扩散模型——12.ADD</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/" title="Medical-Diffusion-model——11.Endora">
+                    <div class="prevTitle">Medical-Diffusion-model——11.Endora</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
     
         
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
-                
-                <span class="abstract-title-text">图像到图像翻译——2.MUNIT</span>
-            </a>
-            <div class="abstract-content">
-                无监督图像到图像的转换是计算机视觉中一个重要且具有挑战性的问题。给定源域中的图像，目标是学习目标域中相应图像的条件分布，而无需查看相应图像对的任何示例。虽然这种条件分布本质上是多模态的，但现有方法做出了过于简化的假设，将其建模为确定性的一对一映射。因此，他们无法从给定的源域图像生成不同的输出。为了解决这个限制，我们提出了一种多模式无监督图像到图像翻译（MUNIT）框架。我们假设图像表示可以分解为域不变的内容代码和捕获域特定属性的样式代码。为了将图像转换到另一个域，我们将其内容代码与从目标域的样式空间采样的随机样式代码重新组合。我们分析了所提出的框架并建立了一些理论结果。与最先进的方法进行比较的广泛实验进一步证明了所提出的框架的优势。此外，我们的框架允许用户通过提供示例样式图像来控制翻译输出的样式。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/24</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
-                
-                <span class="abstract-title-text">图像到图像翻译——1.UNIT</span>
-            </a>
-            <div class="abstract-content">
-                无监督图像到图像翻译旨在通过使用各个域中边缘分布的图像来学习不同域中图像的联合分布。由于存在无限组可以达到给定边缘分布的联合分布，因此在没有额外假设的情况下，人们无法从边缘分布推断出任何有关联合分布的信息。为了解决这个问题，我们做出了共享潜在空间假设，并提出了一种基于耦合 GAN 的无监督图像到图像转换框架。我们将所提出的框架与竞争方法进行比较，并在各种具有挑战性的无监督图像翻译任务上提供高质量的图像翻译结果，包括街景图像翻译、动物图像翻译和人脸图像翻译。我们还将所提出的框架应用于领域适应，并在基准数据集上实现最先进的性能。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/24</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-    <!-- paginator  -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
     
 </main>
 
@@ -573,6 +785,23 @@
 
         </div>
         <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="toc-number">2.1.</span> <span class="toc-text">1.预备知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fatezero%E8%A7%86%E9%A2%91%E7%BC%96%E8%BE%91"><span class="toc-number">2.2.</span> <span class="toc-text">2.FateZero视频编辑</span></a></li></ol></li></ol>
+            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -815,34 +1044,7 @@
         
         
         
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -1227,7 +1429,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 47
+        Total : 46
         </div>
         <!-- search  -->
         
@@ -1243,6 +1445,30 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">05/18</span>
             <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
         </li>
@@ -1255,14 +1481,14 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
         </li>
     
         
@@ -1297,38 +1523,8 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">02/29</span>
-            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
             <span class="archive-post-date">02/28</span>
             <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1346,7 +1542,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
@@ -1385,19 +1581,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型——3.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
         </li>
     
         
@@ -1538,6 +1734,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1549,24 +1750,19 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
         </span>
     
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
@@ -1646,6 +1842,8 @@
         <!-- CNZZ -->
         
         <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         

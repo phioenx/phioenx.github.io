@@ -449,6 +449,126 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">
+                
+                <span class="abstract-title-text">扩散模型——12.ADD</span>
+            </a>
+            <div class="abstract-content">
+                本文将介绍对抗性扩散蒸馏 （ADD），这是一种新颖的训练方法，只需 1-4 个步骤即可有效地对大规模基础图像扩散模型进行采样，同时保持高图像质量。我们使用分数蒸馏来利用大规模现成的图像扩散模型作为教师信号，并结合对抗性损失，以确保即使在一个或两个采样步骤的低步长状态下也能获得高图像保真度。然而该模型在一个步骤中已经明显优于现有的几步方法（GAN，潜在一致性模型），并且仅用四个步骤即可达到最先进的扩散模型（SDXL）的性能。ADD是第一种使用基础模型解锁单步实时图像合成的方法。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">
+                
+                <span class="abstract-title-text">视频扩散模型——5.FateZero</span>
+            </a>
+            <div class="abstract-content">
+                基于扩散的生成模型在基于文本的图像生成方面取得了显著的成功。然而，由于它在生成过程中包含巨大的随机性，因此将此类模型应用于现实世界的视觉内容编辑仍然具有挑战性，尤其是在视频中。在本文中，提出了 FateZero，这是一种基于零样本文本的编辑方法，适用于真实世界的视频，无需按提示训练或特定用途的mask。为了一致地编辑视频，作者提出了几种基于预训练模型的技术。首先，与简单的DDIM inversion技术相比，作者的方法在inversion过程中捕获中间注意力图，有效地保留了结构和运动信息。这些注意力图在编辑过程中直接融合，而不是在去噪过程中生成。为了进一步减少源视频的语义泄漏，将自注意力与源提示中的交叉注意力特征获得的混合掩码融合在一起。此外，还通过引入时空注意力来确保框架的一致性，对UNet的去噪机制进行了自我关注机制的改革。然而，简明扼要的是，本文的方法是第一个从经过训练的文本到图像模型中展示零镜头文本驱动视频风格和局部属性编辑能力的方法。改方法还拥有基于文本到视频模型的更好的零镜头形状感知编辑能力]。大量的实验证明了本文的方法比以前的作品具有更好的时间一致性和编辑能力。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/11</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">
+                
+                <span class="abstract-title-text">Medical-Diffusion-model——11.Endora</span>
+            </a>
+            <div class="abstract-content">
+                生成模型有望彻底改变医学教育、机器人辅助手术和机器学习的数据增强。尽管在生成 2D 医学图像方面取得了进展，但临床视频生成的复杂领域在很大程度上仍未开发。本文介绍了 Endora，这是一种生成模拟临床内窥镜场景的医疗视频的创新方法。本文提出了一种新颖的生成模型设计，该模型将精心制作的时空视频转换器与先进的 2D 视觉基础模型先验集成在一起，在视频生成过程中明确地建模时空动态。我们还率先推出了第一个带有视频生成模型的内窥镜模拟公共基准，并为此采用了现有的最先进的方法。Endora 在生成内窥镜视频方面表现出卓越的视觉质量，在广泛的测试中超越了最先进的方法。此外，我们还探讨了这款内窥镜模拟器如何支持下游视频分析任务，甚至生成具有多视图一致性的 3D 医疗场景。简而言之，Endora 标志着生成式 AI 在临床内窥镜研究部署方面的重大突破，为医疗内容生成的进一步发展奠定了坚实的基础。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/03</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">
+                
+                <span class="abstract-title-text">视频扩散模型——14.DynamiCrafter</span>
+            </a>
+            <div class="abstract-content">
+                对静止图像进行动画处理可提供引人入胜的视觉体验。传统的图像动画技术主要侧重于对具有随机动态（例如云和流体）或特定领域运动（例如人发或身体运动）的自然场景进行动画处理，因此限制了它们对更一般的视觉内容的适用性。为了克服这一限制，本文探索了开放域图像的动态内容合成，将它们转换为动画视频。其关键思想是通过将图像纳入生成过程作为指导，利用文本到视频扩散模型的运动先验。给定一个图像，首先使用query transformer将其投影到文本对齐的丰富上下文表示空间中，这有助于视频模型以兼容的方式消化图像内容。然而，一些视觉细节仍然难以保留在生成的视频中。为了补充更精确的图像信息，通过将整个图像与初始噪声连接起来，进一步将整个图像馈送到扩散模型。实验结果表明，本文提出的方法能够产生视觉上令人信服的、更合乎逻辑和自然的运动，以及与输入图像的更高一致性。比较评估表明，本文的方法明显优于现有竞争对手。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/22</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">
                 
                 <span class="abstract-title-text">视频扩散模型——13.VideoCrafter2</span>
@@ -490,118 +610,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2024/05/20">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/17</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">
-                
-                <span class="abstract-title-text">视频扩散模型--11.FRESCO</span>
-            </a>
-            <div class="abstract-content">
-                文本到图像扩散模型的显著功效激发了人们对其在视频领域的潜在应用的广泛探索。零样本方法旨在将图像扩散模型扩展到视频中，而无需模型训练。最近的方法主要集中在将帧间对应关系纳入注意机制。但是，在确定在何处处理有效特征时施加的软约束有时可能不够充分，从而导致时间不一致。在本文中，引入了FRESCO，帧内对应关系以及帧间通信，以建立更强大的时空约束。此增强功能可确保跨帧对语义相似的内容进行更一致的转换。除了单纯的注意力引导之外，该方法还涉及对特征的显式更新，以实现与输入视频的高度时空一致性，从而显着提高最终翻译视频的视觉连贯性。大量的实验证明了我们提出的框架在产生高质量、连贯视频方面的有效性，标志着对现有零样本方法的显着改进。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/15</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">
-                
-                <span class="abstract-title-text">视频扩散模型--10.FLATTEN</span>
-            </a>
-            <div class="abstract-content">
-                文本到视频编辑旨在根据文本提示编辑源视频的视觉外观。此任务的一个主要挑战是确保编辑视频中的所有帧在视觉上保持一致。最近的工作将先进的文本到图像扩散模型应用于这项任务，将U-Net中的2D空间注意力膨胀为时空注意力。虽然可以通过时空注意添加时间上下文，但它可能会为每个patch引入一些不相关的信息，从而导致编辑的视频不一致。在本文中，作者首次将光流引入扩散模型U-Net的注意力模块中，以解决文本到视频编辑的不一致问题。该方法 FLATTEN 强制跨不同帧的同一流路上的patch在注意力模块中相互关注，从而提高编辑视频的视觉一致性。此外，该方法是免训练的，可以无缝集成到任何基于扩散的文本到视频编辑方法中，并提高其视觉一致性。在现有的文本到视频编辑基准上的实验结果表明，我们提出的方法实现了新的最先进的性能。特别是，该方法在保持编辑视频的视觉一致性方面表现出色。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/15</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">
-                
-                <span class="abstract-title-text">Medical-Diffusion-model——10.ContourDiff</span>
-            </a>
-            <div class="abstract-content">
-                通过不同模式（例如，CT 到 MRI）准确转换医学图像具有许多下游临床和机器学习应用。虽然已经提出了几种方法来实现这一目标，但它们通常优先考虑与输出域特征相关的感知质量，而不是保持解剖学保真度。然而，在翻译过程中保持解剖结构对于许多任务至关重要，例如，当利用来自输入域的掩码来开发将图像翻译到输出域的分割模型时。为了应对这些挑战，本文提出了ContourDiff，这是一种利用图像的领域不变解剖轮廓表示的新颖框架。这些表示很容易从图像中提取，但对其解剖内容形成了精确的空间约束。引入了一种扩散模型，该模型将来自任意输入域的图像的轮廓表示转换为感兴趣输出域中的图像。通过在每个扩散采样步骤中应用轮廓作为约束，我们确保了解剖内容的保存。我们通过使用原始 CT 掩模在从 CT 转换为 MRI 的图像上训练分割模型来评估我们的方法，并在真实 MRI 上测试其性能。我们的方法明显优于其他不成对的图像翻译方法，此外，在训练期间无需访问任何输入域信息。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/13</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">
-                
-                <span class="abstract-title-text">视频扩散模型——9.Tunnel Try-on</span>
-            </a>
-            <div class="abstract-content">
-                视频试穿（video try-on）是一项具有挑战性的任务，在以前的作品中没有得到很好的解决。主要障碍在于保留服装的细节并同时对连贯的动作进行建模。面对这些困难，本文通过提出一个名为“Tunnel Try-on”的基于扩散的框架来解决视频试穿问题。核心思想是在输入视频中挖掘一个“对焦隧道”，在服装区域周围提供特写镜头。我们放大了隧道中的区域，以更好地保留服装的细节。为了生成连贯的运动，我们首先利用卡尔曼滤波在对焦隧道中构建平滑的裁剪，并将隧道的位置嵌入注入注意力层，以提高生成视频的连续性。此外，我们还开发了一种环境编码器，用于提取隧道外部的上下文信息作为补充线索。借助这些技术，Tunnel Try-on 保留了服装的精细细节，并合成了稳定流畅的视频。Tunnel Try-on 展示了重大进步，可以被视为在视频中应用虚拟试妆的商业级的首次尝试。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/08</span>
                 </div>
                 <!-- tags -->
                 
@@ -1042,34 +1050,7 @@
         
         
         
-        
-        
-        
-        
-        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -1454,7 +1435,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 47
+        Total : 46
         </div>
         <!-- search  -->
         
@@ -1470,6 +1451,30 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">05/18</span>
             <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
         </li>
@@ -1482,14 +1487,14 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/15</span>
-            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
         </li>
     
         
@@ -1524,38 +1529,8 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">02/29</span>
-            <a class="archive-post-title" href="/2024/02/29/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98%E2%80%94%E2%80%943.%E8%AE%AD%E7%BB%83ControlNet%E5%8E%BB%E6%8E%A7%E5%88%B6SD/">扩散模型实战——3.训练ControlNet去控制SD</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
             <span class="archive-post-date">02/28</span>
             <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——1.UNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/24</span>
-            <a class="archive-post-title" href="/2024/01/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%942.UNet(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型代码篇——2.UNet</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/20</span>
-            <a class="archive-post-title" href="/2024/01/20/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.ADD(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">扩散模型——16.ADD</a>
         </li>
     
         
@@ -1573,7 +1548,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
         </li>
     
         
@@ -1612,19 +1587,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.GEN-1/">视频扩散模型——5.GEN-1</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.VideoComposer/">视频扩散模型——4.VideoComposer</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">12/26</span>
-            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.LVDM/">视频扩散模型——3.LVDM</a>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
         </li>
     
         
@@ -1765,6 +1740,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1776,24 +1756,19 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="其他">
-            <span class="iconfont-archer">&#xe60a;</span>
-            其他
-        </span>
-    
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-医学图像
         </span>
     
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
