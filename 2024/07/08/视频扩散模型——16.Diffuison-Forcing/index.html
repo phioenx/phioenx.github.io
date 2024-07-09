@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091711376.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091806288.png">
 <meta property="article:published_time" content="2024-07-08T00:52:49.000Z">
-<meta property="article:modified_time" content="2024-07-09T10:50:01.454Z">
+<meta property="article:modified_time" content="2024-07-09T10:55:28.173Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta property="article:tag" content="视频扩散模型">
 <meta name="twitter:card" content="summary">
@@ -649,23 +649,20 @@ o_{t+1}]}\)</span>。轨迹是一个序列 <span class="math inline">\(\textcolo
 包含预测的行动、奖励和观察结果。<span class="math inline">\(\textcolor{blue}{H}\)</span>是前瞻窗口，类似于模型预测控制中的未来预测。在采取计划的行动
 <span class="math inline">\(\textcolor{blue}{\hat{a}_t}\)</span>
 后，环境产生奖励 <span class="math inline">\(\textcolor{blue}{\hat{r}_t}\)</span>
-和下一个观察值 <span class="math inline">\(\textcolor{blue}{\hat{o}_{t+1}}\)</span>，产生下一个toke&nbsp;<span class="math inline">\(\textcolor{blue}{x_t = [\hat{a}_t, r_t,
+和下一个观察值 <span class="math inline">\(\textcolor{blue}{\hat{o}_{t+1}}\)</span>，产生下一个token&nbsp;<span class="math inline">\(\textcolor{blue}{x_t = [\hat{a}_t, r_t,
 o_{t+1}]^⊤}\)</span>。潜在值根据后验 <span class="math inline">\(\textcolor{blue}{p_θ(z_t|z_{t−1}, x_t,
-0)}\)</span> 进行更新。我们的框架支持作为策略和规划器的功能：</font></p>
+0)}\)</span> 进行更新。该框架支持作为策略和规划器的功能：</font></p>
 <p><font color="black" size="5">  <strong>灵活的规划范围。</strong>扩散强迫
 （a） 可以部署在可变范围的任务上，因为每个新动作都是按顺序选择的，并且
 （b） 其前瞻窗口&nbsp;<span class="math inline">\(\textcolor{blue}{H}\)</span>
 可以缩短以降低延迟（使用扩散强迫作为策略），或者延长以执行长期规划（通过下面描述的指导），而无需重新训练或修改架构。请注意，（a）对于具有全轨迹生成视野的Diffuser
 这样的全序列扩散模型是不可能的，而扩散策略需要固定的、小的预测尺寸，排除了（b）。</font></p>
 <p><font color="black" size="5">  <strong>蒙特卡洛树指导（MCTG）。</strong>因果扩散强迫使我们能够通过指导未来
-xt+1：T 的整个分布来影响代币 xtk
-的生成。我们可以绘制多个样本并平均它们的引导梯度，而不是绘制单个轨迹样本来计算此引导梯度。我们称之为蒙特卡洛树指导，其中“树”来自这样一个事实，即当前
-xtk 的去噪受到未来许多路径的梯度的影响。本着像MPPI
-[61]这样的所谓射击方法的精神，xtk随后受到预期奖励的指导，而不是所有未来结果的分配，而不是一个特定的结果。当与采样计划相结合时，MCTG
-的效果会增强，这些计划在对下一个代币进行去噪时保持未来代币的高噪声水平（例如，第
-3.1 节中描述的锯齿形时间表），从而解释了未来更远的更大不确定性。附录 B.3
-进一步证明了 MCTG
-的重要性，以及为什么扩散强迫独特地利用了它。</font></p>
+<span class="math inline">\(\textcolor{blue}{x_{t+1:T}}\)</span>的整个分布来影响token
+<span class="math inline">\(\textcolor{blue}{x_t^k}\)</span>
+的生成。我们可以绘制多个样本并平均它们的引导梯度，而不是绘制单个轨迹样本来计算此引导梯度。我们称之为蒙特卡洛树指导，其中“树”来自这样一个事实，即当前&nbsp;<span class="math inline">\(\textcolor{blue}{x_t^k}\)</span>
+的去噪受到未来许多路径的梯度的影响,<span class="math inline">\(\textcolor{blue}{x_t^k}\)</span>随后受到预期奖励的指导，而不是一个特定的结果。当与采样计划相结合时，MCTG
+的效果会增强，这些计划在对下一个代币进行去噪时保持未来代币的高噪声水平。</font></p>
 <h1 id="三实验">三、实验</h1>
 <p><font color="black" size="5">  评估了扩散强制作为生成序列模型在视频和时间序列预测、规划和模仿学习中的各种应用中的优点。</font></p>
 <h2 id="视频预测一致稳定的序列生成和无限扩展"><font color="black" size="5">1.视频预测：一致、稳定的序列生成和无限扩展</font></h2>
@@ -768,7 +765,7 @@ RNN，用于更高分辨率视频或更复杂分布的应用可能需要大型 t
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/</a>
             <p>发表日期：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">July 8th 2024, 8:52:49 am</a>
-            <p>更新日期：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">July 9th 2024, 6:50:01 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">July 9th 2024, 6:55:28 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -780,8 +777,8 @@ RNN，用于更高分辨率视频或更复杂分布的应用可能需要大型 t
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/" title="视频扩散模型--15.Upscale-A-Video">
-                    <div class="prevTitle">视频扩散模型--15.Upscale-A-Video</div>
+                <a href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/" title="视频扩散模型——15.Upscale-A-Video">
+                    <div class="prevTitle">视频扩散模型——15.Upscale-A-Video</div>
                 </a>
             
         </li>
@@ -1678,7 +1675,7 @@ Forcing）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a c
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
         </li>
     
         

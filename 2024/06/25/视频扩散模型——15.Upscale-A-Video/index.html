@@ -21,12 +21,12 @@
     <meta name="description" content="PhoenixPeng">
     <meta name="description" content="一、引言   在现实场景中，视频超分辨率（VSR）是一项具有挑战性的任务，旨在提高低质量视频的质量以产生高质量的结果。与之前主要关注合成退化或特定相机相关退化的工作不同，由于需要解决低质量视频中常见的复杂和未知退化，例如缩减采样、噪点、模糊、闪烁和视频压缩，因此这项任务要求更高。此外，保持视觉保真度和确保时间连贯性对于输出视频的感知质量至关重要。尽管最近基于卷积神经网络（CNN）的网络在缓解多种形">
 <meta property="og:type" content="article">
-<meta property="og:title" content="视频扩散模型--15.Upscale-A-Video">
+<meta property="og:title" content="视频扩散模型——15.Upscale-A-Video">
 <meta property="og:url" content="http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
 <meta property="og:description" content="一、引言   在现实场景中，视频超分辨率（VSR）是一项具有挑战性的任务，旨在提高低质量视频的质量以产生高质量的结果。与之前主要关注合成退化或特定相机相关退化的工作不同，由于需要解决低质量视频中常见的复杂和未知退化，例如缩减采样、噪点、模糊、闪烁和视频压缩，因此这项任务要求更高。此外，保持视觉保真度和确保时间连贯性对于输出视频的感知质量至关重要。尽管最近基于卷积神经网络（CNN）的网络在缓解多种形">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video.assets\image-20240625094732838.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091857639.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251024383.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251459352.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407090904331.png">
@@ -39,15 +39,15 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091005655.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091009798.png">
 <meta property="article:published_time" content="2024-06-25T01:37:56.000Z">
-<meta property="article:modified_time" content="2024-07-09T08:56:08.853Z">
+<meta property="article:modified_time" content="2024-07-09T10:57:27.637Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video.assets\image-20240625094732838.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091857639.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>视频扩散模型--15.Upscale-A-Video · PhoenixPeng&#39;s blog</title>
+    <title>视频扩散模型——15.Upscale-A-Video · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -275,7 +275,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">视频扩散模型--15.Upscale-A-Video</a>
+                <a href="#" class="post-name">视频扩散模型——15.Upscale-A-Video</a>
             </div>
         </div>
     
@@ -321,7 +321,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                视频扩散模型--15.Upscale-A-Video
+                视频扩散模型——15.Upscale-A-Video
             <!-- 404 -->
             
         </h1>
@@ -506,10 +506,7 @@
     <article class="article-entry">
         <h1 id="一引言">一、引言</h1>
 <p><font color="black" size="5">  在现实场景中，视频超分辨率（VSR）是一项具有挑战性的任务，旨在提高低质量视频的质量以产生高质量的结果。与之前主要关注合成退化或特定相机相关退化的工作不同，<strong>由于需要解决低质量视频中常见的复杂和未知退化，例如缩减采样、噪点、模糊、闪烁和视频压缩，因此这项任务要求更高。此外，保持视觉保真度和确保时间连贯性对于输出视频的感知质量至关重要。</strong>尽管最近基于卷积神经网络（CNN）的网络在缓解多种形式的退化方面取得了成功，但由于它们的生成能力有限，它们在产生逼真的纹理和细节方面仍然不足，这通常会导致过度平滑，这可以在图1所示的RealBasicVSR结果中观察到。</font></p>
-<figure>
-<img src="C:\Users\PhoenixPeng\blog\source_posts\视频扩散模型——15.Upscale-A-Video.assets\image-20240625094732838.png" alt="image-20240625094732838">
-<figcaption aria-hidden="true">image-20240625094732838</figcaption>
-</figure>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091857639.png"></p>
 <blockquote>
 <p><font color="blue" size="5"><strong>图1：</strong></font><font size="5">真实世界和
 AI
@@ -695,7 +692,7 @@ UpscaleA-Video 的生成结果表现出更无缝、更平滑的过渡。</font><
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/</a>
             <p>发表日期：<a href="http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">June 25th 2024, 9:37:56 am</a>
-            <p>更新日期：<a href="http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">July 9th 2024, 4:56:08 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">July 9th 2024, 6:57:27 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1610,7 +1607,7 @@ UpscaleA-Video 的生成结果表现出更无缝、更平滑的过渡。</font><
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
         </li>
     
         
