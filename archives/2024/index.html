@@ -434,18 +434,110 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">
+            <a class="abstract-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">
                 
-                <span class="abstract-title-text">扩散模型——12.ADD</span>
+                <span class="abstract-title-text">视频扩散模型——16.Diffuison Forcing</span>
             </a>
             <div class="abstract-content">
-                本文将介绍对抗性扩散蒸馏 （ADD），这是一种新颖的训练方法，只需 1-4 个步骤即可有效地对大规模基础图像扩散模型进行采样，同时保持高图像质量。我们使用分数蒸馏来利用大规模现成的图像扩散模型作为教师信号，并结合对抗性损失，以确保即使在一个或两个采样步骤的低步长状态下也能获得高图像保真度。然而该模型在一个步骤中已经明显优于现有的几步方法（GAN，潜在一致性模型），并且仅用四个步骤即可达到最先进的扩散模型（SDXL）的性能。ADD是第一种使用基础模型解锁单步实时图像合成的方法。
+                本文介绍了扩散强制，这是一种新的训练范式，其中训练扩散模型以对一组具有独立每个令牌噪声水平的标记进行去噪。通过训练因果下一个token预测模型来应用扩散强迫来对生成建模进行排序，以生成一个或多个未来token，而无需完全扩散过去的token。该方法被证明将下一个token预测模型的优势（如可变长度生成）与全序列扩散模型的优势相结合，如将采样引导到理想轨迹的能力。该方法提供了一系列额外的功能，例如（1）推出连续令牌序列，例如视频，其长度超过训练范围，其中基线发散和（2）新的采样和指导方案，这些方案独特地受益于扩散强迫的可变范围和因果架构，并在决策和规划任务中显着提高性能。除了在实证上的成功之外，该方法还被证明可以优化从真实联合分布中抽取的所有标记子序列的似然的变分下界。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/18">
+                <div class="abstract-date" title="Last updated: 2024/07/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="视频扩散模型">视频扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">
+                
+                <span class="abstract-title-text">视频扩散模型--15.Upscale-A-Video</span>
+            </a>
+            <div class="abstract-content">
+                基于文本的扩散模型在生成和编辑方面取得了显著的成功，在增强视觉内容方面显示出巨大的前景。然而，由于对输出保真度和时间一致性的高要求，将这些模型应用于视频超分辨率仍然具有挑战性，而扩散模型固有的随机性使情况变得复杂。我们的研究介绍了Upscale-A-Video，这是一种用于视频升级的文本引导潜在扩散框架。该框架通过两个关键机制确保时间连贯性：在本地，它将时间层集成到 U-Net 和 VAE-Decoder 中，保持短序列内的一致性;在全球范围内，无需训练，就引入了一个流引导的循环潜伏传播模块，通过在整个序列中传播和融合潜伏来增强整体视频稳定性。得益于扩散范式，本文的模型还提供了更大的灵活性，允许文本提示指导纹理创建，并允许可调节的噪声水平来平衡恢复和生成，从而在保真度和质量之间进行权衡。大量的实验表明，Upscale-A-Video在合成和真实世界的基准测试以及AI生成的视频中都超越了现有方法，展示了令人印象深刻的视觉真实感和时间一致性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model--12.GenerateCT</span>
+            </a>
+            <div class="abstract-content">
+                近年来，生成建模取得了长足的进步，特别是在文本到图像和文本到视频的合成方面。然而，医学领域尚未充分利用大规模基础模型的合成数据生成潜力。在本文中，我们介绍了 GenerateCT，这是第一种用于文本条件计算机断层扫描 （CT） 生成的方法，解决了 3D 医学成像研究的局限性，并使我们的整个框架开源。GenerateCT由预训练的大型语言模型、基于Transformer的文本条件3D胸部CT生成架构和文本条件空间超分辨率扩散模型组成。我们还提出了 CT-ViT，它可以有效地压缩 CT 体积，同时深度保持自回归性，从而能够生成具有可变数量轴向切片的 3D CT 体积。我们的实验表明，GenerateCT 可以产生逼真、高分辨率和高保真的 3D 胸部 CT 体积，与医学语言文本提示一致。我们通过使用生成的 CT 体积训练模型来进一步研究 GenerateCT 的潜力，以对胸部 CT 体积进行多异常分类。我们的贡献为文本条件3D医学图像生成的未来研究奠定了宝贵的基础，并有可能加速医学成像研究的进步。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">
+                
+                <span class="abstract-title-text">扩散模型——12.StableSR</span>
+            </a>
+            <div class="abstract-content">
+                本文利用封装在预训练的文本到图像扩散模型中的先验知识来实现超分辨率（SR）。具体来说，通过使用时间感知编码器，可以在不改变预训练合成模型的情况下获得有希望的恢复结果，从而保留生成先验并最大限度地降低训练成本。为了弥补扩散模型固有的随机性导致的保真度损失，作者还采用了一个可控的特征包装模块，允许用户通过在推理过程中简单地调整标量值来平衡质量和保真度。此外，作者开发了一种渐进式聚合采样策略，以克服预训练扩散模型的固定尺寸限制，从而能够适应任何尺寸的分辨率。使用合成和真实世界的基准对方法进行全面评估，证明了其优于当前最先进的方法。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/01">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/18</span>
                 </div>
                 <!-- tags -->
@@ -509,7 +601,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/03">
+                <div class="abstract-date" title="Last updated: 2024/07/01">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/03</span>
                 </div>
                 <!-- tags -->
@@ -526,7 +618,7 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">
+            <a class="abstract-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">
                 
                 <span class="abstract-title-text">视频扩散模型——14.DynamiCrafter</span>
             </a>
@@ -537,7 +629,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/12">
+                <div class="abstract-date" title="Last updated: 2024/06/25">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/22</span>
                 </div>
                 <!-- tags -->
@@ -565,7 +657,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/22">
+                <div class="abstract-date" title="Last updated: 2024/07/04">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/18</span>
                 </div>
                 <!-- tags -->
@@ -630,94 +722,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">
-                
-                <span class="abstract-title-text">视频扩散模型--10.FLATTEN</span>
-            </a>
-            <div class="abstract-content">
-                文本到视频编辑旨在根据文本提示编辑源视频的视觉外观。此任务的一个主要挑战是确保编辑视频中的所有帧在视觉上保持一致。最近的工作将先进的文本到图像扩散模型应用于这项任务，将U-Net中的2D空间注意力膨胀为时空注意力。虽然可以通过时空注意添加时间上下文，但它可能会为每个patch引入一些不相关的信息，从而导致编辑的视频不一致。在本文中，作者首次将光流引入扩散模型U-Net的注意力模块中，以解决文本到视频编辑的不一致问题。该方法 FLATTEN 强制跨不同帧的同一流路上的patch在注意力模块中相互关注，从而提高编辑视频的视觉一致性。此外，该方法是免训练的，可以无缝集成到任何基于扩散的文本到视频编辑方法中，并提高其视觉一致性。在现有的文本到视频编辑基准上的实验结果表明，我们提出的方法实现了新的最先进的性能。特别是，该方法在保持编辑视频的视觉一致性方面表现出色。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/15</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">
-                
-                <span class="abstract-title-text">Medical-Diffusion-model——10.ContourDiff</span>
-            </a>
-            <div class="abstract-content">
-                通过不同模式（例如，CT 到 MRI）准确转换医学图像具有许多下游临床和机器学习应用。虽然已经提出了几种方法来实现这一目标，但它们通常优先考虑与输出域特征相关的感知质量，而不是保持解剖学保真度。然而，在翻译过程中保持解剖结构对于许多任务至关重要，例如，当利用来自输入域的掩码来开发将图像翻译到输出域的分割模型时。为了应对这些挑战，本文提出了ContourDiff，这是一种利用图像的领域不变解剖轮廓表示的新颖框架。这些表示很容易从图像中提取，但对其解剖内容形成了精确的空间约束。引入了一种扩散模型，该模型将来自任意输入域的图像的轮廓表示转换为感兴趣输出域中的图像。通过在每个扩散采样步骤中应用轮廓作为约束，我们确保了解剖内容的保存。我们通过使用原始 CT 掩模在从 CT 转换为 MRI 的图像上训练分割模型来评估我们的方法，并在真实 MRI 上测试其性能。我们的方法明显优于其他不成对的图像翻译方法，此外，在训练期间无需访问任何输入域信息。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/13</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">
-                
-                <span class="abstract-title-text">视频扩散模型——9.Tunnel Try-on</span>
-            </a>
-            <div class="abstract-content">
-                视频试穿（video try-on）是一项具有挑战性的任务，在以前的作品中没有得到很好的解决。主要障碍在于保留服装的细节并同时对连贯的动作进行建模。面对这些困难，本文通过提出一个名为“Tunnel Try-on”的基于扩散的框架来解决视频试穿问题。核心思想是在输入视频中挖掘一个“对焦隧道”，在服装区域周围提供特写镜头。我们放大了隧道中的区域，以更好地保留服装的细节。为了生成连贯的运动，我们首先利用卡尔曼滤波在对焦隧道中构建平滑的裁剪，并将隧道的位置嵌入注入注意力层，以提高生成视频的连续性。此外，我们还开发了一种环境编码器，用于提取隧道外部的上下文信息作为补充线索。借助这些技术，Tunnel Try-on 保留了服装的精细细节，并合成了稳定流畅的视频。Tunnel Try-on 展示了重大进步，可以被视为在视频中应用虚拟试妆的商业级的首次尝试。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/08</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/archives/2024/page/2/">2</a><a class="extend next" rel="next" href="/archives/2024/page/2/">NEXT &gt;</a>
+            <span class="page-number current">1</span><a class="page-number" href="/archives/2024/page/2/">2</a><a class="page-number" href="/archives/2024/page/3/">3</a><a class="extend next" rel="next" href="/archives/2024/page/2/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1051,7 +1059,81 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1436,7 +1518,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 46
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1452,8 +1534,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">06/18</span>
-            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
         </li>
     
         
@@ -1471,7 +1571,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
-            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
         </li>
     
         
@@ -1536,38 +1636,44 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span>
-            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
         </li>
     
         
@@ -1666,19 +1772,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/07</span>
-            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
-            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/04</span>
-            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
         </li>
     
         
@@ -1746,6 +1852,11 @@
                 扩散模型
             </span>
         
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1770,6 +1881,11 @@
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

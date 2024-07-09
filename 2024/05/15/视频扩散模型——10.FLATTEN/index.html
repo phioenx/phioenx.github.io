@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405161701035.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405161706541.png">
 <meta property="article:published_time" content="2024-05-15T12:37:36.000Z">
-<meta property="article:modified_time" content="2024-05-22T07:57:37.797Z">
+<meta property="article:modified_time" content="2024-07-04T02:47:56.891Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405151044058.png">
@@ -515,7 +515,7 @@
 </blockquote>
 <p><font color="black" size="5">  通过以这种方式捕获空间和时间上下文，这些方法只需要几个微调步骤，甚至不需要训练即可完成
 T2V
-编辑。<strong>然而，这种简单的扩展操作引入了不相关的信息：</strong><font color="Crimson" size="5">因为每个patches都关注视频中的所有其他patches，并在密集的时空注意力中聚合它们的特征。视频中不相关的pathes可能会误导注意力过程，对编辑视频的一致性控制构成威胁。</font>因此，这些方法仍然无法应对文本到视频编辑中的视觉一致性挑战。</font></p>
+编辑。<strong>然而，这种简单的扩展操作引入了不相关的信息：</strong>因为每个patches都关注视频中的所有其他patches，并在密集的时空注意力中聚合它们的特征。视频中不相关的pathes可能会误导注意力过程，对编辑视频的一致性控制构成威胁。</font>因此，这些方法仍然无法应对文本到视频编辑中的视觉一致性挑战。</p>
 <p><font color="black" size="5">  在本文中，作者首次提出了FLATTEN，这是一种新颖的（光学）FLow引导ATTENtion，它能够与文本到图像的扩散模型无缝集成，并隐式利用光流进行文本到视频编辑，以解决以前作品中的视觉一致性限制。</font></p>
 <p><font color="black" size="5">  FLATTEN
 在不同帧的同一流路上强制执行patches，以便在注意力模块中相互关注，从而提高编辑视频的视觉一致性。该方法的主要优点是，<strong>在光流的引导下，信息能够在多个帧之间准确通信，从而稳定编辑视频的提示生成的视觉内容。</strong><font color="RoyalBlue" size="5">具体地说，<strong>作者首先使用预先训练的光流预测模型来估计源视频的光流。然后，估计的光流用于计算patches的轨迹，并引导同一轨迹上pathes之间的注意力机制。</strong></font>同时，作者还提出了一种将光流引导注意力集成到现有扩散过程中的有效方法，即使没有任何训练，也可以保留每帧的特征分布。作者提出了一个以
@@ -723,7 +723,7 @@ T2V 编辑基准上实现新的最先进性能。此外，FLATTEN
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
             <p>原文链接：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/</a>
             <p>发表日期：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">May 15th 2024, 8:37:36 pm</a>
-            <p>更新日期：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">May 22nd 2024, 3:57:37 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">July 4th 2024, 10:47:56 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1156,7 +1156,81 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1541,7 +1615,7 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 46
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1557,8 +1631,26 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">06/18</span>
-            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
         </li>
     
         
@@ -1576,7 +1668,7 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
-            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
         </li>
     
         
@@ -1641,38 +1733,44 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span>
-            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
         </li>
     
         
@@ -1771,19 +1869,19 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/07</span>
-            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
-            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/04</span>
-            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
         </li>
     
         
@@ -1851,6 +1949,11 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
                 扩散模型
             </span>
         
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1875,6 +1978,11 @@ FLATTEN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

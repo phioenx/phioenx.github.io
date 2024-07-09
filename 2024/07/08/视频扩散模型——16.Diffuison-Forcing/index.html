@@ -19,45 +19,35 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、介绍   多模态成像是评估人体解剖信息的关键。通过各种方式捕获多模态的组织信息有助于提高下游成像任务的性能和诊断准确性。但实际场景中，多模态图像是容易造成缺失的，因此需要医学图像翻译任务来解决这一问题，旨在已知源模态的指导下合成缺失的目标模态。鉴于不同模态的组织信息存在非线性变化，这种恢复是一个条件不佳的问题。我们可以通过基于深度学习的方法结合非线性数据作为先验来改善问题条件，从而提供了性能">
+    <meta name="description" content="一、介绍   概率序列建模：生成不同长度的序列（仅生成单个token或通过自回归采样生成&quot;无限数量&quot;的token）。在各种机器学习应用中起着至关重要的作用，包括自然语言处理，视频预测。   当前的对下一个token预测模型是通过Teacher Forcing进行训练的，  Teacher Forcing RNN最初的训练方式：上一个state的输出作为下个state的输入 训练迭代过程早期的RN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Medical Diffusion model——6.SynDiff">
-<meta property="og:url" content="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/index.html">
+<meta property="og:title" content="视频扩散模型——16.Diffuison Forcing">
+<meta property="og:url" content="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、介绍   多模态成像是评估人体解剖信息的关键。通过各种方式捕获多模态的组织信息有助于提高下游成像任务的性能和诊断准确性。但实际场景中，多模态图像是容易造成缺失的，因此需要医学图像翻译任务来解决这一问题，旨在已知源模态的指导下合成缺失的目标模态。鉴于不同模态的组织信息存在非线性变化，这种恢复是一个条件不佳的问题。我们可以通过基于深度学习的方法结合非线性数据作为先验来改善问题条件，从而提供了性能">
+<meta property="og:description" content="一、介绍   概率序列建模：生成不同长度的序列（仅生成单个token或通过自回归采样生成&quot;无限数量&quot;的token）。在各种机器学习应用中起着至关重要的作用，包括自然语言处理，视频预测。   当前的对下一个token预测模型是通过Teacher Forcing进行训练的，  Teacher Forcing RNN最初的训练方式：上一个state的输出作为下个state的输入 训练迭代过程早期的RN">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405072103260.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405072128415.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080823668.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080824055.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080931420.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080935614.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080948068.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081007449.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081017679.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081020908.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081554778.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081604146.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081654387.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081658849.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081706630.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081715001.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081716934.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082021373.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082029680.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082031361.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082045342.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082047635.png">
-<meta property="article:published_time" content="2024-01-15T03:49:25.000Z">
-<meta property="article:modified_time" content="2024-05-08T12:53:58.966Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407080911703.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091831705.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407080924081.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091843988.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081519592.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081537350.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081612523.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091618544.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091641758.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091711376.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091806288.png">
+<meta property="article:published_time" content="2024-07-08T00:52:49.000Z">
+<meta property="article:modified_time" content="2024-07-09T10:50:01.454Z">
 <meta property="article:author" content="PhoenixPeng">
+<meta property="article:tag" content="视频扩散模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405072103260.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407080911703.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Medical Diffusion model——6.SynDiff · PhoenixPeng&#39;s blog</title>
+    <title>视频扩散模型——16.Diffuison Forcing · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -285,7 +275,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Medical Diffusion model——6.SynDiff</a>
+                <a href="#" class="post-name">视频扩散模型——16.Diffuison Forcing</a>
             </div>
         </div>
     
@@ -331,7 +321,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Medical Diffusion model——6.SynDiff
+                视频扩散模型——16.Diffuison Forcing
             <!-- 404 -->
             
         </h1>
@@ -351,6 +341,8 @@
                     <div class= post-intro-tags >
     
     
+        <a class="post-tag" href="javascript:void(0);" data-tags="视频扩散模型">视频扩散模型</a>
+    
 </div>
 
                 
@@ -359,7 +351,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/01/15</span>
+                    <span class="post-intro-time">2024/07/08</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -514,214 +506,259 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405072103260.png"></p>
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407080911703.png"></p>
 <h1 id="一介绍">一、介绍</h1>
-<p><font color="black" size="5">  多模态成像是评估人体解剖信息的关键。通过各种方式捕获多模态的组织信息有助于提高下游成像任务的性能和诊断准确性。但实际场景中，多模态图像是容易造成缺失的，因此需要<strong>医学图像翻译任务来解决这一问题，旨在已知源模态的指导下合成缺失的目标模态</strong>。鉴于不同模态的组织信息存在非线性变化，这种恢复是一个条件不佳的问题。我们可以通过基于深度学习的方法结合非线性数据作为先验来改善问题条件，从而提供了性能的飞跃。</font></p>
-<p><font color="black" size="5">  基于深度学习的方法需要涉及网络模型，这些模型经过训练以捕获给定源图像的目标条件分布的先验。<strong>生成对抗网络（GAN）模型在图像合成方面的特殊真实性而被广泛用于翻译任务。它拥有捕获目标分布信息的判别器，同时判别器还引导生成器实现从源模态到目标模态的单次映射。</strong>基于这种对抗机制，基于GAN的翻译任务在许多工作中报告了SOTA的结果，例如跨MR扫描仪的合成，多对比度MR合成和CT合成。</font></p>
-<p><font color="black" size="5">  尽管GAN模型被证明很强大，但它通过生成器和判别器之间的相互作用间接捕获有关目标模态的分布信息。<strong>因此捕获到的是目标分布的隐式表征，这种隐式表征容易产生学习偏差，包括判别器的过早收敛和模式崩溃，导致合成图像的质量和多样性较差。</strong>最近的计算机视觉研究已将扩散过程作为GAN的有前途的替代方案，以提高生成建模任务中的样本多样性。然而，扩散方法在医学图像翻译中的潜力在很大程度上仍未得到探索，部分原因是常规扩散模型中图像采样的计算负担很大。</font></p>
-<p><font color="black" size="5">  在这里，作者提出了一种用于医学图像合成的新型对抗扩散模型
-SynDiff，以执行高效且高保真的模态转换（<font color="blue" size="5"><strong>图1</strong></font>）。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405072128415.png"></p>
+<p><font color="black" size="5">  <strong>概率序列建模：</strong>生成不同长度的序列（仅生成单个token或通过自回归采样生成"无限数量"的token）。在各种机器学习应用中起着至关重要的作用，包括自然语言处理，视频预测。</font></p>
+<p><font color="black" size="5">  当前的对下一个token预测模型是通过Teacher
+Forcing进行训练的，</font></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图1：</strong></font><font size="5"><strong>a）</strong>
-规则扩散模型在实际图像样本（x0）和各向同性高斯噪声（xT）之间以数百个时间步长逐渐变换。每个正向步骤都会向当前图像样本添加噪声，而每个反向步骤都会对图像样本进行降噪。神经网络用于反向扩散步骤中的去噪。<strong>b）</strong>所提出的对抗扩散模型在几个步骤中执行快速转换。每个前向步进都会增加更大的噪声量，与较大的步长相对应。<strong>adversarial
-projector</strong>
-用于提高反向扩散过程中的精度。扩散生成器合成去噪图像样本，而判别器区分去噪图像的实际样本和合成样本。</font></p>
+<p><strong><font color="Lightpink" size="5">Teacher
+Forcing</font></strong></p>
+<p><font size="5">RNN最初的训练方式：上一个state的输出作为下个state的输入</font></p>
+<p><font size="5">训练迭代过程早期的RNN预测能力非常弱，几乎不能给出好的生成结果。如果某一个单词产生了错误的结果，必然会影响后面一片单词的学习。从而导致学习速度变慢，难以收敛。</font></p>
+<p><font size="5">teacher-forcing
+在训练网络过程中，每次不使用上一个state的输出作为下一个state的输入，而是直接使用训练数据的标准答案(ground
+truth)的对应上一项作为下一个state的输入。</font></p>
+<p><font size="5">给定如下输入序列:</font></p>
+<p><font style="background:Cornsilk" size="5"><strong>[START] Mary had a
+little lamb whose fleece was white as snow [END]</strong></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091831705.png"></p>
+<p><font size="5">free-running：如果一开始生成"a"，之后作为输入来生成下一个单词，模型就偏离正轨。因为生成的错误结果，会导致后续的学习都受到不好的影响，导致学习速度变慢，模型也变得不稳定。</font></p>
+<p><font size="5">而使用teacher-forcing，模型生成一个"a"，可以在计算了error之后，丢弃这个输出，把"Marry"作为后续的输入。该模型将更正模型训练过程中的统计属性，更快地学会生成正确的序列。</font></p>
 </blockquote>
-<h1 id="二syndiff">二、SynDiff</h1>
-<p><font color="black" size="5">  给定源图像，SynDiff利用快速扩散来生成目标图像。并且SynDiff采用
-adversarial
-projector，可在大步长内进行精确的反向采样。引入了一种周期一致性架构，以便在源-目标图像的未配对数据集上进行训练（图2）。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080823668.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080824055.png"></p>
+<p><font color="black" size="5">  其中<strong>模型根据真实的先前tokens的历史信息从而预测下一个token。</strong>这导致了两个局限性：</font></p>
+<p><font color="black" size="5">  1️⃣teacher-forcing过于依赖ground
+truth数据，在训练过程中，模型会有较好的效果，但是在测试的时候因为不能得到ground
+truth的支持，所以如果目前生成的序列在训练过程中有很大不同，模型就会变得脆弱。</font></p>
+<p><font color="black" size="5">  2️⃣当前的下一个token预测模型在连续数据上很容易变得不稳定。例如，当试图在自动回归生成比训练时帧数更长的视频时，帧到帧预测中的微小错误会累积并且使得模型发散。</font></p>
+<p><font color="black" size="5">  全序列扩散似乎提供了一种解决方案。通常用于视频生成和长期规划，人们通过扩散它们的串联来直接模拟固定数量的token的联合分布，其中所有token的噪声水平都是相同的。它们能依据指导采样到理想的序列。它们还擅长生成连续信号，如视频。然而，全序列扩散是通过非因果、未屏蔽的架构普遍参数化的。<strong>这不仅将采样限制为与训练相同的完整序列（而不是可变长度生成）之外，限制了子序列生成的可能性（图1）</strong>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407080924081.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图2：</strong></font><font size="5">对于无监督学习，SynDiff利用周期一致的架构，在两种模态（A,
-B）之间进行双边转换。为了合成模态A的目标图像<span class="math inline">\(\textcolor{blue}{x^A_0}\)</span>,图1中的扩散发生器需要来自模态B的源图像<span class="math inline">\(\textcolor{blue}{y^B}\)</span>的解剖学指导，以实现相同的解剖结构，这在未配对训练集中不可用，因此，SynDiff使用非扩散生成器来估计配对的源图像<span class="math inline">\(\textcolor{blue}{\tilde{y}^B}\)</span>以用于训练目的。a）非扩散模块（Non-Diffusive
-Module）由两个生成器-判别器对组成，用于生成<span class="math inline">\(\textcolor{blue}{x^A_0 \rightarrow
-\tilde{y}^B}\)</span>（红色）和<span class="math inline">\(\textcolor{blue}{x^B_0 \rightarrow
-\tilde{y}^A}\)</span>（蓝色）的初始平移估计值。b）然后将这些初始平移估计值<span class="math inline">\(\textcolor{blue}{\tilde{y}^{A,B}}\)</span>用作扩散模块中的指导源对比度图像。为了实现周期一致性，扩散模块还包括两个生成器-判别器对，以生成<span class="math inline">\(\textcolor{blue}{(x^A_t, \tilde{y}^B, T)
-\rightarrow \hat{x}^A_{t-k}}\)</span>（品红色）和<span class="math inline">\(\textcolor{blue}{(x^B_t, \tilde{y}^A, T)
-\rightarrow \hat{x}^B_{t-k}}\)</span>（绿色）的去噪图像估计。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+1：</strong></font><strong>Diffusion Forcing
+的能力。</strong>如今，不同的应用，如语言建模或视频生成，根据其各自的独特能力，依赖于自回归下一个token预测或全序列扩散。本文所提出的扩散强迫是一种新颖的序列生成模型，具有两种模型类型的关键优势。</font></p>
 </blockquote>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  SynDiff的工作原理详述如下：</font></p>
-<p><font color="Lightpink" size="5">  <strong>1）对抗扩散过程：</strong></font><font color="black" size="5">扩散模型规定了相对较大的
-T，使得步长足够小，可以满足方程（<span class="math inline">\(\textcolor{blue}{q(x_{t-1}|x_t):=\mathcal{N}(x_{t-1};\mu(x_t,t),\Sigma(x_t,t))}\)</span>）的正态性假设，但这限制了图像生成的效率。在这里，作者建议通过以下正向过程进行快速扩散：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080931420.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{k \gg 1}\)</span>
-是步长。噪声方差 <span class="math inline">\(\textcolor{blue}{γ_t}\)</span> 设置为</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080935614.png"></p>
-<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{\bar{β}_{min}}\)</span>和 <span class="math inline">\(\textcolor{blue}{\bar{β}_{max}}\)</span> 表示指数
-schedule中噪声方差的上限和下限。</font></p>
-<p><font color="black" size="5">  在医学图像翻译过程中，源图像（y）的引导是可利用的，因此提出了一种有条件的逆向扩散过程。但需注意，对于<span class="math inline">\(\textcolor{blue}{k \gg 1}\)</span>,&nbsp;<span class="math inline">\(\textcolor{blue}{q(x_{t-k}|x_t,y)}\)</span>没有闭式表达式，用于计算方程4的正态性假设失效：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405080948068.png"></p>
-<p><font color="black" size="5">  在这里，作者介绍了一种新的对抗性投影仪，用于捕捉条件扩散模型中大k的复合转移概率<span class="math inline">\(\textcolor{blue}{q(x_{t-k}|x_t,y)}\)</span>。<strong>在SynDiff中，条件生成器<span class="math inline">\(\textcolor{blue}{G_\theta(x_t,y,t)}\)</span>在每个反向步骤中执行逐步去噪，以估计<span class="math inline">\(\textcolor{blue}{\hat{x}_{t-k} \sim
-p_\theta(x_{t-k}|x_t,y)}\)</span>。判别器<span class="math inline">\(\textcolor{blue}{D_\theta(\{\hat{x}_{t-k}\quad or
-\quad x_{t-k}\},x_t,t)}\)</span>区分从估计和真实去噪分布(<span class="math inline">\(\textcolor{blue}{p_\theta(x_{t-k}|x_t,y) \quad
-vs.\quad q(x_{t-k}|x_t,y)}\)</span>）。</strong><span class="math inline">\(\textcolor{blue}{G_\theta}\)</span>&nbsp;是通过非饱和对抗性损失进行训练的：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081007449.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{t ∼
-\mathcal{U}({0,k,...,T})}\)</span>，为简洁起见，判别器参数被缩写。<span class="math inline">\(\textcolor{blue}{D_\theta}\)</span>也用梯度惩罚的非饱和对抗性损失进行训练：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081017679.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{μ}\)</span>
-是梯度惩罚的权重。</font></p>
-<p><font color="black" size="5">  方程11-12 需要从未知分布<span class="math inline">\(\textcolor{blue}{q(x_{t-k}|x_t,y)}\)</span>中采样。然而，贝叶斯规则可以用来用前向转换概率来表示它：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081020908.png"></p>
-<p><font color="black" size="5">  使用方程 8，可以证明 <span class="math inline">\(\textcolor{blue}{q(x_{t−k}|x_t,x_0) = N(x_{t−k};
-\bar{μ}(x_t,x_0),\bar{γ}I)}\)</span>，参数如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081554778.png"></p>
-<p><font color="black" size="5">  方程11-12 还需要从<span class="math inline">\(\textcolor{blue}{p_\theta(x_{t-k}|x_t,y)}\)</span>中采样。确定性的样本是生成器输出，即
-<span class="math inline">\(\textcolor{blue}{\hat{x}_{t−k} ∼ δ(x_{t−k} −
-G_θ(x_t,y,t))}\)</span>。为了保持随机性，将生成器分布操作为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081604146.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{G^{[·]}_θ}\)</span>
-表示通过生成器的递归投影。方程13和16之间的主要区别是前者基于t =
-0时的实际图像，而后者基于生成器输出的去噪图像。在多个反向扩散步骤的递归采样之后，最终的去噪图像将通过采样<span class="math inline">\(\textcolor{blue}{\hat{x}_0 ∼ p_θ(x_0|x_k,y)
-}\)</span>获得。</font></p>
-<p><font color="Lightpink" size="5">  <strong>2）循环一致架构：</strong></font><font color="black" size="5">在源模态和目标模态的未配对数据集上进行训练的能力提高了学习综合模型的灵活性。但请注意，方程
-16
-中扩散发生器的实现需要同一主体内的成对源-目标图像。为了实现不配对训练，<strong>作者在
-SynDiff
-中引入了周期一致性，以在两种模式（A、B）之间进行双边转换。由于训练图像
-<span class="math inline">\(\textcolor{blue}{x^{A,B}_0}\)</span>
-不匹配，于是首先使用两个参数为 <span class="math inline">\(\textcolor{blue}{\phi^{A,B}}\)</span>
-的非扩散生成器来获得初始平移估计值<span class="math inline">\(\textcolor{blue}{\tilde{y}^{A,B}}\)</span></strong>&nbsp;：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081654387.png"></p>
-<p><font color="black" size="5">  然后，这些初始估计值用于在 SynDiff
-中使用参数 <span class="math inline">\(\textcolor{blue}{θ^{A，B}}\)</span>调节两个扩散生成器：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081658849.png"></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\tilde{x}^{A,B}
-_0}\)</span>是去噪图像的确定性估计值。对于每种模态，相应的<span class="math inline">\(\textcolor{blue}{\tilde{x}_0}\)</span>可用于从<span class="math inline">\(\textcolor{blue}{p_\theta(x_{t-k}|x_t,y)}\)</span>中采样，如方程
-16 所述。为了表示循环一致性损失，可以从扩散发生器采样的<span class="math inline">\(\textcolor{blue}{\hat{x}_0}\)</span> 与 <span class="math inline">\(\textcolor{blue}{x_0}\)</span>
-进行比较。同时，需要通过非扩散生成器进行双边预测：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081706630.png"></p>
-<p><font color="black" size="5">  <strong>方程 19
-中的前两项表示由非扩散发生器形成的循环</strong>;它们对于产生源图像的合理估计以调节扩散发生器至关重要，尤其是在训练的初始阶段。相反，最后两项表示由扩散生成器形成的循环;他们强制执行
-SynDiff 以更好地保留源对比度中的解剖结构。</font></p>
-<p><font color="black" size="5">  为了防止非扩散循环中的恒等映射，非扩散生成器也采用了类似于方程11的非饱和对抗损失，包括相应的判别器：<span class="math inline">\(\textcolor{blue}{D^A_\phi(.)}\)</span>，<span class="math inline">\(\textcolor{blue}{D^B_\phi(.)}\)</span>，其中<span class="math inline">\(\textcolor{blue}{D^A_\phi}\)</span>接收 <span class="math inline">\(\textcolor{blue}{x_0^A}\)</span> 或者 <span class="math inline">\(\textcolor{blue}{y^A}\)</span>作为输入，<span class="math inline">\(\textcolor{blue}{D^B_\phi}\)</span>接收 <span class="math inline">\(\textcolor{blue}{x_0^B}\)</span> 或者 <span class="math inline">\(\textcolor{blue}{y^B}\)</span>作为输入。然后，训练生成器的总损失如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081715001.png"></p>
-<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{λ}\)</span>
-是循环一致性损失的正则化权重。同时，非扩散判别器基于类似于方程 12
-的非饱和损耗进行训练，尽管省略了梯度惩罚。然后，总体判别器损失为：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405081716934.png"></p>
-<h1 id="三实验设置">三、实验设置</h1>
-<p><font color="MediumPurple" size="5">  <strong>数据集：</strong></font><font color="black" size="5">SynDiff在多对比度脑部MRI数据（IXI）和多模态盆腔MRI-CT数据集上进行图像合成。每个分析的数据集都是三向拆分的，以创建没有主题重叠的训练、验证和测试集。</font></p>
-<p><font color="black" size="5">  <strong>1）IXI Dataset：</strong> 40
-名健康受试者的 T1 和 T2 加权图像，（训练、验证、测试）分为 （25、5、10）
-名受试者。在每个受试者中，选择了 100 个带有脑组织的轴向横截面。对于 T1
-加权扫描，TE = 4.603ms，TR = 9.813ms，空间分辨率 = 0.94×0.94×1.2<span class="math inline">\(mm^3\)</span>。对于 T2 加权扫描，TE = 100ms，TR =
-8178.34ms，空间分辨率 = 0.94×0.94×1.2<span class="math inline">\(mm^3\)</span>。</font></p>
-<p><font color="black" size="5">  <strong>2）MRI-CT
-Dataset：</strong>15 名受试者的 MR 和 CT 图像，（训练、验证、测试）分为
-（9,2,4） 名受试者。在每个受试者中，选择了 90 个轴向横截面。对于 T2 加权
-MR 扫描，TE = 97ms，TR = 6000-6600ms，空间分辨率 = 0.875×0.875×2.5<span class="math inline">\(mm^3\)</span>，或 TE = 91-102ms，TR =
-12000-16000ms，空间分辨率 = 0.875-1.1×0.875-1.1×2.5<span class="math inline">\(mm^3\)</span>。对于 CT 扫描，规定空间分辨率 =
-0.1×0.1×3<span class="math inline">\(mm^3\)</span>，内核 =
-B30f，或空间分辨率 = 0.1×0.1×2<span class="math inline">\(mm^3\)</span>，内核 = FC17。</font></p>
-<p><font color="MediumPurple" size="5">  <strong>对比方法：</strong></font><font color="black" size="5">针对几种最先进的扩散和
-GAN
-模型与Syndiff进行对比，所有这些都是为源模态和目标模态之间的不成对翻译而实现的。对于每个模型，执行超参数选择以最大限度地提高验证集的性能。选择的参数包括训练周期数、优化器的学习率、所有模型的损失项权重以及扩散模型中的时间步长数。</font></p>
-<p><font color="black" size="5">  <strong>1）SynDiff：</strong>SynDiff
-使用以下交叉验证的超参数实现：50 个 epoch，0.0001 学习率，<span class="math inline">\(λ=0.5\)</span> 相对权重用于周期一致性损失，<span class="math inline">\(μ=0.5\)</span> 相对权重用于梯度惩罚，T =
-1000，步长为 k=250，总共 <span class="math inline">\(\frac{T}{k}=4\)</span>
-个扩散步骤。噪声方差表的下限和上限分别为<span class="math inline">\(β_{min}=0.1\)</span>，<span class="math inline">\(β_{max}=20\)</span>。</font></p>
-<p><font color="black" size="5">  <strong>2）DDPM：</strong>架构函数和损耗函数是从IDDPM中采用的。在源对比图像的指导下设计了条件扩散过程，并基于与
-SynDiff 相同的策略实现了周期一致性变体。交叉验证的超参数为 50
-个周期，学习率为 0.0001，周期一致性损失的相对权重 <span class="math inline">\(λ=1\)</span>，T =1000，步长为 k=1，总共有 1000
-个扩散步骤。使用<span class="math inline">\(β_{min}=0.1\)</span>，<span class="math inline">\(β_{max}=20\)</span>的噪声时间表。</font></p>
-<p><font color="black" size="5">  <strong>3）cGAN：</strong>考虑了一种用于无监督医学图像平移的周期一致GAN模型。cGAN由两个具有ResNet主干的生成器和两个具有级联卷积块的鉴别器组成，然后进行实例归一化。交叉验证的超参数为
-100 个周期，前 50 个周期的学习率常数为 0.0002，之后线性衰减为
-0，周期一致性损失的 <span class="math inline">\(λ_{cycle}=100\)</span>
-相对权重。</font></p>
-<p><font color="black" size="5">  <strong>4）UNIT：</strong>考虑了一种无监督GAN模型，用于从未配对的源-目标图像中学习。UNIT
-由两个鉴别器和两个转换器组成，在循环设置中有一个 ResNet
-主干。转换器包含具有共享潜在空间的并行连接域图像编码器和发生器。鉴别器包含一连串的下采样卷积块。交叉验证的超参数分别为
-100 个周期、0.0001 个学习率、<span class="math inline">\(λ_r =
-10\)</span>、<span class="math inline">\(λ_{adv} = 1\)</span>、<span class="math inline">\(λ_{cycle} = 10\)</span>
-个相对权重，用于重建、对抗性和周期一致性损失。</font></p>
-<p><font color="MediumPurple" size="5">  <strong>架构细节：</strong></font><font color="black" size="5">对于周期一致的学习，SynDiff
-使用扩散和非扩散模块。<strong>非扩散模块由两个生成器-鉴别器对组成，用于在未配对数据集上生成初始平移估计值。</strong>同时，<strong>扩散模块还包括两个发生器-鉴别器对，每个模态一个。在训练期间，同时使用所有四个生成器鉴别器对。在推理过程中，仅使用一个扩散发生器，负责所需的源到目标模态转换。</strong>下面提供了扩散和非扩散模块的架构细节：</font></p>
-<p><font color="black" size="5">  <strong>1）非扩散模块：</strong>非扩散模块中的每个生成器都接收一个目标模态图像作为输入，并生成同一解剖结构的相应源模态图像的估计值（这在训练集中不可用）。这种对源模态的初步估计后来被用作扩散发生器的解剖学指导。采用具有三个编码块、六个残差块和三个解码块的ResNet骨干网。同时，非扩散模块中的判别器用于防止在生成器的周期一致性训练期间进行身份映射。每个鉴别器接收作为输入的实际和合成源模态图像，在受试者之间未配对。然后，它输出关于图像样本是实际的还是合成的决策日志。采用了具有六个下采样块的卷积主干。每个块包含两个卷积层，并将特征图分辨率减半。</font></p>
-<p><font color="black" size="5">  <strong>2）扩散模块：</strong>扩散模块中的每个发生器接收时间t的噪声图像样本及其时间索引以及指导源模态图像作为输入，并在时间t
-−
-k输出目标模态的去噪图像样本。采用UNet骨干网，包括6个下采样和6个上采样块。每个下采样块使用两个残差子块，然后使用卷积层将特征图分辨率减半，而通道维数每隔一个块增加一倍。通过两层多层感知器（MLP）投射32维正弦位置编码，计算每个时间索引的时间嵌入。时态嵌入被添加到残差子块中的特征图中。每个上采样块使用两个残差子块，后跟一个卷积层，使特征图分辨率加倍，而通道维数每隔一个块减半。同时，每个判别器接收时间<span class="math inline">\(t−k\)</span>处去噪图像的实际样本或合成样本、时间索引和时间t处的噪声图像样本作为输入;它输出关于图像样本是实际的还是合成的决策日志。采用了具有六个下采样块的卷积主干。每个块包含两个卷积层，并将特征图分辨率减半。采用了与扩散发生器相同的时间嵌入策略。</font></p>
-<p><font color="MediumPurple" size="5">  <strong>建模过程：</strong></font><font color="black" size="5">所有模型都是使用
-PyTorch 框架在 Python 中实现的。使用 <span class="math inline">\(β_1 =
-0.5\)</span>、<span class="math inline">\(β_2 = 0.9\)</span> 的 Adam
-优化器训练模型。模型在配备 Nvidia RTX 3090 GPU
-的工作站上执行。在每个数据集中的测试集上评估模型性能。通过峰值信噪比
-（PSNR）、结构相似性指数 （SSIM）
-指标评估性能。在进行度量计算之前，所有图像都按其平均值进行归一化。通过非参数
-Wilcoxon 符号秩检验评估竞争方法之间性能差异的显着性
-（p&lt;0.05）。</font></p>
-<h1 id="四实验结果">四、实验结果</h1>
-<h2 id="多对比-mri-翻译"><font color="black" size="5">1.多对比 MRI
-翻译</font></h2>
-<p><font color="black" size="5">  这一节演示了 SynDiff 在单独的 MRI
-造影剂之间进行无监督翻译。将 SynDiff 与最先进的扩散 （DDPM） 和 GAN
-模型（cGAN、UNIT）进行了比较。在 IXI 数据集中对 T1 → T2 和 T2 → T1
-合成任务的脑图像进行了实验。竞争方法的合成性能定量指标列于表I中。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082021373.png"></p>
+<p><font color="black" size="5">  在本文中，作者介绍了一种训练和采样范式——<strong>扩散强制（Diffusion
+Forcing,
+DF）。在该范式中，每个token都与一个随机、独立的噪声水平相关联，并且可以根据shedules（shedules当中的每个token是任意的、独立的），通过共享的下一个token或下几个token预测模型进行去噪。</strong>本文的方法源于这样的观察：对token加入噪声是一种部分掩码形式——零噪声意味着token未被遮掩，完全噪声则完全掩盖token。因此，<font color="red" size="5"><strong>DF迫使模型学习“去掩码”不同噪声程度的token的任何集合</strong></font>（见图2）。同时，通过将预测参数化为下一token预测模型的组合，该系统能够灵活地生成不同长度的序列，并且能够根据指导推广到新的轨迹（见图1）。</font></p>
+<p><font color="black" size="5">  <strong>此外作者还将 DF
+实现为因果扩散强制（Causal Diffusion Forcing,
+CDF），在这种方法中，未来的token通过因果架构依据过去的token来生成序列。</strong>在采样过程中，CDF
+逐步将一系列高斯噪声帧去噪成干净的样本，不同的帧在每个去噪步骤中可能具有不同的噪声水平。与下一token预测模型类似，CDF
+可以生成可变长度的序列；与下一token预测不同的是，它能够稳定地从紧接的下一个token生成到数千个将来的token——即使是连续token。此外，像完整序列扩散一样，它接受指引以生成高回报的结果。通过协同利用因果性、灵活的范围和可变噪声计划，CDF
+实现了一种新的能力，蒙特卡洛树引导（Monte Carlo Tree Guidance,
+MCTG），与非因果完整序列扩散模型相比，这种方法显著改进了高回报生成的采样。图1概述了这些能力。</font></p>
+<h1 id="二扩散强制diffusion-forcing">二、扩散强制（Diffusion
+Forcing）</h1>
+<p><font color="black" size="5">  <strong><font color="DarkCyan" size="5">将噪声处理为部分掩码：</font></strong>将任何token集合（无论是否顺序）视为按&nbsp;<span class="math inline">\(\textcolor{DarkCyan}{t}\)</span>
+索引的有序集。然后，使用Teacher
+Forcing训练下一个token预测模型可以被解释为在时间 <span class="math inline">\(\textcolor{DarkCyan}{t}\)</span> 屏蔽每个token
+<span class="math inline">\(\textcolor{DarkCyan}{x_t}\)</span>，并从过去的
+<span class="math inline">\(\textcolor{DarkCyan}{x_{1:t-1}}\)</span>进行预测。仅限于序列，该做法称为<strong>沿时间轴的掩蔽</strong>。作者还可以将全序列前向扩散，即逐渐向数据
+<span class="math inline">\(\textcolor{DarkCyan}{x^0_{1:T} ≡
+x_{1:T}}\)</span>
+中增加噪声，作为部分掩蔽的一种形式，将其称为<strong>沿噪声轴的掩蔽</strong>。事实上，在&nbsp;<span class="math inline">\(\textcolor{DarkCyan}{K}\)</span> 步噪声之后，<span class="math inline">\(\textcolor{DarkCyan}{x^{K}_{1:T}}\)</span>是纯白噪声，没有关于原始数据的信息。</font></p>
+<p><font color="black" size="5">  作者沿着掩蔽的两个轴建立了一个统一的视图（见图2）。&nbsp;<span class="math inline">\(\textcolor{DarkCyan}{x_{1:T}}\)</span>
+表示标记序列，其中下标表示时间轴。如上所述，<span class="math inline">\(\textcolor{DarkCyan}{x_t^{k_t}}\)</span>表示在前向扩散过程下具有噪声水平<span class="math inline">\(\textcolor{DarkCyan}{k_t}\)</span>的<span class="math inline">\(\textcolor{DarkCyan}{x_t}\)</span>; <span class="math inline">\(\textcolor{DarkCyan}{x_t^0 = x}\)</span>
+是无噪声token，<span class="math inline">\(\textcolor{DarkCyan}{x_t^K}\)</span> 是白噪声
+<span class="math inline">\(\textcolor{DarkCyan}{N(0,I)}\)</span>。因此，<span class="math inline">\(\textcolor{DarkCyan}{(x_t^{k_t})_{1≤t≤T}}\)</span>
+表示一系列噪声观测值，其中每个token具有不同的噪声水平 <span class="math inline">\(\textcolor{DarkCyan}{k_t}\)</span>，这可以看作是通过噪声对每个令牌施加的部分掩蔽程度。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091843988.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>表
-1：</strong></font><font size="5">在 IXI 数据集中→ T1 和 T1 → T2
-合成任务的性能。PSNR （dB） 和 SSIM （%）
-在整个测试集中被列为均值±标准差。粗体标记每个任务中表现最好的模型。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+2：</strong></font><strong>方法概述。</strong>扩散强制训练因果序列神经网络（例如
+RNN 或 masked
+transformer）对灵活长度序列进行去噪，其中序列的每一帧都可以具有不同的噪声水平。相比之下，在语言建模中常见的下一个token预测模型被训练为从真值序列中预测单个下一个token（教师强迫），而在视频生成中常见的全序列扩散则训练非因果架构以相同的噪声水平同时对序列中的所有帧进行去噪。因此，扩散强迫交错了序列的时间轴和扩散的噪声轴，统一了两种替代方案的优势，并实现了全新的功能。</font></p>
 </blockquote>
-<p><font color="black" size="5">  SynDiff 在两项任务中都具有最高的性能
-（p&lt;0.05）。平均而言，SynDiff 的性能比 DDPM 高出 3.56dB PSNR 和 3.80%
-SSIM，GAN 型号的性能比 DDPM 高出 1.05dB PSNR 和 1.11% SSIM
-（p&lt;0.05）。图 3 中显示了 T2 → T1 的代表性图像，图 4 中显示了 T1 → T2
-的代表性图像。GAN模型显示残余噪声和伪影，以及组织边界附近的不准确描述。DDPM显示出一定程度的空间平滑和残余伪影。与基线相比，SynDiff合成的目标图像噪点和伪影明显降低，并且在组织描述方面实现了高度的解剖学准确性，特别是在CT图像中诊断相关区域附近。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082029680.png"></p>
+<p><font color="black" size="5">  <font color="CornflowerBlue" size="5"><strong>扩散强制：不同token的不同噪声节点。</strong></font>扩散强迫
+（DF） 是一个用于训练和采样噪声token&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{(x_t^{k_t})_{1≤t≤T}}\)</span>
+的任意序列长度的框架，其中至关重要的是，每个token的噪声水平&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{k_t}\)</span>
+可能随时间步长而变化。对于时间序列数据，通过因果架构（其中 <span class="math inline">\(\textcolor{CornflowerBlue}{x^{k_t}_t}\)</span>
+仅依赖于过去的噪声标记）实例化扩散强迫，称之为因果扩散强迫（CDF）。为简单起见，作者专注于使用普通递归神经网络（RNN）的最小实现。</font></p>
+<p><font color="black" size="5">  具有权重为<span class="math inline">\(\textcolor{CornflowerBlue}{\theta}\)</span> 的
+RNN&nbsp;通过动态 <span class="math inline">\(\textcolor{CornflowerBlue}{z_t
+∼ p_θ(z_t|z_{t−1}, x^{k_t}_t, k_t)}\)</span>
+与循环层一起演化，保持潜在&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{z_t}\)</span>
+捕捉过去token的影响，这些。当进行传入的噪声观测 <span class="math inline">\(\textcolor{CornflowerBlue}{x^{k_t}_t}\)</span>时，隐藏状态以马尔可夫式
+<span class="math inline">\(\textcolor{CornflowerBlue}{z_t ∼
+p_θ(z_t|z_{t−1}, x^{k_t}_t, k_t)}\)</span> 进行更新。当&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{k_t = 0}\)</span>
+时，这是贝叶斯滤波的后验更新;而当&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{k_t = K}\)</span>
+时（<span class="math inline">\(\textcolor{CornflowerBlue}{x_t^K}\)</span>
+是纯噪声，因此没有信息），这相当于在贝叶斯滤波中建模“先验分布” <span class="math inline">\(\textcolor{CornflowerBlue}{p_θ(z_t|z_{t−1})}\)</span>。给定潜在
+<span class="math inline">\(\textcolor{CornflowerBlue}{z_t}\)</span>，观测模型
+<span class="math inline">\(\textcolor{CornflowerBlue}{p_θ(x_t^0|z_t)}\)</span>
+预测 <span class="math inline">\(\textcolor{CornflowerBlue}{x_t}\)</span>;该单元具有与标准条件扩散模型相同的输入输出行为，使用条件变量
+<span class="math inline">\(\textcolor{CornflowerBlue}{z_{t-1}}\)</span>
+和噪声令牌 <span class="math inline">\(\textcolor{CornflowerBlue}{x^{k_t}_t}\)</span>
+作为输入来预测未被加噪的 <span class="math inline">\(\textcolor{CornflowerBlue}{x_t =
+x_t^0}\)</span>，从而间接地通过仿射重新参数化预测噪声 <span class="math inline">\(\textcolor{CornflowerBlue}{ε^k_t}\)</span>
+。因此，可以直接使用传统的扩散训练目标来训练（因果）扩散强迫。根据噪声预测&nbsp;<span class="math inline">\(\textcolor{CornflowerBlue}{ε_θ(z^{t−1}, x^{k_t}_t,
+k_t)}\)</span> 对上述单位进行参数化。然后，通过最小化损失来找到参数
+<span class="math inline">\(\textcolor{CornflowerBlue}{θ}\)</span></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081519592.png"></p>
+<p><font color="black" size="5">  其中，从 <span class="math inline">\(\textcolor{CornflowerBlue}{[K]^T}\)</span>
+中均匀采样 <span class="math inline">\(\textcolor{CornflowerBlue}{k_{1:T}}\)</span>，从训练数据中均匀采样
+<span class="math inline">\(\textcolor{CornflowerBlue}{x_{1:T}}\)</span>，根据前向扩散过程，<span class="math inline">\(\textcolor{CornflowerBlue}{ε_t ∼
+N(0,σ^2_{k_t}I)}\)</span>（参见伪代码的算法 1）。重要的是，损失 （3.1）
+捕获了贝叶斯滤波和条件扩散的基本元素。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081537350.png"></p>
+<h2 id="扩散强制采样和能力"><font color="black" size="5">1.扩散强制采样和能力</font></h2>
+<p><font color="black" size="5">  采样在算法 2 中描述，通过在 2D <span class="math inline">\(M × T\)</span> 网格 <span class="math inline">\(\textcolor{blue}{\mathcal{K} \in
+[K]^{M×T}}\)</span> 上规定噪声时间表来定义; 列对应于时间步长 <span class="math inline">\(\textcolor{blue}{t}\)</span>，由&nbsp;<span class="math inline">\(\textcolor{blue}{m}\)</span>
+索引的行确定噪声级别。<span class="math inline">\(\textcolor{blue}{\mathcal{K}_{m,t}}\)</span>
+表示行&nbsp;<span class="math inline">\(\textcolor{blue}{m}\)</span>
+的时间步长&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>
+标记所需的噪声水平。要生成长度为&nbsp;<span class="math inline">\(\textcolor{blue}{T}\)</span> 的整个序列，将标记
+<span class="math inline">\(\textcolor{blue}{x_{1:T}}\)</span>
+初始化为白噪声，对应于噪声水平 <span class="math inline">\(\textcolor{blue}{k =
+K}\)</span>。作者逐行迭代网格，从左到右对列进行去噪，以达到 <span class="math inline">\(\textcolor{blue}{\mathcal{K}}\)</span>
+规定的噪声水平。到最后一行 <span class="math inline">\(\textcolor{blue}{m =
+0}\)</span>，token是干净的，即它们的噪声水平为 <span class="math inline">\(\textcolor{blue}{\mathcal{K_{0,t} ≡
+0}}\)</span>。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407081612523.png" alt="image-20240708161243089">
+<figcaption aria-hidden="true">image-20240708161243089</figcaption>
+</figure>
+<p><font color="black" size="5">  <strong>稳定自回归生成：</strong>对于高维、连续的序列（如视频），已知自回归架构会发散，尤其是在采样超过训练范围时。相比之下，扩散强迫可以通过使用与略微“加噪的tokens”相关的前潜在来更新潜在源，从而稳定地推出长序列，甚至可以在训练序列长度之外推出一些小的噪声级别
+<span class="math inline">\(\textcolor{blue}{0 &lt; k ≪ K}&nbsp; &nbsp;
+&nbsp;\)</span>。</font></p>
+<p><font color="black" size="5">  <strong>让未来充满不确定性：</strong>从一系列白噪声tokens<span class="math inline">\(\textcolor{blue}{[x_1^K, x_2^K, x_3^K]^⊤}\)</span>
+开始，我们可以对第一个token进行完全去噪，对第二个token进行部分去噪，得到
+<span class="math inline">\(\textcolor{blue}{[x^0_1, x^{K/2}_2,
+x_3^K]^⊤}\)</span>，然后得到 <span class="math inline">\(\textcolor{blue}{[x^0_1， x^0_2， x^{K/2}_3
+]^⊤}\)</span>，最后将所有token完全去噪到 <span class="math inline">\(\textcolor{blue}{[x_1^0, x_2^0,
+x_3^0]^⊤}\)</span>。这种“锯齿形”采样方案将噪声水平解释为不确定性，直观地将近期的未来编码为比遥远的未来更确定。</font></p>
+<p><font color="black" size="5">  <strong>长期指导：</strong>在算法 2
+的第 10 行中，<strong>可以向部分扩散的轨迹 <span class="math inline">\(\textcolor{blue}{x_{1:T}}\)</span>添加引导</strong>，如第
+2
+节所示。由于未来token对过去的依赖性，未来token的引导梯度可能会在时间上向后传播。扩散强迫的独特优势在于，由于我们可以在不完全扩散过去的情况下扩散未来的token，因此梯度指导了过去token的采样，从而在尊重因果关系的同时实现了长期引导。</font></p>
+<h2 id="用于灵活序列决策的扩散强迫"><font color="black" size="5">2.用于灵活序列决策的扩散强迫</font></h2>
+<p><font color="black" size="5">  
+扩散强制提供的功能激发了新的序列决策框架（SDM），该框架在机器人和自主代理中具有关键应用。<strong>考虑一个由具有动作&nbsp;<span class="math inline">\(\textcolor{blue}{p(s_{t+1}|s_t,
+a_t)}\)</span>、观测&nbsp;<span class="math inline">\(\textcolor{blue}{p(o_t|s_t)}\)</span> 和奖励 <span class="math inline">\(\textcolor{blue}{p(r_t|s_t， a_t)}\)</span>
+的环境定义的马尔可夫决策过程。</strong>目标是训练策略 <span class="math inline">\(\textcolor{blue}{π(a_t|o_{1:t})}\)</span>，使得轨迹
+<span class="math inline">\(\textcolor{blue}{E[\sum^T_{t=}r_t]}\)</span>
+的预期累积奖励最大化。我们分配token <span class="math inline">\(\textcolor{blue}{x_t = [a_t, r_t,
+o_{t+1}]}\)</span>。轨迹是一个序列 <span class="math inline">\(\textcolor{blue}{x_{1:T}}\)</span>，可能是可变长度的;训练按照算法
+1 进行。在执行的每一步&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>
+中，过去的（无噪声）token&nbsp;<span class="math inline">\(\textcolor{blue}{x_{1:t-1}}\)</span> 由一个潜在的
+<span class="math inline">\(\textcolor{blue}{z_{t-1}}\)</span>
+汇总。基于这个潜在因素，我们通过算法 2 对一个计划 <span class="math inline">\(\textcolor{blue}{\hat{x}_{t:t+H}}\)</span>进行采样，其中
+<span class="math inline">\(\textcolor{blue}{\hat{x}_t = [\hat{a}_t,
+\hat{r}_t, \hat{o}_{t+1}]^⊤}\)</span>
+包含预测的行动、奖励和观察结果。<span class="math inline">\(\textcolor{blue}{H}\)</span>是前瞻窗口，类似于模型预测控制中的未来预测。在采取计划的行动
+<span class="math inline">\(\textcolor{blue}{\hat{a}_t}\)</span>
+后，环境产生奖励 <span class="math inline">\(\textcolor{blue}{\hat{r}_t}\)</span>
+和下一个观察值 <span class="math inline">\(\textcolor{blue}{\hat{o}_{t+1}}\)</span>，产生下一个toke&nbsp;<span class="math inline">\(\textcolor{blue}{x_t = [\hat{a}_t, r_t,
+o_{t+1}]^⊤}\)</span>。潜在值根据后验 <span class="math inline">\(\textcolor{blue}{p_θ(z_t|z_{t−1}, x_t,
+0)}\)</span> 进行更新。我们的框架支持作为策略和规划器的功能：</font></p>
+<p><font color="black" size="5">  <strong>灵活的规划范围。</strong>扩散强迫
+（a） 可以部署在可变范围的任务上，因为每个新动作都是按顺序选择的，并且
+（b） 其前瞻窗口&nbsp;<span class="math inline">\(\textcolor{blue}{H}\)</span>
+可以缩短以降低延迟（使用扩散强迫作为策略），或者延长以执行长期规划（通过下面描述的指导），而无需重新训练或修改架构。请注意，（a）对于具有全轨迹生成视野的Diffuser
+这样的全序列扩散模型是不可能的，而扩散策略需要固定的、小的预测尺寸，排除了（b）。</font></p>
+<p><font color="black" size="5">  <strong>蒙特卡洛树指导（MCTG）。</strong>因果扩散强迫使我们能够通过指导未来
+xt+1：T 的整个分布来影响代币 xtk
+的生成。我们可以绘制多个样本并平均它们的引导梯度，而不是绘制单个轨迹样本来计算此引导梯度。我们称之为蒙特卡洛树指导，其中“树”来自这样一个事实，即当前
+xtk 的去噪受到未来许多路径的梯度的影响。本着像MPPI
+[61]这样的所谓射击方法的精神，xtk随后受到预期奖励的指导，而不是所有未来结果的分配，而不是一个特定的结果。当与采样计划相结合时，MCTG
+的效果会增强，这些计划在对下一个代币进行去噪时保持未来代币的高噪声水平（例如，第
+3.1 节中描述的锯齿形时间表），从而解释了未来更远的更大不确定性。附录 B.3
+进一步证明了 MCTG
+的重要性，以及为什么扩散强迫独特地利用了它。</font></p>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size="5">  评估了扩散强制作为生成序列模型在视频和时间序列预测、规划和模仿学习中的各种应用中的优点。</font></p>
+<h2 id="视频预测一致稳定的序列生成和无限扩展"><font color="black" size="5">1.视频预测：一致、稳定的序列生成和无限扩展</font></h2>
+<p><font color="black" size="5">  作者训练了因果扩散强迫的卷积RNN实现，用于在Minecraft游戏和DMLab导航的视频上进行视频生成建模。在采样时，执行自回归推出，并采用第
+3.1
+节中提出的稳定功能。作者设计的两个基线，它们都利用了相同的精确RNN架构：一个是用Teacher
+Forcing训练的下一帧扩散基线，另一个是因果全序列扩散模型。图 3
+显示了由扩散强迫生成的推出的定性结果，以及从两个数据集的不可见帧开始的基线。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091618544.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图
-3：</strong></font><font size="5">SynDiff 在 IXI
-数据集上进行了代表性的 T2 → T1
-合成任务的演示。来自竞争方法的合成图像与源图像和真实目标图像（参考）一起显示。与扩散和GAN基线相比，SynDiff实现了更低的噪声和伪影水平，以及更准确地描述组织结构。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+3：</strong></font>视频生成。在经过测试的方法中，扩散强制生成在时间上是唯一一致的，即使在训练范围之后进行扩展也不会发散。</font></p>
 </blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082031361.png"></p>
+<p><font color="black" size="5">  扩散强制能够成功并且稳定的扩展视频长度，甚至远远超出其训练范围（例如
+1000
+帧），而教师强制和全序列扩散的基线会迅速发散。此外，在训练范围内，我们观察到全序列扩散受到帧到帧不连续性的影响，其中视频序列急剧跳跃，而扩散强迫推出在一致的
+3D
+环境中显示自我运动。这凸显了扩散强制能够在不产生复合误差的情况下稳定高维序列的推出。</font></p>
+<h2 id="扩散规划mctg因果不确定性灵活的地平线控制"><font color="black" size="5">2.扩散规划：MCTG、因果不确定性、灵活的地平线控制。</font></h2>
+<p><font color="black" size="5">  决策独特地受益于 Diffusion Forcing
+的能力。作者在标准的离线RL基准D4RL
+中评估了作者提出的决策框架。具体来说，在一组具有稀疏奖励的 2D
+迷宫环境中对扩散强制进行了基准测试。智能体的任务是从随机的起始位置开始达到指定的目标位置。该基准提供了一个通过迷宫随机行走的数据集（因此是随机的）。</font></p>
+<p><font color="black" size="5">  作者他们将提出的决策框架
+与最先进的离线 RL 方法和最近推出的扩散规划框架 Diffuser 进行对比。见图 4
+的定性和定量结果：DF 在所有 6 种环境中都优于 Diffuser
+和所有基线。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091641758.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图
-4：</strong></font><font size="5">SynDiff 在 IXI
-数据集上进行了具有代表性的 T1 → T2
-合成任务的演示。来自竞争方法的合成图像与源图像和真实目标图像（参考）一起显示。与扩散和GAN基线相比，SynDiff实现了更低的噪声和伪影水平，以及更准确地描述组织结构。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+4：</strong></font>用于规划的扩散强迫。（返回顶部）在采样过程中，扩散强迫允许每个时间步长在不同的噪声计划中进行去噪，使我们能够在引导规划期间考虑因果不确定性。扩散强迫使遥远的未来比近期的未来更具不确定性，而扩散器在采样过程中使它们处于相同的噪声水平。（底部）从数量上讲，扩散强迫在运行中实现了最高的平均奖励。Diffuser
+在执行实际生成的动作时会严重失败，需要手工制作的 PD
+控制器（用星号表示）并忽略生成的动作。</font></p>
 </blockquote>
-<p><font color="black" size="5">  </font></p>
-<h3 id="跨模态合成"><font color="black" size="5">2.跨模态合成</font></h3>
-<p><font color="black" size="5">  然后，这一部分演示了SynDiff在不同成像模式之间的无监督翻译。将
-SynDiff 与扩散 （DDPM） 和 GAN
-模型（cGAN、UNIT）进行比较。在骨盆数据集上进行 MRI → CT
-合成任务的实验。竞争方法的合成性能定量指标列于表二。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082045342.png"></p>
+<p><font color="black" size="5">  <strong>蒙特卡洛树指导的好处。</strong>RL
+问题的典型目标是找到能够最大化预期未来奖励的行动，作者通过 MCTG
+实现了这些奖励。全序列扩散模型（如
+Diffuser）不支持抽样以最大化预期奖励，为了理解 MCTG 的重要性，在表 1
+中对其进行了消融。删除 MCTG
+指导会降低该方法的性能，尽管即使在那时，扩散强迫仍然具有竞争力。</font></p>
+<p><font color="black" size="5">  <strong>对因果关系进行建模的好处。</strong>与纯粹的生成建模不同，顺序决策会采取行动并接收反馈。由于不确定性的增加，眼前的下一步行动比遥远的将来的行动更重要。尽管
+Diffuser 和后续模型经过训练以生成动作-奖励-状态元组序列 <span class="math inline">\(\textcolor{blue}{[a_t, r_t,
+o_t]}\)</span>，但直接执行动作将导致轨迹明显偏离生成的状态。换言之，生成的状态和动作在因果关系上彼此不一致。为了解决这个缺点，Diffuser
+的实现忽略了生成的动作，而是依赖于手工制作的 PD
+控制器来从生成的状态推断动作。在表 1 中，我们看到 Diffuser
+在直接执行生成的操作时性能急剧下降。相比之下，Diffusion Forcing
+的原始动作生成是自洽的，甚至优于通过将 Diffuser 的状态预测与手工制作的
+PD 控制器相结合而选择的动作。</font></p>
+<p><font color="black" size="5">  <strong>灵活视野的好处。</strong>许多
+RL
+任务具有固定的跨度，需要随着代理在任务中取得进展而缩小计划跨度。扩散强迫通过设计实现了这一点，而像扩散器这样的全序列模型即使进行了调整也表现不佳。</font></p>
+<h2 id="可控的顺序组合生成"><font color="black" size="5">3.可控的顺序组合生成</font></h2>
+<p><font color="black" size="5">  <strong>由于扩散强迫对序列的任何子集的联合分布进行建模，因此可以利用这一独特的属性来实现组合行为。即，扩散强迫可以从轨迹子集的分布中采样，并将这些子轨迹组合成新的轨迹。</strong></font></p>
+<p><font color="black" size="5">  如 7 所示，考虑一个 2D
+方形平面上的轨迹数据集，其中所有轨迹从一个角开始，结束于另一个角，形成一个十字形。当不需要组合行为时，可以通过允许
+HMM 模型的完全内存来让模型复制十字形分布。当人们想要组合时，例如生成 V
+形轨迹，将两个子轨迹拼接在一起，则可以让模型使用 MPC
+生成具有无内存上下文的较短计划。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091711376.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>表
-2：</strong></font><font size="5">多模态盆腔数据集中 T2 加权 MRI → CT
-合成任务的性能。PSNR （dB） 和 SSIM （%）
-在整个测试集中被列为均值±标准差。粗体标记性能最佳的模型。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+7：</strong></font>给定一个轨迹数据集 (a)，扩散强制模型（Diffusion
+Forcing）对任意长度的所有子序列进行联合分布建模。在采样时，我们可以通过全范围采样扩散强制模型（b）从轨迹分布中进行采样，或者通过忽略之前的状态（c）来恢复马尔可夫动态。</font></p>
 </blockquote>
-<p><font color="black" size="5">  总体而言，SynDiff 的性能最高，PSNR
-比 DDPM 高 2.2dB，SSIM 高 4.7%，PSNR 比 GAN 型号高 1.28dB 和 SSIM 高
-2.29%（p&lt;0.05）。MRI → CT 的代表性图像如图 5
-所示。与基线方法相比，SynDiff
-合成的目标图像噪声和伪影更低，组织描述更准确。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202405082047635.png"></p>
+<h2 id="机器人技术长视野模仿学习和强大的视觉运动控制"><font color="black" size="5">4.机器人技术：长视野模仿学习和强大的视觉运动控制</font></h2>
+<p><font color="black" size="5">  最后，作者还说明了扩散强制（DF）为真实世界机器人的视觉运动控制开辟了新的机会。模仿学习是机器人操作中一种流行的技术，人们从专家的演示中学习观察到行动的映射。然而，记忆力的缺乏往往会阻止模仿学习完成长期任务。DF
+不仅缓解了这一缺点，而且还提供了一种使模仿学习鲁棒的方法。</font></p>
+<p><font color="black" size="5">  用记忆模仿学习。通过远程操作 Franka
+机器人来收集视频和动作的数据集。在选定的任务中，需要使用第三个插槽交换苹果和橙子的位置。图示见图
+5。水果的初始位置是随机的，因此有两种可能的目标状态。如图 5
+所示，当一个水果位于第三个插槽中时，无法从当前观察中推断出所需的结果 -
+策略必须记住初始配置以确定要移动哪个水果。与常见的行为克隆方法相比，DF
+自然地将内存纳入其潜在状态。我们发现 DF 实现了 80% 的成功率，而扩散策略
+[10]（一种没有内存的最先进的模仿学习算法）失败了。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407091806288.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图
-5：</strong></font><font size="5">在 MRI → CT
-合成任务的多模态盆腔数据集上演示了
-SynDiff。来自竞争方法的合成图像与源图像和真实目标图像（参考）一起显示。与扩散和GAN基线相比，SynDiff实现了更低的噪声和伪影水平，以及更准确地描述组织结构。</font></p>
+<p><font size="5"><font color="blue" size="5"><strong>图
+5：</strong></font>在真实机器人任务中，机器人手臂被要求使用第三个插槽交换两个水果的插槽。由于水果在开始时是在随机插槽中输入的，因此如果不了解水果的初始放置位置，就无法从单个观察中确定下一步。如（a）和（b）所示，上层观测值是相同的，但下图所示的期望结果可能会有所不同，因此任务需要记住初始配置。此外，如（c）所示，生成动作的同一模型也仅从单帧合成逼真的视频。</font></p>
 </blockquote>
-<p><font color="black" size="5">  </font></p>
-<h1 id="五总结">五、总结</h1>
-<p><font color="black" size="5">  SynDiff是第一个用于医学图像合成的对抗性扩散模型，也是第一个用于非配对医学图像翻译的周期一致性扩散模型。我们展示了
-SynDiff 在多对比度 MRI 和 MRI-CT
-任务中缺失模态合成。在定性和定量性能方面，SynDiff在无监督合成任务中优于最先进的GAN模型。</font></p>
-<p><font color="black" size="5">  常规扩散模型将图像生成视为一个渐进的过程，从随机噪声开始，并在数千个时间步长内重复去噪，导致采样效率低下。在这项研究中，作者建议通过利用具有大步长的快速扩散过程来加速两个数量级的采样。连续样本之间的步长增加会导致复杂的反向跃迁概率，偏离扩散模型中通常使用的正态性假设。为了捕捉这种复杂的分布，并引入了一个对抗性投影仪来执行精确的反向扩散采样。</font></p>
-<p><font color="black" size="5">  在这些情况下，SynDiff可以通过替换空间配准图像上的像素损失来代替周期一致性损失来执行配对训练。通过基于配对和未配对数据的组合，或收集欠采样的源和目标模态采集，扩大训练数据集的大小，性能改进也可能是可行的。本文主要演示了
-SynDiff
-用于两种模式之间的一对一翻译任务。单一源模式可能不包含足够的信息来可靠地恢复目标图像。当多模态协议可用时，可以进行多对一翻译以提高图像翻译的可靠性。为此，可以修改SynDiff，以包含多个源模态作为其生成器的调节输入。SynDiff
-中执行反向扩散步骤以进行去噪的发生器基于卷积主干。最近的成像研究报告称，具有注意力机制的转换器架构在合成过程中及之后提高了对医学图像中远程环境的敏感性。情境表示对渐进式去噪的强度和重要性仍有待证明。尽管如此，注意机制可能有助于增强SynDiff对非典型解剖结构的泛化性能。</font></p>
+<p><font color="black" size="5">  对缺失或嘈杂观测值的鲁棒性。因为它融合了贝叶斯滤波的原理，所以扩散强迫可以执行模仿学习，同时对嘈杂或缺失的观察结果具有鲁棒性。我们通过增加视觉干扰，甚至在执行过程中完全遮挡摄像头来证明这一点。DF
+允许我们通过使用 k &gt; 0
+轻松地将这些观测值指示为“噪声”，在这种情况下，DF
+严重依赖其先前的模型来预测动作。因此，成功率仅降低 4% 至
+76%。相比之下，下一帧扩散模型基线的成功率为
+48%：它必须将扰动观测值视为基本事实，并遭受分布外误差。</font></p>
+<p><font color="black" size="5">  通过视频进行预训练的潜力。最后，在生成动作的同时，图
+4
+说明了扩散强迫能够生成机器人执行任务的视频，该视频仅给定初始帧，统一扩散策略/模仿学习和视频生成建模，并为在未标记视频上进行预训练铺平了道路。</font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  在本文中，作者引入了扩散强制，这是一种新的训练范式，其中训练模型以对具有独立、每个token噪声水平的标记集进行去噪。应用于时间序列数据，作者展示了使用扩散强制训练的下一个token预测模型如何结合下一个token模型和全序列扩散模型的优点。并且引入了新的采样和指导方案，当应用于顺序决策中的任务时，可以显著提高绩效。</font></p>
+<p><font color="black" size="5">  <strong>局限性。</strong>目前的因果实现基于小型
+RNN，用于更高分辨率视频或更复杂分布的应用可能需要大型 transformer
+模型。</font></p>
 <p><font color="black" size="5">  </font></p>
 
     </article>
@@ -729,9 +766,9 @@ SynDiff
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/</a>
-            <p>发表日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">January 15th 2024, 11:49:25 am</a>
-            <p>更新日期：<a href="http://example.com/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">May 8th 2024, 8:53:58 pm</a>
+            <p>原文链接：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/</a>
+            <p>发表日期：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">July 8th 2024, 8:52:49 am</a>
+            <p>更新日期：<a href="http://example.com/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">July 9th 2024, 6:50:01 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -739,17 +776,12 @@ SynDiff
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/" title="Medical Diffuison model——7.MIDiffusion">
-                    <div class="nextTitle">Medical Diffuison model——7.MIDiffusion</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/" title="Medical Diffusion Model——5.SADM">
-                    <div class="prevTitle">Medical Diffusion Model——5.SADM</div>
+                <a href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/" title="视频扩散模型--15.Upscale-A-Video">
+                    <div class="prevTitle">视频扩散模型--15.Upscale-A-Video</div>
                 </a>
             
         </li>
@@ -919,8 +951,8 @@ SynDiff
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Csyndiff"><span class="toc-number">2.</span> <span class="toc-text">二、SynDiff</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">三、实验设置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">四、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%AF%B9%E6%AF%94-mri-%E7%BF%BB%E8%AF%91"><span class="toc-number">4.1.</span> <span class="toc-text">1.多对比 MRI
-翻译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E6%A8%A1%E6%80%81%E5%90%88%E6%88%90"><span class="toc-number">4.1.1.</span> <span class="toc-text">2.跨模态合成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%89%A9%E6%95%A3%E5%BC%BA%E5%88%B6diffusion-forcing"><span class="toc-number">2.</span> <span class="toc-text">二、扩散强制（Diffusion
+Forcing）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E5%BC%BA%E5%88%B6%E9%87%87%E6%A0%B7%E5%92%8C%E8%83%BD%E5%8A%9B"><span class="toc-number">2.1.</span> <span class="toc-text">1.扩散强制采样和能力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E7%81%B5%E6%B4%BB%E5%BA%8F%E5%88%97%E5%86%B3%E7%AD%96%E7%9A%84%E6%89%A9%E6%95%A3%E5%BC%BA%E8%BF%AB"><span class="toc-number">2.2.</span> <span class="toc-text">2.用于灵活序列决策的扩散强迫</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E9%A2%84%E6%B5%8B%E4%B8%80%E8%87%B4%E7%A8%B3%E5%AE%9A%E7%9A%84%E5%BA%8F%E5%88%97%E7%94%9F%E6%88%90%E5%92%8C%E6%97%A0%E9%99%90%E6%89%A9%E5%B1%95"><span class="toc-number">3.1.</span> <span class="toc-text">1.视频预测：一致、稳定的序列生成和无限扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E8%A7%84%E5%88%92mctg%E5%9B%A0%E6%9E%9C%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E7%81%B5%E6%B4%BB%E7%9A%84%E5%9C%B0%E5%B9%B3%E7%BA%BF%E6%8E%A7%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">2.扩散规划：MCTG、因果不确定性、灵活的地平线控制。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E6%8E%A7%E7%9A%84%E9%A1%BA%E5%BA%8F%E7%BB%84%E5%90%88%E7%94%9F%E6%88%90"><span class="toc-number">3.3.</span> <span class="toc-text">3.可控的顺序组合生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%8A%80%E6%9C%AF%E9%95%BF%E8%A7%86%E9%87%8E%E6%A8%A1%E4%BB%BF%E5%AD%A6%E4%B9%A0%E5%92%8C%E5%BC%BA%E5%A4%A7%E7%9A%84%E8%A7%86%E8%A7%89%E8%BF%90%E5%8A%A8%E6%8E%A7%E5%88%B6"><span class="toc-number">3.4.</span> <span class="toc-text">4.机器人技术：长视野模仿学习和强大的视觉运动控制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1164,7 +1196,81 @@ SynDiff
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1549,7 +1655,7 @@ SynDiff
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 46
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1565,8 +1671,26 @@ SynDiff
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">06/18</span>
-            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
         </li>
     
         
@@ -1584,7 +1708,7 @@ SynDiff
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
-            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
         </li>
     
         
@@ -1649,38 +1773,44 @@ SynDiff
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span>
-            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
         </li>
     
         
@@ -1779,19 +1909,19 @@ SynDiff
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/07</span>
-            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
-            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/04</span>
-            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
         </li>
     
         
@@ -1859,6 +1989,11 @@ SynDiff
                 扩散模型
             </span>
         
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1883,6 +2018,11 @@ SynDiff
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

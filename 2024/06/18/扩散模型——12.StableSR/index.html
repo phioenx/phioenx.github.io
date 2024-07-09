@@ -1,0 +1,2374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、引言   在这项研究中，本文提出了 StableSR，这是一种保留预训练扩散先验的方法，而不对退化做出明确的假设。具体来说，与以前需要将 低分辨率的LR 图像连接到中间输出的工作（这需要从头开始训练扩散模型）不同，本文的方法只需要微调一个轻量级的时间感知编码器（lightweight time-aware encoder）和一些特征调制层（feature modulation layers）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扩散模型——12.StableSR">
+<meta property="og:url" content="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="一、引言   在这项研究中，本文提出了 StableSR，这是一种保留预训练扩散先验的方法，而不对退化做出明确的假设。具体来说，与以前需要将 低分辨率的LR 图像连接到中间输出的工作（这需要从头开始训练扩散模型）不同，本文的方法只需要微调一个轻量级的时间感知编码器（lightweight time-aware encoder）和一些特征调制层（feature modulation layers）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251549011.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251658192.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252021732.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252044272.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252059852.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252119153.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252121466.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252125470.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406260925387.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406260948864.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406261025863.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406261038024.png">
+<meta property="article:published_time" content="2024-06-18T02:33:34.000Z">
+<meta property="article:modified_time" content="2024-07-01T07:20:35.660Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta property="article:tag" content="扩散模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251549011.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>扩散模型——12.StableSR · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">扩散模型——12.StableSR</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                扩散模型——12.StableSR
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/06/18</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251549011.png"></p>
+<h1 id="一引言">一、引言</h1>
+<p><font color="black" size="5">  在这项研究中，本文提出了
+StableSR，这是一种保留预训练扩散先验的方法，而不对退化做出明确的假设。<strong>具体来说，与以前需要将
+低分辨率的LR
+图像连接到中间输出的工作（这需要从头开始训练扩散模型）不同，本文的方法只需要微调一个<font color="blue" size="5">轻量级的时间感知编码器（lightweight
+time-aware
+encoder）</font>和一些<font color="red" size="5">特征调制层（feature
+modulation layers）</font>即可完成 SR
+任务。编码器包含一个时间嵌入层来生成时间感知特征，允许扩散模型中的特征在不同的迭代中自适应调制。</strong>除了提高训练效率外，保持原始扩散模型的冻结还有助于保留生成先验。时间感知编码器还通过在恢复过程中为每个扩散步骤提供自适应指导来帮助保持保真度，即在早期迭代时提供更强的指导，在以后提供较弱的指导。实验表明，这种时间感知特性对于实现性能改进至关重要。</font></p>
+<p><font color="black" size="5">  为了抑制从扩散模型继承的随机性以及由于自动编码器编码过程导致的信息丢失，受Codeformer的启发<strong>，本文应用了一个具有可调系数的可控特征包装模块，在自动编码器的解码过程中细化扩散模型的输出。具体而言，采用来自编码器的多尺度中间特征，以残差方式调整解码器特征。</strong>通过可调节系数来控制残余强度，这样可以进一步实现连续的保真度和真实感权衡，以处理轻度和重度退化。</font></p>
+<p><font color="black" size="5">  将扩散模型应用于任意分辨率仍然是一个持续的挑战。一个简单的解决方案是将图像拆分为多个补丁并独立处理每个补丁。但是，这种方法通常会导致输出中的边界不连续性。<strong>为了解决这个问题，作者引入了一种渐进式聚合抽样策略。该方法是将图像划分为重叠的块，并在每次扩散迭代中使用高斯核融合这些块。这个过程使边界变得平滑，从而产生更连贯的输出</strong>。</font></p>
+<p><font color="black" size="5">  将生成先验调整为真实世界的图像超分辨率提出了一个有趣但具有挑战性的问题，在这项工作中，本文提供了一种新颖的方法作为解决方案。<strong>并引入了一种微调方法，该方法利用预先训练的扩散模型，而无需对退化做出明确的假设。</strong>通过提出简单而有效的模块来解决关键挑战，例如保真度和任意分辨率。凭借作者提出<strong>的时间感知编码器、可控的特征包装模块和渐进式聚合采样策略</strong>，
+StableSR
+可以作为强大的基线，激发未来在恢复任务中采用扩散先验的研究。</font></p>
+<h1 id="二方法">二、方法</h1>
+<p><font color="black" size="5">  受 Stable Diffusion
+的生成能力的启发，本文在工作中将其用作扩散先验，因此该方法命名为
+StableSR。StableSR 的主要组件是一个时间感知编码器，它与冻结的 Stable
+Diffusion
+模型一起训练，以允许根据输入图像进行调节。为了进一步促进真实感和保真度之间的权衡，根据用户的偏好，遵循CodeFormer引入了可选的可控功能包装模块。StableSR的整体框架如图2所示：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406251658192.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2：</strong></font><font size="5">StableSR
+框架：首先对时间感知编码器进行微调，该编码器连接到固定的预训练稳定扩散模型。特征与可训练的空间要素变换
+（SFT）
+图层相结合。这种简单而有效的设计能够利用图像SR的丰富扩散。然后，扩散模型是固定的。受CodeFormer的启发，作者还引入了一个可控特征包装（CFW）模块，以残差方式获得调整后的特征<span class="math inline">\(F_m\)</span>，给定来自LR特征的附加信息<span class="math inline">\(F_e\)</span>和来自固定解码器的特征<span class="math inline">\(F_d\)</span>。通过可调节的系数 <span class="math inline">\(w\)</span>，CFW
+可以在质量和保真度之间进行权衡。</font></p>
+</blockquote>
+<h2 id="使用时间感知进行引导式微调"><font color="black" size="5">1.使用时间感知进行引导式微调</font></h2>
+<p><font color="black" size="5">  为了利用 SR
+稳定扩散的先验知识，我们在设计模型时建立了以下约束：1）
+生成的模型必须能够生成合理的 HR 图像，条件是观察到的 LR
+输入。这一点至关重要，因为LR图像是结构信息的唯一来源，这对于保持高保真度至关重要。2）该模型应仅对原始稳定扩散模型进行最小的改动，以防止破坏封装在其中的先前模型。</font></p>
+<p><font color="red" size="5">  <strong>特征调制：</strong></font><font color="black" size="5">虽然现有方法通过交叉注意力成功地控制了扩散模型生成的语义结构，由于归纳偏差不足，这种策略很难提供详细和高频的指导。为了更准确地指导生成过程，<strong>作者采用了一个额外的编码器，从退化的LR图像特征中提取多尺度特征&nbsp;<span class="math inline">\(\textcolor{blue}{\{F^n\}_{n=1}^N}\)</span>，并使用它们通过空间特征变换（SFT）调制稳定扩散中residual
+blocks的中间特征图&nbsp;<span class="math inline">\(\textcolor{blue}{\{F^n_{diff}\}_{n=1}^N}\)</span></strong>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252021732.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{α_n}\)</span> 和 <span class="math inline">\(\textcolor{blue}{β_n}\)</span> 表示 SFT
+中的仿射参数，<span class="math inline">\(\textcolor{blue}{M^n_θ}\)</span>
+表示由多个卷积层组成的小网络。这里 <span class="math inline">\(\textcolor{blue}{n}\)</span> 索引了 Stable
+Diffusion 中 UNet 架构的空间尺度。</font></p>
+<p><font color="black" size="5">  在微调期间，作者冻结了 Stable
+Diffusion 的权重，并仅训练编码器和 SFT 层。这种策略允许我们插入从 LR
+图像中提取的结构信息，而不会破坏 Stable Diffusion
+捕获的生成先验。</font></p>
+<p><font color="black" size="5">  <strong>时间感知指导：</strong>作者发现，通过编码器中的时间嵌入层合并时间信息可以大大提高生成质量和对真实情况的保真度，因为它可以自适应地调整从LR特征得出的条件强度。在这里，从信噪比（SNR）的角度分析了这种现象，然后在消融研究中对其进行了定量和定性验证。</font></p>
+<p><font color="black" size="5">  在生成过程中，生成图像的SNR会随着噪声的逐渐消除而逐渐增加。最近的一项研究表明，当
+SNR 接近 5e−2
+时，图像内容会迅速填充。根据这一观察结果，作者提出的编码器旨在为信噪比达到5e−2的扩散模型提供较强的条件。这是必不可少的，因为在此阶段生成的内容会显着影响我们方法的超分辨率性能。为了进一步证实这一点，<strong>作者利用
+SFT 前后 Stable Diffusion
+特征之间的余弦相似性来测量编码器提供的条件强度。不同时间步长的余弦相似度值如图3a）所示</strong>。可以看出，余弦相似度在5e−2的信噪比（SNR）附近达到最小值，表明编码器施加的最强条件。此外，作者还描绘了从图
+3b）
+中专门设计的编码器中提取的特征图。值得注意的是，5e−2的SNR点周围的特征更加清晰，并且包含更详细的图像结构。因此假设这些自适应特征条件可以为
+SR 提供更全面的指导。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252044272.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图3：</strong></font><font size="5">与没有时间嵌入的条件编码器相比，配备时间嵌入的编码器可以自适应地为预训练的扩散模型提供指导。图（a）：<strong>测量了扩散模型在SFT前后特征在不同时间步长之间的余弦相似性，这与源自编码器的条件强度相呼应。</strong>图（b）：<strong>进一步可视化了从LR图像中提取的条件编码器的特征</strong>。如图所示，当
+SNR 徘徊在 5e−2
+附近时，编码器倾向于提供清晰的特征。这正是扩散模型需要大量指导才能生成所需的高分辨率图像内容的时候。</font></p>
+</blockquote>
+<p><font color="black" size="5">  <strong>色彩校正：</strong>扩散模型偶尔会表现出颜色偏移。为了解决这个问题，作者对生成的图像进行颜色归一化，以使其均值和方差与
+LR 输入的均值和方差保持一致。特别的，让 <span class="math inline">\(\textcolor{blue}{x}\)</span> 表示 LR 输入，<span class="math inline">\(\textcolor{blue}{\hat{y}}\)</span> 表示生成的 HR
+图像，则颜色校正后的输出&nbsp;<span class="math inline">\(\textcolor{blue}{y}\)</span> 计算如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252059852.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{c \in
+\{r,g,b\}}\)</span>表示颜色通道，<span class="math inline">\(\textcolor{blue}{μ^c_{\hat{y}}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{σ^c_{\hat{y}}}\)</span>（或 <span class="math inline">\(\textcolor{blue}{μ^c_x}\)</span> 和 <span class="math inline">\(\textcolor{blue}{σ^c_x}\)</span>）分别是从 <span class="math inline">\(\textcolor{blue}{\hat{y}}\)</span>（或 <span class="math inline">\(\textcolor{blue}{x}\)</span>）的第&nbsp;<span class="math inline">\(\textcolor{blue}{c}\)</span>
+个通道估计的平均值和标准方差。这种简单的校正足以弥补色差。</font></p>
+<p><font color="black" size="5">  除了在像素域中采用色彩校正外，作者还提出了基于小波的色彩校正，以获得更好的视觉性能。给定任何图像
+<span class="math inline">\(\textcolor{blue}{I}\)</span>，作者通过小波分解在第<span class="math inline">\(\textcolor{blue}{i}\)</span> 个 （<span class="math inline">\(\textcolor{blue}{1 ≤ i ≤ l}\)</span>）
+尺度上提取其图像的高频分量 <span class="math inline">\(\textcolor{blue}{H^i}\)</span> 和低频分量 <span class="math inline">\(\textcolor{blue}{L^i}\)</span>，即</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252119153.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{L^0 = I}\)</span>，<span class="math inline">\(\textcolor{blue}{C_i}\)</span> 表示膨胀为 <span class="math inline">\(\textcolor{blue}{2_i}\)</span> 的卷积算子，<span class="math inline">\(\textcolor{blue}{k}\)</span>
+是卷积核定义为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252121466.png"></p>
+<p><font color="black" size="5">  通过将 <span class="math inline">\(\textcolor{blue}{x}\)</span>（或 <span class="math inline">\(\textcolor{blue}{\hat{y}}\)</span>）的第&nbsp;<span class="math inline">\(\textcolor{blue}{l}\)</span>
+个低频和高频分量表示为 <span class="math inline">\(\textcolor{blue}{L^l_x}\)</span> 和 <span class="math inline">\(\textcolor{blue}{H^l_x}\)</span>或（&nbsp;<span class="math inline">\(\textcolor{blue}{L^l_y}\)</span> 和 <span class="math inline">\(\textcolor{blue}{H^l_y}\)</span>），所需的 HR
+输出&nbsp;<span class="math inline">\(\textcolor{blue}{y}\)</span>
+公式如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406252125470.png"></p>
+<p><font color="black" size="5">  直观地说，就是用&nbsp;<span class="math inline">\(\textcolor{blue}{L^l_x}\)</span> 替换了&nbsp;<span class="math inline">\(\textcolor{blue}{\hat{y}}\)</span>
+的低频分量&nbsp;<span class="math inline">\(\textcolor{blue}{L^l_y}\)</span>
+来校正颜色偏差。默认情况下，为了简单起见，作者在像素域中采用色彩校正。</font></p>
+<h2 id="保真与现实主义的权衡"><font color="black" size="5">2.保真与现实主义的权衡</font></h2>
+<p><font color="black" size="5">  尽管所提出的方法的输出在视觉上令人信服，但由于扩散模型固有的随机性，它经常偏离基本事实。从CodeFormer中汲取灵感，作者引入了可控特征包装（CFW）模块，以灵活地管理真实感和保真度之间的权衡。</font></p>
+<p><font color="black" size="5">  由于稳定扩散是在自动编码器的潜在空间中实现的，因此很自然地利用自动编码器的编码器功能来调制相应的解码器功能，以进一步提高保真度。设
+<span class="math inline">\(\textcolor{blue}{F_e}\)</span> 和 <span class="math inline">\(\textcolor{blue}{F_d}\)</span>
+分别作为编码器和解码器特征。并引入了一个可调系数 <span class="math inline">\(\textcolor{blue}{w \in [0,1]}\)</span>
+来控制调制的程度：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406260925387.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{C(·; θ)}\)</span>
+表示具有可训练参数 <span class="math inline">\(\textcolor{blue}{θ}\)</span>
+的卷积层。整体框架如图 2 所示。</font></p>
+<p><font color="black" size="5">  在此设计中，小 <span class="math inline">\(\textcolor{blue}{w}\)</span> 利用了 Stable
+Diffusion 的生成能力，从而产生具有高真实感的输出。相比之下，较大的 w
+允许 LR 图像提供更强的结构引导，从而增强保真度。我们观察到 <span class="math inline">\(\textcolor{blue}{w = 0.5}\)</span>
+在质量和保真度之间取得了良好的平衡。请注意，作者只在这个特定阶段训练
+CFW。</font></p>
+<h2 id="聚合采样"><font color="black" size="5">3.聚合采样</font></h2>
+<p><font color="black" size="5">  由于 Stable Diffusion
+中注意力层相对于图像分辨率的灵敏度更高，因此对于与其训练设置不同的分辨率，它往往会产生较差的输出，特别是
+512×512。这实际上限制了 StableSR 的实用性。</font></p>
+<p><font color="black" size="5">  一种常见的解决方法是将较大的图像拆分为几个重叠的小块，并单独处理每个块。虽然这种策略通常对传统的基于CNN的SR方法产生良好的结果，但它并不直接适用于扩散范式。这是因为在扩散迭代过程中，patches之间的差异会复合并被放大。图
+4 显示了一个典型的故障案例。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406260948864.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图4：</strong></font><font size="5">在处理超过
+512×512
+的图像时，StableSR（无聚合采样）通过将图像切成多个图块、单独处理并将它们拼接在一起，从而存在明显的块不一致。通过作者提出的聚合采样，StableSR可以在大图像上获得一致的结果。图中的分辨率为1024×1024。</font></p>
+</blockquote>
+<p><font color="black" size="5">  作者应用渐进式patch聚合采样算法来处理任意分辨率的图像。<strong>具体来说，首先将低分辨率图像编码为潜在特征图
+<span class="math inline">\(\textcolor{blue}{F ∈
+R^{h×w}}\)</span>，然后将其细分为 <span class="math inline">\(\textcolor{blue}{M}\)</span> 个重叠的小斑块 <span class="math inline">\(\textcolor{blue}{\{F_{Ωn}\}_{n=1}^M}\)</span></strong>，每个patch的分辨率为
+64 × 64 - 匹配训练分辨率(Stable Diffusion 中自动编码器的下采样比例因子为
+8×。)。这里，<span class="math inline">\(\textcolor{blue}{Ω_n}\)</span>
+是&nbsp;<span class="math inline">\(\textcolor{blue}{F}\)</span> 中第&nbsp;<span class="math inline">\(\textcolor{blue}{n}\)</span>
+个patch的坐标集。在反向采样的每个时间步中，每个patch都通过 StableSR
+单独处理，随后对处理后的patch进行汇总。为了集成重叠的patch，为每个patch&nbsp;<span class="math inline">\(\textcolor{blue}{F_{Ω_n}}\)</span> 生成一个权重图
+<span class="math inline">\(\textcolor{blue}{w_{Ω_n}\in R^{h \times
+w}}\)</span>，其条目跟随&nbsp;<span class="math inline">\(\textcolor{blue}{Ω_n}\)</span>
+中的高斯滤波器，而其他地方为
+0。然后根据重叠像素各自的高斯权重图进行加权。特别是，作者定义了一个填充函数
+<span class="math inline">\(\textcolor{blue}{f(·)}\)</span>，它通过填充区域&nbsp;<span class="math inline">\(\textcolor{blue}{Ω_n}\)</span>
+之外的零点将任何大小为 64×64 的块扩展为 h×w
+的分辨率。重复此过程，直到达到最终迭代。</font></p>
+<p><font color="black" size="5">  给定每个patche的输出为 <span class="math inline">\(\textcolor{blue}{ε_θ(Z^{(t)}_{Ω_n}, F_{Ω_n},
+t)}\)</span>，其中<span class="math inline">\(\textcolor{blue}{Z^{(t)}_{Ω_n}}\)</span>
+是噪声输入 <span class="math inline">\(\textcolor{blue}{Z^{(t)}}\)</span>的第&nbsp;<span class="math inline">\(\textcolor{blue}{n}\)</span> 个斑块，<span class="math inline">\(\textcolor{blue}{θ}\)</span>
+是扩散模型的参数，所有patches聚合在一起的结果可以公式化如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406261025863.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{\hat{w}=\sum_n
+w_{Ω_n}}\)</span>&nbsp;。基于<span class="math inline">\(\textcolor{blue}{ε_θ(Z^{(t)}_{Ω_n}, F,
+t)}\)</span>），可以根据采样程序得到<span class="math inline">\(\textcolor{blue}{Z^{(t-1)}}\)</span>，在扩散模型中表示为<span class="math inline">\(\textcolor{blue}{Sampler(Z^{(t)}, ε_θ(Z(t), F,
+t)}\)</span>。随后，将&nbsp;<span class="math inline">\(\textcolor{blue}{Z^{(t-1)}}\)</span>
+重新拆分为重叠的patch并重复上述步骤，直到 <span class="math inline">\(\textcolor{blue}{t=1}\)</span>。整个过程总结在算法
+1
+中。实验表明，这种渐进式聚合方法大大减轻了重叠区域的差异，如图4所示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406261038024.png"></p>
+<h1 id="三实验">三、实验</h1>
+<h2 id="实验设置"><font color="black" size="5">1.实验设置</font></h2>
+<p><font color="black" size="5">  StableSR 基于 Stable Diffusion
+2.1-base 预训练模型所构建。时间感知编码器类似于稳定扩散中去噪 U-Net
+的收缩路径，但更轻巧（∼105M，包括 SFT 层）。SFT层加入到Stable
+Diffusion的每个residual block块中，以实现有效控制。作者对 StableSR
+的扩散模型进行了 117 个epoch的微调，批处理大小为 192，并将提示固定为
+null。遵循 Stable Diffusion 使用 Adam 优化器，学习率设置为 5 ×
+10−5。训练过程以 512 × 512 分辨率和 8 个 NVIDIA Tesla 32G-V100 GPU
+进行。为了进行推理，作者采用具有 200 个时间步长的 DDPM
+采样。为了处理任意大小的图像，对 512×512
+以外的图像采用了建议的聚合采样策略。对于低于 512×512 的图像，首先放大 LR
+图像，使较短的一侧的长度为
+512，并在生成后将结果重新缩放回目标分辨率。</font></p>
+<p><font color="black" size="5">  为了训练 CFW，首先在 Real-ESRGAN
+中的降解管道之后生成分辨率为 512 × 512 的 100k 合成 LR-HR
+对。然后，采用微调扩散模型，以上述LR图像为条件，生成相应的潜码<span class="math inline">\(\textcolor{blue}{Z_0}\)</span>。训练损失与 LDM
+中使用的自动编码器几乎相同，只是作者使用 0.025
+的固定对抗性损失权重而不是自调损失权重</font></p>
+<p><font color="black" size="5">  <strong>训练数据集：</strong>作者采用Real-ESRGAN的降解管道在DIV2K，DIV8K，Flickr2K和OutdoorSceneTraining数据集上合成LR-HR对。作者还从
+FFHQ 数据集中添加了 5000 张面部图像，用于一般情况。</font></p>
+<p><font color="black" size="5">  <strong>测试数据集：</strong>作者在合成数据集和真实世界数据集上评估了它们的方法。对于合成数据，遵循Real-ESRGAN的退化管道，从DIV2K验证集生成3k
+LR-HR对。LR 的分辨率为 128 × 128，相应 HR 的分辨率为 512 ×
+512。请注意，对于
+StableSR，在推理之前，首先将输入上采样到与输出相同的大小。对于真实世界的数据集，我们遵循通用设置对
+RealSR、DRealSR和 DPED-iPhone进行比较。并进一步从互联网上收集了 40
+张图片进行比较。</font></p>
+<p><font color="black" size="5">  <strong>比较方法：</strong>为了验证我们方法的有效性，我们将我们的
+StableSR 与几种最先进的方法3 进行了比较，即 RealSR4 （Ji et al.，
+2020）、BSRGAN （Zhang et al.， 2021a）、RealESRGAN+ （Wang et al.，
+2021c）、DASR （Liang et al.， 2022）、FeMaSR （Chen et al.，
+2022）、潜在扩散模型 （LDM） （Rombach et al.， 2022）、SwinIR-GAN5
+（Liang et al.， 2021） 和 DeepFloyd IF III （Deep-floyd， 2023）. 由于
+LDM 是在分辨率为 256 × 256 的图像上正式训练的，因此我们按照 StableSR
+的相同训练设置对其进行微调，以便进行公平的比较。对于其他方法，我们直接使用官方代码和模型进行测试。请注意，本节中的结果是在训练的相同分辨率下获得的，即
+128 × 128。具体来说，对于来自（Cai et al.， 2019;Wei 等人，2020
+年;Ignatov 等人，2017 年），我们在中心裁剪它们以获得分辨率为 128 × 128
+的补丁。对于其他真实世界的图像，我们首先调整它们的大小，使较短的边为
+128，然后应用中心裁剪。至于其他分辨率，图 4 显示了 1024 × 1024
+分辨率下真实世界图像上的 StableSR 示例。</font></p>
+<p><font color="black" size="5">  <strong>评估指标：</strong>对于具有配对数据的基准测试，即
+DIV2K Valid、RealSR 和 DRealSR，作者采用各种感知指标，包括
+LPIPS、FID、CLIP-IQA和 MUSIQ来评估生成图像的感知质量。还报告了 PSNR 和
+SSIM 分数（在 YCbCr 色彩空间的亮度通道上评估）以供参考。由于 DPED-iPhone
+中无法获得地面实况图像，遵循现有方法报告无参考指标的结果，即用于感知质量评估的
+CLIP-IQA 和 MUSIQ。此外，作者还对 16
+张真实世界的图像进行了用户研究，以验证它们的方法相对于现有方法的有效性。</font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/</a>
+            <p>发表日期：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">June 18th 2024, 10:33:34 am</a>
+            <p>更新日期：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">July 1st 2024, 3:20:35 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/" title="Medical Diffusion Model--12.GenerateCT">
+                    <div class="nextTitle">Medical Diffusion Model--12.GenerateCT</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/" title="视频扩散模型——5.FateZero">
+                    <div class="prevTitle">视频扩散模型——5.FateZero</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E9%97%B4%E6%84%9F%E7%9F%A5%E8%BF%9B%E8%A1%8C%E5%BC%95%E5%AF%BC%E5%BC%8F%E5%BE%AE%E8%B0%83"><span class="toc-number">2.1.</span> <span class="toc-text">1.使用时间感知进行引导式微调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E7%9C%9F%E4%B8%8E%E7%8E%B0%E5%AE%9E%E4%B8%BB%E4%B9%89%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2.保真与现实主义的权衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E9%87%87%E6%A0%B7"><span class="toc-number">2.3.</span> <span class="toc-text">3.聚合采样</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">1.实验设置</span></a></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 50
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/">视频扩散模型——8.ControlVideo</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span>
+            <a class="archive-post-title" href="/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">扩散模型在时间序列的应用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">视频扩散模型——7.Latte</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

@@ -19,25 +19,30 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言">
+    <meta name="description" content="一、引言   为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。虽然基于 GAN 的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型——12.ADD">
-<meta property="og:url" content="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/index.html">
+<meta property="og:title" content="Medical Diffuison Model——7.MIDiffusion">
+<meta property="og:url" content="http://example.com/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言">
+<meta property="og:description" content="一、引言   为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。虽然基于 GAN 的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181038832.png">
-<meta property="article:published_time" content="2024-06-18T02:33:34.000Z">
-<meta property="article:modified_time" content="2024-06-18T02:44:43.253Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181850644.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406211035805.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406221518253.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240904695.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240925573.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240930266.png">
+<meta property="article:published_time" content="2024-01-15T09:27:39.000Z">
+<meta property="article:modified_time" content="2024-06-25T00:38:49.194Z">
 <meta property="article:author" content="PhoenixPeng">
-<meta property="article:tag" content="扩散模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181038832.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型——12.ADD · PhoenixPeng&#39;s blog</title>
+    <title>Medical Diffuison Model——7.MIDiffusion · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -265,7 +270,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型——12.ADD</a>
+                <a href="#" class="post-name">Medical Diffuison Model——7.MIDiffusion</a>
             </div>
         </div>
     
@@ -311,7 +316,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                扩散模型——12.ADD
+                Medical Diffuison Model——7.MIDiffusion
             <!-- 404 -->
             
         </h1>
@@ -331,8 +336,6 @@
                     <div class= post-intro-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
-    
 </div>
 
                 
@@ -341,7 +344,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/06/18</span>
+                    <span class="post-intro-time">2024/01/15</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -496,380 +499,130 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181038832.png"></p>
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181725434.png"></p>
 <h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  为了应对图像翻译的挑战，已经提出了几种基于生成对抗网络（GAN）的方法。在这些技术中，生成模型通常直接对目标模态进行建模，从而确保翻译的真实性。然而，<strong>基于GAN的设计通常包含复杂的对抗结构，并要求为不同的翻译工作量身定制特定于模态的损失函数。</strong>虽然基于
+GAN
+的翻译可以在训练阶段在没有匹配数据集的情况下运行，但它们仍然取决于来自原始域的数据。这种依赖性可能会带来困难，特别是当源域数据稀缺时，使循环一致性训练的平衡复杂化。当目标模式的样本数量很少时，这个问题变得更加明显。</font></p>
+<p><font color="black" size="5">  最近的研究揭示了基于分数的生成模型优于基于GAN的模型。Muzaffer等引入了SynDiff，这是一个具有循环一致性和双重扩散的框架，用于增强语义对齐。尽管如此，这种方法需要双倍的计算开销，需要预训练生成器来评估相关的源图像，并要求源域数据，这与零样本学习范式不同。同时，Meng等建议利用扩散模型（称为SDEdit）通过零样本学习实现图像翻译。与基于GAN的模型相比，SDEdit通过其简化的模型配置和更直接的损失函数表现出优势。然而，在跨模态翻译上下文中出现了
+SDEdit
+的局限性。它是在基于扰动的制导下预测的，该制导固有地假设原始模态和目标模态都可以均匀地受到噪声的影响。这种假设在跨模态图像翻译中通常被证明是无效的，例如，从
+MRI PDw 过渡到 T1 成像。</font></p>
+<p><font color="black" size="5">  为了解决零样本学习在跨模态翻译中带来的障碍，<strong>本文的方法利用统计特征的同质性来调节为零样本跨模态图像翻译量身定制的扩散模型。该策略利用了原点和目标模态之间的联系，利用它们的局部统计特征，通过扩散范式实现跨模态图像转换。</strong>图
+1 说明了统计特征驱动扩散模型（LMI：Locale-based Mutual
+Information），该模型对跨模态图像分割执行零样本图像翻译。本文介绍的是一个无监督的零样本学习框架，能够在以前看不见的模式中导航翻译。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406181850644.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图1：</strong></font><font color="black" size="5">原理图显示了用于零样本跨模态分割的
+LMI
+引导扩散。蓝色和橙色等值线是源分布和目标分布。橙色等值线中的蓝点表示源分布中源数据点的目标数据点（蓝色等值线中的橙色点）。LMIDiffusion
+使用显式统计特征 （LMI）
+来导航下一步（黄点），从头到尾提供连续指导（黄点）。最后，可以使用仅在目标模态上训练的任意分割方法对翻译后的图像进行分割。</font></p>
+</blockquote>
+<h1 id="二方法">二、方法</h1>
+<h2 id="用于跨模态图像翻译的扩散模型"><font color="black" size="5">1.用于跨模态图像翻译的扩散模型</font></h2>
+<p><font color="black" size="5">  跨模态图像翻译可以通过分数匹配框架来解决，该框架用于生成基于源数据
+<span class="math inline">\(\textcolor{blue}{G}\)</span>
+的目标数据（表示为 <span class="math inline">\(\textcolor{blue}{F}\)</span>）。然后使用扰动源域<span class="math inline">\(\textcolor{blue}{G}\)</span>来调节逐步扩散过程。然而，当从图像翻译的零样本学习的角度来看时，在学习阶段仍然无法访问来自源域的数据。然而，据推测，源模式和目标模式之间的局部统计属性具有相似性。最大化互信息（MI）已被验证为一种有效的策略，可以使神经结构具有模拟非线性映射的能力。为了捕捉这些用于图像翻译的共享表示，作者建议使用互相信息作为指导对去噪过程中的局部统计特征进行建模。</font></p>
+<h2 id="局部引导互信息"><font color="black" size="5">2.局部引导互信息</font></h2>
+<p><font color="black" size="5">  为了从数据集中提取语义信息以进行调节，有必要将原始数据转换为MI封装的统计特征。给定图像
+<span class="math inline">\(\textcolor{blue}{X}\)</span>，对于位置 <span class="math inline">\(\textcolor{blue}{i}\)</span>处的点 <span class="math inline">\(\textcolor{blue}{x_i \in
+X}\)</span>，可以通过&nbsp;<span class="math inline">\(\textcolor{blue}{x_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{\delta_{x_i}}\)</span>
+的概率密度函数 （PDF）<span class="math inline">\(\textcolor{blue}{p_{δ_{x_i}}(·)}\)</span> 捕获
+<span class="math inline">\(\textcolor{blue}{i}\)</span>
+处的局部统计信息。</font></p>
+<p><font color="black" size="5">  关于位于 <span class="math inline">\(\textcolor{blue}{x_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{\delta_{x_i}}\)</span>
+内的其他数据点(表示为 <span class="math inline">\(\textcolor{blue}{x_j}\)</span>)，它的统计特征可以通过
+PDF：<span class="math inline">\(\textcolor{blue}{p_{δ_{x_j}}(·)}\)</span>确定，其中&nbsp;<span class="math inline">\(\textcolor{blue}{j}\)</span> 是&nbsp;<span class="math inline">\(\textcolor{blue}{\delta_i}\)</span> 的一个元素。在
+点<span class="math inline">\(\textcolor{blue}{x_i}\)</span>
+处从图像&nbsp;<span class="math inline">\(\textcolor{blue}{X}\)</span>
+到图像&nbsp;<span class="math inline">\(\textcolor{blue}{Y}\)</span>
+的局部互信息（LMI） 通过以下方式定义：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406211035805.png"></p>
+<p><font color="black" size="5">  作者采用方程 1
+作为指导，以调节扩散的每个训练步骤。这是通过在分数网络的整个训练步骤中评估
+<span class="math inline">\(\textcolor{blue}{LMI(x_0,y_t)、t \in
+[0,T]}\)</span>来实现的。</font></p>
+<p><font color="black" size="5">  <strong>性质1：</strong>&nbsp;在<span class="math inline">\(i\)</span>处位置从<span class="math inline">\(\textcolor{blue}{X}\)</span>&nbsp;到&nbsp;<span class="math inline">\(\textcolor{blue}{Y}\)</span>&nbsp;的LMI上界为：<span class="math inline">\(\textcolor{blue}{LMI_\delta(x_i,y_i) \leq
+LMI_\delta(x_i,x_i)}\)</span>，这是点<span class="math inline">\(\textcolor{blue}{x_i}\)</span>处<span class="math inline">\(\textcolor{blue}{X}\)</span>&nbsp;和<span class="math inline">\(\textcolor{blue}{Y}\)</span>之间的最佳信息匹配。</font></p>
+<p><font color="black" size="5">  <strong>性质2：</strong>LMIDiffusion
+生成的翻译误差为 <span class="math inline">\(\textcolor{blue}{\lim\limits_{∆LMI→0} ∆E\hat{F} =
+0}\)</span>。</font></p>
+<p><font color="black" size="5">  在补充部分，作者证明了性质 1 和
+2。性质 1 强调 LMI 在以下条件下达到统计全等：<span class="math inline">\(\textcolor{blue}{p_δ(X)=p_δ(Y ), ∀δ \in
+X}\)</span>。因此，在整个训练迭代过程中，LMI 在训练步骤中始终在 <span class="math inline">\(\textcolor{blue}{X_0}\)</span> 和 <span class="math inline">\(\textcolor{blue}{X_t}\)</span>
+之间的相同位置达到峰值。然而，当 <span class="math inline">\(\textcolor{blue}{p_δ(X) \neq
+p_δ(Y)}\)</span>时，LMI 在&nbsp;<span class="math inline">\(\textcolor{blue}{j}\)</span> 处达到局部最大值，该
+<span class="math inline">\(\textcolor{blue}{j}\)</span> 位于&nbsp;<span class="math inline">\(\textcolor{blue}{y_i}\)</span> 的邻域 <span class="math inline">\(\textcolor{blue}{δ_{y_i}}\)</span>
+中。通过将迭代互信息计算转换为基于张量的运算，可以加快 MI
+确定的过程。在GPU上执行时，这种张量操作可以通过内存复制和并行缩减等技术进一步受益于速度增强。</font></p>
+<h2 id="通过lmi调节扩散"><font color="black" size="5">3.通过LMI调节扩散</font></h2>
+<p><font color="black" size="5">  在训练阶段，可以通过将数据点（表示为&nbsp;<span class="math inline">\(\textcolor{blue}{F}\)</span> ）与其扰动对应物
+<span class="math inline">\(\textcolor{blue}{F_t}\)</span> 之间的 LMI
+合并到分数网络（符号为 <span class="math inline">\(\textcolor{blue}{s_θ}\)</span>）中来指导噪声扰动过程。这是通过将分数匹配的训练目标调整为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406221518253.png"></p>
+<p><font color="black" size="5">  在采样阶段，我们可以将建议的条件算子集成到
+SDE 中：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240904695.png"></p>
+<p><font color="black" size="5">  并使用朴素的 Euler-Maruyama
+求解器来积分
+SDE。采样图像可以通过专为目标域图像分割而设计的工具直接分割。</font></p>
+<h1 id="三实验">三、实验</h1>
+<p><font color="black" size="5">  <strong>数据集：</strong>&nbsp;作者利用IXI
+dataset，该数据集包含来自健康受试者的 600
+张预对齐多模态图像。并且承担PD和T1w模式之间的翻译任务。从IXI数据集的一个子集中，制定了一个由300个切片（从100个受试者中抽取）组成的训练集和一个由75个切片（从25名受试者中抽取）组成的测试集。</font></p>
+<p><font color="black" size="5">  <strong>实验：</strong>&nbsp;本文将
+LMIDiffusion（无监督）与基于少样本学习的 CycleGAN（监督）翻译模型、基于
+GAN 反转的方法（无监督）和基于扩散的方法 SDEdit （零样本监督学习与基于
+SDE 的扰动引导）进行了比较。1️⃣本实验中的
+<strong>CycleGAN（受监督）将被允许同时查看完整的目标域数据集和源域数据集的一小群</strong>（约占数据集
+IXI 数据集的
+11%）。2️⃣第二个基线是基<strong>于GAN反转的方法（无监督）。允许
+StyleGAN2-ADA
+查看目标域训练数据。在经过训练的StyleGAN2-ADA的潜在空间中，通过5000个反演优化步骤来执行域外引导生成。</strong>在生成步骤中引入了一个额外的网络进行反演。3️⃣<strong>SDEdit（无监督）使用分布扰动引导进行扩散。</strong>LMIDiffusion的分数网络结构与类似UNet的分数匹配网络相同，后者通过学习率为3e
+− 4的Adam优化器进行优化。该模型在具有四个 Tesla V100 GPU 的 NVIDIA DGX
+Station 上进行了训练，迭代次数超过 300K。对于分割后端，作者采用了
+K-Means（5
+个聚类）算法，该算法专门针对目标模态进行训练。随后对从上述各种方法获得的翻译结果进行了分割。</font></p>
+<p><font color="black" size="5">  <strong>结果：</strong>图 2
+显示了各种模型的翻译和分割结果。底部行提供了基于翻译图像的分割结果的清晰说明。值得注意的是，从
+LMIDiffusion
+转换派生的分割与分割基本事实密切相关。虽然使用在目标图像上训练的方法进行直接分割对于源域图像不可行，但在翻译后的图像上产生了值得称赞的分割结果。<strong>LMIDiffusion翻译的结果不仅提供了与翻译靶点
+（PDw） 的最大相似性，而且还保留了原始模态 （T1w）
+的优越解剖学特征。</strong>尽管 CycleGAN
+使用监督（少镜头）数据进行训练，但它无法生成高质量的图像。这一缺点可归因于基于GAN的模型难以辨别源模态和目标模态之间的关系，因为来自两个领域的训练数据有限。另一方面虽然
+SDEdit 确实在 PDw
+域中生成图像，但它损害了原始域的解剖特征，使其在零镜头图像分割方面效果较差。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240925573.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2：</strong></font><font color="black" size="5">对不同模型的翻译结果进行定性评估。前两行显示目标和原始模态图像，以及
+ROI 的特写镜头，然后是 CycleGAN、StyleGAN、SDEdit 和 LMIDiffusion
+的转换。随后的一行显示使用 3 个聚类 K-Means 方法进行分割的 ROI
+中的二值化分割结果，该方法仅在目标模态上进行训练。</font></p>
+</blockquote>
+<p><font color="black" size="5">  在表 1 中给出了基于不同模型计算的
+Dice 分数、PSNR 和 SSIM 值。很明显，LMIDiffusion 的Dice 得分为 0.88 ±
+0.05。紧随其后的是基于 CycleGAN 的方法，得分为 0.85 ± 0.07。SDEdit
+技术表现出次优性能，Dice 得分为
+0.82。相比之下，GAN反演方法（StyleGAN）的结果为0.66，强调了其在跨模态图像翻译方面的挑战。在翻译质量指标方面，LMIDiffusion
+处于领先地位，PSNR 和 SSIM 值分别为 20.22 和 SSIM 为 0.69。CycleGAN
+紧随其后，PSNR 为 18.88，SSIM 为 0.27，而 SDEdit 报告的 PSNR 为
+15.96，SSIM 为
+0.50。StyleGAN方法与其较低的Dice分数一致，PSNR最低，为10.15，SSIM为0.06，进一步证明了GAN反演方法在零样本图像转换任务中的局限性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406240930266.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  本文提出了一种应用于跨模态图像分割的零样本跨模态图像平移新方法。对于零样本学习的挑战，本文的方法在翻译质量和零样本分割性能方面优于现有的基于
+GAN
+和基于扩散的方法。结果表明，所提出的LMI引导扩散是一种很有前途的基于零样本学习方式的跨模态图像平移分割方法。通过引入单样本或少样本学习来改进扩散引导的LMI计算，可以潜在地提高模型的性能。</font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/</a>
-            <p>发表日期：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">June 18th 2024, 10:33:34 am</a>
-            <p>更新日期：<a href="http://example.com/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">June 18th 2024, 10:44:43 am</a>
+            <p>原文链接：<a href="http://example.com/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">http://example.com/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/</a>
+            <p>发表日期：<a href="http://example.com/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">January 15th 2024, 5:27:39 pm</a>
+            <p>更新日期：<a href="http://example.com/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">June 25th 2024, 8:38:49 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -877,12 +630,17 @@
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/" title="Medical Diffusion model——8.FGDM">
+                    <div class="nextTitle">Medical Diffusion model——8.FGDM</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/" title="视频扩散模型——5.FateZero">
-                    <div class="prevTitle">视频扩散模型——5.FateZero</div>
+                <a href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/" title="Medical Diffusion Model——6.SynDiff">
+                    <div class="prevTitle">Medical Diffusion Model——6.SynDiff</div>
                 </a>
             
         </li>
@@ -1052,7 +810,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E8%B7%A8%E6%A8%A1%E6%80%81%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E7%9A%84%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.用于跨模态图像翻译的扩散模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%BC%95%E5%AF%BC%E4%BA%92%E4%BF%A1%E6%81%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.局部引导互信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87lmi%E8%B0%83%E8%8A%82%E6%89%A9%E6%95%A3"><span class="toc-number">2.3.</span> <span class="toc-text">3.通过LMI调节扩散</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1296,7 +1054,81 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1681,7 +1513,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 46
+        Total : 50
         </div>
         <!-- search  -->
         
@@ -1697,8 +1529,26 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型--15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">06/18</span>
-            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412-ADD/">扩散模型——12.ADD</a>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
         </li>
     
         
@@ -1716,7 +1566,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
-            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414-DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
         </li>
     
         
@@ -1781,38 +1631,44 @@
     
         
         <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%948.FGDM(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">Medical Diffusion model——8.FGDM</a>
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion model——9.FDDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison model——7.MIDiffusion</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical-Diffusion-model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion model——6.SynDiff</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/10</span>
-            <a class="archive-post-title" href="/2024/01/10/Medical-Diffusion-Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span>
-            <a class="archive-post-title" href="/2024/01/02/Medical-Diffusion-Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
         </li>
     
         
@@ -1911,19 +1767,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/07</span>
-            <a class="archive-post-title" href="/2023/10/07/Medical-diffusion-model%E2%80%94%E2%80%943.Medical-latent-dm-for-3D-Medical-Image-Generation/">Medical diffusion model——3.Medical latent dm for 3D Medical Image Generation</a>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
-            <a class="archive-post-title" href="/2023/09/23/Medical-diffusion-model%E2%80%94%E2%80%942.Med-DDPM/">Medical diffusion model——2.Med-DDPM</a>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/04</span>
-            <a class="archive-post-title" href="/2023/09/04/Medical-diffusion-model%E2%80%94%E2%80%941.Medfusion/">Medical diffusion model——1.Medfusion</a>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
         </li>
     
         
@@ -1991,6 +1847,11 @@
                 扩散模型
             </span>
         
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -2015,6 +1876,11 @@
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
