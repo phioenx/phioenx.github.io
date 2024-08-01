@@ -449,6 +449,118 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">
+                
+                <span class="abstract-title-text">Medical Diffuison Model——7.MIDiffusion</span>
+            </a>
+            <div class="abstract-content">
+                跨模态数据翻译在图像计算中引起了极大的兴趣。深度生成模型（例如 GAN）在处理这些问题方面表现出性能改进。然而，作为图像翻译的一个基本挑战，具有保真度的零样本学习跨模态数据翻译问题仍未得到解答。本文提出了一种新的无监督零样本学习方法，称为互信息引导扩散跨模态数据翻译模型 (MIDiffusion)，它学习将看不见的源数据翻译成目标域。MIDiffusion 利用基于分数匹配的生成模型，该模型学习目标域中的先验知识。我们提出了一种可微局部-MI-Layer (LM I)，用于调节迭代去噪采样。LM I 在统计域中捕获相同的跨模态特征以进行扩散引导；因此，当源域发生变化时，我们的方法不需要重新训练，因为它不依赖于源域和目标域之间的任何直接映射。这一优势对于在实践中应用跨模态数据翻译方法至关重要，因为合理数量的源域数据集并不总是可用于监督训练。与有影响力的生成模型组（包括基于对抗和其他基于分数的模型）相比，我们凭经验展示了 MIDiffusion 的卓越性能。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——6.SynDiff</span>
+            </a>
+            <div class="abstract-content">
+                通过源到目标模态转换对缺失图像进行插补可以促进医学成像中的下游任务。合成目标图像的一种普遍方法涉及通过生成对抗网络（GAN）进行一次性映射。然而，隐式表征图像分布的 GAN 模型可能会受到样本保真度和多样性有限的影响。在本文当中提出了一种基于对抗扩散建模的新方法——SynDiff，以提高医学图像合成的可靠性。为了捕获图像分布的直接关联，SynDiff 利用条件扩散过程逐步将噪声和源图像映射到目标图像上。为了在推理过程中快速准确地进行图像采样，大的扩散步骤与反向扩散方向上的对抗性投影相结合。为了能够对不成对的数据集进行训练，设计了一种循环一致的架构，它具有两个耦合的扩散过程来合成目标给定源和源给定目标。在多对比 MRI 和 MRI-CT 翻译中，SynDiff 相对于竞争性 GAN 和扩散模型的实用性进行了广泛的评估。论文演示表明，SynDiff 在定性和定量方面都比竞争基线提供了卓越的性能。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——5.SADM</span>
+            </a>
+            <div class="abstract-content">
+                由于短期（例如心跳）和长期（例如衰老）因素的复杂组合，人体器官不断经历解剖学变化。显然，在对它们的未来状态进行建模（即通过图像生成）时，对这些因素的先验知识将是有益的。然而，大多数医学图像生成任务仅依赖于单个图像的输入，因此即使纵向数据可用，也忽略了顺序依赖性。序列感知深度生成模型（模型输入是一系列有序且带时间戳的图像）在医学成像领域仍处于探索之中，该领域面临着几个独特的挑战：1）具有不同长度的序列； 2) 丢失数据或帧，以及 3) 高维。为此，我们提出了一种用于生成纵向医学图像的序列感知扩散模型（SADM）。最近，扩散模型在高保真图像生成方面显示出了有希望的结果。我们的方法通过引入序列感知变压器作为扩散模型中的条件模块来扩展这项新技术。即使在训练期间丢失数据，这种新颖的设计也能够学习纵向依赖性，并允许在推理期间自回归生成图像序列。我们对 3D 纵向医学图像进行的广泛实验证明了 SADM 与基线和替代方法相比的有效性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/01/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/10</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——4.ALDM</span>
+            </a>
+            <div class="abstract-content">
+                多模态图像在医学图像分析的综合评估中发挥着至关的重要作用，为识别临床重要的生物标志物提供补充信息。然而，在临床实践中，由于扫描成本、有限的扫描时间和安全考虑等原因，获取多种模式可能具有挑战性。在本文中，我们提出了一种基于潜在扩散模型 (LDM) 的模型，该模型利用可切换块(switchable blocks)对3D医学图像进行图像到图像的转换，而无需进行补丁裁剪。3D LDM 与使用目标模态的调节相结合，可以在 3D 中生成高质量的目标模态，克服 2D 生成方法中丢失切片外信息的缺点。可切换块被称为多个可切换空间自适应归一化（MS-SPADE），它动态地将源潜伏转换为目标潜伏的所需风格，以帮助扩散过程。MS-SPADE 块允许我们使用一个模型来处理一种源模态到各种目标的许多翻译任务，从而消除了针对不同场景的许多翻译模型的需要。我们的模型在不同的源-目标模态场景中展示了成功的图像合成，并且在四种不同模态的多模态脑磁共振成像数据集和独立的 IXI 数据集上测试的定量评估中超越了其他模型。我们的模型展示了跨各种模态的成功图像合成，甚至允许一对多模态转换。此外，它在定量评估中优于其他一对一翻译模型。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/02</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">
                 
                 <span class="abstract-title-text">视频扩散模型——6.Video LCM</span>
@@ -490,118 +602,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2024/06/11">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">
-                
-                <span class="abstract-title-text">视频扩散模型——3.VideoComposer</span>
-            </a>
-            <div class="abstract-content">
-                对可控性的追求作为视觉内容创作的更高标准，在可定制的图像合成方面取得了显着的进步。然而，由于时间动态的巨大变化和跨帧时间一致性的要求，实现可控视频合成仍然具有挑战性。基于合成生成的范式，这项工作提出了VideoComposer，它允许用户灵活地根据文本条件、空间条件，更重要的是时间条件来合成视频。具体来说，考虑到视频数据的特性，作者引入压缩视频的运动矢量作为显式控制信号，以提供有关时间动态的指导。此外，作者开发了一个时空条件编码器（STC-encoder），它作为一个统一的接口，可以有效地整合顺序输入的空间和时间关系，通过它，模型可以更好地利用时间条件，从而实现更高的交互性。 - 框架一致性。大量的实验结果表明，VideoComposer 能够以各种形式（例如文本描述、草图序列、参考视频，甚至简单的手工动作）在合成视频中同时控制空间和时间模式。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">
-                
-                <span class="abstract-title-text">视频扩散模型——2.LVDM</span>
-            </a>
-            <div class="abstract-content">
-                人工智能生成的内容最近引起了广泛关注，但逼真的视频合成仍然具有挑战性。尽管在这一领域已经进行了许多使用 GAN 和自回归模型的尝试，但生成视频的视觉质量和长度还远远不能令人满意。扩散模型最近显示出显着的结果，但需要大量的计算资源。为了解决这个问题，本文通过利用低维 3D 潜在空间引入轻量级视频扩散模型，在有限的计算预算下显着优于以前的像素空间视频扩散模型。此外，本文工作提出在潜在空间中进行分层扩散，以便可以生成超过一千帧的较长视频。为了进一步克服长视频生成的性能下降问题，还提出了条件潜在扰动和无条件指导，可以有效减轻视频长度扩展过程中的累积错误。对不同类别的小域数据集的广泛实验表明，该框架比以前的强基线生成更真实、更长的视频。此外，作者还提供了大规模文本到视频生成的扩展，以展示工作的优越性。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">
-                
-                <span class="abstract-title-text">视频扩散模型——1.Video Diffusion Model</span>
-            </a>
-            <div class="abstract-content">
-                生成时间上一致的高保真视频是生成式建模研究中的一个重要里程碑。我们通过提出一个视频生成的扩散模型，显示出非常有前途的初步结果，朝着这一里程碑取得了进展。我们的模型是标准图像扩散架构的自然扩展，它可以从图像和视频数据中进行联合训练，我们发现这可以减少小批量梯度的方差并加快优化速度。为了生成长时间和更高分辨率的视频，我们引入了一种新的条件采样技术，用于空间和时间视频扩展，其性能优于以前提出的方法。我们提出了一个大型文本条件视频生成任务的第一个结果，以及视频预测和无条件视频生成的既定基准的最先进的结果。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/04/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">
-                
-                <span class="abstract-title-text">扩散模型——11.DiT</span>
-            </a>
-            <div class="abstract-content">
-                本文将介绍DiT，来自《Scalable Diffusion Models with Transformers》，文章探索了一类基于Transformers架构的新型扩散模型。该方法使用训练图像的潜在扩散模型，用对潜在补丁（Latent patch）进行操作的Transformers替换常用的 U-Net 主干网。通过以 Gflops 衡量的前向传递复杂度来分析扩散变压器 (DiT) 的可扩展性。我们发现，通过增加Transformers的深度/宽度或增加输入令牌数量，具有较高 Gflops 的 DiT 始终具有较低的 FID。除了拥有良好的可扩展性之外，我们最大的 DiT-XL/2 模型在类条件 ImageNet 512×512 和 256×256 基准上的表现优于所有先前的扩散模型，在后者上实现了 2.27 的最先进的 FID。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/21</span>
                 </div>
                 <!-- tags -->
                 
@@ -1062,7 +1062,89 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1501,7 +1583,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 50
+        Total : 54
         </div>
         <!-- search  -->
         
@@ -1517,6 +1599,24 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/08</span>
             <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
         </li>
@@ -1530,7 +1630,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         
@@ -1543,12 +1643,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/11</span>
             <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span>
-            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
         </li>
     
         
@@ -1584,13 +1678,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
-            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/08</span>
             <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
         </li>
     
         
@@ -1621,6 +1721,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
             <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1830,6 +1936,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="扩散模型">
                 <span class="iconfont-archer">&#xe606;</span>
                 扩散模型
@@ -1851,9 +1962,9 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="其他">
@@ -1861,14 +1972,14 @@
             其他
         </span>
     
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

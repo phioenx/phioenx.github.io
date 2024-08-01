@@ -19,24 +19,25 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言   近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。   医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了">
+    <meta name="description" content="一、引言   去噪扩散概率模型（DDPM，或简称“扩散模型”）在医学图像分析中显示出广泛的应用，因为它们能够生成高质量、高分辨率的图像，例如用于直接图像生成、图像分割、异常检测、跨模态图像转换和图像去噪。然而，像DDPM这样的标准生成模型仍然无法创建解剖学上合理的组织（图1），并且这种解剖结构无法精确定制。我们提出的解决方案是通过不同类型的组织、器官等的分割掩模将解剖信息作为图像生成的先验，为网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Medical Diffusion Model--12.GenerateCT">
-<meta property="og:url" content="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/index.html">
+<meta property="og:title" content="Medical Diffusion Model——10.SegGuidedDiff">
+<meta property="og:url" content="http://example.com/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言   近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。   医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了">
+<meta property="og:description" content="一、引言   去噪扩散概率模型（DDPM，或简称“扩散模型”）在医学图像分析中显示出广泛的应用，因为它们能够生成高质量、高分辨率的图像，例如用于直接图像生成、图像分割、异常检测、跨模态图像转换和图像去噪。然而，像DDPM这样的标准生成模型仍然无法创建解剖学上合理的组织（图1），并且这种解剖结构无法精确定制。我们提出的解决方案是通过不同类型的组织、器官等的分割掩模将解剖信息作为图像生成的先验，为网络">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png">
-<meta property="article:published_time" content="2024-06-25T00:30:29.000Z">
-<meta property="article:modified_time" content="2024-06-25T01:26:59.768Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407240939223.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407241147673.png">
+<meta property="article:published_time" content="2024-05-03T08:23:57.000Z">
+<meta property="article:modified_time" content="2024-07-24T06:51:12.380Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407240939223.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Medical Diffusion Model--12.GenerateCT · PhoenixPeng&#39;s blog</title>
+    <title>Medical Diffusion Model——10.SegGuidedDiff · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -264,7 +265,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Medical Diffusion Model--12.GenerateCT</a>
+                <a href="#" class="post-name">Medical Diffusion Model——10.SegGuidedDiff</a>
             </div>
         </div>
     
@@ -310,7 +311,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Medical Diffusion Model--12.GenerateCT
+                Medical Diffusion Model——10.SegGuidedDiff
             <!-- 404 -->
             
         </h1>
@@ -338,7 +339,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/06/25</span>
+                    <span class="post-intro-time">2024/05/03</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -494,356 +495,28 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如<strong>患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。</strong></font></p>
-<p><font color="black" size="5">  医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了巨大的潜力。这是因为放射学报告提供了对患者病情的全面评估，从而有助于对医学图像的有效描述。因此，胸片和放射学报告的整合引起了人们对文本到图像生成的极大兴趣。这种兴趣在一定程度上归因于多个数据集和预训练的开源文本到图像模型的可用性。<strong>尽管取得了这些进展，但之前没有研究探索过使用医学语言文本提示生成
-3D 医学图像的文本条件，例如计算机断层扫描 （CT） 和磁共振成像
-（MRI）</strong>。这种研究差距是由于缺乏可用的配对放射学报告-3D医学成像数据，以及与2D生成工作相比，文本条件视频或3D图像生成模型的高计算要求，因此开源工作数量有限。</font></p>
-<p><font color="black" size="5">  在本文中，作者解决了这些局限性，并提出了第一种文本条件胸部CT生成方法（图1），使整个框架完全开源，以加速3D医学成像研究。
-<strong>GenerateCT 由一个预训练的 T5X
-文本编码器、一个基于Transformer的文本条件 3D 胸部 CT
-生成架构，以及一个文本条件空间超分辨率扩散模型组成</strong>（图
-2）。目前，没有公开可用的带有放射学报告的3D医学图像数据集可用于训练GenerateCT。因此，作者还引入了一种新的胸部
-CT 体积数据集和放射学报告，以解决这一局限性。</font></p>
-<p><font color="black" size="5">  生成 CT 体积本质上是由一系列 2D
-切片组成的 3D
-图像，其计数决定了深度，这带来了一个显着的挑战：开发一个紧凑的模型，该模型不仅可以处理可变数量的轴向切片，还可以将token数量保持在最低限度以提高计算效率。为了解决这个问题，本文的工作引入了CT视觉转换器（CT-ViT），这是一个从以前的工作中汲取灵感并进一步改进的模型，并进一步为3D
-CT生成量身定制。<strong>CT-ViT 巧妙地压缩所有维度的 CT
-体积，同时深度保持自动回归性，从而能够生成具有可变切片数量的 CT
-体积。</strong></font></p>
-<p><font color="black" size="5">  在使用 CT-ViT 获得 3D CT
-体积的压缩表示后，可以将文本到 CT 任务构建为sequence to
-sequence问题，以根据相应的文本嵌入预测 CT
-token。从先前的图像生成工作中汲取灵感，本文的方法采用了能够同时预测多个CT
-token的双向 transformer。使用与mask
-预测密切相关的代理任务对transformer进行训练。在推理中，作者最初将所有 CT
-token指定为masked token。随后，在每个推理步骤中，对所有masked的 CT
-token进行并行预测，根据文本嵌入和未屏蔽（预测）CT
-token对其进行条件调整。</font></p>
-<p><font color="black" size="5">  <strong>作者还采用文本条件空间超分辨率扩散模型，使用基于转换器的方法生成低分辨率3D胸部CT，并以医学语言文本提示为条件。</strong>生成的
-CT
-和相应的文本提示用作后续扩散模型的调节输入。该策略产生空间上采样CT，其灵感来自级联扩散模型（CDM）。</font></p>
-<p><font color="black" size="5">  作为第一个探索文本条件 3D
-医学图像生成的公司，GenerateCT
-缺乏用于比较的基准。因此，我们通过将生成的 CT
-体积应用于潜在的真实世界临床应用来验证我们的框架。我们检查在生成的 CT
-体积上训练是否与在真实 CT
-体积上进行训练以进行多异常分类产生相似的性能。实验和结果表明，GenerateCT
-能够生成逼真的、高保真 3D 胸部 CT
-体积，与自由格式的医学语言文本提示一致。我们公开我们的代码和训练模型，以促进胸部
-CT 体积的生成，鼓励进一步研究，并为未来的研究建立基线。</font></p>
-<h1 id="二方法">二、方法</h1>
-<h1 id="数据预处理"><font color="black" size="5">1.数据预处理</font></h1>
-<p><font color="black" size="5">  数据集包括 25,701 个非增强 3D 胸部
-CT 体积，分辨率为 512×512，轴向切片数从 100 到 600
-不等。这些体积来自21,314例独特的患者，并使用适用于不同窗口设置的多种方法进行了重建。考虑到不同的重建方法，这导致总共有
-49,138 个 CT 体积。作者将所有患者划分为一个包含 20,000
-名独特患者的训练集和一个包含 1,314
-名独特患者的测试集，确保没有患者重叠。每张 CT
-体积都附有元数据，包括患者的年龄、性别和影像学细节。此外，这些卷还与放射学报告配对，这些报告分为单独的部分：临床信息、技术、发现和印象。使用印象部分和元数据将文本提示格式化为
-{age} years old {}： {impression}，如图 1
-所示。使用从元数据中检索到的斜率和截距值将 CT 体积转换为它们各自的
-Hounsfield 单位 （HU）。这些值被裁剪到[−1000 HU，+1000
-HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
-生成网络，这些值被归一化为 [−1，
-1]。但是，对于扩散模型，这些值被归一化为 [0， 1]。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png"></p>
+<p><font color="black" size="5">  去噪扩散概率模型（DDPM，或简称“扩散模型”）在医学图像分析中显示出广泛的应用，因为它们能够生成高质量、高分辨率的图像，例如用于直接图像生成、图像分割、异常检测、跨模态图像转换和图像去噪。然而，像DDPM这样的标准生成模型仍然无法创建解剖学上合理的组织（图1），并且这种解剖结构无法精确定制。我们提出的解决方案是通过不同类型的组织、器官等的分割掩模将解剖信息作为图像生成的先验，为网络提供更直接的学习信号，以实现解剖学的真实性。</font></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407240939223.png" alt="image-20240724093945159">
+<figcaption aria-hidden="true">image-20240724093945159</figcaption>
+</figure>
 <blockquote>
-<p><font color="blue" size="5"><strong>图
-1：</strong></font><font color="black" size="5">GenerateCT
-是一个级联框架，它使用医学语言文本提示作为条件输入，生成具有任意切片编号的高保真
-3D 胸部 CT 体积。</font></p>
+<p><font color="blue" size="5"><strong>图1：</strong></font><font size="5">标准扩散模型（右）可能无法创建逼真的组织，即使整体图像看起来很高质量，这激发了我们的分割引导模型（中）。</font></p>
 </blockquote>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  如果只有某些对象类可以被约束在输入掩码中，而其他对象类可以自由地由模型推断，则分割引导的生成将更加灵活。这开辟了进一步的应用，例如从不完整的掩模生成图像，生成解剖学配对/配准数据，对现有注释数据进行“反事实”分析等。为了解决这个问题，作者提出了一种mask-ablated训练策略，在训练过程中为模型提供masks中缺失类的所有可能组合，教它在生成新图像时做出这样的推断。值得注意的是，作者还演示了如何在它们的掩模消融训练模型的潜在空间内进行插值，从而生成与某些真实的图像具有可调节解剖相似性的图像。</font></p>
+<p><font color="black" size="5">  综上所述，作者引入了一种扩散模型，<strong>“SegGuidedDiff”，它可以根据解剖掩模灵活而精确地生成医学图像。</strong>作者评估了他们的模型在乳腺MRI和颈部到骨盆CT的一系列感兴趣的解剖对象的条件下生成图像的能力，其中它在输入解剖掩模、乳腺MRI和颈部到骨盆CT的感兴趣的解剖对象的忠实度方面优于最新的掩模条件生成模型，其中它在其输入解剖掩模的忠实度方面优于现有技术的掩模条件生成模型，并且与一般的解剖真实性相当。</font></p>
+<h1 id="二方法">二、方法</h1>
+<h1 id="向扩散模型添加分割指导"><font color="black" size="5">  1.向扩散模型添加分割指导</font></h1>
+<p><font color="black" size="5">  本文的目标不是从无条件分布<span class="math inline">\(\textcolor{blue}{p(x_0)}\)</span>中采样，而是将某个通道图像<span class="math inline">\(\textcolor{blue}{x_0 ∈
+R^{c×h×w}}\)</span>的生成条件化为遵循某个多类解剖掩模<span class="math inline">\(\textcolor{blue}{m ∈ \{0,...,C −
+1\}^{h×w}}\)</span>，其中 <span class="math inline">\(\textcolor{blue}{C}\)</span>
+是类的数目（包括背景），或者换句话说，从<span class="math inline">\(\textcolor{blue}{p(x_0|m)}\)</span>当中采样。在修改数据似然性<span class="math inline">\(\textcolor{blue}{p(x_0|m)}\)</span>是有掩蔽条件的不改变噪声过程<span class="math inline">\(\textcolor{blue}{q(x_t|x_{t−1})}\)</span>，它修正了逆过程<span class="math inline">\(\textcolor{blue}{p_θ(x_{t−1}|x_t,m)}\)</span>和噪声预测网络<span class="math inline">\(\textcolor{blue}{θ}\)</span>。将其传播到ELBO会导致</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407241147673.png"></p>
+<p><font color="black" size="5">  上述损失用于训练模型，其中每个训练图像&nbsp;<span class="math inline">\(\textcolor{blue}{x_0}\)</span>
+具有某个成对的掩模&nbsp;<span class="math inline">\(\textcolor{blue}{m}\)</span>。作者建议<strong>通过在每个去噪步骤中将&nbsp;<span class="math inline">\(\textcolor{blue}{m}\)</span>
+个信道逐个级联到网络输入来简单地实现这一点</strong>，即，修改网络，使其具有附加的输入通道，如<span class="math inline">\(\epsilon_θ(x_t,t|m)：R^{(c+1)×h×w} →
+R^{c×h×w}\)</span>，可以是任何图像到图像模型。作者使用DDIM算法进行快速、高质量的采样。</font></p>
+<p><font color="black" size="5">  这种简单的方法生成的图像非常忠实于输入掩码（图2，表1），因为去噪过程在其许多渐进步骤中的每一步都以掩码为条件，允许网络跟随掩码，因为它们提供了有用的空间信息，这些信息与最佳去噪模型输出直接相关，最大限度地减少损失。</font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -1197,9 +870,9 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/</a>
-            <p>发表日期：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">June 25th 2024, 8:30:29 am</a>
-            <p>更新日期：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">June 25th 2024, 9:26:59 am</a>
+            <p>原文链接：<a href="http://example.com/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">http://example.com/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/</a>
+            <p>发表日期：<a href="http://example.com/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">五月 3日 2024, 4:23:57 下午</a>
+            <p>更新日期：<a href="http://example.com/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">July 24th 2024, 2:51:12 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1208,16 +881,16 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/" title="视频扩散模型——15.Upscale-A-Video">
-                    <div class="nextTitle">视频扩散模型——15.Upscale-A-Video</div>
+                <a href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/" title="视频扩散模型——9.Tunnel Try-on">
+                    <div class="nextTitle">视频扩散模型——9.Tunnel Try-on</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/" title="扩散模型——12.StableSR">
-                    <div class="prevTitle">扩散模型——12.StableSR</div>
+                <a href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/" title="视频扩散模型——8.ControlVideo">
+                    <div class="prevTitle">视频扩散模型——8.ControlVideo</div>
                 </a>
             
         </li>
@@ -1387,7 +1060,7 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">1.数据预处理</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E6%B7%BB%E5%8A%A0%E5%88%86%E5%89%B2%E6%8C%87%E5%AF%BC"><span class="toc-number">3.</span> <span class="toc-text">  1.向扩散模型添加分割指导</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1651,7 +1324,89 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -2090,7 +1845,7 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 50
+        Total : 54
         </div>
         <!-- search  -->
         
@@ -2106,6 +1861,24 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/08</span>
             <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
         </li>
@@ -2119,7 +1892,7 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         
@@ -2132,12 +1905,6 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <li class="archive-post-item">
             <span class="archive-post-date">06/11</span>
             <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span>
-            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
         </li>
     
         
@@ -2173,13 +1940,19 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
-            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/08</span>
             <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
         </li>
     
         
@@ -2210,6 +1983,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
             <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -2419,6 +2198,11 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="扩散模型">
                 <span class="iconfont-archer">&#xe606;</span>
                 扩散模型
@@ -2440,9 +2224,9 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="其他">
@@ -2450,14 +2234,14 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
             其他
         </span>
     
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

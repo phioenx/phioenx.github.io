@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="不成对的图像到图像（Unpaired I2I）转换——仅使用不成对的训练数据将图像从某个输入域转换到输出域的任务在医学图像分析中提供了广泛的应用。一个重要的案例是促进不同成像模式（例如 CT 和 MRI）之间的分割，适用于大脑、腹部和骨盆等解剖位置。由于在每种单独模态中注释图像需要大量的时间和劳动力投入，因此这一点特别有用，因为一种模态的注释可以直接应用于翻译成另一种模态的图像。然而，这样做需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Medical Diffusion model——11.ContourDiff">
+<meta property="og:url" content="http://example.com/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="不成对的图像到图像（Unpaired I2I）转换——仅使用不成对的训练数据将图像从某个输入域转换到输出域的任务在医学图像分析中提供了广泛的应用。一个重要的案例是促进不同成像模式（例如 CT 和 MRI）之间的分割，适用于大脑、腹部和骨盆等解剖位置。由于在每种单独模态中注释图像需要大量的时间和劳动力投入，因此这一点特别有用，因为一种模态的注释可以直接应用于翻译成另一种模态的图像。然而，这样做需">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220901058.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221152596.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220944135.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220946541.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221454782.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221503740.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221507625.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221516386.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221518755.png">
+<meta property="article:published_time" content="2024-05-13T07:21:25.000Z">
+<meta property="article:modified_time" content="2024-07-24T01:40:19.924Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220901058.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Medical Diffusion model——11.ContourDiff · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Medical Diffusion model——11.ContourDiff</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Medical Diffusion model——11.ContourDiff
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/05/13</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p><font color="black" size="5">  不成对的图像到图像（Unpaired
+I2I）转换——<strong>仅使用不成对的训练数据将图像从某个输入域转换到输出域的任务在医学图像分析中提供了广泛的应用</strong>。一个重要的案例是促进不同成像模式（例如
+CT 和
+MRI）之间的分割，适用于大脑、腹部和骨盆等解剖位置。由于在每种单独模态中注释图像需要大量的时间和劳动力投入，因此这一点特别有用，因为一种模态的注释可以直接应用于翻译成另一种模态的图像。然而，这样做<strong>需要通过翻译保持解剖学的一致性</strong>。</font></p>
+<p><font color="black" size="5">  确保不配对 I2I
+翻译的解剖学一致性具有挑战性，特别是当输入和输出域表现出严重的结构偏差时。一个例子是标准检查中捕获的腿部和脊柱区域的
+CT 和 MRI 之间的巨大视觉差异（如图 1所示），其中通常 CT
+图像显示两条腿，而 MRI 扫描仅显示一条腿，CT 图像捕获整个腹部，而MRI
+分别聚焦于腰部区域。由于翻译模型学习这些结构偏差，缺乏这种一致性可能会导致翻译图像与其相应的分割掩模之间不对齐，从而可能导致在翻译图像上训练的分割模型不可靠。事实上，当模态之间存在如此严重的不一致时，像
+CycleGAN 这样的流行翻译方法可能会产生不良结果。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220901058.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图1：</strong></font><font size="5">在某些解剖区域，CT
+和 MRI 模式之间存在结构偏差：从轴向视图 (a)
+来看，腹部区域的偏差较小，但从轴向视图来看，腿部的偏差很严重；从矢状视图来看，脊柱区域的偏差很严重
+(b)。</font></p>
+</blockquote>
+<p><font color="black" size="5">  受到先前空间条件扩散模型研究的启发，本文提出了一种<strong>平移扩散模型“ContourDiff”，<font color="PaleVioletRed" size="5">它使用图像的域不变解剖轮廓表示来指导翻译过程，即使在模态之间也能保证精确的解剖一致性严重的结构性偏差。</font></strong>该模型还有一个额外的好处，即它是“无源”的：<strong>它只需要一组未标记的输出域图像进行训练</strong>。因此，它可以在推理时翻译来自任意看不见的输入域的图像。据作者所知，这是第一个<strong>不需要输入域信息进行训练的不配对图像翻译模型。</strong></font></p>
+<h1 id="二方法">二、方法</h1>
+<p><font color="black" size="5">  <strong>问题定义：</strong>在不配对图像翻译中，<strong>只有输入和输出域示例的不配对数据集可用于训练。</strong>本文的方法实现了无源图像转换，其中只有未标记的数据集&nbsp;<span class="math inline">\(\textcolor{blue}{N_{out}}\)</span> 输出域（示例
+<span class="math inline">\(\textcolor{blue}{x^{out}_n (n = 1, ...,
+N_{out})
+}\)</span>）可用于训练。然后，<strong>目标是在推理时使用经过训练的模型将未见过的输入域数据
+<span class="math inline">\(\textcolor{blue}{x^{in}_n}\)</span>
+转换到输出域。</strong>在本文的案例中，目标是将 CT 图像转换为 MRI
+领域，以便与 MRI
+训练的分割模型一起使用。为此，作者提出了一种新颖的基于扩散模型的图像翻译框架，该框架基于图像的域不变解剖轮廓表示。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221152596.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2：</strong></font><font size="5">ContourDiff
+架构图。</font></p>
+</blockquote>
+<h2 id="向扩散模型添加轮廓引导"><font color="black" size="5"><strong>1.向扩散模型添加轮廓引导</strong></font></h2>
+<p><font color="black" size="5">  对于标准扩散模型，如何约束生成图像的语义/解剖结构尚不清楚。为了解决这个问题，作者建议利用图像的轮廓表示来提供生成图像的指导。<strong>在训练模型时，使用
+Canny 边缘检测滤波器提取每个训练图像 <span class="math inline">\(\textcolor{blue}{x_0}\)</span> 的轮廓表示 <span class="math inline">\(\textcolor{blue}{c}\)</span>，并将其与每个去噪步骤的网络输入连接起来，这种做法类似于SegGuidedDiff、ControlNet。</strong>这将网络修改为
+<span class="math inline">\(\textcolor{blue}{ε_θ(x_t, t|c)}\)</span>
+并将扩散训练目标修改为</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220944135.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{(x_0, c)}\)</span>
+是训练集图像及其轮廓。</font></p>
+<p><font color="black" size="5">  </font></p>
+<h2 id="轮廓引导图像翻译"><font color="black" size="5">2.轮廓引导图像翻译</font></h2>
+<p><font color="black" size="5">  轮廓的一个重要特征是它们可以被视为域不变但保留解剖结构的图像表示。这允许在某些输出域中训练的轮廓引导扩散模型充当无源图像转换方法，如下所示。</font></p>
+<p><font color="black" size="5">  首先，在带有计算轮廓 <span class="math inline">\(\textcolor{blue}{(x^{out}_n, c^{out}_n)
+}\)</span>的输出域图像上训练轮廓引导扩散模型，如算法 1
+所示。接下来，为了将一些输入域图像 <span class="math inline">\(\textcolor{blue}{x_{in}}\)</span>
+转换到输出域，提取其轮廓 <span class="math inline">\(\textcolor{blue}{c_{in}}\)</span>使用Ffilter去除不相关背景后，使用以&nbsp;<span class="math inline">\(\textcolor{blue}{c_{in}}\)</span>
+为条件的输出域训练模型 <span class="math inline">\(\textcolor{blue}{ε_θ}\)</span> 生成图像 <span class="math inline">\(\textcolor{blue}{x^{in→out}_0}\)</span>。因此，<span class="math inline">\(\textcolor{blue}{x^{in→out}_0}\)</span>
+保持了&nbsp;<span class="math inline">\(\textcolor{blue}{x_{in}}\)</span>
+的解剖内容，同时拥有输出域的视觉域特征。该翻译算法如算法 2 所示，其中
+<span class="math inline">\(\textcolor{blue}{α_t = 1−β_t}\)</span>
+具有加性预调度噪声 <span class="math inline">\(\textcolor{blue}{β_t}\)</span> 的方差，且<span class="math inline">\(\textcolor{blue}{\bar{α}_t = \prod^t_{s=1}
+α_s}\)</span>。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407220946541.png"></p>
+<p><font color="black" size="5">  <strong>过滤掉图像伪影。</strong>作者还对所有网络输入图像
+<span class="math inline">\(\textcolor{blue}{x}\)</span>
+应用额外的预处理，以过滤掉非解剖特征/伪影（例如 CT
+中的电动床），通过应用二进制掩码 <span class="math inline">\(\textcolor{blue}{M_{filter}}\)</span> 作为 <span class="math inline">\(\textcolor{blue}{x ← M_{filter} ⊙
+x}\)</span>。&nbsp;<span class="math inline">\(\textcolor{blue}{M_{filter}}\)</span> 是通过在
+<span class="math inline">\(\textcolor{blue}{x}\)</span> 上顺序计算以下
+Scikit-Image
+函数来定义的：<strong>threshold_multiotsu、binary_erosion、remove_small_objects
+和 remove_small_holes</strong>。</font></p>
+<p><font color="black" size="5">  <strong>强制相邻切片的翻译一致性。</strong>此外，作者建议强制将从
+3D 图像（例如
+CT）获取的相邻输入域图像切片转换到输出域的一致性，如下所示。首先，将 3D
+体积中的第一个切片图像 <span class="math inline">\(\textcolor{blue}{x^{in}_1}\)</span>
+转换为其输出域版本 <span class="math inline">\(\textcolor{blue}{x^{in→out}_1}\)</span>。重复生成，直到生成的一幅图像的平均值小于指定的阈值
+<span class="math inline">\(\textcolor{blue}{m_{thresh}}\)</span>。然后，通过生成不同的候选翻译
+<span class="math inline">\(\textcolor{blue}{x^{in→out}_i}\)</span>（使用模型的不同采样噪声输入）来翻译连续的切片
+<span class="math inline">\(\textcolor{blue}{x^{in}_i (i = 2, . . . ,
+N_{slices})}\)</span>，直到一个在 <span class="math inline">\(\textcolor{blue}{δ}\)</span> 的 <span class="math inline">\(\textcolor{blue}{L_2}\)</span>
+距离内。先前的切片翻译 <span class="math inline">\(\textcolor{blue}{x^{in→out}_{i-1}}\)</span>，并将其用于最终的<span class="math inline">\(\textcolor{blue}{x^{in→out}_i}\)</span>。作者分别对腰椎使用
+<span class="math inline">\(\textcolor{blue}{m_{thresh} =
+110}\)</span>、<span class="math inline">\(\textcolor{blue}{δ =
+50}\)</span>，对臀部/大腿解剖视图使用 <span class="math inline">\(\textcolor{blue}{m_{thresh} = 100}\)</span>、<span class="math inline">\(\textcolor{blue}{δ =
+40}\)</span>。在每次迭代期间，如果多个候选满足 <span class="math inline">\(\textcolor{blue}{L_2}\)</span> 距离标准，作者选择
+<span class="math inline">\(\textcolor{blue}{δ}\)</span>
+最小的一个。每次迭代生成 4 个候选，最多允许 5
+次尝试；如果此后没有候选人满足指定要求，将选择&nbsp; <span class="math inline">\(\textcolor{blue}{δ}\)</span>
+最小的候选人。</font></p>
+<h1 id="三实验">三、实验</h1>
+<h2 id="实验设置"><font color="black" size="5"><strong>1.实验设置</strong></font></h2>
+<p><font color="black" size="5">  <strong>数据集。</strong>在本文中，我们研究最常见的转换场景之一：CT
+到 MRI。对于训练轮廓引导扩散模型的 MRI 数据集，收集具有 T-1 加权腰椎 (L)
+和臀部和大腿 (H&amp;T) 身体区域的私有数据集。选择 40 个矢状腰椎 MRI
+体积（670 个 2D 切片）和来自大腿和臀部的 10 个轴向 MRI 体积（404 个 2D
+切片）。相应地，分别从 L 和 H&amp;T 中的 TotalSegmentator 项目 获得 54
+个矢状（2,333 个 2D 切片）和 29 个轴向（4,937 个 2D 切片）CT
+体积。该实验设置模仿了利用外部标签信息来加速内部数据集的注释过程的重要现实应用。为了训练骨分割的下游任务模型，作者进一步按患者随机分割两个
+CT 集（L 为 43:11，H&amp;T 为 23:6）进行训练和验证。使用保留的带注释的
+MRI 集（10 L 体积，包括 158 个 2D 切片，12 H&amp;T 体积，包括 426 个 2D
+切片）评估分割模型的测试性能。此外，为了研究该方法的泛化能力，在 SPIDER
+腰椎 (L-SPIDER) 公共数据集 的 40 个体积（731 个 2D
+切片）上测试了腰椎分割模型。</font></p>
+<p><font color="black" size="5">  <strong>评估指标。</strong>对于评估指标，使用
+Dice 系数 (Dice) 和平均对称表面距离 (ASSD) 定量评估翻译图像上的 MRI
+分割模型性能。由于没有配对图像，作者计算了翻译图像和真实输出域图像分布之间的
+FID 以供参考，尽管我们发现它没有捕获全局解剖真实性。</font></p>
+<p><font color="black" size="5">  <strong>实施细节。</strong>对于图像翻译模型，作者采用UNet架构作为具有两通道输入（灰度图像及其轮廓）的去噪模型
+<span class="math inline">\(\textcolor{blue}{ε_θ}\)</span>。扩散模型的训练设置与SegGuidedDiff中的相同。作者使用DDIM算法进行采样，有50步。对于分割模型，使用基于卷积的
+UNet 和基于 Transformer 的 SwinUNet 。所有图像的大小均调整为 256 × 256
+并标准化为 [0,
+255]。对于其他基线的训练，大多遵循各个官方GitHub的默认设置。如果提供了方法，训练最多
+200 个 epochs，并设置 <span class="math inline">\(λ_{idt} = 0.5\)</span>
+以包含identity loss。对于 CycleGAN 和
+MaskGAN，使用余弦学习率调度器训练分割模型，最多 100 个时期，初始学习率为
+<span class="math inline">\(1 × 10^{−3}\)</span>。</font></p>
+<h2 id="图像翻译性能"><font color="black" size="5"><strong>2.图像翻译性能</strong></font></h2>
+<p><font color="black" size="5">  <strong>与其他方法的比较。</strong>通过输出域训练的下游任务分割模型在翻译图像上的性能，将本文的框架与其他翻译/适应方法进行比较，包括
+CycleGAN、SynSeg-Net、CyCADA 和 MaskGAN。 CycleGAN 和 SynSeg-Net
+仅在图像级别转换图像，而 CyCADA 还对齐下游任务模型编码器的潜在特征输出。
+MaskGAN
+结合了自动提取的粗掩模，以便在将输入图像转换到输出域时更好地保留结构。对于
+CyCADA，
+作者利用与其他模型相同的分段架构，没有跳过连接来实现特征级对齐。就其他方法而言，根据图像转换器在多个训练时期生成的图像来训练和评估分割模型的性能，并报告最佳模型。<strong>作者表示：这些方法都是不配对的（在输入和输出域图像上训练），而我们的无源方法只需要输出域图像进行训练；这是因为没有其他无源图像级适应（翻译）方法可以比较，</strong>因为本文的方法是同类中的第一个。</font></p>
+<p><font color="black" size="5">  分割模型结果如表 1 所示。“w/o
+Adap”。是一个基线，指的是在 CT 上训练的模型，无需任何调整，并直接在 MRI
+上进行测试。对于三个测试集，本文的方法明显优于以前的图像适应方法：例如，UNet
+的 L、L-SPIDER 和 H&amp;T 的输出域模型 Dice 分别高出至少 0.199、0.126 和
+0.196。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221454782.png"></p>
+<p><font color="black" size="5">  在图 3
+中提供了示例图像翻译。这些数据集构成了一项具有挑战性的任务，因为 (1)
+输入域和输出域之间图像特征的显着变化以及 (2)
+不同扫描之间的高解剖变异性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221503740.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图3：</strong></font><font size="5">根据不同翻译模型的腰部、髋部和大腿区域的
+CT 生成 MRI。原始 CT
+中的掩模（蓝色）被添加到所有生成的图像中以可视化对齐情况。</font></p>
+</blockquote>
+<p><font color="black" size="5">  此外，作者还发现对抗训练模型（例如
+CycleGAN）在输入域和输出域之间存在一致的结构偏差方面存在问题，即当一个域缺乏在另一个域中看到的某些特征时。如图
+1 和附录 D.1、D.2、D.3 和 D.4 所示，这在H&amp;T 数据集中尤其明显，其中
+MRI 以单腿为主，而 CT
+通常包含两条腿。这种偏见可能会导致对抗机制过度强调这些特征，因此倾向于将两条腿的
+CT 转化为仅描绘一条腿的 MRI。对于从矢状面看的腰椎，MRI
+通常从最低的胸椎开始，到骶骨结束。另一方面，CT
+通常包括大腿，有时还包括腹部。尽管通过轮廓引导存在这些域特征差异，本文的模型通过翻译明确地强制执行解剖学一致性，生成严格遵循输入
+CT 图像的 MRI，从而实现更好的掩模对齐和更好的分割模型性能。</font></p>
+<p><font color="black" size="5">  此外，FID
+分数似乎不能可靠地反映翻译后的输出域图像和实际输出域图像之间的解剖学一致性。根据表
+1 和表 3，尽管在 FID 中获得了最高分数，但与其他模型相比，ContourDiff
+的翻译图像在定量和定性方面似乎都最符合解剖保真度。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221507625.png"></p>
+<p><font color="black" size="5">  <strong>消融研究。</strong> (1)
+通过在空图（即全零）上进行条件训练并在翻译步骤中添加 CT
+轮廓来验证在训练期间将轮廓引入每个去噪步骤的有效性。图 4
+显示，在没有轮廓的情况下训练的去噪模型&nbsp;<span class="math inline">\(\textcolor{blue}{ε_θ}\)</span> 很难遵循引入的 CT
+轮廓。此外，在这些无条件生成的 MRI 上训练的 UNet
+的性能出现了急剧下降（参见附录 A）。 (2)
+直接生成图像（即通过单个候选），而不强制相邻切片的翻译一致性。定性结果显示，使用单个候选图像生成的图像质量有所下降（参见附录
+B）。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221516386.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图4：</strong></font><font size="5">消融研究1：无条件扩散模型与轮廓引导扩散模型生成的图像比较</font></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202407221518755.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图5：</strong></font><font size="5">消融研究2：比较单个候选（Single
+C.）生成的图像，而不使用多个候选进行选择和生成</font></p>
+</blockquote>
+<p><font color="black" size="5">  </font></p>
+<h1 id="四结论">四、结论</h1>
+<p><font color="black" size="5">  在本文中，作者引入了一种新颖的框架（ContourDiff）来保持不成对图像翻译中的解剖保真度。本文的方法限制输出域中生成的图像与输入域图像的解剖轮廓对齐。医学数据集的定量和定性结果都表明，ContourDiff
+在维护解剖结构方面明显优于多种现有的图像翻译方法。</font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">http://example.com/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/</a>
+            <p>发表日期：<a href="http://example.com/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">五月 13日 2024, 3:21:25 下午</a>
+            <p>更新日期：<a href="http://example.com/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">July 24th 2024, 9:40:19 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/" title="视频扩散模型--10.FLATTEN">
+                    <div class="nextTitle">视频扩散模型--10.FLATTEN</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/" title="视频扩散模型——9.Tunnel Try-on">
+                    <div class="prevTitle">视频扩散模型——9.Tunnel Try-on</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">二、方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E6%B7%BB%E5%8A%A0%E8%BD%AE%E5%BB%93%E5%BC%95%E5%AF%BC"><span class="toc-number">1.1.</span> <span class="toc-text">1.向扩散模型添加轮廓引导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AE%E5%BB%93%E5%BC%95%E5%AF%BC%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91"><span class="toc-number">1.2.</span> <span class="toc-text">2.轮廓引导图像翻译</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">2.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">1.实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E6%80%A7%E8%83%BD"><span class="toc-number">2.2.</span> <span class="toc-text">2.图像翻译性能</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">四、结论</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 54
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/">视频扩散模型——8.ControlVideo</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span>
+            <a class="archive-post-title" href="/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">扩散模型在时间序列的应用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">视频扩散模型——7.Latte</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

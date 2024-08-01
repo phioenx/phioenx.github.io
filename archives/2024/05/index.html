@@ -574,18 +574,18 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">
+            <a class="abstract-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">
                 
-                <span class="abstract-title-text">Medical-Diffusion-model——10.ContourDiff</span>
+                <span class="abstract-title-text">Medical Diffusion model——11.ContourDiff</span>
             </a>
             <div class="abstract-content">
-                通过不同模式（例如，CT 到 MRI）准确转换医学图像具有许多下游临床和机器学习应用。虽然已经提出了几种方法来实现这一目标，但它们通常优先考虑与输出域特征相关的感知质量，而不是保持解剖学保真度。然而，在翻译过程中保持解剖结构对于许多任务至关重要，例如，当利用来自输入域的掩码来开发将图像翻译到输出域的分割模型时。为了应对这些挑战，本文提出了ContourDiff，这是一种利用图像的领域不变解剖轮廓表示的新颖框架。这些表示很容易从图像中提取，但对其解剖内容形成了精确的空间约束。引入了一种扩散模型，该模型将来自任意输入域的图像的轮廓表示转换为感兴趣输出域中的图像。通过在每个扩散采样步骤中应用轮廓作为约束，我们确保了解剖内容的保存。我们通过使用原始 CT 掩模在从 CT 转换为 MRI 的图像上训练分割模型来评估我们的方法，并在真实 MRI 上测试其性能。我们的方法明显优于其他不成对的图像翻译方法，此外，在训练期间无需访问任何输入域信息。
+                通过不同模式（例如，CT 到 MRI）准确转换医学图像具有许多下游临床和机器学习应用。虽然已经提出了几种方法来实现这一目标，但它们通常优先考虑与输出域特征相关的感知质量，而不是保持解剖学保真度。然而，在翻译过程中保持解剖结构对于许多任务至关重要，例如，当利用来自输入域的掩码来开发将图像翻译到输出域的分割模型时。为了应对这些挑战，本文提出了ContourDiff，这是一种利用图像的领域不变解剖轮廓表示的新颖框架。这些表示很容易从图像中提取，但对其解剖内容形成了精确的空间约束。引入了一种扩散模型，该模型将来自任意输入域的图像的轮廓表示转换为感兴趣输出域中的图像。通过在每个扩散采样步骤中应用轮廓作为约束，确保了解剖内容的保存。通过使用原始 CT 掩模在从 CT 转换为 MRI 的图像上训练分割模型来评估我们的方法，并在真实 MRI 上测试其性能。我们的方法明显优于其他不成对的图像翻译方法，此外，在训练期间无需访问任何输入域信息。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/03">
+                <div class="abstract-date" title="Last updated: 2024/07/24">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/13</span>
                 </div>
                 <!-- tags -->
@@ -615,6 +615,34 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2024/05/14">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/08</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——10.SegGuidedDiff</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型已经使得非常高质量的医学图像生成成为可能，但是在生成的图像中实施解剖约束是具有挑战性的。为此，作者提出了一种基于扩散模型的方法，该方法支持解剖学可控的医学图像生成，通过在每个采样步骤中遵循多类解剖分割掩模。我们还引入了随机掩模消融训练算法，以实现对选定的解剖约束组合的调节，同时允许其他解剖区域的灵活性。我们比较了我们的方法（“SegGuidedDiff”）与现有的方法在乳腺MRI和腹部/颈部到骨盆CT数据集与广泛的解剖对象。结果表明，我们的方法达到了一个新的国家的最先进的在两个数据集上生成的图像输入解剖掩模的忠实性，并与一般的解剖现实主义。最后，我们的模型还享有额外的好处，能够调整生成的图像的解剖相似性，通过插值在其潜在的空间选择的真实的图像。SegGuidedDiff有许多应用，包括跨模态翻译，以及生成配对或反事实数据。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/03</span>
                 </div>
                 <!-- tags -->
                 
@@ -975,7 +1003,89 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1414,7 +1524,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 50
+        Total : 54
         </div>
         <!-- search  -->
         
@@ -1430,6 +1540,24 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/08</span>
             <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
         </li>
@@ -1443,7 +1571,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         
@@ -1456,12 +1584,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/11</span>
             <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span>
-            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
         </li>
     
         
@@ -1497,13 +1619,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
-            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/08</span>
             <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
         </li>
     
         
@@ -1534,6 +1662,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
             <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1743,6 +1877,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="扩散模型">
                 <span class="iconfont-archer">&#xe606;</span>
                 扩散模型
@@ -1764,9 +1903,9 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="其他">
@@ -1774,14 +1913,14 @@
             其他
         </span>
     
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">

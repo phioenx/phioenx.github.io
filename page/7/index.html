@@ -449,6 +449,118 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/11/29/E3D-Lstm/">
+                
+                <span class="abstract-title-text">E3D-Lstm</span>
+            </a>
+            <div class="abstract-content">
+                本文参考《Eidetic 3D LSTM:A Model For Video Prediction And Beyond》介绍当中提出了的 Eidetic 3D LSTM (E3D-LSTM)模型，它将3D卷积集成到RNN中。封装的3D-Conv使RNN的局部感知器具有运动感知能力，并使存储单元能够存储更好的短期特征。对于长期关系，通过门控的自注意力模块使当前的记忆状态与其历史记录进行交互。即使在长时间的干扰之后，它也能够跨多个时间戳有效地回忆起存储的记忆。作者在广泛使用的未来视频预测数据集上评估 E3D-LSTM 网络并实现最先进的性能。然后实验表明，E3D-LSTM 网络在早期活动识别方面也表现良好，可以在仅观察有限的视频帧后推断正在发生的事情或将要发生的事情。该任务与对动作意图和趋势进行建模的视频预测非常一致。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/12/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/29</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
+                
+                <span class="abstract-title-text">常见的图像评价指标</span>
+            </a>
+            <div class="abstract-content">
+                在看论文的实验当中总是会看到一些比较常见的图像评价指标，如：PSNR,SSIM,LPIPS。但总是看一遍忘一遍具体含义，加上之后的实验当中也可能需要这些指标去做评估，所以本文主要介绍这些常见的图像评价指标，并附上实验代码。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/03/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/27</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">
+                
+                <span class="abstract-title-text">扩散模型——8.Consistency Models</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型极大地推进了图像、音频和视频生成领域的发展，但它们依赖于迭代采样过程，导致生成缓慢。为了克服这个限制，我们提出了一致性模型，这是一个新的模型系列，通过直接将噪声映射到数据来生成高质量的样本。它们通过设计支持快速一步生成，同时仍然允许多步采样以牺牲计算量来换取样本质量。它们还支持零样本数据编辑，例如图像修复、着色和超分辨率，而无需对这些任务进行明确的培训。一致性模型可以通过提取预先训练的扩散模型来训练，也可以作为独立的生成模型来训练。通过大量实验，我们证明它们在一步采样和少步采样方面优于扩散模型的现有蒸馏技术。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/12/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/14</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/11/02/PredNet/">
+                
+                <span class="abstract-title-text">PredNet</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要是对《Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning》本文探索了视频序列中未来帧的预测作为学习视觉世界结构的无监督学习规则。提出了一种名为预测神经网络（“PredNet”）的架构，其灵感来自神经科学文献中的“预测编码”概念。这些网络学习预测视频序列中的未来帧，网络中的每一层都进行本地预测，并且仅将这些预测的偏差转发到后续网络层。我们表明，这些网络能够稳健地学习预测合成（渲染）对象的运动，并且在此过程中，网络学习内部表示，这些内部表示对于解码潜在对象参数（例如姿势）非常有用，这些参数支持以更少的时间进行对象识别。实验结果表明预测代表了无监督学习的强大框架，允许对对象和场景结构进行隐式学习。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/11/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/02</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
                 
                 <span class="abstract-title-text">BFNs——Bayesian Flow Networks</span>
@@ -488,120 +600,8 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/06">
+                <div class="abstract-date" title="Last updated: 2024/07/31">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/09</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model——3.3D Medical LDM</span>
-            </a>
-            <div class="abstract-content">
-                本文主要是用于探究扩散模型是否能够用于生成医学3D图像。作者提出了一种适用于潜在空间的扩散模型的新架构，并在四个公开可用的数据集上对其进行训练，这些数据集包含来自广泛解剖范围的数据：脑 MRI、胸部 CT、乳腺 MRI 和膝部 MRI。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/10/07</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model——2.Med-DDPM</span>
-            </a>
-            <div class="abstract-content">
-                本文提出了一种利用扩散模型进行像素级可控 3D 医学图像合成的创新方法。该方法将分割掩模合并到扩散过程中，从而能够生成高分辨率、语义引导的 3D 医学图像。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/23</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model——1.Medfusion</span>
-            </a>
-            <div class="abstract-content">
-                在本文中，作者提出了 Medfusion，一种用于医学图像的条件潜在 DDPM。通过使用来自眼科、放射学和组织病理学的图像，将基于 DDPM 的模型与基于 GAN 的模型进行比较，并证明 DDPM 在所有相关指标上都击败了GAN。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/09/04</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">
-                
-                <span class="abstract-title-text">扩散模型——7.Latent diffusion model</span>
-            </a>
-            <div class="abstract-content">
-                本文为了使扩散模型在有限的计算资源上去训练，并且能够保留质量和灵活性，Latent Diffusion Models通过预训练好的Autoencoder将图像转为潜在空间上的潜在表示，然后让扩散模式在一个潜在表示空间中训练并逐步去噪来生成图像，然后将潜在表征结果解码为完整的图像，该方法大大降低了对算力的需求。本文还首次将交叉注意力机制引入到该模型的架构中，让文生图能够在消费级GPU上，在10秒级别时间生成图片，大大降低了落地门槛，也带来了文生图领域的大火。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/31</span>
                 </div>
                 <!-- tags -->
                 
@@ -1062,7 +1062,89 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1501,7 +1583,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 50
+        Total : 54
         </div>
         <!-- search  -->
         
@@ -1517,6 +1599,24 @@
             
         
         <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">07/08</span>
             <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
         </li>
@@ -1530,7 +1630,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.GenerateCT/">Medical Diffusion Model--12.GenerateCT</a>
+            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         
@@ -1543,12 +1643,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/11</span>
             <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span>
-            <a class="archive-post-title" href="/2024/06/03/Medical-Diffusion-model%E2%80%94%E2%80%9411.Endora/">Medical-Diffusion-model——11.Endora</a>
         </li>
     
         
@@ -1584,13 +1678,19 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
-            <a class="archive-post-title" href="/2024/05/13/Medical-Diffusion-model%E2%80%94%E2%80%9410.ContourDiff/">Medical-Diffusion-model——10.ContourDiff</a>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/08</span>
             <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
         </li>
     
         
@@ -1621,6 +1721,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">01/24</span>
             <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
         </li>
     
         
@@ -1830,6 +1936,11 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="扩散模型">
                 <span class="iconfont-archer">&#xe606;</span>
                 扩散模型
@@ -1851,9 +1962,9 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
-            扩散模型-医学图像
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="其他">
@@ -1861,14 +1972,14 @@
             其他
         </span>
     
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
         <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
             <span class="iconfont-archer">&#xe60a;</span>
             扩散模型-图像翻译
-        </span>
-    
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型">
