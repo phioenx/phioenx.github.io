@@ -431,6 +431,86 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">
+                
+                <span class="abstract-title-text">扩散模型——14.DDIM Inversion</span>
+            </a>
+            <div class="abstract-content">
+                1.背景
+1.1
+diffusion and denoising
+  加噪过程，是指给定一张真实图片的
+latent \(\textcolor{blue}{x_0}\)
+，不断地采样高斯噪声 \(\textcolor{blue}{ϵ ∼ N
+(0, I)}\) ，按照预先定义的 scheduler 加到 latent 上。从第 \(\textcolor{blue}{t-1}\) 步到第 \(\textcolor{blue}{t}\)
+步的加噪过程可以表示为：
+\[\huge x_t = \sqrt{\alpha_t}x_{t-1} +
+\sqrt{1-\alpha_t}\epsilon_...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/08/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/08/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">
+                
+                <span class="abstract-title-text">扩散模型——13.SSL</span>
+            </a>
+            <div class="abstract-content">
+                生成对抗网络（GAN）和生成扩散模型（DM）已广泛应用于现实世界图像超分辨率（Real-ISR）中，以增强图像感知质量。然而，这些生成模型很容易产生视觉伪影和错误的图像结构，从而导致不自然的 Real-ISR 结果。基于自然图像表现出高自相似性的事实，即局部补丁在整个图像中可以有许多与其相似的补丁，在这项工作中，我们提出了一种简单而有效的自相似性损失（SSL）来提高生成的性能真实 ISR 模型，增强结构和纹理细节的幻觉，同时减少令人不快的视觉伪影。具体来说，我们计算真实图像的自相似图（SSG），并强制 Real-ISR 输出的 SSG 接近它。为了降低训练成本并关注边缘区域，我们从真实图像生成边缘掩模，并仅在掩模像素上计算 SSG。提议的 SSL 作为一般的即插即用的惩罚，可以轻松应用于现成的 Real-ISR 模型。我们的实验表明，通过与 SSL 结合，许多最先进的 Real-ISR 模型（包括基于 GAN 和 DM 的模型）的性能可以得到大幅提高，再现更加感知真实的图像细节，并消除许多错误的重建和视觉效果。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/08/14">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/08/14</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -835,7 +915,39 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1336,7 +1448,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 56
         </div>
         <!-- search  -->
         
@@ -1350,6 +1462,18 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span>
+            <a class="archive-post-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">扩散模型——14.DDIM Inversion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span>
+            <a class="archive-post-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">扩散模型——13.SSL</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -1443,7 +1567,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/03</span>
-            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">Medical Diffusion Model——10.CoLa-Diff</a>
         </li>
     
         
@@ -1491,7 +1615,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
@@ -1674,13 +1798,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">扩散模型——2.DDIM加速采样</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/23</span>
-            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">扩散模型——1.从DDPM入门</a>
         </li>
     
     </div>
@@ -1715,14 +1839,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">

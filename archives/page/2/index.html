@@ -434,6 +434,62 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">
+                
+                <span class="abstract-title-text">视频扩散模型——14.DynamiCrafter</span>
+            </a>
+            <div class="abstract-content">
+                对静止图像进行动画处理可提供引人入胜的视觉体验。传统的图像动画技术主要侧重于对具有随机动态（例如云和流体）或特定领域运动（例如人发或身体运动）的自然场景进行动画处理，因此限制了它们对更一般的视觉内容的适用性。为了克服这一限制，本文探索了开放域图像的动态内容合成，将它们转换为动画视频。其关键思想是通过将图像纳入生成过程作为指导，利用文本到视频扩散模型的运动先验。给定一个图像，首先使用query transformer将其投影到文本对齐的丰富上下文表示空间中，这有助于视频模型以兼容的方式消化图像内容。然而，一些视觉细节仍然难以保留在生成的视频中。为了补充更精确的图像信息，通过将整个图像与初始噪声连接起来，进一步将整个图像馈送到扩散模型。实验结果表明，本文提出的方法能够产生视觉上令人信服的、更合乎逻辑和自然的运动，以及与输入图像的更高一致性。比较评估表明，本文的方法明显优于现有竞争对手。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/22</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">
+                
+                <span class="abstract-title-text">视频扩散模型——13.VideoCrafter2</span>
+            </a>
+            <div class="abstract-content">
+                文本到视频生成旨在根据给定的提示生成视频。最近，一些商业视频模型已经能够生成具有最小噪点、出色细节和高美学分数的合理视频。然而，这些模型依赖于大规模、过滤良好、高质量的视频，而这些视频是社区无法访问的。许多现有的研究工作使用低质量的WebVid-10M数据集训练模型，很难生成高质量的视频，因为模型经过优化以适合WebVid-10M。在这项工作中，本文探索了从Stable Diffusion扩展的视频模型的训练方案，并研究了利用低质量视频和合成高质量图像获得高质量视频模型的可行性。首先分析了视频模型的空间和时间模块与低质量视频的分布转移之间的联系。可以观察到的是，与仅训练时间模块相比，所有模块的完全训练会导致空间和时间模块之间的耦合更强。基于这种更强的耦合，作者通过用高质量图像微调空间模块，将分布转移到更高质量的水平，而不会出现运动退化，从而产生通用的高质量视频模型。进行评估以证明所提出的方法的优越性，特别是在图像质量、运动和概念构图方面。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/18</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">
                 
                 <span class="abstract-title-text">视频扩散模型——12.VideoCrafter1</span>
@@ -574,18 +630,18 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">
+            <a class="abstract-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">
                 
-                <span class="abstract-title-text">Medical Diffusion Model——10.SegGuidedDiff</span>
+                <span class="abstract-title-text">Medical Diffusion Model——10.CoLa-Diff</span>
             </a>
             <div class="abstract-content">
-                扩散模型已经使得非常高质量的医学图像生成成为可能，但是在生成的图像中实施解剖约束是具有挑战性的。为此，作者提出了一种基于扩散模型的方法，该方法支持解剖学可控的医学图像生成，通过在每个采样步骤中遵循多类解剖分割掩模。我们还引入了随机掩模消融训练算法，以实现对选定的解剖约束组合的调节，同时允许其他解剖区域的灵活性。我们比较了我们的方法（“SegGuidedDiff”）与现有的方法在乳腺MRI和腹部/颈部到骨盆CT数据集与广泛的解剖对象。结果表明，我们的方法达到了一个新的国家的最先进的在两个数据集上生成的图像输入解剖掩模的忠实性，并与一般的解剖现实主义。最后，我们的模型还享有额外的好处，能够调整生成的图像的解剖相似性，通过插值在其潜在的空间选择的真实的图像。SegGuidedDiff有许多应用，包括跨模态翻译，以及生成配对或反事实数据。
+                MRI 合成有望减轻临床实践中缺少 MRI 模式的挑战。通过对复杂且可变的数据分布进行建模，扩散模型已成为一种有效的图像合成技术。然而，大多数基于扩散的 MRI 合成模型都使用单一模式。由于它们在原始图像域中操作，因此它们是内存密集型的并且对于多模态合成来说不太可行。此外，它们常常无法保留 MRI 中的解剖结构。此外，平衡多模态 MRI 输入的多种条件对于多模态合成至关重要。在这里，我们提出了第一个基于扩散的多模态 MRI 合成模型，即条件潜在扩散模型（CoLa-Diff）。为了减少内存消耗，我们设计了 CoLa-Diff 在潜在空间中运行。我们提出了一种新颖的网络架构，例如类似的协作过滤，来解决潜在空间中可能的压缩和噪声。为了更好地保持解剖结构，引入脑区域掩模作为密度分布的先验来指导扩散过程。我们进一步提出自动权重适应以有效地利用多模态信息。我们的实验表明，CoLa-Diff 优于其他最先进的 MRI 合成方法，有望成为多模态 MRI 合成的有效工具。
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/24">
+                <div class="abstract-date" title="Last updated: 2024/08/06">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/03</span>
                 </div>
                 <!-- tags -->
@@ -643,62 +699,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2024/04/09">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/04/07</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">
-                
-                <span class="abstract-title-text">视频扩散模型——7.Latte</span>
-            </a>
-            <div class="abstract-content">
-                本文将介绍一种新颖的Latent Diffusion Transformer，即 Latte，用于视频生成。 Latte 首先从输入视频中提取时空token，然后采用一系列 Transformer 块对潜在空间中的视频分布进行建模。为了对从视频中提取的大量token进行建模，从分解输入视频的空间和时间维度的角度引入了四种有效的变体。为了提高生成视频的质量，通过严格的实验分析确定了 Latte 的最佳实践，包括视频剪辑Patch嵌入、模型变体、时间步级信息注入、时间位置嵌入和学习策略。我们的综合评估表明，Latte 在四个标准视频生成数据集（即 FaceForensics、SkyTimelapse、UCF101 和 Taichi-HD）上实现了最先进的性能。此外，我们将 Latte 扩展到文本到视频生成 (T2V) 任务，其中 Latte 取得了与最新 T2V 模型相当的结果。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/03/23</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">
-                
-                <span class="abstract-title-text">详解Sora视频生成大模型背后的技术</span>
-            </a>
-            <div class="abstract-content">
-                文中将根据官方报告详细介绍Sora模型的架构、关键技术特点以及它在模拟数字世界中的应用。还将讨论Sora模型的训练过程，以及根据最近的一些论文推测一下可行性。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/28</span>
                 </div>
                 <!-- tags -->
                 
@@ -1083,7 +1083,39 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1584,7 +1616,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 56
         </div>
         <!-- search  -->
         
@@ -1598,6 +1630,18 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span>
+            <a class="archive-post-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">扩散模型——14.DDIM Inversion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span>
+            <a class="archive-post-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">扩散模型——13.SSL</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -1691,7 +1735,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/03</span>
-            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">Medical Diffusion Model——10.CoLa-Diff</a>
         </li>
     
         
@@ -1739,7 +1783,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
@@ -1922,13 +1966,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">扩散模型——2.DDIM加速采样</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/23</span>
-            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">扩散模型——1.从DDPM入门</a>
         </li>
     
     </div>
@@ -1963,14 +2007,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">

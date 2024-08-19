@@ -19,34 +19,39 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、前言   对于一个由N个样本（N张图像）构成的集合 \(\textcolor{blue}{x^{(1)},x^{(2)},...,x^{(N)}}\) 假设它们是彼此独立且都采样来源于未知概率分布 \(\textcolor{blue}{q(x)}\)。对此，首先需要构建生成模型 \(\textcolor{blue}{p_θ(x)}\),其中\(\textcolor{blue}{θ}\)为模型的">
+    <meta name="description" content="一、引言   图像超分辨率（ISR）是低级视觉中的一个基本问题。给定低分辨率（LR）输入，ISR旨在恢复其内容高保真度的高分辨率（HR）对应图像，其在数字摄影、高清显示、医疗等领域具有广泛的应用。图像分析、遥感等。从SRCNN开始，各种基于卷积神经网络（CNN）的方法被提出来提高ISR性能，例如残差连接（residual connections）、密集连接（dense connections）和">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扩散模型——1.从DDPM入门">
-<meta property="og:url" content="http://example.com/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:title" content="扩散模型——13.SSL">
+<meta property="og:url" content="http://example.com/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、前言   对于一个由N个样本（N张图像）构成的集合 \(\textcolor{blue}{x^{(1)},x^{(2)},...,x^{(N)}}\) 假设它们是彼此独立且都采样来源于未知概率分布 \(\textcolor{blue}{q(x)}\)。对此，首先需要构建生成模型 \(\textcolor{blue}{p_θ(x)}\),其中\(\textcolor{blue}{θ}\)为模型的">
+<meta property="og:description" content="一、引言   图像超分辨率（ISR）是低级视觉中的一个基本问题。给定低分辨率（LR）输入，ISR旨在恢复其内容高保真度的高分辨率（HR）对应图像，其在数字摄影、高清显示、医疗等领域具有广泛的应用。图像分析、遥感等。从SRCNN开始，各种基于卷积神经网络（CNN）的方法被提出来提高ISR性能，例如残差连接（residual connections）、密集连接（dense connections）和">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181107088.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181107427.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181108938.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181108862.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181109196.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181109614.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181110333.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181110947.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111222.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111115.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111238.png">
-<meta property="article:published_time" content="2023-05-23T02:25:41.000Z">
-<meta property="article:modified_time" content="2024-06-13T01:22:04.818Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408140952475.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141012927.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141029822.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141049199.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141056604.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141114259.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141136366.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141138029.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141441892.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141445482.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141449319.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141516945.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141522511.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141543880.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141552470.png">
+<meta property="article:published_time" content="2024-08-14T01:48:01.000Z">
+<meta property="article:modified_time" content="2024-08-14T07:55:24.729Z">
 <meta property="article:author" content="PhoenixPeng">
+<meta property="article:tag" content="扩散模型">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181107088.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408140952475.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>扩散模型——1.从DDPM入门 · PhoenixPeng&#39;s blog</title>
+    <title>扩散模型——13.SSL · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -274,7 +279,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">扩散模型——1.从DDPM入门</a>
+                <a href="#" class="post-name">扩散模型——13.SSL</a>
             </div>
         </div>
     
@@ -320,7 +325,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                扩散模型——1.从DDPM入门
+                扩散模型——13.SSL
             <!-- 404 -->
             
         </h1>
@@ -340,6 +345,8 @@
                     <div class= post-intro-tags >
     
     
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
 </div>
 
                 
@@ -348,7 +355,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2023/05/23</span>
+                    <span class="post-intro-time">2024/08/14</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -503,234 +510,264 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="一前言">一、前言</h1>
-<p><font color="black" size="5">  对于一个由N个样本（N张图像）构成的集合
-<span class="math inline">\(\textcolor{blue}{x^{(1)},x^{(2)},...,x^{(N)}}\)</span>
-假设它们是彼此独立且都采样来源于未知概率分布 <span class="math inline">\(\textcolor{blue}{q(x)}\)</span>。对此，首先需要构建生成模型
-<span class="math inline">\(\textcolor{blue}{p_θ(x)}\)</span>,其中<span class="math inline">\(\textcolor{blue}{θ}\)</span>为模型的学习参数，然后通过N个样本来学习到最好的参数<span class="math inline">\(\textcolor{blue}{θ^*}\)</span>,当学习足够充分时应有</font></p>
-<p><span class="math display">\[\huge p_{θ^{*}}≈q(x)\]</span></p>
-<p><font color="black" size="5">  那么此时在已知分布<span class="math inline">\(\textcolor{blue}{p_{θ^*}}\)</span>中采样则可以产生”相似“的样本。此时就可以延申出两个问题，这也是构建生成模型的核心步骤：</font></p>
-<p><font color="black" size="5">   <strong>1）如何设计好的建模方式
-<span class="math inline">\(\textcolor{blue}{p_{θ^{*}}}\)</span></strong>&nbsp;</font></p>
-<p><font color="black" size="5">
-  <strong>2）如何根据样本从而训练估计模型中的参数<span class="math inline">\(\textcolor{blue}{θ}\)</span></strong>&nbsp;</font></p>
-<p><font color="black" size="5">  而扩散模型创造性地通过扩散过程构建了一个精巧的建模方式，利用U-Net网络去估计模型中的参数θ，下面就让我们从DDPM开始了解扩散模型的基本原理，然后手动编写代码进入项目，全面的了解扩散模型的奇妙之处叭！</font></p>
-<h1 id="二ddpm基本工作原理介绍">二、DDPM基本工作原理介绍</h1>
-<p>&nbsp;<font color="black" size="5">  扩散模型分为两个过程：<strong>扩散过程、逆扩散过程</strong></font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181107088.png"></p>
-<p><font color="black" size="5">  如上图所示,扩散过程为从右向左（<span class="math inline">\(\textcolor{blue}{x_0 \rightarrow
-x_T}\)</span>）,表示对图片逐渐加噪处理，而逆扩散过程从左往右（<span class="math inline">\(\textcolor{blue}{x_T \rightarrow
-x_0}\)</span>）,表示从噪声当中逐渐复原出图片。下面讲逐个展开：到底真实图像样本是如何一步步加噪成噪声的？以及我们又如何从噪声当中如何生成出图片。</font></p>
-<h2 id="扩散过程"><font color="black" size="5">
-<strong>1、扩散过程</strong></font></h2>
-<p><font color="black" size="5">  DDPM在扩散过程中，通过对任意的初始样本<span class="math inline">\(\textcolor{blue}{x_0}\)</span>&nbsp;连续地添加T次高斯噪声，可获得一条样本轨迹为<span class="math inline">\(\textcolor{blue}{x_0\rightarrow
-x_1\rightarrow...\rightarrow&nbsp;
-x_T}\)</span>&nbsp;,并且当T趋于无穷时，原始样本<span class="math inline">\(\textcolor{blue}{x_0}\)</span>的特征完全消失，成为标准高斯分布。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181107427.png"></p>
-<p><font color="black" size="5">  从概率分布的角度出发，如果要定义初始样本（训练样本）的概率分布为<span class="math inline">\(\textcolor{blue}{q(x_0)}\)</span>,就要通过无限次地扩散动作，从而实现了从初始样本分布到标准高斯分布的映射，即<span class="math inline">\(\textcolor{blue}{q(x_T) =
-N(0,I)}\)</span>。</font></p>
-<p><span class="math display">\[
-\huge q(x_{1:T})=\prod_{t=1}^Tq(x_t|x_{t-1}) \tag{1}
-\]</span>
-<font color="black" size="5">  当然,扩散过程连续添加的高斯噪声并不是任意的，其具体的规定为：</font>
-<span class="math display">\[
-\huge q(x_t|x_{t-1})=N(x_t;\sqrt{1-β_t}x_{t-1},β_tI) \tag{2}
-\]</span> <font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{β_t}\)</span>满足<span class="math inline">\(\textcolor{blue}{β_1&lt;β_2&lt;....&lt;β_T}\)</span>,在一个设计好的variance
-schedule下，如果扩散步数T足够大，那么最终得到的<span class="math inline">\(\textcolor{blue}{x_T}\)</span>就完全丢失了原始数据特征而变成了一个随机噪音。扩散过程的每一步都生成一个带噪音的数据<span class="math inline">\(\textcolor{blue}{x_t}\)</span>，而<span class="math inline">\(\textcolor{blue}{x_{t+1}}\)</span>是在<span class="math inline">\(\textcolor{blue}{x_t}\)</span>上加噪得到的，其只受<span class="math inline">\(\textcolor{blue}{x_t}\)</span>的影响，因此整个扩散过程也就是一个马尔卡夫链。</font></p>
-<p><font color="black" size="5">  让我们回到式2：</font> <span class="math display">\[
-\huge q(x_t|x_{t-1})=N(x_t;\sqrt{1-β_t}x_{t-1},β_tI)
-\]</span>
-<font color="black" size="5">  上式表明，在给定t−1时刻样本<span class="math inline">\(\textcolor{blue}{x_{t−1}}\)</span>的条件下，t时刻样本<span class="math inline">\(\textcolor{blue}{x_t}\)</span>的分布为高斯分布，其均值为<span class="math inline">\(\textcolor{blue}{\sqrt{1−β_t}x_{t−1}}\)</span>,方差为<span class="math inline">\(\textcolor{blue}{β_tI}\)</span>。由此看出，该条件高斯分布的均值参数只与<span class="math inline">\(\textcolor{blue}{x_{t−1}}\)</span>有关，与<span class="math inline">\(\textcolor{blue}{x_{t−2}，x_{t−3}，....，}\)</span>无关，因此随机过程是一个马尔可夫过程。</font></p>
-<p><font color="black" size="5">  利用重参数技巧（</font><font color="red" size="5">假设从一个均值为<span class="math inline">\(μ\)</span>,标准差为<span class="math inline">\(σ\)</span>的高斯分布中采样一个向量x，则可以将采样过程表示为：<span class="math inline">\(x=μ+σϵ\)</span>,其中<span class="math inline">\(ϵ\backsim
-N(0,I)\)</span></font><font color="black" size="5">）,并且令<span class="math inline">\(\textcolor{blue}{\alpha_t = 1 -
-β_t}\)</span>,<span class="math inline">\(\textcolor{blue}{z_t\backsim
-N(0,I)}\)</span>,对于t时刻的样本<span class="math inline">\(\textcolor{blue}{x_t}\)</span>，就理论而言应该是分布在<span class="math inline">\(\textcolor{blue}{N(\sqrt{\alpha_t}x_{t−1},(1−a_t)I)}\)</span>中采样获得的。即：</font>
-<span class="math display">\[
-\huge x_t =\sqrt{\alpha_t}x_{t−1}+ \sqrt{1-\alpha_t}z_{t-1} \tag{3}
-\]</span> <font color="black" size="5">  将<span class="math inline">\(\textcolor{blue}{x_{t-1} =
-\sqrt{\alpha_{t-1}}x_{t−2} +
-\sqrt{1-\alpha_{t-1}}z_{t-2}}\)</span>代入到式3，我们可以得到：</font>
-<span class="math display">\[
-\huge x_t=\sqrt{\alpha_t}\sqrt{\alpha_{t-1}}x_{t−2}
-+\sqrt{\alpha_t}\sqrt{1-\alpha_{t-1}}z_{t-2}+\sqrt{1-\alpha_t}z_{t-1}
-\]</span> <font color="black" size="5">  由于<span class="math inline">\(\textcolor{blue}{z_{t-2}}\)</span>和<span class="math inline">\(\textcolor{blue}{z_{t-1}}\)</span>都是服从标准正态分布<span class="math inline">\(\textcolor{blue}{\mathcal{N}(0,I)}\)</span>。</font><font color="red" size="5">（两个正态分布<span class="math inline">\(x \sim N(μ_1,σ_1)\)</span>和<span class="math inline">\(y \sim N(μ_2,σ_2)\)</span>，叠加后的分布<span class="math inline">\(ax+by\)</span>的均值为<span class="math inline">\(aμ_1+bμ_2\)</span>,方差为<span class="math inline">\(a^2σ_1^2+b^2σ_2^2\)</span>)，因此<span class="math inline">\(z_{t-2}\)</span>和<span class="math inline">\(z_{t-1}\)</span>叠加后的分布为<span class="math inline">\(\mathcal{N}(0,(1-\alpha_t\alpha_{t-1})I)\)</span>，再根据重参数技巧，取<span class="math inline">\(\bar{z}_{t-2}
-\sim&nbsp;\mathcal{N}(0,I)\)</span>我们可以得到：</font> <span class="math display">\[
-\huge x_t=\sqrt{\alpha_t\alpha_{t-1}}x_{t−2}
-+\sqrt{1-\alpha_t\alpha_{t-1}} \bar{z}_{t-2}
-\]</span> <font color="black" size="5">  由此类推，我们再依次代入<span class="math inline">\(\textcolor{blue}{x_{t-2},...,x_0}\)</span>我们可以得到下式：</font>
-<span class="math display">\[
-\huge x_t=\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\bar{z}_0
-\]</span>
-<font color="black" size="5">  此时我们可以发现，任意时刻的<span class="math inline">\(\textcolor{blue}{q(x_t)}\)</span>的推导也可以完全基于<span class="math inline">\(\textcolor{blue}{x_0}\)</span>和<span class="math inline">\(\textcolor{blue}{β_t}\)</span>来计算出来，并不需要做迭代。</font></p>
-<p><font color="black" size="5">  最后，当我们给定<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，随机变量<span class="math inline">\(\textcolor{blue}{x_t}\)</span>的概率分布为：</font>
-<span class="math display">\[
-\huge q(x_t|x_0)=N(x_t;\sqrt{\bar{\alpha}_t}x_0,1-\bar{\alpha}_tI)
-\tag{4}
-\]</span></p>
-<p><strong><font color="black" size="5">更加细致的了解variance
-schedule：</font></strong></p>
-<p><font color="black" size="5">  <span class="math inline">\(\textcolor{blue}{\beta_t}\)</span>的取值直接影响到<span class="math inline">\(\textcolor{blue}{\bar{\alpha}_t}\)</span>，它们的关系为：<span class="math inline">\(\textcolor{blue}{\bar{\alpha}_t
-=\prod\limits_{i=1}^T (1 - β_i)}\)</span>,随着t的增加，<span class="math inline">\(\textcolor{blue}{\beta_t}\)</span>呈线性增加，即<span class="math inline">\(\textcolor{blue}{β_1&lt;β_2&lt;....&lt;β_T}\)</span>，则<span class="math inline">\(\textcolor{blue}{\sqrt{\bar{\alpha}_t}}\)</span>随着t的增加一直减小。故能推出<span class="math inline">\(\textcolor{blue}{\sqrt{1-\bar{\alpha}_t}}\)</span>也是随着t的增加一直增大。如果<span class="math inline">\(\textcolor{blue}{\beta_t}\)</span>呈线性值，<span class="math inline">\(\textcolor{blue}{\sqrt{\bar{\alpha}_t}}\)</span>和<span class="math inline">\(\textcolor{blue}{\sqrt{1-\bar{\alpha}_t}}\)</span>的曲线图如图所示：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181108938.png" style="zoom:80%;"></p>
-<p><font color="black" size="5">  对于式4，<span class="math inline">\(\textcolor{blue}{\sqrt{\bar{\alpha}_t}}\)</span>和<span class="math inline">\(\textcolor{blue}{\sqrt{1-\bar{\alpha}_t}}\)</span>可看作是数据<span class="math inline">\(\textcolor{blue}{x_0}\)</span>的权重和噪声<span class="math inline">\(\textcolor{blue}{z}\)</span>的权重。由上图可知，随着时间步的增加，数据的权重逐步减小，而噪声的权重逐步增大。所以<span class="math inline">\(\textcolor{blue}{\beta_t}\)</span>的作用是给数据和噪声在不同时间步分配权重。</font></p>
-<h2 id="逆扩散过程"><font color="black" size="5">
-<strong>2、逆扩散过程</strong></font></h2>
-<p><font color="black" size="5">  扩散模型的性质表明，从<span class="math inline">\(q(x_t)=N(0,I)\)</span>到<span class="math inline">\(q(x_0)\)</span>的逆过程是马尔可夫过程，并且有<span class="math inline">\(q(x_{t-1}|x_t)=N(\tilde{\mu}(x_t),\tilde{\Sigma}(x_t))\)</span>,假如我们能够在给定<span class="math inline">\(x_t\)</span>条件下知道<span class="math inline">\(x_{t-1}\)</span>的分布，即如果我们知道<span class="math inline">\(q(x_{t-1}|x_t)\)</span>,那么就能够在任意一张噪声图片当中经过一次次的采样得到一张图片而达成图片生成的目的。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181108862.png"></p>
-<p><font color="black" size="5">  若<span class="math inline">\(q(x_{t-1}|x_t)\)</span>的均值<span class="math inline">\(\tilde{\mu}(x_t)\)</span>和方差参数<span class="math inline">\(\tilde{\Sigma}(x_t)\)</span>为已知量，则能从<span class="math inline">\(x_T\)</span>的分布<span class="math inline">\(N(0,I)\)</span>开始依次采样获得<span class="math inline">\(x_t\)</span>，然后在<span class="math inline">\(q(x_{t-1}|x_t)\)</span>中采样获得<span class="math inline">\(x_{t-1}\)</span>，....，迭代此过程直至获得样本<span class="math inline">\(x_0\)</span>。但在逆扩散过程中，<span class="math inline">\(q(x_{t-1}|x_t)\)</span>的均值<span class="math inline">\(\tilde{\mu}(x_t)\)</span>和方差参数<span class="math inline">\(\tilde{\Sigma}(x_t)\)</span>是没有解析形式的，因而需要学习每个时刻t的均值和方差参数。</font></p>
-<p><font color="black" size="5">  而我们可以构建生成模型<span class="math inline">\(P_\theta(x_{0:T})\)</span>：</font></p>
-<p><span class="math display">\[\quad\quad\quad\quad\quad\quad\quad\huge
-P_\theta(x_{0:T})=P_\theta(x_T)\prod_{t=1}^TP_\theta(x_{t-1}|x_t)\quad\quad\quad\quad(5)\]</span></p>
-<p><span class="math display">\[\quad\quad\quad\quad\quad\quad\quad\huge
-P_\theta(x_{t-1}|x_t)=N(x_{t-1};\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))\quad\quad\quad\quad\quad(6)\]</span></p>
-<p><font color="black" size="5">&nbsp;其中，<span class="math inline">\(P(x_T)=N(0,I)\)</span></font></p>
-<p><font color="black" size="5">  这样，我们就可以利用<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>去近似<span class="math inline">\(q(x_{t-1}|x_t)\)</span>，通过深度学习模型去预测这样的一个逆向分布<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>，然而在论文中，作者把条件概率<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>的方差直接取了<span class="math inline">\(\beta_t\)</span>
-，而不是上面说的需要网络去估计的<span class="math inline">\(\Sigma_\theta(x_t,t)\)</span>，所以说实际上只有均值需要网络去估计。</font></p>
-<p><font color="black" size="5">  虽然我们无法得到逆扩散过程的概率分布<span class="math inline">\(q(x_{t-1}|x_t)\)</span>,但是如果我们知道<span class="math inline">\(x_0\)</span>,那么<span class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>我们就可以写出来，至于为什么，下面会做推理，但是在此之前，你肯定也会有疑问为什么要这么做呢，我个人觉得的是可能我们需要知道<span class="math inline">\(\tilde{\mu}(x_t)\)</span>才能够推算出我们需要估计的<span class="math inline">\(\mu_\theta(x_t,t)\)</span>从而指导<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>进行训练。</font></p>
-<p><font color="black" size="5">  通过贝叶斯公式，我们可以对<span class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>进行推导：</font></p>
-<p><span class="math display">\[\huge \begin{aligned}q (x_{t-1}|x_t,x_0)
-&amp;= \frac{q(x_{t-1}x_tx_0)}{q(x_0x_t)}
-\\&amp;=\frac{q(x_{t-1}x_tx_0)}{q(x_0x_{t-1})} *
-\frac{q(x_0x_{t-1})}{q(x_0x_t)}\\&amp;=q(x_t|x_{t-1},x_0) *
-\frac{q(x_{t-1}|x_0)}{q(x_t|x_0)} \quad \quad\quad\quad(7)\end{aligned}
-\]</span></p>
-<p><font color="black" size="5">  根据高斯分布的概率密度函数：<span class="math inline">\(f(x)=\frac{1}{\sqrt{2\pi}\sigma}
-e^\frac{-(x-\mu)^2}{2\sigma^2}\)</span>以及式4-<span class="math inline">\(x_t =&nbsp;\sqrt{\bar{\alpha}_t}x_0 +
-\sqrt{1-\bar{\alpha}_t}z_t\)</span>上式右边三个q都可以推得：</font></p>
-<p><span class="math display">\[\huge
-\begin{aligned}q(x_{t-1}|x_0)&amp;=N(x_{t-1};\sqrt{\bar{\alpha}_{t-1}}x_0,(1-\bar{\alpha}_{t-1})I)\\&amp;=\frac{1}{\sqrt{2\pi(1-\bar{\alpha}_{t-1}})}exp(-\frac{1}{2}\frac{(x_{t-1}-\sqrt{\bar{\alpha}_{t-1}}x_0)^2}{1-\bar{\alpha}_{t-1}})\end{aligned}\]</span></p>
-<p><span class="math display">\[\huge
-\begin{aligned}q(x_t|x_0)&amp;=N(x_t;\sqrt{\bar{\alpha}_t}x_0,(1-\bar{\alpha}_t)I)\\&amp;=\frac{1}{\sqrt{2\pi(1-\bar{\alpha}_t})}
-exp(-\frac{1}{2}\frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t})\end{aligned}\]</span></p>
-<p><span class="math display">\[\huge
-\begin{aligned}q(x_t|x_{t-1},x_0)&amp;=N(x_t;\sqrt{\alpha_t}x_{t-1},(1-\alpha_t)I)\\&amp;=\frac{1}{\sqrt{2\pi(1-\alpha_t})}
-exp(-\frac{1}{2}\frac{(x_t-\sqrt{\alpha_t}x_{t-1})^2}{1-\alpha_t})\end{aligned}\]</span></p>
-<p><font color="black" size="5">  由于它们均满足正态分布，把上式代入到式7当中，我们就能得到下式：</font></p>
-<p><span class="math display">\[\Large
-q(x_{t-1}|x_t,x_0)=\alpha*exp(-\frac{1}{2}(\frac{(x_t-\sqrt{\alpha_t}x_{t-1})^2}{1-\alpha_t}+\frac{(x_{t-1}-\sqrt{\bar{\alpha}_{t-1}}x_0)^2}{1-\bar{\alpha}_{t-1}}-\frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t}))\]</span></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\alpha\)</span>是系数，作者这里是直接忽略，然后进一步化成下面一步,由于中间展开化简过程较多,没有什么概念知识，就是各种初等变换所以直接列出最终结果：</font></p>
-<p><span class="math display">\[\Large
-exp(-\frac{1}{2}((\frac{a_t}{\beta_t}+\frac{1}{1-\bar{a}_{t-1}})x^2_{t-1}-(\frac{2\sqrt{a_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{a}_{t-1}}}{1-\bar{a}_{t-1}}x_0)x_{t-1}+C(x_t,x_0)))\]</span></p>
-<p><font color="black" size="5">  由正态分布满足公式：<span class="math inline">\(exp(-\frac{(x-\mu)^2}{2\sigma^2})=exp(-\frac{1}{2}(\frac{1}{\sigma^2}x^2-\frac{2\mu}{\sigma^2}x+\frac{\mu^2}{\sigma^2}))\)</span>,我们的目的是找到相乘相除后新的分布<span class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>的均值<span class="math inline">\(\tilde{\mu}_t\)</span>和方差,所以我们通过找到这两个式子的对应关系（因为两个正态分布相乘或相除后的变换仍然是正态分布，所以形式应该是一致的，既然形式一致，只需要把每个部分对应上）。首先两个公式方差形式是等价的：</font></p>
-<p><span class="math display">\[\huge \frac{1}{\sigma^2}:=
-\frac{\alpha_t}{\beta_t} + \frac{1}{1-\bar{\alpha}_{t-1}}\]</span></p>
-<p><font color="black" size="5">  接下来，通过观察第二部分去求得均值<span class="math inline">\(\tilde{\mu}_t\)</span>，如下：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181109196.png"></p>
-<p><font color="black" size="5">  此时我们观察这个式子，其中<span class="math inline">\(x_t\)</span>是我们已经需要进行降噪的图像，其中<span class="math inline">\(x_0\)</span>是未知的，因为在逆扩散过程中<span class="math inline">\(x_0\)</span>就是我们需要通过一步步降噪生成出来的图像。但是<span class="math inline">\(x_0\)</span>在前面的公式推导中，已经求得了<span class="math inline">\(x_t\)</span>关于<span class="math inline">\(x_0\)</span>的表达式式4，反过来转化一下，即可得:</font></p>
-<p><span class="math display">\[\quad\quad\quad\quad\quad\quad\quad\huge
-x_0 = \frac{1}{\sqrt{\bar{a}_t}}(x_t -
-\sqrt{1-\bar{a}_t}\epsilon)\quad\quad\quad\quad(8)\]</span></p>
-<p><font color="black" size="5">  最后一步，把<span class="math inline">\(x_0\)</span>表达式代入，再进行一系列计算，最后<span class="math inline">\(\tilde{\mu}_t\)</span>的表达式为：</font></p>
-<p><span class="math display">\[\quad\quad\quad\quad\quad\quad\quad
-\huge \tilde{\mu}_t =
-\frac{1}{\sqrt{a_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{a}_t}}\epsilon)\quad\quad\quad\quad(9)\]</span></p>
-<p><font color="black" size="5">  这里的<span class="math inline">\(\epsilon\)</span>对应正向过程中的<span class="math inline">\(z_t\)</span>，虽然在函数形式上我们可以通过移项得到式8,但是根据正态分布采样的<span class="math inline">\(z_t\)</span>的实际值我们并不知道，所以我们把<span class="math inline">\(z_t\)</span>换成<span class="math inline">\(\epsilon\)</span>的写法。</font></p>
-<p><font color="black" size="5">  至此,我们得到了<span class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>分布的均值和方差，分别是：</font></p>
-<p><span class="math display">\[\huge \tilde{\mu}_t =
-\frac{1}{\sqrt{\alpha_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon)\]</span></p>
-<p><span class="math display">\[\huge \tilde{\beta}_{t} =
-\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\beta_t\]</span></p>
-<p><font color="black" size="5">  而如果我们用神经网络去预测这个<span class="math inline">\(\epsilon\)</span>,就能够预测出所对应的均值,在论文当中这个<span class="math inline">\(\epsilon_\theta(x_t,t)\)</span>正是我们所需要学习的<span class="math inline">\(\epsilon\)</span>,其中<span class="math inline">\(\theta\)</span>是学习的参数，原文当中是使用了U-Net结构去学习。</font></p>
-<p><font color="black" size="5">  因为<span class="math inline">\(\mu_t\)</span>的构成所有都已知了,<span class="math inline">\(x_t\)</span>是我们输入的原始噪声，<span class="math inline">\(\epsilon\)</span>是经过学习过后的网络返回的噪声，<span class="math inline">\(\beta\)</span>和<span class="math inline">\(a_t\)</span>，<span class="math inline">\(\bar{a}_t\)</span>是我们设定的常数，所以<span class="math inline">\(\mu_t\)</span>可知，所以<span class="math inline">\(x_{t-1}\)</span>可以求得。</font></p>
-<p><font color="black" size="5">当我们把<span class="math inline">\(\epsilon\)</span>替换成可以预测的噪声<span class="math inline">\(\epsilon_\theta(x_t,t)\)</span>,那么均值也会变成：</font></p>
-<p><span class="math display">\[\quad\quad\quad\quad\quad\quad\quad\quad\huge\mu_\theta(x_t,t)
-=
-\frac{1}{\sqrt{\alpha_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,t))\quad\quad\quad\quad(10)\]</span></p>
-<p><font color="black" size="5">  这就是DDPM的一个特点，输入<span class="math inline">\(x_t\)</span>到网络当中去训练网络去预测的不是<span class="math inline">\(x_0\)</span>,而是噪声<span class="math inline">\(\epsilon\)</span>,那么你可能就会想我们是否可以一次性预测好<span class="math inline">\(\epsilon\)</span>再根据式8不就能直接得到<span class="math inline">\(x_0\)</span>,为什么还有采样得到<span class="math inline">\(x_{t-1}\)</span>,再预测下一步的噪声再一步步去噪到<span class="math inline">\(x_0\)</span>呢？这是因为由于我们的扩散过程的式3是通过马尔可夫性得到的，如果我们直接从<span class="math inline">\(x_t\)</span>推出<span class="math inline">\(x_0\)</span>是不符合马尔可夫性的，所以我们只能把得到的式8当中的<span class="math inline">\(x_0\)</span>当作零件去计算下一步时刻的均值</font></p>
-<h2 id="目标函数"><font color="black" size="5">3、目标函数</font></h2>
-<p><font color="black" size="5">  明确要训练<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>，那要怎么确定目标函数呢？扩散模型直接使用极大似然法来训练模型，即对于任意训练样本<span class="math inline">\(x_0\)</span>,均使其对数似然函数最大化：</font></p>
-<p><span class="math display">\[\huge \max\limits_\theta
-logP_\theta(x_0)\]</span></p>
-<p><font color="black" size="5">  从Loss下降的角度就是最小化似然函数：</font></p>
-<p><span class="math display">\[\huge \mathcal{L} =E_q [-
-logP_\theta(x_0)]\]</span></p>
-<p><font color="black" size="5">  考虑到<span class="math inline">\(P_\theta(x_0)=\int_{x_{1:T}}P_\theta(x_{0:T})dx_{1:
-T}\)</span>,我们无法直接处理<span class="math inline">\(P_\theta(x_0)\)</span>的解析形式，因而扩散模型没有选择直接优化似然函数，而是采用了近似推断的技术来优化负对数似然：</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181109614.png"></p>
-<p><span class="math display">\[\huge \mathcal{L}_{VLB}
-=E_{q(x_{0:T})}[log(\frac{q(x_{1:T}|x_0)}{P_\theta(x_{0:T})})]\geqslant&nbsp;-E_{q(x_0)}
-logP_\theta(x_0)\]</span>&nbsp;</p>
-<p><font color="black" size="5">  相信这一系列下来你或许有不少问号，博主刚看的时候也是一样的，接下来由我们一步步到来：</font></p>
-<p><font color="black" size="5">  <strong>第一步：</strong>通过近似推断的技术，就是用q分布去近似p分布，KL散度具有非负性，用于衡量两个分布的相似程度。因此加上一个非负数那么肯定是大于等于的；</font></p>
-<p><font color="black" size="5">  <strong>第二步：</strong>KL散度是衡量两个概率分布差异的一种方法。对于两个概率分布P和q,KL散度可以定义为：<span class="math inline">\(D_{KL}(P(x)||q(x))=\int_{-\infty}^\infty
-P(x)log(\frac{P(x)}{q(x)}dx) = E_{x\sim
-P}[log(\frac{P(x)}{q(x)})]\)</span>，再根据贝叶斯公式我们可以得到：<span class="math inline">\(P_\theta(x_{1:T}|x_0)=\frac{P_\theta(x_{1:T},x_0)}{P_\theta(x_0)}\)</span>；</font></p>
-<p><font color="black" size="5">  <strong>第三步：</strong>一个对数的运算公式以及<span class="math inline">\(P_\theta(x_{1:T},x_0)=P_\theta(x_{0:T})\)</span>；</font></p>
-<p><font color="black" size="5">  <strong>第四步：</strong><span class="math inline">\(log(P_\theta(x_0))\)</span>拿到期望外面去与前项抵消掉。</font></p>
-<p><font color="black" size="5">  进一步可以写出交叉熵的上界，进一步对其上界进行简化:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181110333.png"></p>
-<p><font color="black" size="5">  简化后，最终整理成了三项，我们进行一步步分析：</font></p>
-<p><font color="black" size="5">  <strong>第一项：</strong>是两个分布的KL散度，由于前向过程
-q 没有可学习参数，而&nbsp;<span class="math inline">\(x_T\)</span>
-则是纯高斯噪声，因此这一项和我们最优化无关， <span class="math inline">\(L_T\)</span> 可以当做常量忽略;</font></p>
-<p><font color="black" size="5">  <strong>第二项：</strong>是正向过程的后验条件概率和逆向过程的转移分布的一个KL散度。第一个分布<span class="math inline">\(q(x_{t-1}|x_t,x_0)\)</span>,是一个高斯分布，我们已经在逆扩散过程当中推导出来其解析形式：</font></p>
-<p><span class="math display">\[\huge
-q(x_{t-1}|x_T,x_0)=N(x_{t-1};\tilde{\mu_t},\tilde{\beta_t}I)\]</span></p>
-<p><span class="math display">\[\huge \tilde{\mu}_t =
-\frac{1}{\sqrt{\alpha_t}}(x_t-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon)\]</span></p>
-<p><span class="math display">\[\huge {\tilde{\beta}_t} =
-\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\beta_t\]</span></p>
-<p><font color="black" size="5">  第二个分布<span class="math inline">\(P_\theta(x_{t-1}|x_t
-)\)</span>是我们网络期望拟合的目标分布，也是一个高斯分布，均值用网络估计，方差被设置为了一个和
-<span class="math inline">\(β_t\)</span> 有关的常数。</font></p>
-<p><span class="math display">\[\huge
-P_\theta(x_{t-1}|x_t)=N(x_{t-1};\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))\]</span></p>
-<p><font color="black" size="5">  在两个分布q,p都是高斯分布，则它们的KL散度为：<span class="math inline">\(KL(p,q)=log\frac{\sigma_2}{\sigma_1}+\frac{\sigma_1^2+(\mu_1-\mu_2)^2}{2\sigma_2^2}-\frac{1}{2}\)</span></font></p>
-<p><font color="black" size="5">  然后因为这两个分布的方差全是常数，和优化无关，所以其实优化目标就是两个分布均值的二范数。</font></p>
-<p><span class="math display">\[\huge
-L_t=E_q[||\tilde{\mu}_t(x_t,x_0)-\mu_\theta(x_t,t)||^2]\]</span></p>
-<p><font color="black" size="5">  由此，我们可以看出来其优化目标变成了后面逆向过程的均值<span class="math inline">\(\mu_\theta\)</span>尽量去逼近前面的正向过程的后验分布的均值<span class="math inline">\(\tilde{\mu}_t\)</span>,也就是说可以用网络直接预测<span class="math inline">\(\mu_\theta\)</span>,再计算<span class="math inline">\(\tilde{\mu}_t\)</span>和<span class="math inline">\(\mu_\theta\)</span>的损失去优化。</font></p>
-<p><font color="black" size="5">  但如果我们将式8、式9和式10代入此式，我们还能够进一步扩展,其中式8的<span class="math inline">\(\epsilon\sim N(0,I)\)</span>：</font></p>
-<p><span class="math display">\[\huge
-L_t=E_{x_0,\epsilon}[||\frac{1}{\sqrt{\alpha_t}}(x_t -
-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)-\frac{1}{\sqrt{\alpha_t}}(x_t
--
-\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,t))||^2]\]</span></p>
-<p><font color="black" size="5">  然后，去括号之后化简，再把系数给忽略掉，作者说这样比较好训练，采样质量也有所提高，我们可以得到下式：</font></p>
-<p><span class="math display">\[\huge L_t
-=E_{x_0,\epsilon}[||\epsilon_t-\epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\epsilon_t,t)||^2]
-,\epsilon \sim N(0,I)\]</span></p>
-<p><font color="black" size="5">  其中<span class="math inline">\(\epsilon_\theta(x_t,t),x_t=\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\epsilon_t\)</span>是由神经网络训练预测出来的值，<span class="math inline">\(\epsilon_t\)</span>就是当前时刻的噪声随机量。至此，我们的损失函数最终化简成上面这个式子，我们从预测图片到预测均值再到我们只需要预测噪声即可。</font></p>
-<p><font color="black" size="5">  <strong>第三项:</strong>其中<span class="math inline">\(L_0\)</span>可以看成是原始数据重建，优化的是负对数似然，<span class="math inline">\(L_0\)</span>可以用估计的<span class="math inline">\(N(x_0;\mu_\theta(x_1,1),\Sigma_\theta(x_1,1))\)</span>来构建一个离散化的decoder来计算。</font></p>
-<p><font color="black" size="5">  我们假设图像数据由 {0, 1, ...
-255}中的整数组成并线性缩放至 [−1,
-1]。这确保了神经网络逆过程在从标准正态先验<span class="math inline">\(p(x_T)\)</span>开始的一致缩放的输入上运行。为了获得离散对数似然，我们将逆过程的最后一项设置为从高斯
-<span class="math inline">\(\mathcal{N}(x_0; μ_θ(x_1, 1), σ^2_1
-I)\)</span> 导出的独立离散解码器:</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181110947.png"></p>
-<p><font color="black" size="5">  其中D是数据维度，i上标表示提取一个坐标。</font></p>
-<h2 id="训练和采样算法"><font color="black" size="5">4、训练和采样算法</font></h2>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111222.png"></p>
-<h3 id="训练过程"><font color="black" size="5">1）训练过程:</font></h3>
-<p><font color="black" size="5">  1.随机选择一个训练样本<span class="math inline">\(x_0\)</span>；</font></p>
-<p><font color="black" size="5">  2.从<span class="math inline">\({1...T}\)</span>随机抽样一个t；</font></p>
-<p><font color="black" size="5">  3.随机产生噪音<span class="math inline">\(\epsilon \sim N(0,I)\)</span>;</font></p>
-<p><font color="black" size="5">  4.计算当前所产生的带噪声数据<span class="math inline">\(x_t\)</span>;</font></p>
-<p><font color="black" size="5">  5.输入<span class="math inline">\(x_t\)</span>到网络当中去预测噪声<span class="math inline">\(\epsilon_\theta(x_t,t)\)</span></font></p>
-<p><font color="black" size="5">  6.计算所产生的噪音和预测的噪音的L2损失</font></p>
-<p><font color="black" size="5">  7.计算梯度，更新网络</font></p>
-<p><font color="black" size="5">  8.重复此过程</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111115.png"></p>
-<h3 id="采样过程"><font color="black" size="5">2）采样过程：</font></h3>
-<p><font color="black" size="5">  1.从一个随机噪声开始<span class="math inline">\(x_T \sim N(0,I)\)</span>；</font></p>
-<p><font color="black" size="5">  2.用训练好的网络预测噪音<span class="math inline">\(\epsilon_\theta(x_t,t)\)</span>；</font></p>
-<p><font color="black" size="5">  3.然后计算<span class="math inline">\(\mu_\theta(x_t,t)\)</span>;</font></p>
-<p><font color="black" size="5">  4.然后计算<span class="math inline">\(x_{t-1} = \frac{1}{\sqrt{a_t}}(x_t -
-\frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_\theta(x_t,t))+\sigma_tz\)</span>;</font></p>
-<p><font color="black" size="5">  5.逆向迭代T步，直到t=0完成新样本的生成。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202309181111238.png"></p>
-<h1 id="三总结">三、总结</h1>
-<p><font color="black" size="5">  总的来说，扩散过程是个固定过程，逐渐向图像添加高斯噪声，直到最终得到纯噪声，而逆向过程通过一个可学习的<span class="math inline">\(P_\theta\)</span>逐步降噪恢复得到图像，训练过程中随机取来自真实未知且可能复杂的数据分布。正向和逆向两个过程都是马尔可夫链，其中正向过程是确定性可控的，通过不断调整系数<span class="math inline">\(\beta_t\)</span>逐步添加噪声，转移分布是高斯的，逆向过程虽然复杂，但是转移分布<span class="math inline">\(P_\theta(x_{t-1}|x_t)\)</span>也可以假设为高斯，用神经网络来逼近求解。</font></p>
-<p><font color="black" size="5">  评论区已开放，欢迎评论。</font></p>
+        <p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408140952475.png"></p>
+<h1 id="一引言">一、引言</h1>
+<p><font color="black" size="5">  图像超分辨率（ISR）是低级视觉中的一个基本问题。给定低分辨率（LR）输入，ISR旨在恢复其内容高保真度的高分辨率（HR）对应图像，其在数字摄影、高清显示、医疗等领域具有广泛的应用。图像分析、遥感等。从SRCNN开始，各种基于卷积神经网络（CNN）的方法被提出来提高ISR性能，例如残差连接（residual
+connections）、密集连接（dense
+connections）和通道注意力（channel-attention）。最近，一些基于transformer的ISR方法也出现并表现出更强大的性能。</font></p>
+<p><font color="black" size="5">  早期，研究人员通常采用简单的降级，例如双三次下采样和高斯平滑后的下采样来合成LR-HR训练对，同时重点研究ISR网络设计。然而，现实世界中的图像退化要复杂得多，并且在这些简单的合成数据上训练的
+ISR
+模型很难推广到现实世界的应用。因此，近年来，人们在真实世界ISR（Real-ISR）方面做了很多工作，旨在在真实场景中的退化图像上获得感知逼真的ISR结果。一些研究人员提出通过使用长短相机焦距来收集真实世界的LR-HR图像对；然而，这是非常昂贵的，并且训练有素的模型只有在使用类似的拍摄设备时才能很好地工作。因此，研究人员建议通过设计更复杂的退化模型来合成更真实的训练数据。著名的作品包括
+BSRGAN和 Real-ESRGAN。在 BSRGAN
+中，随机洗牌并组合模糊、下采样和噪声降级以形成复杂的降级，而在
+Real-ESRGAN
+中，开发了一个具有多次重复退化操作的高阶退化模型。最近，研究人员还提出将人类指导引入训练数据生成过程。</font></p>
+<p><font color="black" size="5">  考虑到训练数据具有更真实的退化，另一个问题是如何训练网络以实现
+Real-ISR 的目标。众所周知，旨在最小化保真度误差的 L1 或 L2
+损失通常会导致图像细节过度平滑。为了解决这个问题，在过去几年中，生成对抗网络（GAN）被广泛采用来训练
+Real-ISR 模型。借助对抗性损失，GAN
+模型可以学习寻找图像重建路径以生成更清晰的细节。尽管已经取得了巨大进步，但基于
+GAN 的 Real-ISR
+模型仍然存在一个关键限制，即它们倾向于产生视觉上令人不愉快的伪影。最近，随着扩散模型（DM）的快速发展，利用预训练的大规模文本到图像模型（例如稳定扩散（SD））来实现真实ISR。受益于
+DM 强大的生成先验，最近的一些工作，例如StableSR展示了令人鼓舞的 Real-ISR
+结果，具有精细的尺度和现实的细节。然而，DM 具有较高的随机性，这会导致
+Real-ISR 输出不稳定和图像错误的细节。</font></p>
+<p><font color="black" size="5">  在本文中，我们的目标是通过提出一种新的训练损失函数来改进基于
+GAN 和 DM 的 Real-ISR
+方法，减少伪影并产生更真实的细节。众所周知，自然图像在整个图像中呈现出重复的模式。这种自相似性已广泛应用于许多图像恢复算法中，例如
+BM3D、NCSR、WNNM 和 NLSN
+，其中图像自相似性被用作在规范化恢复图像之前。在这项工作中，作者利用图像自相似性作为强有力的惩罚来监督
+Real-ISR
+训练进度。所提出的图像自相似性损失（SSL）可以在大多数现有的生成式
+Real-ISR
+模型中充当即插即用的惩罚，指导它们更有效地利用固有的图像自相似性信息进行细节重建。<font color="red" size="5"><strong>具体来说，作者计算自相似图（SSG）来描述图像结构依赖性，并最小化真实值（GT）和真实ISR输出的SSG之间的距离以优化模型。为了使训练过程更加高效并关注更多图像边缘/纹理区域，作者通过以离线方式从
+GT 图像生成边缘掩模，并且仅在边缘像素上构建
+SSG。</strong></font></font></p>
+<p><font color="black" size="5">  本文提出的 SSL
+可以很容易地采用到现成的基于 GAN 和基于 DM 的 Real-ISR
+模型中，作为增强图像细节和减少令人不快的伪影的额外惩罚。图 1
+显示了一个例子。可以看到
+SwinIRGAN过度平滑图像纹理并生成错误的细节，而最近基于 DM 的 StableSR
+恢复了更清晰的细节，但仍然无法生成一些精细的尺度结构或正确的纹理。相比之下，使用
+SSL 训练的 StableSR
+模型可以重建清晰的内容和更真实的纹理，并具有更好的感知质量。作者对最先进的
+Real-ISR 模型进行了大量实验，验证了作者提出的 SSL 在基于 GAN 或基于 DM
+的 ISR 任务中的有效性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141012927.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图1：</strong></font><font size="5">从左到右、从上到下：SwinIRGAN、StableSR、SSL
+引导的 StableSR 和ground-truth (GT) 图像生成的 Real-ISR 结果。 SwinIRGAN
+产生过度平滑和错误的结果，而 StableSR
+产生更多细节，但具有错误的结构和伪影。我们的 SSL 引导的 StableSR
+生成更忠实的细节，同时抑制大量伪影。</font></p>
+</blockquote>
+<h1 id="二图像自相似性损失">二、图像自相似性损失</h1>
+<p><font color="black" size="5">  所提出的训练框架如图2所示。除了常用的L1、感知损失、基于GAN的方法中的对抗性损失或基于DM的方法中的高斯噪声预测MSE损失之外，作者还计算
+ISR 输出和真实值 (GT)的自相似图（self-similarity graphs
+SSG），从而在它们之间引入自相似性损失
+(SSL)，以监督图像细节和结构的重建。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141029822.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图2：</strong></font><font size="5">使用我们提出的自相似性损失（SSL）说明（a）基于生成对抗网络（GAN）和（b）基于潜在扩散模型（DM）的
+Real-ISR 的训练进度。 GAN 或 DM 网络用于将输入 LR 图像映射到 ISR
+输出。我们计算ISR输出和真实图像（GT）的自相似图（SSG），并计算它们之间的SSL以监督图像细节和结构的生成。</font></p>
+</blockquote>
+<h2 id="图像自相似性"><font color="black" size="5">1.图像自相似性</font></h2>
+<p><font color="black" size="5">  对于一幅自然图像，人们可以在观察到该图像许多重复的模式，称为图像自相似性。这种性质长期以来一直被用来提高图像恢复性能。实际上，Transformer
+模型中的自注意力机制利用了深层特征空间中的图像自相似性。在本文中，作者采用指数欧式距离来计算自相似性。对于任意两个
+pathces <span class="math inline">\(\textcolor{blue}{I_p,I_q \in
+R^{(2f+1) \times (2f+1) \times C}}\)</span>&nbsp;分别以图像&nbsp;<span class="math inline">\(\textcolor{blue}{I \in R^{H \times W \times
+C}}\)</span>中的像素<span class="math inline">\(\textcolor{blue}{u_p}\)</span>和<span class="math inline">\(\textcolor{blue}{u_q}\)</span>为中心，其中<span class="math inline">\(\textcolor{blue}{f}\)</span>表示patches半径，<span class="math inline">\(\textcolor{blue}{H}\)</span>，<span class="math inline">\(\textcolor{blue}{W}\)</span>，<span class="math inline">\(\textcolor{blue}{C}\)</span>分别是图像的高度、宽度和通道数，首先计算<span class="math inline">\(\textcolor{blue}{I_p}\)</span>和<span class="math inline">\(\textcolor{blue}{I_q}\)</span>之间的欧式距离平方：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141049199.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{μ^i_{p+j}}\)</span> 和 <span class="math inline">\(\textcolor{blue}{μ^i_{q+j}}\)</span>
+分别表示块&nbsp;<span class="math inline">\(\textcolor{blue}{I_p}\)</span>
+和&nbsp;<span class="math inline">\(\textcolor{blue}{I_q}\)</span> 中&nbsp;<span class="math inline">\(\textcolor{blue}{μ^i_{p}}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{μ^i_{q}}\)</span>
+周围的邻域像素。 <span class="math inline">\(\textcolor{blue}{I_p}\)</span> 和 <span class="math inline">\(\textcolor{blue}{I_q}\)</span>之间的相似度&nbsp;<span class="math inline">\(\textcolor{blue}{S(I_p,I_q)}\)</span>
+计算如下：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141056604.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{h &gt; 0}\)</span>
+是比例因子。可以看出，<span class="math inline">\(\textcolor{blue}{0≤S(I_p,
+I_q)≤1}\)</span>。当欧氏距离<span class="math inline">\(\textcolor{blue}{d^2(I_p，I_q)}\)</span>接近0时，相似度<span class="math inline">\(\textcolor{blue}{S(I_p,I_q)}\)</span>接近1，表明两个patches高度相似。</font></p>
+<h2 id="mask-generation"><font color="black" size="5">2.Mask
+Generation</font></h2>
+<p><font color="black" size="5">  通过使用等式2中定义的自相似性度量。
+我们可以计算一个块与整个图像中所有其他块的相似度，并构建一个自相似图（SSG）。然而，这在计算上是昂贵的，因为这样的SSG的大小将为<span class="math inline">\(\textcolor{blue}{H^2 ×
+W^2}\)</span>。实际上，我们不需要计算每个patches的自相似性，因为Real-ISR的挑战在于边缘和纹理区域而不是平滑区域。<strong>因此，可以生成边缘/纹理像素的掩模来指示我们应该在哪里计算
+SSG。</strong>为了简单起见，首先通过将拉普拉斯算子（用 <span class="math inline">\(\textcolor{blue}{L}\)</span> 表示）应用于 GT 图像
+<span class="math inline">\(\textcolor{blue}{I_{HR} ∈ R^{H ×W
+×C}}\)</span> 来生成边缘图 <span class="math inline">\(\textcolor{blue}{E \in R^{H ×W}}\)</span>，即
+<span class="math inline">\(\textcolor{blue}{E = L ⊗
+I_{HR}}\)</span>。然后，通过对 <span class="math inline">\(\textcolor{blue}{E}\)</span>
+进行阈值处理得到二值掩码 <span class="math inline">\(\textcolor{blue}{M
+∈ R^{H ×W}}\)</span>：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141114259.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{t}\)</span>
+是阈值。我们根据经验将其设置为
+20，以保留大部分真实边缘像素，同时滤除平滑和琐碎的图像特征。 <span class="math inline">\(\textcolor{blue}{M}\)</span>以离线方式计算，以避免每次迭代中的重复计算。</font></p>
+<p><font color="black" size="5">  在训练过程中，对于<span class="math inline">\(\textcolor{blue}{(i,j)}\)</span>处的像素，其中<span class="math inline">\(\textcolor{blue}{M_{i,j} =
+1}\)</span>，在GT图像和ISR输出中找到对应的RGB像素<span class="math inline">\(\textcolor{blue}{u_p}\)</span>，并计算它们的SSG进行比较。在DF2K_OST训练数据集上，边缘像素仅占图像像素总数的13%。通过使用<span class="math inline">\(\textcolor{blue}{M}\)</span>来指导SSG的构建，不仅可以显着降低训练成本，而且可以集中精力于图像边缘和纹理。</font></p>
+<h2 id="自相似图计算"><font color="black" size="5">3.自相似图计算</font></h2>
+<p><font color="black" size="5">  对于原始RGB图像&nbsp;<span class="math inline">\(\textcolor{blue}{I}\)</span> 中的边缘像素&nbsp;<span class="math inline">\(\textcolor{blue}{p}\)</span>（Mask <span class="math inline">\(\textcolor{blue}{M}\)</span>中对应的像素为<span class="math inline">\(\textcolor{blue}{M_p =
+1}\)</span>），我们定义一个搜索区域<span class="math inline">\(\textcolor{blue}{I_{K_s} ∈ R^{K_s ×K_s
+×C}}\)</span>以及局部窗口<span class="math inline">\(\textcolor{blue}{I_p ∈ R^{K_w ×K_w
+×C}}\)</span>以它为中心，其中 <span class="math inline">\(\textcolor{blue}{K_w = 2f + 1}\)</span>，<span class="math inline">\(\textcolor{blue}{f}\)</span>
+是窗口的半径。然后对于搜索区域中的每个像素<span class="math inline">\(\textcolor{blue}{q}\)</span>，我们提取一个滑动窗口<span class="math inline">\(\textcolor{blue}{I_q ∈
+R^{K_w×K_w×C}}\)</span>并通过式（1）和等式（2）来计算其与<span class="math inline">\(\textcolor{blue}{I_p}\)</span>的相似度，即<span class="math inline">\(\textcolor{blue}{S(Ip,Iq)}\)</span>.
+然后我们将<span class="math inline">\(S(I_p,I_q)\)</span>归一化为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141136366.png"></p>
+<p><font color="black" size="5">  其中 <span class="math inline">\(\textcolor{blue}{ε = \sum_{q∈I_{K_s}}S(I_p,
+I_q)}\)</span> 是归一化因子。</font></p>
+<p><font color="black" size="5">  SSG的整体计算流程如图3所示。更具体地说，对于mask中的每个边缘像素，在GT图像和ISR图像中找到对应的像素，并设置以它们为中心的搜索区域。然后，设置一个局部滑动窗口，计算以<strong>中心像素</strong>为中心的patches与另一个以<strong>搜索区域像素</strong>为中心的patches之间的相似度。<span class="math inline">\(\textcolor{blue}{\bar{S}(I_p, I_q)}\)</span>
+的所有值构建了图像 <span class="math inline">\(\textcolor{blue}{I}\)</span> 的
+SSG，它描述了图像固有的结构相似性分布。在实践中，我们可以使用步幅 <span class="math inline">\(\textcolor{blue}{s}\)</span> 对 <span class="math inline">\(\textcolor{blue}{I_q}\)</span>
+进行采样，以进一步降低计算成本（我们在实现中设置 s = 3）。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141138029.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图3：</strong></font><font size="5">自相似图（SSG）计算过程图示。首先通过在
+GT
+图像上应用拉普拉斯算子来生成一个mask来指示图像边缘区域。在训练期间，对于mask中的每个边缘像素，我们在GT图像和ISR图像中找到对应的像素，并设置以它们为中心的搜索区域。利用局部滑动窗口计算搜索区域内各像素与中心像素的相似度，从而可以分别计算GT图像和ISR图像的SSG，进而计算SSL。红色像素表示边缘像素，蓝色块表示滑动窗口。</font></p>
+</blockquote>
+<h2 id="自相似性损失"><font color="black" size="5">4.自相似性损失</font></h2>
+<p><font color="black" size="5">  分别用<span class="math inline">\(\textcolor{blue}{\bar{S}_{HR}}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{\bar{S}_{ISR}}\)</span> 表示 GT
+图像的 SSG 和 ISR
+输出。我们可以使用它们的距离作为损失来监督网络训练。这里作者使用 KL
+散度和 L1 距离来构建 SSL：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141441892.png"></p>
+<p><font color="black" size="5">  <strong>基于 GAN 的模型中的
+SSL。</strong>要将SSL应用到现成的基于GAN的Real-ISR方法中，只需将上述<span class="math inline">\(\textcolor{blue}{L_{SSL}}\)</span>损失添加到其原始损失函数<span class="math inline">\(\textcolor{blue}{L_{original}}\)</span>（例如像素级<span class="math inline">\(\textcolor{blue}{L_1}\)</span>损失、感知损失和GAN损失）中，然后重新训练模型：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141445482.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{β}\)</span>是平衡参数。</font></p>
+<p><font color="black" size="5">  <strong>基于 DM 的模型中的
+SSL。</strong>对于那些基于潜在 DM 的 Real-ISR 方法，StableSR 和
+ResShift，应用 <span class="math inline">\(\textcolor{blue}{L_{original}}\)</span>
+来预测潜在空间中所需的噪声。由于SSL是在图像空间中计算的，因此我们需要将预测的噪声通过VAE解码器传递以输出ISR图像，如图2（b）所示，然后将SSL应用于重建图像。我们还采用逐像素
+L1 损失来实现更稳定的训练。总损失为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141449319.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{β}\)</span>、<span class="math inline">\(\textcolor{blue}{γ}\)</span>是平衡参数。 <span class="math inline">\(\textcolor{blue}{L_{SSL}}\)</span>和<span class="math inline">\(\textcolor{blue}{L_1}\)</span>将反向传播它们的梯度以更新去噪UNet的参数和DM中的控制部分</font></p>
+<h1 id="三实验结果">三、实验结果</h1>
+<h2 id="基于gan模型的实验"><font color="black" size="5">1.基于GAN模型的实验</font></h2>
+<p><font color="black" size="5">  <strong>比较方法。</strong>我们提出的
+SSL 可以直接应用于现有的基于 GAN 的 Real-ISR
+模型，作为即插即用模块，通过简单的双三次降级或复杂的混合降级来提高其性能。对于双三次降解，我们将
+SSL 嵌入到 ESRGAN 、RankSRGAN、SPSR、BebyGAN和
+LDL中。对于复杂的混合物降解，我们将 SSL 嵌入到 Real-ESRGAN 和 BSRGAN
+中。上述大多数模型都采用 CNN 主干（例如 RRDB&nbsp; 或 SRResNet
+）作为生成器。在本文中，作者还采用transformer backbones，即 SwinIR 和
+ELAN，作为生成器，产生 SwinIRGAN 和 ELANGAN 模型。对于上述每个 Real-ISR
+模型（例如 ESRGAN），我们用“*-SSL”表示（例如 ESRGAN-SSL）</font></p>
+<p><font color="black" size="5">  <strong>训练细节。</strong>对于每种评估的
+Real-ISR 方法，我们使用相同的patches大小和训练数据集（即 DIV2K、DF2K和
+DF2K-OST）训练其 SSL
+引导对应方法和原来的方法一样。在复杂退化的实验中，由于RealESRGAN和BSRGAN中的原始退化设置太重，我们遵循HGGT中的Real-ESRGAN和BSRGAN设置（退化水平较弱）来生成训练数据。采用
+Adam 优化器。初始学习率设置为 1e-4，对于 CNN 主干网，在 200K
+次迭代后减半；对于 Transformer 主干网，在 200K、250K、275K、287.5K
+次迭代后，该学习率减半。计算SSG时，搜索区域<span class="math inline">\(I_{Ks}\)</span>设置为25，滑动窗口<span class="math inline">\(I_{Kw}\)</span>设置为9，缩放因子<span class="math inline">\(h\)</span>设置为0.004。 <span class="math inline">\(β\)</span> 设置为 1000。所有实验均在 NVIDIA RTX
+3090 GPU 上进行。所有 SSL 引导模型都是从训练有素的面向保真度的版本（例如
+RRDB、SwinIR或 ELAN （仅使用 L1
+损失进行训练而没有鉴别器）进行微调，以获得更好的初始化</font></p>
+<p><font color="black" size="5">  <strong>评估数据集和指标。</strong>我们采用广泛使用的测试基准，包括
+Set5、Set14、DIV2K100、Urban100、BSDS100、Manga109、General100
+来评估竞争方法。考虑到使用[65,
+84]中的复杂混合退化模型时合成LR图像存在一定的随机性，对于每个测试图像，我们使用随机采样的退化因子合成一组30张LR图像，并报告公平可靠评估的平均指标。我们计算
+Y 通道中的 PSNR 和 SSIM，以进行保真度测量。对于感知质量，LPIPS 和DISTS
+用于定量评估。</font></p>
+<p><font color="black" size="5">  <strong>双三次降解的结果。</strong>表
+1 显示了使用双三次降解时不同 Real-ISR 模型的定量结果。可以看出，在所有 7
+个测试数据集上，无论使用 CNN 还是 Transformer 主干，我们的 SSL
+引导模型在大多数保真度（PSNR、SSIM）和感知（LPIPS、DISTS）测量方面都超过了原始模型。这表明图像SSG可以表征图像的固有结构，而我们的SSL可以在Real-ISR模型训练过程中提供有效的监督，迫使模型以更好的保真度幻觉出更正确的内容，并抑制视觉伪影以实现更好的感知质量。值得一提的是，我们的SSL不会在推理过程中引入任何额外的成本。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141516945.png"></p>
+<p><font color="black" size="5">  <strong>定性结果。</strong>图 4
+提供了在双三次退化情况下主要 Real-ISR 模型与其 SSL
+引导版本之间的视觉比较。可以清楚地看到 SSL
+引导模型可以生成更清晰的纹理（第一列），或更丰富的细节（第二列），并纠正原始生成的扭曲纹理（第三/第四/第五/第六/第七列）模型。这些观察结果与表
+1 中的结果相呼应，再次证明 SSL 可以幻觉正确的细节并抑制伪影。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141522511.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图4：</strong></font><font size="5">基于最先进的
+GAN 的 Real-ISR 模型与使用我们的 SSL
+训练的对应模型的视觉比较。这里使用双三次退化模型。从顶行到底行是双三次插值的结果、原始
+Real-ISR 模型、使用我们的 SSL 训练的 Real-ISR 模型以及 GT
+图像。</font></p>
+</blockquote>
+<p><font color="black" size="5">  </font></p>
+<h2 id="基于dm模型的实验"><font color="black" size="5">2.基于DM模型的实验</font></h2>
+<p><font color="black" size="5">  <strong>比较方法。</strong>我们将
+SSL 嵌入到三个代表性的基于 DM 的模型中，包括 StableSR、ResShift 和
+DiffIR。对于上述每个 Real-ISR
+模型（例如，StableSR），我们用“*-SSL”（StableSR-SSL）表示。</font></p>
+<p><font color="black" size="5">  <strong>训练细节。</strong>对于每个评估的基于
+DM 的 Real-ISR 方法，我们采用相同的训练数据集（包括
+DF2KOST、DIV8K、FFHQ），并应用与所使用的相同的退化管道在稳定SR中。 SSL
+引导版本中的训练补丁大小和迭代设置为与原始方法相同。使用 Adam
+优化器。学习率固定为5e-5。计算SSG时，搜索区域<span class="math inline">\(\textcolor{blue}{I_{K_s}}\)</span>设置为25，滑动窗口<span class="math inline">\(\textcolor{blue}{I_{K_w}}\)</span>设置为9，缩放因子<span class="math inline">\(\textcolor{blue}{h}\)</span>设置为0.004。对于SSL引导的StableSR和DiffIR，方程7中的权重<span class="math inline">\(\textcolor{blue}{β}\)</span>和<span class="math inline">\(\textcolor{blue}{γ}\)</span> 分别设置为 1 和
+0.1。对于 SSL 引导的 DiffIR，由于原始模型已经利用了逐像素 L1
+损失，因此我们将损失函数类型实现为等式6、<span class="math inline">\(\textcolor{blue}{β}\)</span>设置为1000。所有实验均在NVIDIA
+V100 GPU上进行。我们更新了预训练 DM 中 UNet 的所有参数以及 SSL
+引导对应部分的控制部分。</font></p>
+<p><font color="black" size="5">  <strong>评估数据集和指标。</strong>我们利用来自StableSR的测试图像，包括3000个合成的DIV2K100低质量测试图像（每个GT图像有一组由具有复杂退化因素的DIV2K100
+数据集生成的30个LR图像），RealSR （
+100张真实世界低质量图像及其由相机获取的相应GT），DRealSR
+（93张真实世界低质量图像及其由相机捕获的相应GT），DPED-iphone（113张真实世界不带
+GT 的 iPhone 拍摄的低质量图像）。我们计算全参考图像质量指标，包括
+PSNR、SSIM、LPIPS 和 DISTS，以及无参考图像质量指标，包括 NIQE、CLIP-IQA
+和 MUSIQ 。还计算了统计距离度量 FID 。</font></p>
+<p><font color="black" size="5">  <strong>定量结果。</strong>表 2
+显示了原始基于 DM 的 Real-ISR 方法及其 SSL
+引导版本的数值结果。可以看到，StableSR-SSL
+获得了更好的无参考指标（NIQE/CLIP-IQA/MUSIQ），同时获得了较差的全参考指标（PSNR/SSIM/LPIPS/DISTS）。
+ResShift-SSL
+获得更好的全参考指标（PSNR/SSIM/LPIPS/DISTS），但更差的无参考指标（NIQE/CLIP-IQA/MUSIQ）。
+DiffIR-SSL
+获得更好的感知相关指标（LPIPS/DISTS/NIQE/CLIP-IQA/MUSIQ）。虽然不同的SSL引导模型获得不同的性能，但仍然是合理的，原因如下：（1）。
+StableSR-SSL 利用预训练的稳定扩散模型，该模型在 LAION5B
+上进行训练，LAION5B 是一个包含大量文本到图像对的多模态数据集。与用于 SR
+任务的一般训练数据集（例如 DF2K和
+DIV8K）相比，这会导致明显的数据分布差异。因此，在推理阶段，StableSR-SSL
+生成的结果与测试集中的 GT（例如
+DIV2K100）表现出显着差异。因此，所有全参考指标都会失败，而无参考指标却得到更好的结果，这也表明感知质量更好。
+(2) ResShift-SSL 获得更好的 FR-IQA
+(PSNR/SSIM/LPIPS/DISTS/FID)结果，这表明SSL可以帮助ResShift以更高的保真度重建纹理。至于较差的NR-IQA指标，这主要是因为现有的NR-IQA指标，包括NIQE、CLIP-IQA和MUSIQ，偏向于具有更多高频细节的图像，即使这些细节是错误的。从补充图
+6 中可以看出，ResShift 产生了许多错误的细节（例如，在第 1
+列的窗口上），而 ResShift-SSL
+成功地删除了这些伪影。我们的用户研究还表明，73.07% 的观察者选择了
+ResShift-SSL 的结果。然而，NR-IQA 指标更喜欢 ResShift
+的结果，因为它们还不够准确，无法代表人类的感知。 （3）。 DiffIR-SSL
+不仅从头开始训练潜在扩散模型，而且还利用了鉴别器。由于鉴别器引入的影响，PSNR/SSIM变得更差，但获得了更好的感知相关指标（LPIPS/DISTS/NIQE/CLIP-IQA/MUSIQ）。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141543880.png"></p>
+<p><font color="black" size="5">  <strong>定性结果。</strong>图 5
+显示了可视化结果。可以看到，与原始的基于DM的Real-ISR方法相比，它们的SSL引导版本在恢复图像结构和细节方面表现明显更好，展示了SSL强大的结构正则化能力。例如，StableSR
+在 T 恤中生成错误图案（第 1 列），在周柱上生成不完整的细节（第 2
+列），而 SSL 引导的 StableSR 会恢复正确的 T
+恤图案，并在周柱上产生更完整的结构。对于
+ResShift，它要么过度平滑细节（第 3 列），要么生成错误的纹理（第 4
+列），而 SSL 可以帮助解决这个问题。 DiffIR
+也得到了类似的观察结果。所有这些结果都验证了 SSL 在鼓励 Real-ISR
+模型生成更精细细节方面的有效性。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202408141552470.png"></p>
+<blockquote>
+<p><font color="blue" size="5"><strong>图5：</strong></font><font size="5">对最先进的基于
+DM 的 Real-ISR 模型与使用我们的 SSL
+训练的模型进行视觉比较。从顶行到底行是双三次插值的结果、原始 Real-ISR
+模型、使用我们的 SSL 训练的 Real-ISR 模型以及 GT 图像。</font></p>
+</blockquote>
+<p><font color="black" size="5">  </font></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  生成图像超分辨率方法，包括基于 GAN
+和基于 DM
+的方法，很容易产生视觉伪影。在这项工作中，我们提出了一种图像自相似性先验的新颖用途，用于改进生成的现实世界图像超分辨率结果。具体来说，我们显式计算图像的自相似图（SSG），并将真实图像的SSG图与Real-ISR输出之间的差异作为自相似损失（SSL）来监督网络训练。
+SSL 可以轻松嵌入到现成的 Real-ISR 模型中，包括基于 GAN 和基于 DM
+的模型，作为即插即用的惩罚，指导模型更稳定地生成真实细节并抑制错误生成和视觉文物。我们对基准数据集进行的广泛实验验证了所提出的
+SSL 在生成 Real-ISR 任务中的通用性和有效性。</font></p>
+<p><font color="black" size="5">  </font></p>
 
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">http://example.com/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/</a>
-            <p>发表日期：<a href="http://example.com/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">五月 23日 2023, 10:25:41 上午</a>
-            <p>更新日期：<a href="http://example.com/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">June 13th 2024, 9:22:04 am</a>
+            <p>原文链接：<a href="http://example.com/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">http://example.com/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/</a>
+            <p>发表日期：<a href="http://example.com/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">August 14th 2024, 9:48:01 am</a>
+            <p>更新日期：<a href="http://example.com/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">August 14th 2024, 3:55:24 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -739,12 +776,17 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/" title="扩散模型——2.DDIM加速采样">
-                    <div class="nextTitle">扩散模型——2.DDIM加速采样</div>
+                <a href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/" title="扩散模型——14.DDIM Inversion">
+                    <div class="nextTitle">扩散模型——14.DDIM Inversion</div>
                 </a>
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/" title="生成增强CT图像的相关论文2">
+                    <div class="prevTitle">生成增强CT图像的相关论文2</div>
+                </a>
             
         </li>
     </ul>
@@ -913,9 +955,8 @@ I)\)</span> 导出的独立离散解码器:</font></p>
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cddpm%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">二、DDPM基本工作原理介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">
-1、扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E6%89%A9%E6%95%A3%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">
-2、逆扩散过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text">3、目标函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E5%92%8C%E9%87%87%E6%A0%B7%E7%AE%97%E6%B3%95"><span class="toc-number">2.4.</span> <span class="toc-text">4、训练和采样算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="toc-number">2.4.1.</span> <span class="toc-text">1）训练过程:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E8%BF%87%E7%A8%8B"><span class="toc-number">2.4.2.</span> <span class="toc-text">2）采样过程：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">三、总结</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%9B%BE%E5%83%8F%E8%87%AA%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%8D%9F%E5%A4%B1"><span class="toc-number">2.</span> <span class="toc-text">二、图像自相似性损失</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E8%87%AA%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="toc-number">2.1.</span> <span class="toc-text">1.图像自相似性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mask-generation"><span class="toc-number">2.2.</span> <span class="toc-text">2.Mask
+Generation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E7%9B%B8%E4%BC%BC%E5%9B%BE%E8%AE%A1%E7%AE%97"><span class="toc-number">2.3.</span> <span class="toc-text">3.自相似图计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%8D%9F%E5%A4%B1"><span class="toc-number">2.4.</span> <span class="toc-text">4.自相似性损失</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">三、实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Egan%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.1.</span> <span class="toc-text">1.基于GAN模型的实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Edm%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">2.基于DM模型的实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1199,7 +1240,39 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1700,7 +1773,7 @@ I)\)</span> 导出的独立离散解码器:</font></p>
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 56
         </div>
         <!-- search  -->
         
@@ -1714,6 +1787,18 @@ I)\)</span> 导出的独立离散解码器:</font></p>
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span>
+            <a class="archive-post-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">扩散模型——14.DDIM Inversion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span>
+            <a class="archive-post-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">扩散模型——13.SSL</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -1807,7 +1892,7 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/03</span>
-            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">Medical Diffusion Model——10.CoLa-Diff</a>
         </li>
     
         
@@ -1855,7 +1940,7 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
@@ -2038,13 +2123,13 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">扩散模型——2.DDIM加速采样</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/23</span>
-            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">扩散模型——1.从DDPM入门</a>
         </li>
     
     </div>
@@ -2079,14 +2164,14 @@ I)\)</span> 导出的独立离散解码器:</font></p>
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">

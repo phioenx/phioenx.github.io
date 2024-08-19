@@ -434,6 +434,62 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">
+                
+                <span class="abstract-title-text">视频扩散模型——7.Latte</span>
+            </a>
+            <div class="abstract-content">
+                本文将介绍一种新颖的Latent Diffusion Transformer，即 Latte，用于视频生成。 Latte 首先从输入视频中提取时空token，然后采用一系列 Transformer 块对潜在空间中的视频分布进行建模。为了对从视频中提取的大量token进行建模，从分解输入视频的空间和时间维度的角度引入了四种有效的变体。为了提高生成视频的质量，通过严格的实验分析确定了 Latte 的最佳实践，包括视频剪辑Patch嵌入、模型变体、时间步级信息注入、时间位置嵌入和学习策略。我们的综合评估表明，Latte 在四个标准视频生成数据集（即 FaceForensics、SkyTimelapse、UCF101 和 Taichi-HD）上实现了最先进的性能。此外，我们将 Latte 扩展到文本到视频生成 (T2V) 任务，其中 Latte 取得了与最新 T2V 模型相当的结果。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/03/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/03/23</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">
+                
+                <span class="abstract-title-text">详解Sora视频生成大模型背后的技术</span>
+            </a>
+            <div class="abstract-content">
+                文中将根据官方报告详细介绍Sora模型的架构、关键技术特点以及它在模拟数字世界中的应用。还将讨论Sora模型的训练过程，以及根据最近的一些论文推测一下可行性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/03/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/02/28</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">
                 
                 <span class="abstract-title-text">图像到图像翻译——2.MUNIT</span>
@@ -473,7 +529,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/09">
+                <div class="abstract-date" title="Last updated: 2024/08/15">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/24</span>
                 </div>
                 <!-- tags -->
@@ -518,7 +574,7 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">
                 
                 <span class="abstract-title-text">Medical Diffusion model——8.FGDM</span>
             </a>
@@ -643,62 +699,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2024/07/18">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/02</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">
-                
-                <span class="abstract-title-text">视频扩散模型——6.Video LCM</span>
-            </a>
-            <div class="abstract-content">
-                一致性模型在高效图像生成方面表现出了强大的能力，并允许在几个采样步骤内进行合成，从而减轻了扩散模型中的高计算成本。然而，在更具挑战性和资源消耗的视频生成中，一致性模型的探索仍然较少。在本报告中，我们提出了 VideoLCM 框架来填补这一空白，该框架利用图像生成的一致性模型的概念，以最少的步骤有效地合成视频，同时保持高质量。 VideoLCM 基于现有的潜在视频扩散模型，并结合了用于训练潜在一致性模型的一致性蒸馏技术。实验结果揭示了我们的 VideoLCM 在计算效率、保真度和时间一致性方面的有效性。值得注意的是，VideoLCM 只需四个采样步骤即可实现高保真、流畅的视频合成，展示了实时合成的潜力。我们希望VideoLCM能够作为后续研究的简单而有效的基线。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">
-                
-                <span class="abstract-title-text">视频扩散模型——4.Gen1</span>
-            </a>
-            <div class="abstract-content">
-                本文将介绍的是由Runway公司推出的一款名为GEN-1模型，它可以由来改变视频或电影的视觉风格。Runway在其官方网站上发布了各种视频风格转换的演示视频（据说贵公司只在演示视频做的好，但实际效果很一般。。。）。而GEN-2也已经问世，但对于官方只发布了GEN-1相关的论文，所以这次就好介绍关于GEN-1的技术。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
                 </div>
                 <!-- tags -->
                 
@@ -1083,7 +1083,39 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1584,7 +1616,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 56
         </div>
         <!-- search  -->
         
@@ -1598,6 +1630,18 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span>
+            <a class="archive-post-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">扩散模型——14.DDIM Inversion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span>
+            <a class="archive-post-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">扩散模型——13.SSL</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -1691,7 +1735,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/03</span>
-            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.SegGuidedDiff/">Medical Diffusion Model——10.SegGuidedDiff</a>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">Medical Diffusion Model——10.CoLa-Diff</a>
         </li>
     
         
@@ -1739,7 +1783,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/15</span>
-            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
         </li>
     
         
@@ -1922,13 +1966,13 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
-            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——2.DDIM加速采样</a>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">扩散模型——2.DDIM加速采样</a>
         </li>
     
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/23</span>
-            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8%EF%BC%88%E7%90%86%E8%AE%BA%E7%AF%87%EF%BC%89/">扩散模型——1.从DDPM入门</a>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">扩散模型——1.从DDPM入门</a>
         </li>
     
     </div>
@@ -1963,14 +2007,14 @@
         <div class="sidebar-panel-categories">
     <div class="sidebar-categories-name">
     
-        <span class="sidebar-category-name" data-categories="图像到图像翻译">
-            <span class="iconfont-archer">&#xe60a;</span>
-            图像到图像翻译
-        </span>
-    
         <span class="sidebar-category-name" data-categories="其他">
             <span class="iconfont-archer">&#xe60a;</span>
             其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
         </span>
     
         <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
