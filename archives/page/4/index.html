@@ -434,6 +434,146 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion model——8.FGDM</span>
+            </a>
+            <div class="abstract-content">
+                最近，扩散模型已经成为一种优越的生成模型，可以产生高质量和逼真的图像。然而，对于医学图像翻译，现有的扩散模型缺乏准确保留结构信息，因为源域图像的结构细节在正向扩散过程中丢失，不能通过学习的反向扩散完全恢复，而解剖结构的完整性在医学图像中非常重要。例如，图像翻译中的错误可能会扭曲、移位甚至删除结构和肿瘤，导致诊断不正确，治疗不足。使用配对源图像和目标图像与匹配解剖进行训练和调节扩散模型会有所帮助。然而，这种配对数据很难获得且成本高昂，并且还可能会降低开发模型对分布外测试数据的鲁棒性。我们提出了一种频率引导的扩散模型(FGDM)，该模型使用频域滤波器来指导扩散模型进行结构保持图像平移。基于其设计，FGDM 允许零样本学习，因为它可以仅在来自目标域的数据上进行训练，并直接用于源到目标域翻译，而无需在训练期间暴露于源域数据。我们在不同解剖部位的三个锥束 CT (CBCT) 到 CT 翻译任务以及跨机构 MR 成像翻译任务上评估了它。FGDM在FID、峰值信噪比 (PSNR) 和结构相似性指数度量 (SSIM) 指标方面优于最先进的方法（基于GAN、基于VAE 和基于扩散的），显示出其在零样本医学图像翻译中显着优势。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">
+                
+                <span class="abstract-title-text">Medical Diffuison Model——7.MIDiffusion</span>
+            </a>
+            <div class="abstract-content">
+                跨模态数据翻译在图像计算中引起了极大的兴趣。深度生成模型（例如 GAN）在处理这些问题方面表现出性能改进。然而，作为图像翻译的一个基本挑战，具有保真度的零样本学习跨模态数据翻译问题仍未得到解答。本文提出了一种新的无监督零样本学习方法，称为互信息引导扩散跨模态数据翻译模型 (MIDiffusion)，它学习将看不见的源数据翻译成目标域。MIDiffusion 利用基于分数匹配的生成模型，该模型学习目标域中的先验知识。我们提出了一种可微局部-MI-Layer (LM I)，用于调节迭代去噪采样。LM I 在统计域中捕获相同的跨模态特征以进行扩散引导；因此，当源域发生变化时，我们的方法不需要重新训练，因为它不依赖于源域和目标域之间的任何直接映射。这一优势对于在实践中应用跨模态数据翻译方法至关重要，因为合理数量的源域数据集并不总是可用于监督训练。与有影响力的生成模型组（包括基于对抗和其他基于分数的模型）相比，我们凭经验展示了 MIDiffusion 的卓越性能。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——6.SynDiff</span>
+            </a>
+            <div class="abstract-content">
+                通过源到目标模态转换对缺失图像进行插补可以促进医学成像中的下游任务。合成目标图像的一种普遍方法涉及通过生成对抗网络（GAN）进行一次性映射。然而，隐式表征图像分布的 GAN 模型可能会受到样本保真度和多样性有限的影响。在本文当中提出了一种基于对抗扩散建模的新方法——SynDiff，以提高医学图像合成的可靠性。为了捕获图像分布的直接关联，SynDiff 利用条件扩散过程逐步将噪声和源图像映射到目标图像上。为了在推理过程中快速准确地进行图像采样，大的扩散步骤与反向扩散方向上的对抗性投影相结合。为了能够对不成对的数据集进行训练，设计了一种循环一致的架构，它具有两个耦合的扩散过程来合成目标给定源和源给定目标。在多对比 MRI 和 MRI-CT 翻译中，SynDiff 相对于竞争性 GAN 和扩散模型的实用性进行了广泛的评估。论文演示表明，SynDiff 在定性和定量方面都比竞争基线提供了卓越的性能。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——5.SADM</span>
+            </a>
+            <div class="abstract-content">
+                由于短期（例如心跳）和长期（例如衰老）因素的复杂组合，人体器官不断经历解剖学变化。显然，在对它们的未来状态进行建模（即通过图像生成）时，对这些因素的先验知识将是有益的。然而，大多数医学图像生成任务仅依赖于单个图像的输入，因此即使纵向数据可用，也忽略了顺序依赖性。序列感知深度生成模型（模型输入是一系列有序且带时间戳的图像）在医学成像领域仍处于探索之中，该领域面临着几个独特的挑战：1）具有不同长度的序列； 2) 丢失数据或帧，以及 3) 高维。为此，我们提出了一种用于生成纵向医学图像的序列感知扩散模型（SADM）。最近，扩散模型在高保真图像生成方面显示出了有希望的结果。我们的方法通过引入序列感知变压器作为扩散模型中的条件模块来扩展这项新技术。即使在训练期间丢失数据，这种新颖的设计也能够学习纵向依赖性，并允许在推理期间自回归生成图像序列。我们对 3D 纵向医学图像进行的广泛实验证明了 SADM 与基线和替代方法相比的有效性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/01/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/10</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——4.ALDM</span>
+            </a>
+            <div class="abstract-content">
+                多模态图像在医学图像分析的综合评估中发挥着至关的重要作用，为识别临床重要的生物标志物提供补充信息。然而，在临床实践中，由于扫描成本、有限的扫描时间和安全考虑等原因，获取多种模式可能具有挑战性。在本文中，我们提出了一种基于潜在扩散模型 (LDM) 的模型，该模型利用可切换块(switchable blocks)对3D医学图像进行图像到图像的转换，而无需进行补丁裁剪。3D LDM 与使用目标模态的调节相结合，可以在 3D 中生成高质量的目标模态，克服 2D 生成方法中丢失切片外信息的缺点。可切换块被称为多个可切换空间自适应归一化（MS-SPADE），它动态地将源潜伏转换为目标潜伏的所需风格，以帮助扩散过程。MS-SPADE 块允许我们使用一个模型来处理一种源模态到各种目标的许多翻译任务，从而消除了针对不同场景的许多翻译模型的需要。我们的模型在不同的源-目标模态场景中展示了成功的图像合成，并且在四种不同模态的多模态脑磁共振成像数据集和独立的 IXI 数据集上测试的定量评估中超越了其他模型。我们的模型展示了跨各种模态的成功图像合成，甚至允许一对多模态转换。此外，它在定量评估中优于其他一对一翻译模型。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/01/02</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">
                 
                 <span class="abstract-title-text">视频扩散模型——6.Video LCM</span>
@@ -501,7 +641,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/11">
+                <div class="abstract-date" title="Last updated: 2024/10/16">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/26</span>
                 </div>
                 <!-- tags -->
@@ -566,150 +706,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">
-                
-                <span class="abstract-title-text">扩散模型——11.DiT</span>
-            </a>
-            <div class="abstract-content">
-                本文将介绍DiT，来自《Scalable Diffusion Models with Transformers》，文章探索了一类基于Transformers架构的新型扩散模型。该方法使用训练图像的潜在扩散模型，用对潜在补丁（Latent patch）进行操作的Transformers替换常用的 U-Net 主干网。通过以 Gflops 衡量的前向传递复杂度来分析扩散变压器 (DiT) 的可扩展性。我们发现，通过增加Transformers的深度/宽度或增加输入令牌数量，具有较高 Gflops 的 DiT 始终具有较低的 FID。除了拥有良好的可扩展性之外，我们最大的 DiT-XL/2 模型在类条件 ImageNet 512×512 和 256×256 基准上的表现优于所有先前的扩散模型，在后者上实现了 2.27 的最先进的 FID。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/21</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">
-                
-                <span class="abstract-title-text">扩散模型——10.ControlNet</span>
-            </a>
-            <div class="abstract-content">
-                本文提出了提出了 ControlNet，这是一种神经网络架构，可将空间调节控制添加到大型预训练文本到图像扩散模型中。 ControlNet 锁定可用于生产的大型扩散模型，并重用其经过数十亿图像预训练的深度且强大的编码层作为强大的骨干来学习一组不同的条件控制。神经架构与“零卷积”（零初始化卷积层）连接，参数从零逐渐增长，并确保没有有害噪声会影响微调。我们使用稳定扩散、使用单个或多个条件、有或没有提示来测试各种条件控制，例如边缘、深度、分割、人体姿势等。我们证明了 ControlNet 的训练对于小型（<50k）和大型（>1m）数据集都是稳健的。大量结果表明 ControlNet 可以促进更广泛的应用来控制图像扩散模型。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/02/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/12</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">
-                
-                <span class="abstract-title-text">扩散模型——9.Latent Consistency Models</span>
-            </a>
-            <div class="abstract-content">
-                潜在扩散模型（LDM）在合成高分辨率图像方面取得了显着的成果。然而，迭代采样过程计算量大，导致生成速度慢。受一致性模型的启发，本文作者提出了潜在一致性模型（LCM），可以在任何预训练的 LDM 上以最少的步骤进行快速推理，包括稳定扩散。将引导反向扩散过程视为求解增强概率流 ODE (PF-ODE)，LCM 旨在直接预测潜在空间中此类 ODE 的解，从而减少大量迭代的需要并允许快速、高保真采样。高质量的 768×768 2∼4 步 LCM 从预训练的无分类器引导扩散模型中高效提取，仅需 32 个 A100 GPU 小时即可进行训练。此外，作者还引入了潜在一致性微调（LCF），这是一种专为在定制图像数据集上微调 LCM 而定制的新颖方法。对 LAION-5B-Aesthetics 数据集的评估表明，LCM通过几个步骤的推理即可实现最先进的文本到图像生成性能。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/01/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/04</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/11/29/E3D-Lstm/">
-                
-                <span class="abstract-title-text">E3D-Lstm</span>
-            </a>
-            <div class="abstract-content">
-                本文参考《Eidetic 3D LSTM:A Model For Video Prediction And Beyond》介绍当中提出了的 Eidetic 3D LSTM (E3D-LSTM)模型，它将3D卷积集成到RNN中。封装的3D-Conv使RNN的局部感知器具有运动感知能力，并使存储单元能够存储更好的短期特征。对于长期关系，通过门控的自注意力模块使当前的记忆状态与其历史记录进行交互。即使在长时间的干扰之后，它也能够跨多个时间戳有效地回忆起存储的记忆。作者在广泛使用的未来视频预测数据集上评估 E3D-LSTM 网络并实现最先进的性能。然后实验表明，E3D-LSTM 网络在早期活动识别方面也表现良好，可以在仅观察有限的视频帧后推断正在发生的事情或将要发生的事情。该任务与对动作意图和趋势进行建模的视频预测非常一致。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/12/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/29</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
-                
-                <span class="abstract-title-text">常见的图像评价指标</span>
-            </a>
-            <div class="abstract-content">
-                在看论文的实验当中总是会看到一些比较常见的图像评价指标，如：PSNR,SSIM,LPIPS。但总是看一遍忘一遍具体含义，加上之后的实验当中也可能需要这些指标去做评估，所以本文主要介绍这些常见的图像评价指标，并附上实验代码。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/03/19">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/11/27</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/3/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/page/5/">5</a><a class="page-number" href="/archives/page/6/">6</a><a class="extend next" rel="next" href="/archives/page/5/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/3/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/page/5/">5</a><a class="page-number" href="/archives/page/6/">6</a><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/5/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1093,7 +1093,84 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1616,7 +1693,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1630,6 +1707,42 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/19</span>
@@ -1657,7 +1770,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/16</span>
-            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
         </li>
     
         
@@ -1670,12 +1783,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
             <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         

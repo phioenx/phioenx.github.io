@@ -449,6 +449,146 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">
+                
+                <span class="abstract-title-text">扩散模型——6.Classifier-free guidance</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要是对《Classifier-free diffusion guidance》文章的介绍以及笔记总结，介绍了Classifier-free针对Classifier Guidance遇到的问题提出了一个无需分类器就能使得FID与IS到达权衡的一个思想。并与其进行对比，再针对饱和度问题进行探讨。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/03/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/11</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">
+                
+                <span class="abstract-title-text">扩散模型——5.Classifier guidance</span>
+            </a>
+            <div class="abstract-content">
+                本篇文章主要是对《Diffusion Models Beat GANs on Image Synthesis》文章的介绍以及笔记总结，另外介绍了该文章所改进的架构，使用了分类器指导思想以及上采样提高图像生成的分辨率。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/09/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/08/10</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">
+                
+                <span class="abstract-title-text">扩散模型代码篇——1.Gaussian Diffusion</span>
+            </a>
+            <div class="abstract-content">
+                本篇是扩散模型实战代码编写的第一篇，写这篇文章的初衷是在复现DDPM时，有些公式不能在pycharm中很好的用文字表达出来。故想着在markdown上可以把代码与公式给对应起来，方便自己理解与查看。本篇第一篇是将编写扩散模型当中加噪、去噪、训练以及采样所需要的公式或函数。后续将会更新扩散模型所用到的UNet等编写。这个系列也会逐步更新一系列扩散模型的代码，尽请期待。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/08/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/27</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+                
+                <span class="abstract-title-text">扩散模型——4.分数模型（SDEs）</span>
+            </a>
+            <div class="abstract-content">
+                本文依据《Score-Based Generative Modeling through Stochastic Differential Equations》的方法原理以及实验结论进行笔记以及总结。本篇文章先是介绍了何为分数以及基于朗之万动力学的采样过程。对后续的SDE模型的讲解进行一定的铺垫，文章提出了一个随机微分方程（SDE），通过缓慢注入噪声将复杂的数据分布平滑地转换为已知的先验分布，以及相应的逆时间SDE，通过缓慢去除噪声将先验分布转换回数据分布。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/26</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">
+                
+                <span class="abstract-title-text">扩散模型——3.Improved DDPM</span>
+            </a>
+            <div class="abstract-content">
+                本文依据《Improved Denoising Diffusion Probabilistic Models》的方法原理以及实验结论进行笔记以及总结。本篇文章证明了通过一些修改，DDPM可以更快地采样并实现更好的对数似然，而对样本质量的影响很小。此外，作者还研究了 DDPM 如何随着可用训练计算量的变化而扩展，并发现更多的训练计算会带来更好的样本质量和对数似然。这些结果的结合使DDPM成为生成建模的一个有吸引力的选择，因为它们将良好的对数似然、高质量样本和相当快的采样与基础良好的固定训练目标结合起来，该目标可以通过训练计算轻松扩展。这些结果表明DDPMs是未来研究的一个有希望的方向。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/03/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">
                 
                 <span class="abstract-title-text">扩散模型——2.DDIM加速采样</span>
@@ -469,38 +609,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">
-                
-                <span class="abstract-title-text">扩散模型——1.从DDPM入门</span>
-            </a>
-            <div class="abstract-content">
-                本篇文章主要介绍扩散模型的框架原理以及生成过程，是以DDPM为主进行介绍，让你对扩散模型有初步的了解。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/13">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/23</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/page/9/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
+            <a class="extend prev" rel="prev" href="/page/9/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -980,7 +1092,84 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1503,7 +1692,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1517,6 +1706,42 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/19</span>
@@ -1544,7 +1769,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/16</span>
-            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
         </li>
     
         
@@ -1557,12 +1782,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
             <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         

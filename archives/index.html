@@ -434,6 +434,174 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">
+                
+                <span class="abstract-title-text">扩散模型——17.分布匹配蒸馏</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型生成高质量图像，但需要数十次前向传递。我们引入了分布匹配蒸馏 (DMD)，这是一种将扩散模型转换为一步图像生成器的过程，对图像质量的影响最小。我们强制单步图像生成器在分布级别匹配扩散模型，通过最小化近似 KL 散度，其梯度可以表示为 2 个得分函数之间的差异，其中一个目标分布和另一个由以下方法生成的合成分布我们的一步生成器。评分函数被参数化为在每个分布上分别训练的两个扩散模型。结合与多步扩散输出的大规模结构相匹配的简单回归损失，我们的方法优于所有已发布的少步扩散方法，在 ImageNet 64×64 上达到 2.62 FID，在零样本 COCO-30k 上达到 11.49 FID，与稳定扩散相当，但速度快几个数量级。利用 FP16 推理，我们的模型可以在现代硬件上生成 20 FPS 的图像。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/11/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/11/18</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">
+                
+                <span class="abstract-title-text">扩散模型——18.快捷模型</span>
+            </a>
+            <div class="abstract-content">
+                扩散模型和流量匹配模型可以通过学习将噪声转移到数据来生成多样化且逼真的图像。然而，这些模型的采样涉及对许多神经网络通道的迭代去噪，使得生成缓慢且昂贵。以前的加速采样方法需要复杂的训练机制，例如多个训练阶段、多个网络或脆弱的调度。我们引入了快捷模型，这是一系列生成模型，它们使用单个网络和训练阶段在单个或多个采样步骤中生成高质量的样本。快捷模型不仅根据当前的噪声水平，而且根据所需的步长来调节网络，从而允许模型在生成过程中向前跳过。在各种采样步骤预算中，快捷模型始终能够比以前的方法（例如一致性模型和回流）产生更高质量的样本。与蒸馏相比，快捷模型降低了单个网络和训练阶段的复杂性，并且还允许在推理时改变步骤预算。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/11/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/11/18</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">
+                
+                <span class="abstract-title-text">扩散模型——16.PIXART-δ</span>
+            </a>
+            <div class="abstract-content">
+                本技术报告介绍了 PIXART-δ，这是一种文本到图像合成框架，它将潜在一致性模型 (LCM) 和 ControlNet 集成到先进的 PIXART-α 模型中。 PIXART-α 因其通过非常高效的训练过程生成 1024 像素分辨率的高质量图像的能力而受到认可。 PIXART-δ中LCM的集成显着加快了推理速度，只需2-4步即可生成高质量图像。值得注意的是，PIXART-δ 在生成 1024 × 1024 像素图像方面突破了 0.5 秒，比 PIXART-α 提高了 7 倍。此外，PIXART-δ 设计为可在一天内在 32GB V100 GPU 上进行高效训练。凭借其 8 位推理能力（von Platen 等，2023），PIXART-δ 可以在 8GB GPU 内存限制内合成 1024px 图像，大大增强了其可用性和可访问性。此外，结合类似 ControlNet 的模块可以对文本到图像扩散模型进行细粒度控制。我们引入了一种新颖的 ControlNet-Transformer 架构，专为 Transformer 量身定制，可在生成高质量图像的同时实现明确的可控性。作为最先进的开源图像生成模型，PIXART-δ 为稳定扩散模型系列提供了一种有前途的替代方案，为文本到图像的合成做出了重大贡献。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/11/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/10/30</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">
+                
+                <span class="abstract-title-text">扩散模型——15.PIXART-α</span>
+            </a>
+            <div class="abstract-content">
+                最先进的文本到图像（T2I）模型需要大量的训练成本（例如数百万个 GPU 小时），严重阻碍了 AIGC 社区的根本创新，同时增加了二氧化碳排放。本文介绍了PIXART-α，一种基于Transformer的T2I扩散模型，其图像生成质量可与最先进的图像生成器（例如Imagen、SDXL甚至Midjourney）竞争，达到接近商业应用的标准。此外，它还支持高达 1024 × 1024 分辨率的高分辨率图像合成，且训练成本较低，如图 1 和图 2 所示。为了实现这一目标，提出了三个核心设计：（1）训练策略分解：我们设计了三种不同的训练策略分解：分别优化像素依赖性、文本图像对齐和图像美学质量的训练步骤； （2）高效的T2I Transformer：我们将交叉注意力模块合并到Diffusion Transformer（DiT）中，以注入文本条件并简化计算密集型的类条件分支； （3）高信息数据：我们强调文本-图像对中概念密度的重要性，并利用大型视觉语言模型自动标记密集的伪标题以辅助文本-图像对齐学习。因此，PIXART-α 的训练速度明显超过了现有的大规模 T2I 模型，例如，PIXARTα 仅花费了 Stable Diffusion v1.5 训练时间的 12%（∼753 vs. ∼6,250 A100 GPU 天），节省了近 300,000 美元（28,400 美元） vs. 320,000 美元）并减少 90% 的二氧化碳排放量。而且，与更大的SOTA模型RAPHAEL相比，我们的训练成本仅为1%。大量实验表明，PIXART-α 在图像质量、艺术性和语义控制方面表现出色。我们希望 PIXART-α 能够为 AIGC 社区和初创公司提供新的见解，以加速从头开始构建自己的高质量且低成本的生成模型
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/10/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/10/28</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——14.SelfRDB</span>
+            </a>
+            <div class="abstract-content">
+                去噪扩散模型（DDM）最近在医学图像翻译领域获得了关注，因为其训练稳定性优于对抗模型。 DDM 学习多步去噪变换，以逐步将随机高斯噪声图像映射到目标模态图像，同时接收来自源模态图像的固定指导。由于这种去噪转换与任务相关的源到目标转换显着不同，DDM 可能会受到源模态指导较弱的影响。在这里，我们提出了一种新颖的自洽递归扩散桥（SelfRDB），以提高医学图像翻译的性能。与 DDM 不同，SelfRDB 采用新颖的前向过程，其起点和终点分别基于目标图像和源图像定义。整个过程中的中间图像样本通过正态分布表示，其均值作为起点和加性噪声的方差的凸组合。与在过程的起点规定零方差和在过程中点规定高方差的常规扩散桥不同，我们提出了一种新颖的噪声调度，其方差向终点单调增加，以提高泛化性能并促进之间的信息传递两种方式。为了进一步提高每个反向步骤中的采样精度，我们提出了一种新颖的采样程序，其中网络递归地生成目标图像的瞬态估计，直到收敛到自洽解。多对比 MRI 和 MRI-CT 翻译的综合分析表明，SelfRDB 比竞争方法具有更优越的性能。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/10/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/09/11</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model--13.Endora</span>
+            </a>
+            <div class="abstract-content">
+                生成模型有望彻底改变医学教育、机器人辅助手术和机器学习的数据增强。尽管在生成 2D 医学图像方面取得了进展，但临床视频生成的复杂领域在很大程度上仍未得到开发。本文介绍了 Endora，这是一种生成模拟临床内窥镜检查场景的医学视频的创新方法。我们提出了一种新颖的生成模型设计，它将精心制作的时空视频转换器与先进的 2D 视觉基础模型先验集成在一起，在视频生成过程中显式地建模时空动态。我们还开创了第一个使用视频生成模型进行内窥镜模拟的公共基准，并采用了现有的最先进方法来实现这一目标。 Endora 在生成内窥镜视频方面展示了卓越的视觉质量，在广泛的测试中超越了最先进的方法。此外，我们还探讨了该内窥镜模拟器如何支持下游视频分析任务，甚至生成具有多视图一致性的 3D 医疗场景。简而言之，Endora 标志着临床内窥镜研究中生成人工智能部署的显着突破，为医疗内容生成的进一步发展奠定了坚实的基础。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/11/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/08/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">
                 
                 <span class="abstract-title-text">扩散模型——14.DDIM Inversion</span>
@@ -517,7 +685,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/08/01">
+                <div class="abstract-date" title="Last updated: 2024/10/31">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/28</span>
                 </div>
                 <!-- tags -->
@@ -554,202 +722,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model——13.SSLDM</span>
-            </a>
-            <div class="abstract-content">
-                非增强 CT （NCCT） 成像可能会降低图像对比度和解剖可见性，从而可能增加诊断的不确定性。相比之下，对比增强 CT （CECT） 有助于观察感兴趣区域 （ROI）。领先的生成模型，尤其是条件扩散模型，在医学图像模态变换方面表现出了卓越的能力。典型的条件扩散模型通常在分割标签的指导下生成图像，用于医疗模态变换。获得真实指导的机会有限且其基数低，可能会对条件扩散模型的实际临床应用构成挑战。为了实现生成质量和临床实践的平衡，我们提出了一种基于医学图像翻译潜在扩散模型（S2LDM）的新型Syncretic生成模型，该模型可以在推理过程中无需额外条件即可实现高保真重建。S2LDM通过融合编码和扩散增强了不同模态图像的相似性，促进了潜在空间中的融合信息，并在对比增强区域生成了具有更多细节的医学图像。然而，频域中的融合潜空间往往有利于较低频率，通常位于相同的解剖结构中。因此，S2LDM在整个训练过程中应用自适应相似性损失和动态相似性来指导生成，并补充高频细节的不足。定量实验验证了该方法在医学图像翻译中的有效性。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/08/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型-医学图像">扩散模型-医学图像</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">
-                
-                <span class="abstract-title-text">视频扩散模型——16.Diffuison Forcing</span>
-            </a>
-            <div class="abstract-content">
-                本文介绍了扩散强制，这是一种新的训练范式，其中训练扩散模型以对一组具有独立每个令牌噪声水平的标记进行去噪。通过训练因果下一个token预测模型来应用扩散强迫来对生成建模进行排序，以生成一个或多个未来token，而无需完全扩散过去的token。该方法被证明将下一个token预测模型的优势（如可变长度生成）与全序列扩散模型的优势相结合，如将采样引导到理想轨迹的能力。该方法提供了一系列额外的功能，例如（1）推出连续令牌序列，例如视频，其长度超过训练范围，其中基线发散和（2）新的采样和指导方案，这些方案独特地受益于扩散强迫的可变范围和因果架构，并在决策和规划任务中显着提高性能。除了在实证上的成功之外，该方法还被证明可以优化从真实联合分布中抽取的所有标记子序列的似然的变分下界。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="视频扩散模型">视频扩散模型</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">
-                
-                <span class="abstract-title-text">视频扩散模型——15.Upscale-A-Video</span>
-            </a>
-            <div class="abstract-content">
-                基于文本的扩散模型在生成和编辑方面取得了显著的成功，在增强视觉内容方面显示出巨大的前景。然而，由于对输出保真度和时间一致性的高要求，将这些模型应用于视频超分辨率仍然具有挑战性，而扩散模型固有的随机性使情况变得复杂。我们的研究介绍了Upscale-A-Video，这是一种用于视频升级的文本引导潜在扩散框架。该框架通过两个关键机制确保时间连贯性：在本地，它将时间层集成到 U-Net 和 VAE-Decoder 中，保持短序列内的一致性;在全球范围内，无需训练，就引入了一个流引导的循环潜伏传播模块，通过在整个序列中传播和融合潜伏来增强整体视频稳定性。得益于扩散范式，本文的模型还提供了更大的灵活性，允许文本提示指导纹理创建，并允许可调节的噪声水平来平衡恢复和生成，从而在保真度和质量之间进行权衡。大量的实验表明，Upscale-A-Video在合成和真实世界的基准测试以及AI生成的视频中都超越了现有方法，展示了令人印象深刻的视觉真实感和时间一致性。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/09">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model--12.Class-Guided I2I Diffu</span>
-            </a>
-            <div class="abstract-content">
-                近年来，生成建模取得了长足的进步，特别是在文本到图像和文本到视频的合成方面。然而，医学领域尚未充分利用大规模基础模型的合成数据生成潜力。在本文中，我们介绍了 GenerateCT，这是第一种用于文本条件计算机断层扫描 （CT） 生成的方法，解决了 3D 医学成像研究的局限性，并使我们的整个框架开源。GenerateCT由预训练的大型语言模型、基于Transformer的文本条件3D胸部CT生成架构和文本条件空间超分辨率扩散模型组成。我们还提出了 CT-ViT，它可以有效地压缩 CT 体积，同时深度保持自回归性，从而能够生成具有可变数量轴向切片的 3D CT 体积。我们的实验表明，GenerateCT 可以产生逼真、高分辨率和高保真的 3D 胸部 CT 体积，与医学语言文本提示一致。我们通过使用生成的 CT 体积训练模型来进一步研究 GenerateCT 的潜力，以对胸部 CT 体积进行多异常分类。我们的贡献为文本条件3D医学图像生成的未来研究奠定了宝贵的基础，并有可能加速医学成像研究的进步。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">
-                
-                <span class="abstract-title-text">扩散模型——12.StableSR</span>
-            </a>
-            <div class="abstract-content">
-                本文利用封装在预训练的文本到图像扩散模型中的先验知识来实现超分辨率（SR）。具体来说，通过使用时间感知编码器，可以在不改变预训练合成模型的情况下获得有希望的恢复结果，从而保留生成先验并最大限度地降低训练成本。为了弥补扩散模型固有的随机性导致的保真度损失，作者还采用了一个可控的特征包装模块，允许用户通过在推理过程中简单地调整标量值来平衡质量和保真度。此外，作者开发了一种渐进式聚合采样策略，以克服预训练扩散模型的固定尺寸限制，从而能够适应任何尺寸的分辨率。使用合成和真实世界的基准对方法进行全面评估，证明了其优于当前最先进的方法。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">
-                
-                <span class="abstract-title-text">视频扩散模型——5.FateZero</span>
-            </a>
-            <div class="abstract-content">
-                基于扩散的生成模型在基于文本的图像生成方面取得了显著的成功。然而，由于它在生成过程中包含巨大的随机性，因此将此类模型应用于现实世界的视觉内容编辑仍然具有挑战性，尤其是在视频中。在本文中，提出了 FateZero，这是一种基于零样本文本的编辑方法，适用于真实世界的视频，无需按提示训练或特定用途的mask。为了一致地编辑视频，作者提出了几种基于预训练模型的技术。首先，与简单的DDIM inversion技术相比，作者的方法在inversion过程中捕获中间注意力图，有效地保留了结构和运动信息。这些注意力图在编辑过程中直接融合，而不是在去噪过程中生成。为了进一步减少源视频的语义泄漏，将自注意力与源提示中的交叉注意力特征获得的混合掩码融合在一起。此外，还通过引入时空注意力来确保框架的一致性，对UNet的去噪机制进行了自我关注机制的改革。然而，简明扼要的是，本文的方法是第一个从经过训练的文本到图像模型中展示零镜头文本驱动视频风格和局部属性编辑能力的方法。改方法还拥有基于文本到视频模型的更好的零镜头形状感知编辑能力]。大量的实验证明了本文的方法比以前的作品具有更好的时间一致性和编辑能力。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/06/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/11</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/6/">6</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
+            <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1133,7 +1109,84 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1656,7 +1709,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1670,6 +1723,42 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/19</span>
@@ -1697,7 +1786,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/16</span>
-            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
         </li>
     
         
@@ -1710,12 +1799,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
             <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         

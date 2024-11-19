@@ -19,24 +19,33 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
     
     <meta name="description" content="PhoenixPeng">
-    <meta name="description" content="一、引言   近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。   医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了">
+    <meta name="description" content="一、引言   在这份技术报告中，作者提出了PIXART-δ，它将LCM和ControlNet合并到PIXART-α中。值得注意的是，PIXART-α 是一种先进的高质量 1024px 扩散转换器文本到图像合成模型，以其通过极其高效的训练过程实现的卓越图像生成质量而闻名。   我们将 LCM 合并到 PIXART-δ 中以加速推理。 LCM 通过将反向扩散过程视为求解增强概率流 ODE (PF-OD">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Medical Diffusion Model--12.Class-Guided I2I Diffu">
-<meta property="og:url" content="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/index.html">
+<meta property="og:title" content="扩散模型——16.PIXART-δ">
+<meta property="og:url" content="http://example.com/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/index.html">
 <meta property="og:site_name" content="PhoenixPeng的领域">
-<meta property="og:description" content="一、引言   近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。   医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了">
+<meta property="og:description" content="一、引言   在这份技术报告中，作者提出了PIXART-δ，它将LCM和ControlNet合并到PIXART-α中。值得注意的是，PIXART-α 是一种先进的高质量 1024px 扩散转换器文本到图像合成模型，以其通过极其高效的训练过程实现的卓越图像生成质量而闻名。   我们将 LCM 合并到 PIXART-δ 中以加速推理。 LCM 通过将反向扩散过程视为求解增强概率流 ODE (PF-OD">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png">
-<meta property="article:published_time" content="2024-06-25T00:30:29.000Z">
-<meta property="article:modified_time" content="2024-07-24T00:25:36.282Z">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7BB40FA8EC-0469-41E6-B4CA-08E0F5665D26%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B5BA1A7CD-F4E5-42AF-AACB-1EDE64DCBE49%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B78523205-DECA-493B-AA08-CC428612D00E%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B6D8E904A-FB55-4F67-B437-355AC8990FF5%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B25360B73-3EE3-4709-B93F-3B589055014B%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7BB38591D4-EA16-4A19-9639-8739DAED0F1F%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B68FD94F7-A96E-4CF7-A8C8-2C13702CB42C%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7BA3450E67-7688-45CC-900C-D7575CBD1AA0%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7B2A8A5187-3563-4257-96E5-B9C870862441%7D.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7BF0C5A902-9F30-4E8D-A0D8-606E0EC15D05%7D.png">
+<meta property="article:published_time" content="2024-10-30T03:39:05.000Z">
+<meta property="article:modified_time" content="2024-11-11T09:50:06.150Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png">
+<meta name="twitter:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4.assets%7BB40FA8EC-0469-41E6-B4CA-08E0F5665D26%7D.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Medical Diffusion Model--12.Class-Guided I2I Diffu · PhoenixPeng&#39;s blog</title>
+    <title>扩散模型——16.PIXART-δ · PhoenixPeng&#39;s blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -264,7 +273,7 @@
                 <a href="/">PhoenixPeng&#39;s blog.</a>
             </div>
             <div class="post-title header-element">
-                <a href="#" class="post-name">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
+                <a href="#" class="post-name">扩散模型——16.PIXART-δ</a>
             </div>
         </div>
     
@@ -310,7 +319,7 @@
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Medical Diffusion Model--12.Class-Guided I2I Diffu
+                扩散模型——16.PIXART-δ
             <!-- 404 -->
             
         </h1>
@@ -338,7 +347,7 @@
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
                     <span class="iconfont-archer post-intro-calander">&#xe676;</span>
-                    <span class="post-intro-time">2024/06/25</span>
+                    <span class="post-intro-time">2024/10/30</span>
                     <!-- busuanzi -->
                     
                         <span id="busuanzi_container_page_pv" class="busuanzi-pv">
@@ -494,74 +503,216 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h1 id="一引言">一、引言</h1>
-<p><font color="black" size="5">  近年来，生成建模取得了显著进展，特别是在文本到图像和文本到视频合成领域。尽管取得了这些进展，但医学领域尚未充分利用大规模基础模型的潜力。然而，合成数据生成在加速医学研究方面具有巨大的前景，因为医学影像研究在数据方面面临重大挑战，例如<strong>患者隐私问题、类别分布不平衡、对训练有素的临床医生的需求以及大量公开可用数据集的稀缺性。</strong></font></p>
-<p><font color="black" size="5">  医学图像和放射学报告的配对数据集为文本条件医学图像生成提供了巨大的潜力。这是因为放射学报告提供了对患者病情的全面评估，从而有助于对医学图像的有效描述。因此，胸片和放射学报告的整合引起了人们对文本到图像生成的极大兴趣。这种兴趣在一定程度上归因于多个数据集和预训练的开源文本到图像模型的可用性。<strong>尽管取得了这些进展，但之前没有研究探索过使用医学语言文本提示生成
-3D 医学图像的文本条件，例如计算机断层扫描 （CT） 和磁共振成像
-（MRI）</strong>。这种研究差距是由于缺乏可用的配对放射学报告-3D医学成像数据，以及与2D生成工作相比，文本条件视频或3D图像生成模型的高计算要求，因此开源工作数量有限。</font></p>
-<p><font color="black" size="5">  在本文中，作者解决了这些局限性，并提出了第一种文本条件胸部CT生成方法（图1），使整个框架完全开源，以加速3D医学成像研究。
-<strong>GenerateCT 由一个预训练的 T5X
-文本编码器、一个基于Transformer的文本条件 3D 胸部 CT
-生成架构，以及一个文本条件空间超分辨率扩散模型组成</strong>（图
-2）。目前，没有公开可用的带有放射学报告的3D医学图像数据集可用于训练GenerateCT。因此，作者还引入了一种新的胸部
-CT 体积数据集和放射学报告，以解决这一局限性。</font></p>
-<p><font color="black" size="5">  生成 CT 体积本质上是由一系列 2D
-切片组成的 3D
-图像，其计数决定了深度，这带来了一个显着的挑战：开发一个紧凑的模型，该模型不仅可以处理可变数量的轴向切片，还可以将token数量保持在最低限度以提高计算效率。为了解决这个问题，本文的工作引入了CT视觉转换器（CT-ViT），这是一个从以前的工作中汲取灵感并进一步改进的模型，并进一步为3D
-CT生成量身定制。<strong>CT-ViT 巧妙地压缩所有维度的 CT
-体积，同时深度保持自动回归性，从而能够生成具有可变切片数量的 CT
-体积。</strong></font></p>
-<p><font color="black" size="5">  在使用 CT-ViT 获得 3D CT
-体积的压缩表示后，可以将文本到 CT 任务构建为sequence to
-sequence问题，以根据相应的文本嵌入预测 CT
-token。从先前的图像生成工作中汲取灵感，本文的方法采用了能够同时预测多个CT
-token的双向 transformer。使用与mask
-预测密切相关的代理任务对transformer进行训练。在推理中，作者最初将所有 CT
-token指定为masked token。随后，在每个推理步骤中，对所有masked的 CT
-token进行并行预测，根据文本嵌入和未屏蔽（预测）CT
-token对其进行条件调整。</font></p>
-<p><font color="black" size="5">  <strong>作者还采用文本条件空间超分辨率扩散模型，使用基于转换器的方法生成低分辨率3D胸部CT，并以医学语言文本提示为条件。</strong>生成的
-CT
-和相应的文本提示用作后续扩散模型的调节输入。该策略产生空间上采样CT，其灵感来自级联扩散模型（CDM）。</font></p>
-<p><font color="black" size="5">  作为第一个探索文本条件 3D
-医学图像生成的公司，GenerateCT
-缺乏用于比较的基准。因此，我们通过将生成的 CT
-体积应用于潜在的真实世界临床应用来验证我们的框架。我们检查在生成的 CT
-体积上训练是否与在真实 CT
-体积上进行训练以进行多异常分类产生相似的性能。实验和结果表明，GenerateCT
-能够生成逼真的、高保真 3D 胸部 CT
-体积，与自由格式的医学语言文本提示一致。我们公开我们的代码和训练模型，以促进胸部
-CT 体积的生成，鼓励进一步研究，并为未来的研究建立基线。</font></p>
-<h1 id="二方法">二、方法</h1>
-<h1 id="数据预处理"><font color="black" size="5">1.数据预处理</font></h1>
-<p><font color="black" size="5">  数据集包括 25,701 个非增强 3D 胸部
-CT 体积，分辨率为 512×512，轴向切片数从 100 到 600
-不等。这些体积来自21,314例独特的患者，并使用适用于不同窗口设置的多种方法进行了重建。考虑到不同的重建方法，这导致总共有
-49,138 个 CT 体积。作者将所有患者划分为一个包含 20,000
-名独特患者的训练集和一个包含 1,314
-名独特患者的测试集，确保没有患者重叠。每张 CT
-体积都附有元数据，包括患者的年龄、性别和影像学细节。此外，这些卷还与放射学报告配对，这些报告分为单独的部分：临床信息、技术、发现和印象。使用印象部分和元数据将文本提示格式化为
-{age} years old {}： {impression}，如图 1
-所示。使用从元数据中检索到的斜率和截距值将 CT 体积转换为它们各自的
-Hounsfield 单位 （HU）。这些值被裁剪到[−1000 HU，+1000
-HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
-生成网络，这些值被归一化为 [−1，
-1]。但是，对于扩散模型，这些值被归一化为 [0， 1]。</font></p>
-<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202406250925133.png"></p>
+<p><font color="black" size="5">  在这份技术报告中，作者提出了PIXART-δ，它将<strong>LCM</strong>和<strong>ControlNet</strong>合并到<strong>PIXART-α</strong>中。值得注意的是，PIXART-α
+是一种先进的高质量 1024px
+扩散转换器文本到图像合成模型，以其通过极其高效的训练过程实现的卓越图像生成质量而闻名。</font></p>
+<p><font color="black" size="5">  我们将 LCM 合并到 PIXART-δ
+中以加速推理。 LCM 通过将反向扩散过程视为求解增强概率流 ODE
+(PF-ODE)，在预训练的 LDM 上仅需 2∼4
+个步骤即可实现高质量和快速的推理，这使得 PIXART- δ
+在（∼4）步内生成样本，同时保持高质量的生成。因此，PIXART-δ 在 A100 GPU
+上每张 1024 × 1024 图像只需 0.5 秒，与 PIXART-α 相比，推理速度提高了 7
+倍。我们还支持 LCM-LoRA，以获得更好的用户体验和便利</font></p>
+<p><font color="black" size="5">  此外，我们将类似 ControlNet
+的模块合并到 PIXART-δ 中。
+ControlNet展示了在各种条件下对文本到图像扩散模型输出的卓越控制。然而，值得注意的是，ControlNet
+的模型架构是为基于 UNet 的扩散模型而复杂设计的，我们观察到将其直接复制到
+Transformer 模型中效果较差。因此，我们提出了一种为 Transformer
+模型定制的新型 ControlNet-Transformer 架构。我们的
+ControlNet-Transformer
+实现了明确的可控性并获得了高质量的图像生成。</font></p>
+<h1 id="二lcm-in-pixart-δ">二、LCM IN PIXART-δ</h1>
+<p><font color="black" size="5">  在本节中，我们采用潜在一致性蒸馏（LCD）在
+120K 内部图像文本对上训练
+PIXART-δ。在2.1，我们首先提供详细的训练算法和具体修改的消融研究。在2.2，我们说明了PIXART-δ的训练效率和LCM的加速比。最后，在2.3，我们展示了PIXART-δ的训练细节。</font></p>
+<h2 id="算法和修改"><font color="black" size="5">2.1
+算法和修改</font></h2>
+<p><font color="black" size="5">  <strong>LCD
+算法：</strong>源自初始的一致性蒸馏（CD）和LCD
+算法，我们在算法1中提出了具有无分类器指导（CFG）的PIXART-δ的伪代码。具体来说，如图1所示的训练流程所示，三个模型（教师模型、学生模型和EMA模型）充当ODE求解器的去噪器。分别为<span class="math inline">\(\textcolor{blue}{\Psi(\cdot, \cdot, \cdot, \cdot),
+f_\theta,}\)</span>&nbsp;和 <span class="math inline">\(\textcolor{blue}{f_{\theta^-}}\)</span>。在训练过程中，我们首先在时间步&nbsp;<span class="math inline">\(\textcolor{blue}{t_{n+k}}\)</span>
+处采样噪声，其中教师模型用于去噪以获得<span class="math inline">\(\textcolor{blue}{\hat{z}_{T_{t_0}}}\)</span>。然后，利用ODE求解器<span class="math inline">\(\textcolor{blue}{\Psi(\cdot, \cdot, \cdot,
+\cdot)}\)</span>&nbsp;从<span class="math inline">\(\textcolor{blue}{z_{t_{n+k}}}\)</span>和<span class="math inline">\(\textcolor{blue}{\hat{z}_{T_{t_0}}}\)</span>计算<span class="math inline">\(\textcolor{blue}{\hat{z}^{\Psi,\omega}_{t_n}}\)</span>。然后利用EMA模型进一步去噪，得到<span class="math inline">\(\textcolor{blue}{\hat{z}_{E_{t_0}}}\)</span>。同时，学生模型在<span class="math inline">\(\textcolor{blue}{t_{n+k}}\)</span>处对样本<span class="math inline">\(\textcolor{blue}{z_{t_{n+k}}}\)</span>进行加噪，以导出<span class="math inline">\(\textcolor{blue}{\hat{z}_{S_{t_0}}}\)</span>。最后一步涉及最小化<span class="math inline">\(\textcolor{blue}{\hat{z}_{S_{t_0}}}\)</span>和<span class="math inline">\(\textcolor{blue}{\hat{z}_{E_{t_0}}}\)</span>之间的距离，也称为优化一致性蒸馏目标。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7BB40FA8EC-0469-41E6-B4CA-08E0F5665D26%7D.png"></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B5BA1A7CD-F4E5-42AF-AACB-1EDE64DCBE49%7D.png"></p>
 <blockquote>
-<p><font color="blue" size="5"><strong>图
-1：</strong></font><font color="black" size="5">GenerateCT
-是一个级联框架，它使用医学语言文本提示作为条件输入，生成具有任意切片编号的高保真
-3D 胸部 CT 体积。</font></p>
+<p><strong><font color="blue" size="5">图1：</font></strong><font size="5">PIXART-δ
+的训练流程。该图的上半部分提供了训练过程的高级概述，描述了沿着特定 ODE
+轨迹的噪声采样和去噪的连续阶段。序列号标记在映射线上，以清楚地指示这些步骤的顺序。下半部分深入研究了预训练（教师）模型和学生模型的复杂作用，揭示了它们在上半部分训练过程中各自的功能，并标记了相应的序列号，以便于交叉引用。</font></p>
+</blockquote>
+<p><font color="black" size="5">  与原始的 LCM 从指定范围 <span class="math inline">\(\textcolor{blue}{[ω_{min}, ω_{max}]}\)</span>
+中选择可变制导尺度 <span class="math inline">\(\textcolor{blue}{ω}\)</span>
+不同，在我们的实现中，我们将制导尺度设置为常数 <span class="math inline">\(\textcolor{blue}{ω_{fix}}\)</span>，去除了 LCM
+中的制导尺度嵌入操作。</font></p>
+<p><font color="black" size="5">  <strong>超参数的影响。</strong>我们的研究补充了
+LCM 训练过程的两个关键方面：CFG 规模和批量大小。使用 FID 和 CLIP
+分数作为性能基准来评估这些因素。图2中的术语“<span class="math inline">\(\textcolor{blue}{bs}\)</span>”、“<span class="math inline">\(\textcolor{blue}{ω_{fix}}\)</span>”和“<span class="math inline">\(\textcolor{blue}{ω_{Embed}}\)</span>”分别表示训练批量大小、固定指导尺度和嵌入指导尺度。</font></p>
+<ul>
+<li><font color="black" size="5"> <strong>CFG
+量表分析：</strong>参考图 2，我们检查了三种不同的 CFG 量表：(1)
+3.5，在我们的消融研究中使用； (2) 4.5，在 PIXART-α 中产生最佳结果； (3)
+不同范围的 CFG 尺度嵌入 (<span class="math inline">\(ω_{
+Embed}\)</span>)，这是 LCM
+中的标准方法。我们的研究表明，采用恒定的指导尺度而不是更复杂的 CFG
+嵌入可以提高 PIXART-δ 的性能并简化实施。</font></li>
+<li><font color="black" size="5"><strong>批量大小检查：</strong>使用 2
+个 V100 GPU 和 32 个 V100 GPU
+两种配置来评估批量大小对模型性能的影响；每个 GPU 加载 12 个图像。如图 2
+所示，我们的结果表明，较大的批量会对 FID 和 CLIP
+分数产生积极影响。然而，如图 8 所示，PIXART-δ
+也可以快速收敛，并以较小的批量大小获得可比的图像质量。</font></li>
+<li><font color="black" size="5"><strong>收敛：</strong>最后，我们观察到训练过程在大约
+5,000
+次迭代后趋于收敛。超过这个阶段，进一步的改进是微乎其微的。</font></li>
+</ul>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B78523205-DECA-493B-AA08-CC428612D00E%7D.png"></p>
+<blockquote>
+<p><strong><font color="blue" size="5">图2：</font></strong><font size="5">FID
+和 CLIP Score 对无分类器指导量表 (ω)
+的各种策略的消融研究及其对训练期间蒸馏收敛的影响。</font></p>
+</blockquote>
+<p><font color="black" size="5">  <strong>Noise Schedule
+调整。</strong>噪声表是扩散过程中最重要的部分之一。接下来，我们调整了
+LCM 中的噪声调度函数以与 PIXART-α
+噪声调度保持一致，该噪声调度在蒸馏训练期间具有更高的
+logSNR（信噪比）。图 3 可视化了 PIXART-δ 或 LCM
+不同选择下的噪声表函数及其各自的 logSNR。值得注意的是，PIXART-δ
+可以对更广泛的噪声分布进行参数化，这一功能已被进一步证明可以增强图像生成。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B6D8E904A-FB55-4F67-B437-355AC8990FF5%7D.png"></p>
+<blockquote>
+<p><strong><font color="blue" size="5">图3：</font></strong><font size="5"><span class="math inline">\(β_t\)</span>、噪声调度函数以及 PIXART-δ 和 LCM
+之间相应的 logSNR 的实例化。 <span class="math inline">\(β_t\)</span>
+是扩散过程中的系数 <span class="math inline">\(z_t = \sqrt{\bar{α}_t}z_0
++ \sqrt{1 − \bar{α}_t}ε\)</span>, <span class="math inline">\(α_t = 1 −
+β_t\)</span></font></p>
 </blockquote>
 <p><font color="black" size="5">  </font></p>
+<h2 id="训练效率和推理时间"><font color="black" size="5">2.2
+训练效率和推理时间</font></h2>
+<p><font color="black" size="5">  对于训练，如表所示。如图 1
+所示，我们在 32GB GPU
+内存限制内成功地进行了蒸馏过程，同时保留了相同的批量大小并通过 SDXL-LCM
+支持高达 1024 × 1024 的图像分辨率。这种训练效率显着使 PIXART-δ
+能够在各种消费级 GPU 规范上进行训练。根据第 3.1
+节中关于较大批量大小的有益影响的讨论，我们的方法显着使得即使在内存容量有限的
+GPU
+上也可以利用较大批量大小。</font><font color="black" size="5">  </font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B25360B73-3EE3-4709-B93F-3B589055014B%7D.png"></p>
+<p><font color="black" size="5">  对于推论，如表所示。如图 2 和图 7
+所示，我们对我们的模型 PIXART-δ 与其他方法（如 SDXL LCM-LoRA、PIXARTα
+和跨不同硬件平台的 SDXL
+标准）实现的生成速度进行了比较分析。始终如一，PIXART-δ 在 A100 上的 0.5
+秒内实现了 1024x1024 高分辨率图像的生成，并且在 T4 上仅用 3.3 秒、在
+V100 上仅用 0.8 秒就完成了该过程，所有这些都在批量大小为 1
+的情况下完成。这是一个重要的结果。比其他方法有所改进，例如，SDXL 标准在
+T4 上需要 26.5 秒，在 T4 上需要 3.8 秒在 A100 上。 PIXART-δ
+的效率是显而易见的，因为与 PIXART-α 和 SDXL 标准分别需要 14 和 25
+个步骤相比，它仅用 4
+个步骤就在生成速度方面保持了一致的领先优势。值得注意的是，随着8位推理技术的实现，PIXART-δ需要不到8GB的GPU
+VRAM。这种卓越的效率使 PIXART-δ 能够在各种 GPU 卡上运行，甚至开启了在
+CPU 上运行的可能性。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7BB38591D4-EA16-4A19-9639-8739DAED0F1F%7D.png"></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B68FD94F7-A96E-4CF7-A8C8-2C13702CB42C%7D.png"></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7BA3450E67-7688-45CC-900C-D7575CBD1AA0%7D.png"></p>
+<blockquote>
+<p><strong><font color="blue" size="5">图7：</font></strong><font size="5">生成的输出示例。上半部分是
+PIXART-δ 和 SDXL-LCM 之间的比较，有 4 个采样步骤。下半部分，比较涉及
+PIXART-δ 和 PIXART-α（教师模型，使用 DPM-Solver，14
+个步骤）。</font></p>
+</blockquote>
+<h2 id="训练描述"><font color="black" size="5">2.3
+训练描述</font></h2>
+<p><font color="black" size="5">  正如第 2 节中所讨论的。 3.1
+中，我们使用具有 120K 图像的高质量内部数据集，在两种分辨率设置（512×512
+和 1024×1024）下进行实验。我们利用 PIXART-α 的多尺度图像生成功能（支持
+512px 和 1024px
+分辨率）顺利地在两种分辨率下训练模型。对于这两种分辨率，PIXART-δ 在达到
+5K
+次迭代之前都产生了令人印象深刻的结果，此后只观察到了最小的改进。训练在 2
+个 V100 GPU 上执行，总批量大小为 24，学习率为 2e-5，EMA 速率 μ =
+0.95，并使用 AdamW 优化器。我们采用 DDIMSolver和跳过步骤 k =
+20来提高效率。如第 2 节所述。如图 3.1 和图 3 所示，对原始 LCM
+调度程序进行了修改，以适应预训练的 PIXART-α
+和稳定扩散模型之间的差异。按照 PIXART-α 方法，我们将扩散过程中的 <span class="math inline">\(\textcolor{blue}{β_t}\)</span>
+从缩放线性更改为线性曲线，同时将 βt0 从 0.00085 调整为 0.0001，将 <span class="math inline">\(\textcolor{blue}{β_{t_T}}\)</span> 从 0.012 调整为
+0.02。引导尺度 <span class="math inline">\(\textcolor{blue}{ω_{fix}}\)</span> 设置为 4.5，在
+PIXART-α 中被确定为最佳。虽然在训练过程中省略了 LCM 中 ω
+的傅立叶嵌入，但 PIXART-α 和 PIXART-δ
+都保持相同的结构和可训练参数。这使我们能够使用与教师扩散模型 (PIXART-α)
+相同的参数来初始化一致性函数 <span class="math inline">\(\textcolor{blue}{f_θ( \hat{z}, ω_{fix}, c,
+t_n)}\)</span>，而不会影响性能。基于LCM-LoRA的成功，PIXART-δ可以进一步轻松集成LCM-LoRA，增强其对更多样化应用的适应性。</font></p>
+<h1 id="三controlnet-in-pixart-δ">三、ControlNet in PIXART-δ</h1>
+<h2 id="架构"><font color="black" size="5">3.1 架构</font></h2>
+<p><font color="black" size="5">  ControlNet 最初是为 UNet
+架构定制的，采用跳跃连接来增强控制信号的集成。将 ControlNet 无缝融入基于
+Transformer 的模型（以 PIXART-δ 为例）带来了独特的挑战。与 UNet
+不同，Transformers
+缺乏明确的“编码器”和“解码器”块，使得这些组件之间的传统连接不合适。</font></p>
+<p><font color="black" size="5">  为了应对这一挑战，我们提出了一种创新方法ControlNet-Transformer，以确保ControlNet与Transformer的有效集成，保持ControlNet在管理控制信息和高质量生成PIXART-δ方面的有效性。</font></p>
+<p><font color="black" size="5">  PIXART-δ 包含 28 个 Transformer
+块。我们将ControlNet中原来的零卷积替换为零线性层，即权值和偏置都初始化为零的线性层。我们探索以下网络架构：</font></p>
+<ul>
+<li><p><font color="black" size="5"><strong>ControlNet-UNet。</strong>为了遵循原始的
+ControlNet 设计，我们将前 14 个块视为 PIXART-δ 的“编码器”级别，将后 14
+个块视为 PIXART-δ 的“解码器”级别。我们使用 ControlNet 创建 14
+个编码块的可训练副本。随后，这些块的输出通过加法集成到 14
+个跳跃连接中，这些连接链接到最后 14
+个解码器块。网络设计如图4（b）所示。</font></p>
+<p><font color="black" size="5">值得注意的是，由于原始 Transformer
+设计中缺乏明确的“编码器”和“解码器”阶段以及跳过连接，这种称为
+ControlNet-UNet 的改编遇到了挑战。这种适应背离了 Transformer
+的传统架构，这会妨碍有效性并导致次优结果。</font></p></li>
+<li><p><font color="black" size="5"><strong>ControlNet-Transformer。</strong>为了应对这些挑战，我们提出了一种新颖且专门定制的
+Transformer 设计，如图 4 (c) 所示。这种创新方法旨在将 ControlNet 结构与
+Transformer 架构的固有特征无缝集成。为了实现这种集成，我们有选择地将
+ControlNet 结构应用于初始 N 个基本块。在这种情况下，我们生成前 N
+个基本块的 N 个可训练副本。第 i
+个可训练块的输出复杂地连接到零线性层，然后将所得输出添加到相应的第 i
+个冻结块的输出。随后，该组合输出用作后续第 (i + 1)
+个冻结块的输入。该设计遵循了 PixArt 的原始数据流，我们的观察强调了
+ControlNet-Transformer
+在可控性和性能方面的显着增强。这种方法代表了在此类应用中充分发挥基于
+Transformer 的模型潜力的关键一步。
+我们使用N=13作为最终模型。</font><font color="black" size="5">  </font></p></li>
+</ul>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7B2A8A5187-3563-4257-96E5-B9C870862441%7D.png"></p>
+<blockquote>
+<p><strong><font color="blue" size="5">图4：</font></strong><font size="5">PIXART-δ
+与 ControlNet 集成。
+(b)：ControlNet-UNet。基本块分为“编码器”和“解码器”阶段。控制网络结构应用于
+PIXART-δ 的每个编码器级，输出通过跳跃连接连接到解码器级。
+(c)：ControlNet-Transformer。 ControlNet
+应用于前几个块。每个块的输出被添加到相应冻结块的输出，作为下一个冻结块的输入。</font></p>
+</blockquote>
+<h2 id="实验设置"><font color="black" size="5">3.2
+实验设置</font></h2>
+<p><font color="black" size="5">  我们使用 PIXART-δ 中的 HED
+边缘图作为条件，对 512px
+生成进行消融研究，重点关注网络架构变化。具体来说，我们在 ControlNet-UNet
+和 ControlNet-Transformer
+上进行消融。其他条件，例如canny，将是未来的工作。对于ControlNet-Transformer，我们消融了复制块的数量，包括1、4、7、13和27。我们在内部数据上提取HED，并将梯度累积步骤设置为4的建议是较大的梯度积累会带来更好的结果。优化器和学习率设置与PIXARTδ相同。所有实验均在
+16 个 32GB V100 GPU 上进行。实验 ControlNet-Transformer (N = 27) 的每个
+GPU 的批量大小设置为 2。对于所有其他实验，批量大小设置为
+12。我们的训练集由 3M HED 和图像对组成。</font></p>
+<h2 id="消融实验"><font color="black" size="5">3.3
+消融实验</font></h2>
+<p><font color="black" size="5">  如图 5 所示，ControlNet-Transformer
+总体表现优异，表现出更快的收敛速度和更高的整体性能。这种优越性可归因于
+ControlNet-Transformer 的设计与 Transformer
+架构的固有数据流无缝结合。相反，ControlNet-UNet
+在不存在的“编码器”和“解码器”阶段之间引入了概念信息流，偏离了 Transformer
+的自然数据处理模式。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——16-PIXART-δ.assets%7BF0C5A902-9F30-4E8D-A0D8-606E0EC15D05%7D.png"></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -569,10 +720,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -580,10 +733,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -591,10 +746,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -602,10 +759,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -613,10 +772,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -624,10 +785,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -635,10 +798,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -646,10 +811,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -657,10 +824,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -668,10 +837,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -679,10 +850,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -690,503 +863,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
-<p><font color="black" size="5">  </font></p>
+<p><font color="black" size="5">  </font><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
 <p><font color="black" size="5">  </font></p>
@@ -1197,9 +879,9 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
-            <p>原文链接：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/</a>
-            <p>发表日期：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">June 25th 2024, 8:30:29 am</a>
-            <p>更新日期：<a href="http://example.com/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">July 24th 2024, 8:25:36 am</a>
+            <p>原文链接：<a href="http://example.com/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">http://example.com/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/</a>
+            <p>发表日期：<a href="http://example.com/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">October 30th 2024, 11:39:05 am</a>
+            <p>更新日期：<a href="http://example.com/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">November 11th 2024, 5:50:06 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1208,16 +890,16 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/" title="视频扩散模型——15.Upscale-A-Video">
-                    <div class="nextTitle">视频扩散模型——15.Upscale-A-Video</div>
+                <a href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/" title="扩散模型——18.快捷模型">
+                    <div class="nextTitle">扩散模型——18.快捷模型</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/" title="扩散模型——12.StableSR">
-                    <div class="prevTitle">扩散模型——12.StableSR</div>
+                <a href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/" title="扩散模型——15.PIXART-α">
+                    <div class="prevTitle">扩散模型——15.PIXART-α</div>
                 </a>
             
         </li>
@@ -1387,7 +1069,12 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">1.数据预处理</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Clcm-in-pixart-%CE%B4"><span class="toc-number">2.</span> <span class="toc-text">二、LCM IN PIXART-δ</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%92%8C%E4%BF%AE%E6%94%B9"><span class="toc-number">2.1.</span> <span class="toc-text">2.1
+算法和修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%95%88%E7%8E%87%E5%92%8C%E6%8E%A8%E7%90%86%E6%97%B6%E9%97%B4"><span class="toc-number">2.2.</span> <span class="toc-text">2.2
+训练效率和推理时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.3.</span> <span class="toc-text">2.3
+训练描述</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89controlnet-in-pixart-%CE%B4"><span class="toc-number">3.</span> <span class="toc-text">三、ControlNet in PIXART-δ</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">3.2
+实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.3.</span> <span class="toc-text">3.3
+消融实验</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1681,7 +1368,84 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -2204,7 +1968,7 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -2218,6 +1982,42 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/19</span>
@@ -2245,7 +2045,7 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/16</span>
-            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
         </li>
     
         
@@ -2258,12 +2058,6 @@ HU]的范围，代表HU的实际下限和上限。为了训练文本条件的 CT
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
             <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         

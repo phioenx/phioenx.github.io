@@ -434,6 +434,170 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">
+                
+                <span class="abstract-title-text">Medical Diffusion Model——12.SSLDM</span>
+            </a>
+            <div class="abstract-content">
+                非增强 CT （NCCT） 成像可能会降低图像对比度和解剖可见性，从而可能增加诊断的不确定性。相比之下，对比增强 CT （CECT） 有助于观察感兴趣区域 （ROI）。领先的生成模型，尤其是条件扩散模型，在医学图像模态变换方面表现出了卓越的能力。典型的条件扩散模型通常在分割标签的指导下生成图像，用于医疗模态变换。获得真实指导的机会有限且其基数低，可能会对条件扩散模型的实际临床应用构成挑战。为了实现生成质量和临床实践的平衡，我们提出了一种基于医学图像翻译潜在扩散模型（S2LDM）的新型Syncretic生成模型，该模型可以在推理过程中无需额外条件即可实现高保真重建。S2LDM通过融合编码和扩散增强了不同模态图像的相似性，促进了潜在空间中的融合信息，并在对比增强区域生成了具有更多细节的医学图像。然而，频域中的融合潜空间往往有利于较低频率，通常位于相同的解剖结构中。因此，S2LDM在整个训练过程中应用自适应相似性损失和动态相似性来指导生成，并补充高频细节的不足。定量实验验证了该方法在医学图像翻译中的有效性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型-医学图像">扩散模型-医学图像</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">
+                
+                <span class="abstract-title-text">视频扩散模型——16.Diffuison Forcing</span>
+            </a>
+            <div class="abstract-content">
+                本文介绍了扩散强制，这是一种新的训练范式，其中训练扩散模型以对一组具有独立每个令牌噪声水平的标记进行去噪。通过训练因果下一个token预测模型来应用扩散强迫来对生成建模进行排序，以生成一个或多个未来token，而无需完全扩散过去的token。该方法被证明将下一个token预测模型的优势（如可变长度生成）与全序列扩散模型的优势相结合，如将采样引导到理想轨迹的能力。该方法提供了一系列额外的功能，例如（1）推出连续令牌序列，例如视频，其长度超过训练范围，其中基线发散和（2）新的采样和指导方案，这些方案独特地受益于扩散强迫的可变范围和因果架构，并在决策和规划任务中显着提高性能。除了在实证上的成功之外，该方法还被证明可以优化从真实联合分布中抽取的所有标记子序列的似然的变分下界。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/07/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="视频扩散模型">视频扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">
+                
+                <span class="abstract-title-text">视频扩散模型——15.Upscale-A-Video</span>
+            </a>
+            <div class="abstract-content">
+                基于文本的扩散模型在生成和编辑方面取得了显著的成功，在增强视觉内容方面显示出巨大的前景。然而，由于对输出保真度和时间一致性的高要求，将这些模型应用于视频超分辨率仍然具有挑战性，而扩散模型固有的随机性使情况变得复杂。我们的研究介绍了Upscale-A-Video，这是一种用于视频升级的文本引导潜在扩散框架。该框架通过两个关键机制确保时间连贯性：在本地，它将时间层集成到 U-Net 和 VAE-Decoder 中，保持短序列内的一致性;在全球范围内，无需训练，就引入了一个流引导的循环潜伏传播模块，通过在整个序列中传播和融合潜伏来增强整体视频稳定性。得益于扩散范式，本文的模型还提供了更大的灵活性，允许文本提示指导纹理创建，并允许可调节的噪声水平来平衡恢复和生成，从而在保真度和质量之间进行权衡。大量的实验表明，Upscale-A-Video在合成和真实世界的基准测试以及AI生成的视频中都超越了现有方法，展示了令人印象深刻的视觉真实感和时间一致性。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">
+                
+                <span class="abstract-title-text">扩散模型——12.StableSR</span>
+            </a>
+            <div class="abstract-content">
+                本文利用封装在预训练的文本到图像扩散模型中的先验知识来实现超分辨率（SR）。具体来说，通过使用时间感知编码器，可以在不改变预训练合成模型的情况下获得有希望的恢复结果，从而保留生成先验并最大限度地降低训练成本。为了弥补扩散模型固有的随机性导致的保真度损失，作者还采用了一个可控的特征包装模块，允许用户通过在推理过程中简单地调整标量值来平衡质量和保真度。此外，作者开发了一种渐进式聚合采样策略，以克服预训练扩散模型的固定尺寸限制，从而能够适应任何尺寸的分辨率。使用合成和真实世界的基准对方法进行全面评估，证明了其优于当前最先进的方法。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="扩散模型">扩散模型</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">
+                
+                <span class="abstract-title-text">视频扩散模型——5.FateZero</span>
+            </a>
+            <div class="abstract-content">
+                基于扩散的生成模型在基于文本的图像生成方面取得了显著的成功。然而，由于它在生成过程中包含巨大的随机性，因此将此类模型应用于现实世界的视觉内容编辑仍然具有挑战性，尤其是在视频中。在本文中，提出了 FateZero，这是一种基于零样本文本的编辑方法，适用于真实世界的视频，无需按提示训练或特定用途的mask。为了一致地编辑视频，作者提出了几种基于预训练模型的技术。首先，与简单的DDIM inversion技术相比，作者的方法在inversion过程中捕获中间注意力图，有效地保留了结构和运动信息。这些注意力图在编辑过程中直接融合，而不是在去噪过程中生成。为了进一步减少源视频的语义泄漏，将自注意力与源提示中的交叉注意力特征获得的混合掩码融合在一起。此外，还通过引入时空注意力来确保框架的一致性，对UNet的去噪机制进行了自我关注机制的改革。然而，简明扼要的是，本文的方法是第一个从经过训练的文本到图像模型中展示零镜头文本驱动视频风格和局部属性编辑能力的方法。改方法还拥有基于文本到视频模型的更好的零镜头形状感知编辑能力]。大量的实验证明了本文的方法比以前的作品具有更好的时间一致性和编辑能力。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/06/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/06/11</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">
                 
                 <span class="abstract-title-text">视频扩散模型——14.DynamiCrafter</span>
@@ -501,7 +665,7 @@
             
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/20">
+                <div class="abstract-date" title="Last updated: 2024/11/14">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/17</span>
                 </div>
                 <!-- tags -->
@@ -566,150 +730,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">
-                
-                <span class="abstract-title-text">Medical Diffusion model——11.ContourDiff</span>
-            </a>
-            <div class="abstract-content">
-                通过不同模式（例如，CT 到 MRI）准确转换医学图像具有许多下游临床和机器学习应用。虽然已经提出了几种方法来实现这一目标，但它们通常优先考虑与输出域特征相关的感知质量，而不是保持解剖学保真度。然而，在翻译过程中保持解剖结构对于许多任务至关重要，例如，当利用来自输入域的掩码来开发将图像翻译到输出域的分割模型时。为了应对这些挑战，本文提出了ContourDiff，这是一种利用图像的领域不变解剖轮廓表示的新颖框架。这些表示很容易从图像中提取，但对其解剖内容形成了精确的空间约束。引入了一种扩散模型，该模型将来自任意输入域的图像的轮廓表示转换为感兴趣输出域中的图像。通过在每个扩散采样步骤中应用轮廓作为约束，确保了解剖内容的保存。通过使用原始 CT 掩模在从 CT 转换为 MRI 的图像上训练分割模型来评估我们的方法，并在真实 MRI 上测试其性能。我们的方法明显优于其他不成对的图像翻译方法，此外，在训练期间无需访问任何输入域信息。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/13</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">
-                
-                <span class="abstract-title-text">视频扩散模型——9.Tunnel Try-on</span>
-            </a>
-            <div class="abstract-content">
-                视频试穿（video try-on）是一项具有挑战性的任务，在以前的作品中没有得到很好的解决。主要障碍在于保留服装的细节并同时对连贯的动作进行建模。面对这些困难，本文通过提出一个名为“Tunnel Try-on”的基于扩散的框架来解决视频试穿问题。核心思想是在输入视频中挖掘一个“对焦隧道”，在服装区域周围提供特写镜头。我们放大了隧道中的区域，以更好地保留服装的细节。为了生成连贯的运动，我们首先利用卡尔曼滤波在对焦隧道中构建平滑的裁剪，并将隧道的位置嵌入注入注意力层，以提高生成视频的连续性。此外，我们还开发了一种环境编码器，用于提取隧道外部的上下文信息作为补充线索。借助这些技术，Tunnel Try-on 保留了服装的精细细节，并合成了稳定流畅的视频。Tunnel Try-on 展示了重大进步，可以被视为在视频中应用虚拟试妆的商业级的首次尝试。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/08</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">
-                
-                <span class="abstract-title-text">Medical Diffusion Model——10.CoLa-Diff</span>
-            </a>
-            <div class="abstract-content">
-                MRI 合成有望减轻临床实践中缺少 MRI 模式的挑战。通过对复杂且可变的数据分布进行建模，扩散模型已成为一种有效的图像合成技术。然而，大多数基于扩散的 MRI 合成模型都使用单一模式。由于它们在原始图像域中操作，因此它们是内存密集型的并且对于多模态合成来说不太可行。此外，它们常常无法保留 MRI 中的解剖结构。此外，平衡多模态 MRI 输入的多种条件对于多模态合成至关重要。在这里，我们提出了第一个基于扩散的多模态 MRI 合成模型，即条件潜在扩散模型（CoLa-Diff）。为了减少内存消耗，我们设计了 CoLa-Diff 在潜在空间中运行。我们提出了一种新颖的网络架构，例如类似的协作过滤，来解决潜在空间中可能的压缩和噪声。为了更好地保持解剖结构，引入脑区域掩模作为密度分布的先验来指导扩散过程。我们进一步提出自动权重适应以有效地利用多模态信息。我们的实验表明，CoLa-Diff 优于其他最先进的 MRI 合成方法，有望成为多模态 MRI 合成的有效工具。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/08/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/03</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/">
-                
-                <span class="abstract-title-text">视频扩散模型——8.ControlVideo</span>
-            </a>
-            <div class="abstract-content">
-                本次介绍一个名为 ControlVideo 的免训练框架，以实现自然高效的文本到视频生成。ControlVideo 改编自 ControlNet，利用了输入运动序列的粗略结构一致性，并引入了三个模块来改进视频生成。首先，为了保证帧之间的外观连贯性，ControlVideo 在自注意力模块中添加了完全跨帧交互。其次，为了减轻闪烁效应，它引入了一种交错帧平滑器，该平滑器在交替帧上采用帧插值。最后，为了有效地制作长视频，它利用了一个分层采样器，该采样器以整体连贯性单独合成每个短片。有了这些模块，ControlVideo 在数量和质量上都优于广泛的运动提示
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/05/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/04/10</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">
-                
-                <span class="abstract-title-text">扩散模型在时间序列的应用</span>
-            </a>
-            <div class="abstract-content">
-                扩散模型在生成与观察数据相似的样本方面具有出色的性能，目前广泛应用于图像、视频和文本合成中。本文主要介绍基于扩散模型的时间序列预测、插补和生成方法。最后，我们总结了基于扩散的方法的常见局限性，并强调了未来潜在的研究方向。
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/04/09">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/04/07</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/6/">6</a><a class="extend next" rel="next" href="/archives/page/3/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/3/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1093,7 +1117,84 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -1616,7 +1717,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 56
+        Total : 61
         </div>
         <!-- search  -->
         
@@ -1630,6 +1731,42 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/19</span>
@@ -1657,7 +1794,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/16</span>
-            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.SSLDM/">Medical Diffusion Model——13.SSLDM</a>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
         </li>
     
         
@@ -1670,12 +1807,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">06/25</span>
             <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/25</span>
-            <a class="archive-post-title" href="/2024/06/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.Class-Guided%20I2I%20Diffuison/">Medical Diffusion Model--12.Class-Guided I2I Diffu</a>
         </li>
     
         
