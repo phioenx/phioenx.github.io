@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="PhoenixPeng">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="PhoenixPeng">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,PhoenixPeng,diffusion model,medical diffusion">
+    
+    <meta name="description" content="PhoenixPeng">
+    <meta name="description" content="一、介绍   扩散模型能否取代自回归模型，成为构建大语言模型的新范式？   最新发布的这篇文章——《Large Language Diffusion models》给出了肯定的答案。   它是一种前所未有的从头训练的8B规模的扩散模型，在多项基准测试中展现出与同等规模自回归模型相当甚至更优的性能。    目前，几乎所有的大语言模型都采用自回归架构——即通过预测下一个token来生成文本。这种方法虽">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扩散模型--19.LLaDA(首个8B扩散大语言模型)">
+<meta property="og:url" content="http://example.com/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/index.html">
+<meta property="og:site_name" content="PhoenixPeng的领域">
+<meta property="og:description" content="一、介绍   扩散模型能否取代自回归模型，成为构建大语言模型的新范式？   最新发布的这篇文章——《Large Language Diffusion models》给出了肯定的答案。   它是一种前所未有的从头训练的8B规模的扩散模型，在多项基准测试中展现出与同等规模自回归模型相当甚至更优的性能。    目前，几乎所有的大语言模型都采用自回归架构——即通过预测下一个token来生成文本。这种方法虽">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251441688.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442043.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442259.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442958.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443563.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443998.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443336.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444071.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444975.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444056.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444171.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444733.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444982.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444833.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444282.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445493.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445132.png">
+<meta property="og:image" content="c:\Users\PhoenixPeng\blog\source_posts\%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA.assets%7B11E736CA-5DE9-462A-8F2E-15CAF6F26F4D%7D.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445195.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445320.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445770.png">
+<meta property="article:published_time" content="2025-02-24T01:46:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T06:49:25.453Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251441688.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>扩散模型--19.LLaDA(首个8B扩散大语言模型) · PhoenixPeng&#39;s blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- Google tag (gtag.js) -->
+    
+
+<meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>PhoenixPeng's blog.</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">PhoenixPeng&#39;s blog.</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">扩散模型--19.LLaDA(首个8B扩散大语言模型)</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/404-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                扩散模型--19.LLaDA(首个8B扩散大语言模型)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2025/02/24</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="一介绍">一、介绍</h1>
+<p><font color="black" size="5">  扩散模型能否取代自回归模型，成为构建大语言模型的新范式？</font></p>
+<p><font color="black" size="5">  最新发布的这篇文章——《Large Language
+Diffusion models》给出了肯定的答案。</font></p>
+<p><font color="black" size="5">  它是一种前所未有的从头训练的8B规模的扩散模型，在多项基准测试中展现出与同等规模自回归模型相当甚至更优的性能。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251441688.png"></p>
+<p><font color="black" size="5">  目前，几乎所有的大语言模型都采用自回归架构——<strong>即通过预测下一个token来生成文本</strong>。这种方法虽然行之有效，但也存在一些固有局限，首先由于需要逐个生成token，导致生成速度较慢，特别是在生成长文本时尤为明显；其次，自回归模型只能利用已生成的左侧上下文来预测下一个token，这种单向依赖使其难以充分捕捉文本中的双向语义关系，例如在完型填空任务中，自回归模型难以同时考虑空缺左右两侧的语境信息。</font></p>
+<p><font color="black" size="5">  作者认为LLM的智能（可扩展性、指令跟踪、上下文学习、对话能力）不是来自自回归机制本身，而是源于生成建模的核心原则：<strong>通过最大可能性估计来近似真实的语言分布。</strong>由此，LLaDA提供了全新的思路，展示了一种不同于传统从左到右方法的文本生成方法。</font></p>
+<blockquote>
+<p><font color="black" size="5">Prompt: <em>Explain what artificial
+intelligence is.</em></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442043.gif"></p>
+</blockquote>
+<h1 id="二llada原理">二、LLaDA原理</h1>
+<h2 id="概率公式"><strong><font color="black" size="5">2.1
+概率公式</font></strong></h2>
+<p><font color="black" size="5">  LLaDA采用了一种叫做掩码扩散模型（Masked
+Diffusion
+Model）的架构，<strong>通过前向过程和反向过程定义模型分布&nbsp;<span class="math inline">\(\textcolor{blue}{p_\theta(x_0)}\)</span>。</strong></font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442259.png"></p>
+<p><font color="black" size="5">  在前向过程中，逐渐屏蔽 <span class="math inline">\(\textcolor{blue}{x_0}\)</span>
+中独立的标记（会随机选择文本中的一些词，将它们替换成特殊的掩码标记。），直到&nbsp;<span class="math inline">\(\textcolor{blue}{t=1}\)</span>
+时序列被完全屏蔽。对于&nbsp;<span class="math inline">\(\textcolor{blue}{t
+\in (0,1)}\)</span>，序列&nbsp;<span class="math inline">\(\textcolor{blue}{x_t}\)</span>
+被部分屏蔽，每被屏蔽的概率为&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>，而保持未被屏蔽的概率为&nbsp;<span class="math inline">\(\textcolor{blue}{1-t}\)</span>。这个过程就像是在文本中打上一些空白，例如：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251442958.png"></p>
+<p><font color="black" size="5">  在反向过程中，模型会训练一个掩码预测器（mask
+predictor）<span class="math inline">\(\textcolor{blue}{p_\theta(\cdot|x_t)}\)</span>。这个预测器的任务是学习如何将这些空白（[MASK]）还原成有意义的文本。<strong>即当&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span> 从 1 到 0
+时，反向过程通过迭代预测掩码标记来恢复数据分布。预测器将&nbsp;<span class="math inline">\(\textcolor{blue}{x_t}\)</span>&nbsp;作为输入，并同时预测所有被屏蔽的标记（表示为M）。</strong>它不是简单地从左到右去预测，而是可以同时看到掩码位置前后的词语。这种双向的设计让LLaDA能够更好地理解文本的上下文关系，通过不断优化这个过程，LLaDA为大语言模型提供了一种全新的构建方法。</font></p>
+<p><font color="black" size="5">  LLaDA通过仅对掩码标记计算的交叉熵损失进行训练的：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443139.png"></p>
+<p><font color="black" size="5">  其中，<span class="math inline">\(\textcolor{blue}{x_0}\)</span>
+从训练数据中采样，<span class="math inline">\(\textcolor{blue}{t}\)</span> 从 [0, 1]
+中均匀采样，<span class="math inline">\(\textcolor{blue}{x_t}\)</span>
+从前向过程中采样。指标函数 <span class="math inline">\(\textcolor{blue}{1[\cdot]}\)</span>
+可确保只计算掩码标记的损失。</font></p>
+<p><font color="black" size="5">  一旦训练完成，就可以模拟由掩码预测器参数化的反向过程，并将模型分布&nbsp;<span class="math inline">\(\textcolor{blue}{p_\theta(x_0)}\)</span>
+定义为&nbsp;<span class="math inline">\(\textcolor{blue}{t=0}\)</span>
+时诱导的边际分布。值得注意的是，公式 (3)
+中的损失已被证明是模型分布负对数似然的上限：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443563.png"></p>
+<p><font color="black" size="5">  上式表明LLADA是一种原则性的生成模型，具有自然地在上下文学习的潜力，类似于LLM。此外，它的生成视角确保了在极端情况下<strong>Fisher
+consistency(<font color="blue" size="5">指当数据量趋于无穷大时，模型能收敛到真实分布</font>)</strong>，表明具有大数据和模型的可伸缩性。</font></p>
+<p><font color="black" size="5"><strong>训练过程分为预训练和监督微调两个阶段。</strong></font></p>
+<h2 id="预训练"><strong><font color="black" size="5">2.2
+预训练</font></strong></h2>
+<p><font color="black" size="5">  LLaDA采用Transformer作为掩码预测器，其架构与现有的LLM类似。不同的是LLaDA并不使用<strong>因果掩码（<font color="blue" size="5">让模型在进行预测时只能关注过去和当前的tokens</font>）</strong>，因为LLaDA的结构允许它能看到整个输入进行预测，从而更好地理解tokens之间的双向依赖关系。</font></p>
+<p><font color="black" size="5">  LLaDA采用了2.3万亿词库的训练数据集进行预训练，使用了13万小时的H800
+GPU算力。值得注意的是，这些训练数据包含了通用文本，代码，数学和多语言内容。</font></p>
+<p><font color="black" size="5">  对于训练序列&nbsp;<span class="math inline">\(\textcolor{blue}{x_0}\)</span>，随机采样 <span class="math inline">\(\textcolor{blue}{t \in
+[0,1]}\)</span>，以相同的概率&nbsp;<span class="math inline">\(\textcolor{blue}{t}\)</span>&nbsp;独立屏蔽每个标记，得到&nbsp;<span class="math inline">\(\textcolor{blue}{x_t}\)</span>： </font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443998.png"></p>
+<p><font color="black" size="5">  其中，每个标记的条件分布由以下公式给出：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251443336.png"></p>
+<p><font color="black" size="5">  这里，<span class="math inline">\(\textcolor{blue}{M}\)</span>
+表示屏蔽标记。直观地说，每个标记要么保持不变，要么被屏蔽，被屏蔽的概率随着
+<span class="math inline">\(\textcolor{blue}{t}\)</span> 从 0 到 1
+的递增而线性增加。在&nbsp;<span class="math inline">\(\textcolor{blue}{t=1}\)</span>
+时，保证所有标记都被屏蔽，这意味着 <span class="math inline">\(\textcolor{blue}{x_1}\)</span>
+遵循集中在完全屏蔽标记序列上的狄拉克分布。值得注意的是，线性掩蔽概率类似于连续扩散模型中的噪声时间表。这种线性的动机是假设文本中的信息平均与标记数成正比，因此在前向过程中线性地丢失信息是合理的。</font></p>
+<p><font color="black" size="5">  正向过程不仅可逆，而且对应于在所有tokens中完全分解的反向过程。
+<span class="math inline">\(\textcolor{blue}{t}\)</span>
+从1到0的反向过程将从完全掩盖的令牌序列中生成新数据。对于 <span class="math inline">\(\textcolor{blue}{0≤s&lt;t≤1}\)</span>，反向过程的条件分布被分解为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444071.png"></p>
+<p><font color="black" size="5">  其中每个标记的条件分布为：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444975.png"></p>
+<p><font color="black" size="5">  因此，需要估计的关键函数是条件分布
+<span class="math inline">\(\textcolor{blue}{q_{0|t}(x^i_s|x_t)}\)</span>，如果原始标记在输入
+<span class="math inline">\(\textcolor{blue}{x_t}\)</span>
+中被掩盖，它将预测原始标记。这类似于连续扩散模型中的数据预测形式。</font></p>
+<p><font color="black" size="5">  
+虽然掩码扩散的开发并不平凡，但实现起来却很简单。我们首先引入掩码预测器，即一个参数模型
+<span class="math inline">\(\textcolor{blue}{p_θ(\cdot|x_t)}\)</span>（例如，一个没有因果掩码的变换器），它将任意
+<span class="math inline">\(\textcolor{blue}{t}\)</span> 的 <span class="math inline">\(\textcolor{blue}{x_t}\)</span>
+作为输入，同时预测所有掩码标记。然后，定义模型分布 <span class="math inline">\(\textcolor{blue}{p_θ(x_0)}\)</span>
+如下：从作为完全掩码标记序列的 <span class="math inline">\(\textcolor{blue}{x_1}\)</span> 开始，模拟由 <span class="math inline">\(\textcolor{blue}{p_θ(\cdot|x_t)}\)</span>
+参数化的从 <span class="math inline">\(\textcolor{blue}{t = 1}\)</span>
+到 0 的近似反向过程，并通过蒙特卡罗方法估计公式
+(3)，进行随机梯度下降训练。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444056.png"></p>
+<h2 id="监督微调"><strong><font color="black" size="5">2.3
+监督微调</font></strong></h2>
+<p><font color="black" size="5">  LLaDA通过使用配对数据&nbsp;<span class="math inline">\(\textcolor{blue}{(p_0, r_0)}\)</span>
+进行监督微调（SFT）来增强 LLaDA 遵循指令的能力，其中 <span class="math inline">\(\textcolor{blue}{p_0}\)</span> 是提示，<span class="math inline">\(\textcolor{blue}{r_0}\)</span> 表示响应。这是 LLM
+最简单、最基本的后期训练方法。从技术上讲，这需要对条件分布 <span class="math inline">\(\textcolor{blue}{p_θ(r_0|p_0)}\)</span>
+而不是预训练中的 <span class="math inline">\(\textcolor{blue}{p_θ(x_0)}\)</span>
+进行建模。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444171.png"></p>
+<p><font color="black" size="5">  实现方法与预训练类似。如图所示，保持提示信息不变，并像处理&nbsp;<span class="math inline">\(\textcolor{blue}{x_0}\)</span>
+一样，独立屏蔽响应中的标记。然后，我们将提示和屏蔽后的回应&nbsp;<span class="math inline">\(\textcolor{blue}{r_t}\)</span>
+输入预训练的屏蔽预测器，计算 SFT 的损失：</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444733.png"></p>
+<p><font color="black" size="5">  其中<span class="math inline">\(\textcolor{blue}{L'}\)</span>表示以后指定的动态长度，并且所有其他符号保持与以前相同。</font></p>
+<p><font color="black" size="5">  请注意，这种方法与预训练完全兼容。从本质上讲，<span class="math inline">\(\textcolor{blue}{p_0}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{r_0}\)</span>
+的连接可被视为干净的预训练数据 <span class="math inline">\(\textcolor{blue}{x_0}\)</span>，而&nbsp;<span class="math inline">\(\textcolor{blue}{p_0}\)</span> 和&nbsp;<span class="math inline">\(\textcolor{blue}{r_t}\)</span>
+的连接则是屏蔽版本的 <span class="math inline">\(\textcolor{blue}{x_t}\)</span>。这一过程与预训练完全相同，唯一的区别是所有被屏蔽的标记都恰好出现在&nbsp;<span class="math inline">\(\textcolor{blue}{x_t}\)</span> 部分。</font></p>
+<p><font color="black" size="5">  LLaDA
+8B模型在由4.5M个词对组成的数据集上进行了SFT训练。与预训练过程一致，数据准备和训练都遵循现有
+LLM 中使用的 SFT 协议，没有引入任何额外的技术来优化 LLaDA
+的性能。数据集跨越多个领域，包括代码、数学、指令遵循和结构化数据理解。LLaDA将
+|EOS|
+标记附加到每个mini-batch中短对的末尾，以确保所有数据的长度相等。在训练过程中，将
+|EOS| 作为正常标记处理，在采样过程中则将其移除，从而使 LLaDA
+能够自动控制应答长度。</font></p>
+<h2 id="推理"><strong><font color="black" size="5">2.4
+推理</font></strong></h2>
+<p><font color="black" size="5">  作为一个生成模型，LLaDA
+既能对新文本进行采样，也能对候选文本的可能性进行评估。从采样开始。如图所示，给定一个提示
+<span class="math inline">\(\textcolor{blue}{p_0}\)</span>，我们将反向过程离散化，从模型分布
+<span class="math inline">\(\textcolor{blue}{p_\theta(r_0|p_0)}\)</span>
+开始采样，从完全屏蔽的响应开始。采样步骤的总数是一个超参数，它自然为
+LLaDA
+提供了效率和采样质量之间的权衡。默认采用均匀分布的时间步数。此外，生成长度也被视为一个超参数，它指定了采样过程开始时完全屏蔽句子的长度。由于预训练和
+SFT
+都是使用长度可变的数据集进行的，因此最终结果对该长度超参数并不敏感。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444982.png"></p>
+<p><font color="black" size="5">  在时间 <span class="math inline">\(\textcolor{blue}{t \in (0, 1]}\)</span> 到 <span class="math inline">\(\textcolor{blue}{s \in [0,
+t)}\)</span>的中间阶段，将 <span class="math inline">\(\textcolor{blue}{p_0}\)</span> 和 <span class="math inline">\(\textcolor{blue}{r_t}\)</span>
+输入掩码预测器，同时预测所有被掩码的标记。随后，我们对预测到的标记进行重屏蔽
+<span class="math inline">\(\textcolor{blue}{\frac{s}{t}}\)</span>，以获得
+<span class="math inline">\(\textcolor{blue}{r_s}\)</span>，确保反向过程的转换与正向过程一致，从而实现准确采样。</font></p>
+<p><font color="black" size="5">  原则上，重屏蔽的策略应该是纯随机的。然而，受
+LLMs
+中采样退火技巧的启发，作者探索了两种确定但有效的重屏蔽策略：</font></p>
+<p><font color="black" size="5">  <strong>1）Low-confidence remasking
+(低置信度remasking)：</strong>在每个推理步骤，选择模型预测置信度最低的tokens进行remasking。这种策略可以集中精力预测模型不确定的tokens，提高生成质量。</font></p>
+<p><font color="black" size="5">  <strong>2）Semi-autoregressive
+remasking (半自回归remasking)：</strong>此外，对于 SFT 之后的
+LLaDA，将序列分为若干个block，在每个block内使用low-confidence
+remasking策略，然后按自回归的方式逐个生成block。这种策略结合了扩散模型的并行生成能力和自回归模型的顺序生成能力，可以在生成质量和效率之间取得平衡。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444833.png"></p>
+<blockquote>
+<p><font size="5">  在使用半自回归remasking进行分块生成时，可能会出现语义断层（如前半句抒情，后半句突然转折）。<strong>优化方案</strong>：动态块长调整（根据标点分割块），或引入跨块注意力缓存机制。</font></p>
+</blockquote>
+<h1 id="三实验">三、实验</h1>
+<h2 id="可扩展性"><strong><font color="black" size="5">3.1
+可扩展性</font></strong></h2>
+<p><font color="black" size="5">  在<span class="math inline">\(10^{23}\)</span>FLOPs的大规模计算预算下，LLaDA在<strong>大规模多任务语言理解（MMLU）、小学数学推理（GSM8K）、代码生成（HumanEval）</strong>等六项核心任务上的表现与同等规模的自回归模型相当。这表明扩散模型在大规模训练时具有良好的性能提升潜力。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251444282.png"></p>
+<p><font color="black" size="5">  值得注意的是，在 MMLU 和 GSM8K
+等任务中，LLaDA 表现出更强的可扩展性。即使在物理交互(PIQA)
+等性能落后的任务中，LLaDA
+也能在更大规模上缩小与自回归模型的差距。为了考虑异常值的重大影响，我们选择不拟合定量缩放曲线，以避免潜在的误解。不过，这些结果清楚地表明了
+LLaDA 的可扩展性。</font></p>
+<h2 id="基准结果"><strong><font color="black" size="5">3.2
+基准结果</font></strong></h2>
+<p><font color="black" size="5">  为了全面评估LLaDA
+8B的上下文学习和指令跟随能力，与现有LLM进行了详细的比较，评估任务包括一般任务、数学、代码和中文方面的
+15 项流行基准。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445493.png"></p>
+<p><font color="black" size="5">  如表 1 所示，在对 2.3T
+标记进行预训练后，LLaDA 8B 表现出了非凡的性能，在几乎所有任务上都超过了
+LLaMA2 7B，并且在整体上与 LLaMA3 8B 具有竞争力。<strong>LLaDA
+在数学和中文任务中表现出优势(<font color="blue" size="5">LLaDA在中文任务（CMMLU
+69.9 vs LLaMA3
+50.7）的显著优势可能源于训练数据中中文语料占比更高，而非架构优势。</font>)</strong>，展示了扩散模型在复杂推理任务上的潜力。作者推测，LLaDA
+的优势与在某些任务中表现相对较弱的因素相同--数据质量和分布的差异，这主要是由于
+LLM 数据集的闭源情况造成的。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445132.png"></p>
+<p><font color="black" size="5">  此外，Tab. 2 比较了 LLaDA 8B
+Instruct 与现有 LLM
+的性能。我们发现，经过450万对高质量指令数据的SFT监督微调后，LLaDA在遵循复杂指令方面表现出色。SFT
+提高了 LLaDA 在大多数下游任务中的性能，但少数指标（如
+MMLU）出现了下降，我们推测这可能是由于 SFT
+数据的质量不够理想。总体而言，由于没有使用强化学习（RL）进行配准，LLaDA
+8B的结果略微落后于 LLaMA3 8B
+Instruct，尽管在许多指标上的差距仍然很小。值得注意的是，即使仅使用
+SFT，LLaDA 也表现出了出色的指令跟随能力。</font></p>
+<h2 id="逆向推理与分析"><strong><font color="black" size="5">3.3
+逆向推理与分析</font></strong></h2>
+<p><font color="black" size="5">  <strong>逆向推理能力：</strong>传统自回归模型往往存在逆向诅咒问题，即在逆向任务如从结果推导过程上表现明显弱于正向任务。而LLaDA通过其双向注意力机制，在诗歌补全的正向任务（已知开头补全结尾）和逆向任务（已知结尾补充开头）上都取得了一致的高性能。甚至在某些测试用例上超越了GPT4o的表现。</font></p>
+<p><font color="black" size="5">  具体来说，作者构建了一个包含 496
+个中国名诗句对的数据集。给定诗歌中的一个句子，模型的任务是在不进行额外微调的情况下生成下一句（正对）或上一句（反对）。</font></p>
+<p><img src="C:\Users\PhoenixPeng\blog\source_posts\扩散模型——19.LLaDA.assets%7B11E736CA-5DE9-462A-8F2E-15CAF6F26F4D%7D.png"></p>
+<p><font color="black" size="5">  如表 3 所示，LLaDA
+有效地解决了逆转诅咒，在正向和逆转任务中均表现出一致的零样本性能。相比之下，Qwen
+2.5 和 GPT-4o 在两者之间表现出明显的差距。正向生成的结果证实，这两种 ARM
+都很强大，与 LLaDA
+相比，它们受益于更大的数据集和更多的计算资源。不过，在逆转任务中，LLaDA
+的表现远远超过了这两个
+ARM。强调的是，并没有为逆转任务设计任何特殊的方法。直观地说，LLaDA
+对标记的处理是一致的，没有归纳偏差，因此性能均衡。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445195.png"></p>
+<blockquote>
+<p><font size="5">  LLaDA的动态掩码策略（0-100%随机掩码）理论上允许模型学习任意位置的依赖关系，突破了自回归模型只能从左到右建模的限制。但在高掩码比例（如
+80%）时，关键语义信息可能被过度破坏，导致模型学习到错误的关联（例如将"猫追老鼠"
+误学成 "老鼠追猫"）。例如，论文中逆转诗歌任务的成功（LLaDA 准确率 42.4
+vs GPT-4o 34.3）表明双向建模有效，但 PIQA 任务表现较弱（74.4 vs LLaMA3
+80.6）暗示物理常识推理仍依赖顺序信息。</font></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445320.png"></p>
+<h2 id="案例研究"><strong><font color="black" size="5">3.4
+案例研究</font></strong></h2>
+<p><font color="black" size="5">  在表 4 中展示了由 LLaDA 8B Instruct
+生成的样本。表4 中展示了它的指令跟随能力。首先，表格展示了 LLaDA
+以非自回归方式生成连贯、流畅和扩展文本的能力。其次，它强调了该模型的多轮对话能力，可有效保留对话历史，并根据上下文生成适合多种语言的回复。LLaDA
+的这种聊天功能首次脱离了传统的 ARM，令人印象深刻。</font></p>
+<p><img src="https://cdn.jsdelivr.net/gh/phioenx/blogimage@main/img/202502251445770.png"></p>
+<h1 id="四总结">四、总结</h1>
+<p><font color="black" size="5">  我们介绍了LLaDA，这是一种基于扩散模型的大型语言建模的原则性且未开发的方法。
+LLaDA表现出强大的能力，在可扩展性，上下文学习和指令跟随方面，达到与强大的LLM相当的性能。此外，LLADA还提供了独特的优势，例如双向建模和增强鲁棒性等独特优势，有效地解决了现有LLM的几个固有局限性。本文的发现不仅将扩散模型建立为可行且有前途的替代方案，而且还挑战了关于这些基本能力与ARM固有联系的普遍假设。</font></p>
+<p><font color="black" size="5">  当然LLaDA也存在一些明显的局限性：首先，它目前仅使用了监督微调，没有像其他主流模型那样进行RLHF（基于人类反馈的强化学习对齐），这可能导致其在安全性和对齐性方面表现不足。其次在一些需要强化学习对齐的任务上，如MT-Bench对话评测和TruthfulQA真实性评测中，LLaDA的表现略逊于经过RLHF的Llama2等模型。此外，由于训练数据中数据和代码任务的比例相对较低。在GSM8K数学推理和HumanEval代码生成等特定任务上的表现仍有提升空间。这项研究的意义在于证明了扩散模型可以作为构建大语言模型的可行替代方案。更重要的是它挑战了一个普遍认知，大语言模型的关键能力并非必须依赖于自回归架构，这为未来大语言模型的发展开辟了新的方向。</font></p>
+<p><font color="black" size="5">  </font></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://example.com">PhoenixPeng</a>
+            <p>原文链接：<a href="http://example.com/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/">http://example.com/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/</a>
+            <p>发表日期：<a href="http://example.com/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/">February 24th 2025, 9:46:00 am</a>
+            <p>更新日期：<a href="http://example.com/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/">February 25th 2025, 2:49:25 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/" title="扩散模型——17.分布匹配蒸馏">
+                    <div class="prevTitle">扩散模型——17.分布匹配蒸馏</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC81OTAwMi8zNTQ2NA>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:1654794646@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">一、介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8Cllada%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、LLaDA原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E7%8E%87%E5%85%AC%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">2.1
+概率公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">2.2.</span> <span class="toc-text">2.2
+预训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E7%9D%A3%E5%BE%AE%E8%B0%83"><span class="toc-number">2.3.</span> <span class="toc-text">2.3
+监督微调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E7%90%86"><span class="toc-number">2.4.</span> <span class="toc-text">2.4
+推理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">三、实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">3.1
+可扩展性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E5%87%86%E7%BB%93%E6%9E%9C"><span class="toc-number">3.2.</span> <span class="toc-text">3.2
+基准结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91%E6%8E%A8%E7%90%86%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">3.3.</span> <span class="toc-text">3.3
+逆向推理与分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E7%A0%94%E7%A9%B6"><span class="toc-number">3.4.</span> <span class="toc-text">3.4
+案例研究</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2025/02/24/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9419.LLaDA/">扩散模型--19.LLaDA(首个8B扩散大语言模型)</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9417.%E5%88%86%E5%B8%83%E5%8C%B9%E9%85%8D%E8%92%B8%E9%A6%8F/">扩散模型——17.分布匹配蒸馏</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2024/11/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9418.%E5%BF%AB%E6%8D%B7%E6%A8%A1%E5%9E%8B/">扩散模型——18.快捷模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2024/10/30/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416-PIXART-%CE%B4/">扩散模型——16.PIXART-δ</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2024/10/28/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.PIXART-%CE%B1/">扩散模型——15.PIXART-α</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2024/09/11/Medical-Diffusion-Model%E2%80%94%E2%80%9414.SelfRDB/">Medical Diffusion Model——14.SelfRDB</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2024/08/25/Medical%20Diffusion%20Model%E2%80%94%E2%80%9413.Endora/">Medical Diffusion Model--13.Endora</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span>
+            <a class="archive-post-title" href="/2024/08/19/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DDIM%20Inversion/">扩散模型——14.DDIM Inversion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/14</span>
+            <a class="archive-post-title" href="/2024/08/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.SSL/">扩散模型——13.SSL</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2024/07/28/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BACT%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%872/">生成增强CT图像的相关论文2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span>
+            <a class="archive-post-title" href="/2024/07/24/GAN%E4%B8%8E%E9%85%8D%E5%87%86%E7%BD%91%E7%BB%9C%E7%BB%93%E5%90%88%E7%9A%84%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C/">GAN与配准网络结合的相关工作</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2024/07/16/Medical%20Diffusion%20Model%E2%80%94%E2%80%9412.SSLDM/">Medical Diffusion Model——12.SSLDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2024/07/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9416.Diffuison-Forcing/">视频扩散模型——16.Diffuison Forcing</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2024/06/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9415.Upscale-A-Video/">视频扩散模型——15.Upscale-A-Video</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2024/06/18/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.StableSR/">扩散模型——12.StableSR</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/11</span>
+            <a class="archive-post-title" href="/2024/06/11/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.FateZero/">视频扩散模型——5.FateZero</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9414.DynamiCrafter/">视频扩散模型——14.DynamiCrafter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2024/05/18/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9413.VideoCrafter2/">视频扩散模型——13.VideoCrafter2</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span>
+            <a class="archive-post-title" href="/2024/05/17/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9412.VideoCrafter1/">视频扩散模型——12.VideoCrafter1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2024/05/16/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.FRESCO/">视频扩散模型--11.FRESCO</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2024/05/15/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.FLATTEN/">视频扩散模型--10.FLATTEN</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2024/05/13/Medical%20Diffusion%20Model%E2%80%94%E2%80%9411.ContourDiff/">Medical Diffusion model——11.ContourDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/08</span>
+            <a class="archive-post-title" href="/2024/05/08/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Tunnel-Try-on/">视频扩散模型——9.Tunnel Try-on</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span>
+            <a class="archive-post-title" href="/2024/05/03/Medical%20Diffusion%20Model%E2%80%94%E2%80%9410.CoLa-Diff/">Medical Diffusion Model——10.CoLa-Diff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/10</span>
+            <a class="archive-post-title" href="/2024/04/10/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.ControlVideo/">视频扩散模型——8.ControlVideo</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span>
+            <a class="archive-post-title" href="/2024/04/07/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E5%9C%A8%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/">扩散模型在时间序列的应用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2024/03/23/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latte/">视频扩散模型——7.Latte</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span>
+            <a class="archive-post-title" href="/2024/02/28/%E8%AF%A6%E8%A7%A3Sora%E8%83%8C%E5%90%8E%E7%9A%84%E6%8A%80%E6%9C%AF/">详解Sora视频生成大模型背后的技术</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%941.UNIT/">图像到图像翻译——1.UNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2024/01/24/%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%942.MUNIT(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">图像到图像翻译——2.MUNIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%948.FGDM/">Medical Diffusion model——8.FGDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%949.FDDM/">Medical Diffusion Model——9.FDDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%947.MIDiffusion/">Medical Diffuison Model——7.MIDiffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2024/01/15/Medical%20Diffusion%20Model%E2%80%94%E2%80%946.SynDiff/">Medical Diffusion Model——6.SynDiff</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2024/01/10/Medical%20Diffusion%20Model%E2%80%94%E2%80%945.SADM/">Medical Diffusion Model——5.SADM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span>
+            <a class="archive-post-title" href="/2024/01/02/Medical%20Diffusion%20Model%E2%80%94%E2%80%944.ALDM/">Medical Diffusion Model——4.ALDM</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Video-LCM/">视频扩散模型——6.Video LCM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.Gen1/">视频扩散模型——4.Gen1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.VideoComposer/">视频扩散模型——3.VideoComposer</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2023/12/26/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.LVDM/">视频扩散模型——2.LVDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span>
+            <a class="archive-post-title" href="/2023/12/25/%E8%A7%86%E9%A2%91%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.Video-Diffusion-Model/">视频扩散模型——1.Video Diffusion Model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span>
+            <a class="archive-post-title" href="/2023/12/21/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9411.DiT/">扩散模型——11.DiT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2023/12/12/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%9410.ControlNet/">扩散模型——10.ControlNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2023/12/04/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%949.Latent-Consistency-Models/">扩散模型——9.Latent Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/29</span>
+            <a class="archive-post-title" href="/2023/11/29/E3D-Lstm/">E3D-Lstm</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2023/11/27/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9B%BE%E5%83%8F%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">常见的图像评价指标</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/14</span>
+            <a class="archive-post-title" href="/2023/11/14/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%948.Consistency-Models/">扩散模型——8.Consistency Models</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span>
+            <a class="archive-post-title" href="/2023/11/02/PredNet/">PredNet</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span>
+            <a class="archive-post-title" href="/2023/10/14/Bayesian-Flow-Networks(%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD)/">BFNs——Bayesian Flow Networks</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2023/10/09/%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BAct%E5%9B%BE%E5%83%8F%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%871/">生成增强ct图像的相关论文1</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2023/10/07/Medical%20Diffusion%20Model%E2%80%94%E2%80%943.3d%20Medical%20%20LDM/">Medical Diffusion Model——3.3D Medical LDM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2023/09/23/Medical%20Diffusion%20Model%E2%80%94%E2%80%942.Med-DDPM/">Medical Diffusion Model——2.Med-DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2023/09/04/Medical%20Diffusion%20Model%E2%80%94%E2%80%941.Medfusion/">Medical Diffusion Model——1.Medfusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span>
+            <a class="archive-post-title" href="/2023/08/31/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%947.Latent-diffusion-model/">扩散模型——7.Latent diffusion model</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2023/08/29/PITI-%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91%E4%BB%BB%E5%8A%A1-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">PITI:图像翻译任务+预训练扩散模型</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span>
+            <a class="archive-post-title" href="/2023/08/11/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%946.Classifier-free-guidance/">扩散模型——6.Classifier-free guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span>
+            <a class="archive-post-title" href="/2023/08/10/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%945.Classifier-guidance/">扩散模型——5.Classifier guidance</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span>
+            <a class="archive-post-title" href="/2023/07/27/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E7%AF%87%E2%80%94%E2%80%941.Gaussian%20Diffusion/">扩散模型代码篇——1.Gaussian Diffusion</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2023/07/26/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%944.%E5%88%86%E6%95%B0%E6%A8%A1%E5%9E%8B/">扩散模型——4.分数模型（SDEs）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%943.Improved-DDPM/">扩散模型——3.Improved DDPM</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2023/07/25/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%942.DDIM/">扩散模型——2.DDIM加速采样</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2023/05/23/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B%E2%80%94%E2%80%941.%E4%BB%8EDDPM%E5%85%A5%E9%97%A8/">扩散模型——1.从DDPM入门</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型-医学图像">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型-医学图像
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                扩散模型
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="视频扩散模型">
+                <span class="iconfont-archer">&#xe606;</span>
+                视频扩散模型
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="其他">
+            <span class="iconfont-archer">&#xe60a;</span>
+            其他
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-医学图像">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-医学图像
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="图像到图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            图像到图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-图像翻译">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-图像翻译
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="扩散模型-实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            扩散模型-实战
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="视频扩散模型">
+            <span class="iconfont-archer">&#xe60a;</span>
+            视频扩散模型
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://example.com",
+        root: siteMetaRoot,
+        author: "PhoenixPeng"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js?v=20211217" defer></script>
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
