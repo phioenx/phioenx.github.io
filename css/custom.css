@@ -58,12 +58,3 @@ h1,h2,h3,h4,h5,h6,#subtitle,.content,.line,.post-content p,.post-content li{
 .post-meta-date:hover,.post-meta-date-created:hover{
 	cursor: url('./mouse/xxx.cur'), auto!important;
 }
-
-/* 导航栏右侧布局调整 */
-#nav-right{
-    flex:1 1 auto;
-    justify-content: flex-end;
-    margin-left: auto;
-    display: flex;
-    flex-wrap:nowrap;
-}
