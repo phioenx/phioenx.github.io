@@ -1,0 +1,427 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>哈基鹏的大模型之旅（一） | 哈基鹏的博客🐦</title><meta name="author" content="PhoenixPeng"><meta name="copyright" content="PhoenixPeng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="大语言模型LLM介绍，包括大语言模型的定义、概述了OpenAI、Claude、Gemini、DeepSeek等系列模型的发展路程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈基鹏的大模型之旅（一）">
+<meta property="og:url" content="https://amadeuspjq.cn/posts/dbc3748e.html">
+<meta property="og:site_name" content="哈基鹏的博客🐦">
+<meta property="og:description" content="大语言模型LLM介绍，包括大语言模型的定义、概述了OpenAI、Claude、Gemini、DeepSeek等系列模型的发展路程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://amadeuspjq.cn/img/cover2.jpg">
+<meta property="article:published_time" content="2025-10-28T02:57:14.000Z">
+<meta property="article:modified_time" content="2025-11-10T02:42:58.445Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta property="article:tag" content="大语言模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://amadeuspjq.cn/img/cover2.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "哈基鹏的大模型之旅（一）",
+  "url": "https://amadeuspjq.cn/posts/dbc3748e.html",
+  "image": "https://amadeuspjq.cn/img/cover2.jpg",
+  "datePublished": "2025-10-28T02:57:14.000Z",
+  "dateModified": "2025-11-10T02:42:58.445Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "PhoenixPeng",
+      "url": "https://amadeuspjq.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://amadeuspjq.cn/posts/dbc3748e.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '哈基鹏的大模型之旅（一）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/modify.css"><link rel="stylesheet" href=" /css/custom.css"><link rel="stylesheet" href=" /css/categorybar.css"><link rel="stylesheet" href=" /css/readPercent.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="/css/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(https://amadeuspjq.cn/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">哈基鹏的博客🐦</span></a><a class="nav-page-title" href="/"><span class="site-name">哈基鹏的大模型之旅（一）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">哈基鹏的大模型之旅（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-28T02:57:14.000Z" title="发表于 2025-10-28 10:57:14">2025-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-10T02:42:58.445Z" title="更新于 2025-11-10 10:42:58">2025-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">7.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="top-img gist" style="background-image: url(/img/top2.jpg)"></div><article class="container post-content" id="article-container"><h1 id="大语言模型（LLM）简介"><a href="#大语言模型（LLM）简介" class="headerlink" title="大语言模型（LLM）简介"></a>大语言模型（LLM）简介</h1><p><font color = black size = 4><strong>大语言模型（LLM,Large Language Model），也称大型语言模型，是一种旨在理解和生成人类语言的人工智能模型</strong>。</font></p>
+<p><font color = black size = 4>LLM是相较于传统语言模型，包含数百亿（或更多）参数的语言模型，它们在更大规模语料上进行预训练任务，从而获得对语言深层次的理解。目前，国外的知名 LLM 有 GPT、LLaMA、Gemini、Claude 和 Grok 等，国内的有 DeepSeek、通义千问、豆包、Kimi、文心一言、GLM 等。</font></p>
+<p><font color = black size = 4>尽管这些大型语言模型与小型语言模型（例如 <code>3.3 亿</code>参数的 <code>BERT</code> 和 <code>15 亿</code>参数的 <code>GPT-2</code>）使用相似的架构和预训练任务，但它们展现出截然不同的能力，尤其在解决复杂任务时表现出了惊人的潜力，这被称为“<strong>涌现能力</strong>”。以 GPT-3 和 GPT-2 为例，GPT-3 可以通过学习上下文来解决少样本任务，而 GPT-2 在这方面表现较差。因此，科研界给这些庞大的语言模型起了个名字，称之为“大语言模型（LLM）”。为了探索性能的极限，许多研究人员开始训练越来越庞大的语言模型，例如拥有175B（1750亿）参数的GPT-3是LLM的开端，基于GPT-3进行预训练（Pretraining）、监督微调（Supervised Fine-Tuning，SFT）、强化学习与人类反馈（Reinforcement Learning with Human Feedback，RLHF）三阶段训练得到的 ChatGPT 更是主导了 LLM 时代的到来。</font></p>
+<h2 id="常见的LLM模型"><a href="#常见的LLM模型" class="headerlink" title="常见的LLM模型"></a>常见的LLM模型</h2><p><font color = black size = 4>大语言模型的发展历程虽然只有短短不到五年的时间，但是发展速度相当惊人，截止 2024 年 6 月，国内外有超过百种大模型相继发布。下图按照时间线给出了 2019 年至 2024 年 6 月比较有影响力并且模型参数量超过 100 亿的大语言模型：</font></p>
+<p><img src="https://github.com/datawhalechina/llm-universe/raw/main/figures/C1-1-LLMs_0925_final.png"></p>
+<p><font color = black size = 4>接下来我们主要介绍几个国内外常见的大模型（包括开源和闭源）</font></p>
+<h3 id="OpenAI系列模型"><a href="#OpenAI系列模型" class="headerlink" title="OpenAI系列模型"></a><font color = black size = 4>OpenAI系列模型</font></h3><p><font color = black size = 4><strong>OpenAI</strong> 公司在 2018 年提出的 <strong>GPT（Generative Pre-Training）</strong> 模型是典型的 生成式预训练语言模型之一。</font></p>
+<p><font color = black size = 4>GPT 模型的基本原则是<strong>通过语言建模将世界知识压缩到仅解码器 (decoder-only) 的 Transformer 模型中</strong>，这样它就可以恢复(或记忆)世界知识的语义，并充当通用任务求解器。它能够成功的两个关键点：</font></p>
+<ul>
+<li><font color = black size = 4>训练能够准确预测下一个单词的 decoder-only 的 Transformer 语言模型</font></li>
+<li><font color = black size = 4>扩展语言模型的大小</font></li>
+</ul>
+<p><font color = black size = 4>OpenAI 在 LLM 上的研究大致可以分为以下几个阶段：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/C1-1-GPT_series.png"></p>
+<ul>
+<li><p><font color = black size = 4>🐶<strong>GPT-1</strong> 是 GPT 系列的开山之作，也是第一个使用 Decoder-Only 的预训练模型。但是，GPT-1 的模型体量和预训练数据都较少，沿承了传统 Transformer 的模型结构，使用了 12层 Decoder Block 和 768 的隐藏层维度，模型参数量仅有 1.17亿（0.12B），在大小为 5GB 的 BooksCorpus 数据集上预训练得到。可以看到，GPT-1 的参数规模与预训练规模和 BERT-base 是大致相当的，但其表现相较于 BERT-base 却有所不如，这也是 GPT 系列模型没能成为预训练语言模型时代的代表的原因。</font></p>
+</li>
+<li><p><font color = black size = 4>🦮<strong>GPT-2</strong> 则是 OpenAI 在 GPT-1 的基础上进一步探究预训练语言模型多任务学习能力的产物。GPT-2 的模型结构和 GPT-1 大致相当，只是扩大了模型参数规模、将 Post-Norm 改为了 Pre-Norm（也就是先进行 LayerNorm 计算，再进入注意力层计算）。这些改动的核心原因在于，由于模型层数增加、体量增大，梯度消失和爆炸的风险也不断增加，为了使模型梯度更稳定对上述结构进行了优化。</font></p>
+<blockquote>
+<p><font  size = 4>GPT-2 的核心改进是大幅增加了预训练数据集和模型体量。GPT-2 的 Decoder Block 层数达到了48（注意，GPT-2 共发布了四种规格的模型，此处我们仅指规格最大的 GPT-2 模型），隐藏层维度达到了 1600，模型整体参数量达 15亿（1.5B），使用了自己抓取的 40GB 大小的 WebText 数据集进行预训练，不管是模型结构还是预训练大小都超过了 1代一个数量级。</font></p>
+<p><font  size = 4>GPT-2 的另一个重大突破是以 zero-shot（零样本学习）为主要目标，也就是不对模型进行微调，直接要求模型解决任务。例如，在传统的预训练-微调范式中，我们要解决一个问题，一般需要收集几百上千的训练样本，在这些训练样本上微调预训练语言模型来实现该问题的解决。而 zero-shot 则强调不使用任何训练样本，直接通过向预训练语言模型描述问题来去解决该问题。zero-shot 的思路自然是比预训练-微调范式更进一步、更高效的自然语言范式，但是在 GPT-2 的时代，模型能力还不足够支撑较好的 zero-shot 效果，在大模型时代，zero-shot 及其延伸出的 few-shot（少样本学习）才开始逐渐成为主流。</font></p>
+</blockquote>
+</li>
+<li><p><font color = black size = 4>🦁<strong>GPT-3</strong> 则是更进一步展示了 OpenAI“力大砖飞”的核心思路，也是 LLM 的开创之作。在 GPT-2 的基础上，OpenAI 进一步增大了模型体量和预训练数据量，整体参数量达 175B，是当之无愧的“大型语言模型”。在模型结构上，基本没有大的改进，只是由于巨大的模型体量使用了稀疏注意力机制来取代传统的注意力机制。在预训练数据上，则是分别从 CC、WebText、维基百科等大型语料集中采样，共采样了 45T、清洗后 570GB 的数据。根据推算，GPT-3 需要在 1024张 A100（80GB 显存）的分布式训练集群上训练 1个月。</font></p>
+</li>
+</ul>
+<p><font color = black size = 4>之所以说 GPT-3 是 LLM 的开创之作，除去其巨大的体量带来了涌现能力的凸显外，还在于其提出了 few-shot 的重要思想。few-shot 是在 zero-shot 上的改进，研究者发现即使是 175B 大小的 GPT-3，想要在 zero-shot 上取得较好的表现仍然是一件较为困难的事情。而 few-shot 是对 zero-shot 的一个折中，旨在提供给模型少样的示例来教会它完成任务。few-shot 一般会在 prompt（也就是模型的输入）中增加 3~5个示例，来帮助模型理解。例如，对于情感分类任务：</font></p>
+<blockquote>
+<p><font  size = 4>zero-shot：请你判断“<strong>这真是一个绝佳的机会</strong>”的情感是正向还是负向，如果是正向，输出1；否则输出0</font></p>
+<p><font  size = 4>few-shot：请你判断“<strong>这真是一个绝佳的机会</strong>”的情感是正向还是负向，如果是正向，输出1；否则输出0。你可以参考以下示例来判断：“你的表现非常好”——1；“太糟糕了”——0；“真是一个好主意”——1。</font></p>
+</blockquote>
+<p><font color = black size = 4>通过给模型提供少量示例，模型可以取得远好于 zero-shot 的良好表现。few-shot 也被称为上下文学习（In-context Learning），即让模型从提供的上下文中的示例里学习问题的解决方法。GPT-3 在 few-shot 上展现的强大能力，为 NLP 的突破带来了重要进展。如果对于绝大部分任务都可以通过人为构造 3~5个示例就能让模型解决，其效率将远高于传统的预训练-微调范式，意味着 NLP 的进一步落地应用成为可能——而这，也正是 LLM 的核心优势。</font></p>
+<p><font color = black size = 4>下表总结了从 GPT-1 到 GPT-3 的模型结构、预训练语料大小的变化：</font></p>
+<table>
+<thead>
+<tr>
+<th align="center">模型</th>
+<th align="center">DecoderLayer</th>
+<th align="center">Hidden_size</th>
+<th align="center">注意力头数</th>
+<th align="center">注意力维度</th>
+<th align="center">总参数量</th>
+<th align="center">预训练语料</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GPT-1</td>
+<td align="center">12</td>
+<td align="center">3072</td>
+<td align="center">12</td>
+<td align="center">768</td>
+<td align="center">0.12B</td>
+<td align="center">5GB</td>
+</tr>
+<tr>
+<td align="center">GPT-2</td>
+<td align="center">48</td>
+<td align="center">6400</td>
+<td align="center">25</td>
+<td align="center">1600</td>
+<td align="center">1.5B</td>
+<td align="center">40GB</td>
+</tr>
+<tr>
+<td align="center">GPT-3</td>
+<td align="center">96</td>
+<td align="center">49152</td>
+<td align="center">96</td>
+<td align="center">12288</td>
+<td align="center">175B</td>
+<td align="center">570GB</td>
+</tr>
+</tbody></table>
+<p><font color = black size = 4>🦅2022年11月，<strong>OpenAI</strong> 发布了基于 GPT 模型（GPT-3.5 和 GPT-4）的<strong>会话应用 ChatGPT</strong>。由于与人类交流的出色能力，ChatGPT 自发布以来就引发了人工智能社区的兴奋。ChatGPT 本质上是一个 LLM 应用，是基于基座模型开发出来的，与基座模型有本质的区别。ChatGPT 上线后用户增长迅速，5 天注册人数突破 100 万，两个月后月活用户破亿，成为当时史上用户增长最快的消费级应用程序。</font></p>
+<p><font color = black size = 4>随着不断迭代，ChatGPT 逐渐丰富了其功能：</font></p>
+<ul>
+<li><font color = black size = 4><strong>智能模式切换：</strong> GPT-5 一体化系统自动在知识型、推理型、多模态模式间智能切换，无需手动选择🏟️</font></li>
+<li><font color = black size = 4><strong>思维链：</strong> 系统自动判断何时需要深度思考，可选择性展示推理过程，帮助用户理解复杂问题的解决步骤🏛️</font></li>
+<li><font color = black size = 4><strong>跨领域能力：</strong> 集成编码、推理、代理任务于一体，一个模型解决所有问题🏗️</font></li>
+<li><font color = black size = 4><strong>多模态能力：</strong> 能够分析和理解用户提供的图片、音频和视频，实现全面的多模态交互🏚️</font></li>
+<li><font color = black size = 4><strong>实时语音和视频对话：</strong> 用户可与 AI 进行自然的语音和视频交流，支持手势识别和情感表达🏡</font></li>
+<li><font color = black size = 4><strong>自定义指令与记忆功能：</strong> 记住用户之前的交互习惯和偏好，提供个性化体验🏢</font></li>
+<li><font color = black size = 4><strong>GPT 构建器平台：</strong> 允许用户无需编程创建专用的 AI 助手，支持自定义知识库和行为模式🏣</font></li>
+<li><font color = black size = 4><strong>数据分析与可视化：</strong> 直接处理和分析上传的数据文件，生成图表和可视化报告🏤</font></li>
+<li><font color = black size = 4><strong>插件系统：</strong> 允许开发者创建工具扩展 ChatGPT 的能力，实现网页浏览、数据分析和第三方服务调用🏥</font></li>
+</ul>
+<p><font color = black size = 4><strong>OpenAI 模型发展历程：</strong></font></p>
+<p><font color = black size = 4>2023年3月，发布 <strong>GPT-4</strong>，引入多模态能力，参数规模显著扩大</font></p>
+<p><font color = black size = 4>2024年5月，发布 <strong>GPT-4o</strong>，实现文本、语音、图像多模态融合，响应速度提升 2 倍</font></p>
+<p><font color = black size = 4>2024年7月，发布<strong>GPT-4o mini</strong>，轻量级消费级应用模型</font></p>
+<p><font color = black size = 4>2024年9月，发布 <strong>o1 系列</strong>，专为复杂推理设计，支持思维链推理</font></p>
+<p><font color = black size = 4>2025年2月，发布 <strong>GPT-4.5</strong>，知识广度和推理深度显著提升，上下文扩展至 512K</font></p>
+<p><font color = black size = 4>2025年8月，发布 <strong>GPT-5</strong> 系列，集成多模态和推理能力，实现 GPT 系列和 o 系列大一统。GPT-5 是一个一体化系统，包含智能高效的基础模型、深度推理模型、实时路由模块，系统会基于对话类型、问题复杂度、工具需求及用户显式指令智能调度模型，自动判断何时需要开启深度思考</font></p>
+<h3 id="Claude系列模型"><a href="#Claude系列模型" class="headerlink" title="Claude系列模型"></a><font color = black size = 4>Claude系列模型</font></h3><p><font color = black size = 4>Claude 系列模型是由 OpenAI 离职人员创建的 <strong>Anthropic</strong> 公司开发的闭源语言大模型。</font></p>
+<ul>
+<li><font color = black size = 4>最早的 <strong>Claude</strong> 于 2023 年 3 月 15 日发布。</font></li>
+<li><font color = black size = 4>2024 年 3 月 4 日，更新至 <strong>Claude-3</strong>，包括 Claude 3 Haiku、Claude 3 Sonnet 和 Claude 3 Opus，它们的能力依次递增，旨在满足不同用户和应用场景的需求。</font></li>
+<li><font color = black size = 4>2024 年 10 月，Anthropic 发布了 <strong>Claude 3.5 Sonnet</strong>，这是一款在推理和通用任务上有显著提升的模型。</font></li>
+<li><font color = black size = 4>2025 年 5 月，Anthropic 又进一步发布了 <strong>Claude 4.0</strong>，包括了 Claude 4 Sonnet 和 Claude 4 Opus，均是<strong>混合推理模型</strong>，支持标准模式与推理思考模式，<strong>编码能力异常强大</strong>。支持多工具并行调用与精准指令解析，本地文件访问时内存管理升级，可规避捷径行为，强化复杂任务处理能力。</font></li>
+<li><font color = black size = 4>2025 年 8 月，Anthropic 更新至 <strong>Claude Opus 4.1</strong>，在推理能力、代码能力和agent 支持上有进一步提升。</font></li>
+</ul>
+<h3 id="Gemini系列模型"><a href="#Gemini系列模型" class="headerlink" title="Gemini系列模型"></a><font color = black size = 4>Gemini系列模型</font></h3><p><font color = black size = 4><strong>Gemini 系列</strong>语言大模型由 <strong>Google</strong> 开发。</font></p>
+<ul>
+<li><font color = black size = 4>2022 年 4 月，发布了初始版本（PaLM 后更名为 Gemini）。</font></li>
+<li><font color = black size = 4>2025 年 2 月，Google 发布了 <strong>Gemini 2.0</strong> 系列模型，在性能和效率上有显著提升。包括 Gemini 2.0 Pro、Gemini 2.0 Flash、Gemini 2.0 Flash-Lite 是 Gemini 2.0 系列的三个版本，分别适用于不同的场景。同样，推出了其推理模型 <strong>Gemini 2.0 Flash Thinking</strong>。</font></li>
+<li><font color = black size = 4>2025 年 3 月，Google 发布了 <strong>Gemini 2.5 Pro</strong>，性能有了进一步提升，推理能力和代码能力提升非常显著。</font></li>
+</ul>
+<h3 id="LLaMA系列模型"><a href="#LLaMA系列模型" class="headerlink" title="LLaMA系列模型"></a><font color = black size = 4>LLaMA系列模型</font></h3><p><font color = black size = 4><strong>LLaMA 系列模型</strong>是 <strong>Meta</strong> 开源的一组参数规模 <strong>从 8B 到 405B</strong> 的基础语言模型。</font></p>
+<ul>
+<li><p><font color = black size = 4>2023年2月，Meta发布了<strong>LLaMA-1</strong>，包括7B、13B、30B和65B四个参数量版本。这些模型在超过1T token的语料上进行了预训练，其中最大的65B参数模型在2,048张A100 80G GPU上训练了近21天。</font></p>
+</li>
+<li><p><font color = black size = 4>2023年7月，Meta发布了<strong>LLaMA-2</strong>，包含7B、13B、34B和70B四个参数量版本，除了34B模型外，其他均已开源。LLaMA-2将预训练的语料扩充到了2T token，并将模型的上下文长度从2,048翻倍到了4,096。引入了分组查询注意力机制（Grouped-Query Attention, GQA）等技术。</font></p>
+</li>
+<li><p><font color = black size = 4>2024年4月，Meta发布了<strong>LLaMA-3</strong>，包括8B和70B两个参数量版本。LLaMA-3支持8K长文本，并采用了编码效率更高的tokenizer，词表大小为128K。使用了超过15T token的预训练语料，是LLaMA-2的7倍多。</font></p>
+</li>
+<li><p><font color = black size = 4>2024 年 7 月，发布了 <strong>LLaMA 3.1</strong> 模型 ，分别8B、70B 和 405B 三个规模。</font></p>
+<blockquote>
+<p>1️⃣<code>更多的训练数据量</code>：LLaMA3.1 在 15 万亿个 token 的数据上进行预训练，采用了更科学的数据配比。LLaMA3.1 接触到更多的文本信息，从而提高了其理解和生成文本的能力。</p>
+<p>2️⃣<code>更长的上下文长度</code>：LLaMA 3.1 将上下文长度大幅提升至 128K token，支持处理极长的文档和对话历史，改善了对长文本的理解和生成能力，适用于更复杂的应用场景。</p>
+<p>3️⃣<code>更多的训练数据量</code>：LLaMA3.1 在 15 万亿个 token 的数据上进行预训练，采用了更科学的数据配比。LLaMA3.1 接触到更多的文本信息，从而提高了其理解和生成文本的能力。</p>
+<p>4️⃣<code>更长的上下文长度</code>：LLaMA 3.1 将上下文长度大幅提升至 128K token，支持处理极长的文档和对话历史，改善了对长文本的理解和生成能力，适用于更复杂的应用场景。</p>
+<p>5️⃣<code>分组查询注意力（GQA，Grouped-Query Attention）</code>：通过将查询（query）分组并在组内共享键（key）和值（value），减少了计算量，同时保持了模型性能，提高了大型模型的推理效率（LLaMA2 只有 70B 采用）。</p>
+<p>6️⃣<code>更大的词表</code>：LLaMA3.1 采用了 128K 的 tokenizer，是前两代 32K 的 4 倍，这使得其语义编码能力得到了极大的增强，从而显著提升了模型的性能。</p>
+<p>7️⃣<code>精细的指令遵循</code>：通过改进的对齐技术，LLaMA 3.1 在遵循复杂指令、理解微妙提示方面表现更出色，使模型行为更可预测和可控。</p>
+<p>8️⃣<code>完善的工具使用</code>：增强了 Function Calling 能力，使模型能够更准确地识别何时以及如何调用外部工具，提高了与外部系统集成的能力。</p>
+</blockquote>
+</li>
+<li><p><font color = black size = 4>2024 年 12 月，发布了 <strong>LLaMA 3.3</strong> 模型(只开源了 70B 的指令模型)。</font></p>
+</li>
+</ul>
+<p><font color = black size = 4>它们都是在数万亿个字符上训练的，展示了如何<strong>仅使用公开可用的数据集来训练最先进的模型</strong>，而不需要依赖专有或不可访问的数据集。这些数据集包括 Common Crawl、Wikipedia、OpenWebText2、RealNews、Books 等。LLaMA 模型使用了<strong>大规模的数据过滤和清洗技术</strong>，以提高数据质量和多样性，减少噪声和偏见。LLaMA 模型还使用了高效的<strong>数据并行</strong>和<strong>流水线并行</strong>技术，以加速模型的训练和扩展其中 405B 参数模型是首个公开的千亿级开源模型，性能对标 GPT-4o 等商业闭源模型。</font></p>
+<p><font color = black size = 4>与 GPT 系列相同，LLaMA 模型也采用了 <strong>decoder-only</strong> 架构，同时结合了一些前人工作的改进。LLaMA 系列基本上是后续大模型的标杆：</font></p>
+<ul>
+<li><font color = black size = 4><code>Pre-normalization 正则化</code>：为了提高训练稳定性，LLaMA 对每个 Transformer 子层的输入进行了 RMSNorm 归一化，这种归一化方法可以避免梯度爆炸和消失的问题，提高模型的收敛速度和性能；</font></li>
+<li><font color = black size = 4><code>SwiGLU 激活函数</code>：将 ReLU 非线性替换为 SwiGLU 激活函数，增加网络的表达能力和非线性，同时减少参数量和计算量；</font></li>
+<li><font color = black size = 4><code>旋转位置编码（RoPE，Rotary Position Embedding）</code>：模型的输入不再使用位置编码，而是在网络的每一层添加了位置编码，RoPE 位置编码可以有效地捕捉输入序列中的相对位置信息，并且具有更好的泛化能力</font></li>
+<li><font color = black size = 4><code>分组查询注意力（GQA，Grouped-Query Attention）</code>：通过将查询（query）分组并在组内共享键（key）和值（value），减少了计算量，同时保持了模型性能，提高了大型模型的推理效率。</font></li>
+</ul>
+<h3 id="DeepSeek系列模型"><a href="#DeepSeek系列模型" class="headerlink" title="DeepSeek系列模型"></a><font color = black size = 4>DeepSeek系列模型</font></h3><p><font color = black size = 4><strong>DeepSeek</strong> 是由 <strong>深度求索 (DeepSeek) 团队</strong> 开发的开源大语言模型系列。首个版本于 2023 年 11 月发布。DeepSeek 采用 <strong>decoder-only</strong> 架构，融合了 FlashAttention-2、RoPE 位置编码、SwiGLU 等先进技术，在多语言理解和代码生成等方面表现出色。</font></p>
+<p><font color = black size = 4>模型发展历程：</font></p>
+<ul>
+<li><p><font color = black size = 4>2023 年 11 月 12 日：发布 DeepSeek 系列基础模型，包括 <strong>7B 和 67B</strong> 两种规模的 <strong>Base</strong> 和 <strong>Chat</strong> 版本。模型在 1.2 万亿 token 上进行训练，同时发布了 <strong>DeepSeek-Coder</strong> 专用代码生成模型。</font></p>
+</li>
+<li><p><font color = black size = 4>2024 年 3 月 15 日：发布 <strong>DeepSeek-V2</strong> 系列，提升了多语言能力、长文本理解和推理能力，同时发布了 <strong>DeepSeek-MoE</strong> 混合专家模型。</font></p>
+</li>
+<li><p><font color = black size = 4>2024 年 5 月 31 日：发布 <strong>DeepSeek-V2.5</strong>，性能得到进一步提升，上下文长度扩展至 <strong>128K tokens</strong>，并改进了工具调用和多模态能力。</font></p>
+</li>
+<li><p><font color = black size = 4>2024 年 10 月：发布 <strong><a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V3">DeepSeek-V3</a></strong>，在推理能力、多语言理解和创意生成方面有显著提升，支持更复杂的系统提示词控制，并进一步提升了代码质量和多轮对话一致性。</font></p>
+</li>
+<li><p><font color = black size = 4>2025 年 2 月：</font></p>
+<ul>
+<li><p><font color = black size = 4><strong><a target="_blank" rel="noopener" href="https://github.com/deepseek-ai">DeepSeek-R1</a></strong> <strong>推理型大模型</strong>，专注于复杂问题求解和精确推理能力，在数学、逻辑推理和结构化知识方面展现出卓越性能，类似于 OpenAI 的 o1 系列。并且是<strong>首个开源的推理型大模型</strong>，在多项基准测试中超越了 o1 系列。</font></p>
+</li>
+<li><p><font color = black size = 4><strong>DeepSeek-R1-Zero</strong> 直接在大规模强化学习 (RL) 训练的模型，无需 SFT，在推理方面就十分出色。</font></p>
+</li>
+<li><p><font color = black size = 4>同时开源了用 Llama 和 Qwen 从 DeepSeek-R1 中蒸馏出的六个 dense 模型。 其中 DeepSeek-R1-Distill-Qwen-32B 在各种基准测试中均优于 OpenAI-o1-mini。</font></p>
+</li>
+</ul>
+</li>
+<li><p><font color = black size = 4>2025 年 8 月： 发布了混合推理模型<strong>DeepSeek-V3.1</strong>，在提升推理效率的同时降低token消耗，优化工具调用与智能体协作能力，并通过专用搜索token增强了信息检索性能。</font></p>
+</li>
+</ul>
+<p><font color = black size = 4>deepseek 目前采用的主要改进如下：</font></p>
+<ul>
+<li><font color = black size = 4>多头潜在注意力 (MLA，Multi-head Latent Attention) ：通过将键值 (KV) 缓存显著压缩为潜在向量来保证高效推理的同时不降低效果。</font></li>
+<li><font color = black size = 4>DeepSeekMoE，通过稀疏计算以经济的成本训练强大的模型。</font></li>
+<li><font color = black size = 4>一系列推理加速技术</font></li>
+</ul>
+<h3 id="Qwen系列模型"><a href="#Qwen系列模型" class="headerlink" title="Qwen系列模型"></a><font color = black size = 4>Qwen系列模型</font></h3><p><font color = black size = 4><strong>通义千问由阿里巴巴基于 “通义” 大模型研发</strong>，于 2023 年 4 月正式发布。Qwen 系列均采用 <strong>decoder-Only</strong> 架构，并结合 <code>SwiGLU 激活</code>、<code>RoPE</code>、<code>GQA</code> 等技术。中文能力相对来说非常不错的开源模型。</font></p>
+<ul>
+<li><font color = black size = 4>2023 年 9 月，阿里云开源了 <strong>Qwen</strong>（通义千问）系列工作。</font></li>
+<li><font color = black size = 4>2024 年 6 月 6 日，正式开源了 <strong>Qwen2</strong>。</font></li>
+<li><font color = black size = 4>2025 年 4 月 29 日，发布了全新升级的 <strong>Qwen3</strong> 系列模型。开源了 7 种模型大小：<strong>0.6B, 1.7B, 4B, 8B, 14B, 32B</strong> 的 Dense 模型和 <strong>30B-A3B, 235B-A22B</strong> 的 MoE 模型；8B 以下模型的上下文长度为 32k，8B 以上模型的上下文长度为 128k。<strong>采用混合推理架构</strong>，<strong>支持思考模式和非思考模式之间无缝切换</strong>。</font></li>
+<li><font color = black size = 4>2025年7月，更新为版本 <strong>Qwen3-2507</strong>，<strong>不再采用混合推理架构</strong>，提供三种参数规模：<strong>235B-A22B、30B-A3B、4B</strong>。指令遵循、逻辑推理、文本理解、数学、科学、编码、工具使用能力显著提升，支持256K上下文，可扩展至1M。</font><ul>
+<li><font color = black size = 4>Qwen3-Instruct-2507（非思考模型）： 在多语言和长尾知识覆盖范围有实质性增长，在主观和开放式任务中与用户偏好的一致性显著更好，文本生成质量更高。</font></li>
+<li><font color = black size = 4>Qwen3-Thinking-2507（思考模型）： 在推理任务（逻辑&#x2F;数学&#x2F;科学&#x2F;编码&#x2F;需人类专业知识的学术基准）上性能显著提升，达开源思考模型 SOTA。</font></li>
+</ul>
+</li>
+</ul>
+<p><font color = black size = 4>同时其还发布了代码模型(Qwen3-Coder)，数学模型(Qwen2.5-Math)，语音模型(Qwen3-ASR-Flash)，图片理解模型(Qwen3-VL)，多模态模型(Qwen2.5-Omini)等一系列强大模型。</font></p>
+<h3 id="GLM系列模型"><a href="#GLM系列模型" class="headerlink" title="GLM系列模型"></a><font color = black size = 4>GLM系列模型</font></h3><p><font color = black size = 4><strong>GLM 系列模型</strong>是 <strong>清华大学和智谱 AI 等</strong> 合作研发的语言大模型。</font></p>
+<ul>
+<li><font color = black size = 4>2023 年 3 月，发布了<strong>ChatGLM</strong>。</font></li>
+<li><font color = black size = 4>2023 年 6 月，发布了 <strong>ChatGLM2</strong>。相对于一代，ChatGLM2 将上下文长度扩展到了 32K，通过更大的预训练规模实现了模型性能的大幅度突破。不过，在 ChatGLM2 中，模型架构就基本回归了 LLaMA 架构，引入 MQA 的注意力机制，预训练任务也回归经典的 CLM，放弃了 GLM 的失败尝试。</font></li>
+<li><font color = black size = 4>2023 年 10 月，发布了 <strong>ChatGLM3</strong>，相对于二代在语义、数学、推理、代码和知识方面都达到了当时的 SOTA 性能</font></li>
+<li><font color = black size = 4>2024 年 1 月，智谱发布了支持 128K 上下文，包括多种类型的 <strong>GLM-4</strong> 系列模型，评估其在英文基准上达到了 GPT-4 的水平。不过，智谱并未直接开源 GLM-4，而是开源了其轻量级版本 GLM-4-9B 模型，其在 1T token 的多语言语料库上进行预训练，上下文长度为 8K，并使用与 GLM-4 相同的管道和数据进行后训练。在训练计算量较少的情况下，其超越了 Llama-3-8B，并支持 GLM-4 中所有工具的功能。</font></li>
+<li><font color = black size = 4>2025 年 7 月，发布了 <strong>GLM4.5</strong>。 <strong>GLM-4.5</strong> 系列模型是专为智能体应用而设计的模型。该系列采用混合推理架构，提供两种工作模式：<strong>思考模式</strong>用于处理复杂推理任务和工具调用，<strong>非思考模式</strong>则专注于快速响应。目前推出两个版本：<strong>GLM-4.5</strong> 和 <strong>GLM-4.5-Air</strong>。</font></li>
+</ul>
+<p><font color = black size = 4>在技术规格方面，GLM-4.5 拥有 355B 总参数量和 32B 激活参数，而 GLM-4.5-Air 则采用更轻量化的设计，包含 106B 总参数量和 12B 激活参数。GLM-4.5 系列模型将推理、编码和智能体能力有机统一，为智能体应用提供强大的技术支撑。</font></p>
+<h2 id="LLM的特点与能力"><a href="#LLM的特点与能力" class="headerlink" title="LLM的特点与能力"></a>LLM的特点与能力</h2><p><font color = black size = 4>大语言模型具有多种显著特点，这些特点使它们在自然语言处理和其他领域中引起了广泛的兴趣和研究。以下是大语言模型的一些主要特点：</font></p>
+<ol>
+<li><font color = black size = 4><strong>巨大的规模：</strong> LLM 通常具有巨大的参数规模，可以达到数十亿甚至数千亿个参数。这使得它们能够捕捉更多的语言知识和复杂的语法结构。</font></li>
+<li><font color = black size = 4><strong>预训练和微调：</strong> LLM 采用了预训练和微调的学习方法。首先在大规模文本数据上进行预训练（无标签数据），学习通用的语言表示和知识。然后通过微调（有标签数据）适应特定任务，从而在各种 NLP 任务中表现出色。</font></li>
+<li><font color = black size = 4><strong>上下文感知：</strong> LLM 在处理文本时具有强大的上下文感知能力，能够理解和生成依赖于前文的文本内容。这使得它们在对话、文章生成和情境理解方面表现出色。</font></li>
+<li><font color = black size = 4><strong>多语言支持：</strong> LLM 可以用于多种语言，不仅限于英语。它们的多语言能力使得跨文化和跨语言的应用变得更加容易。</font></li>
+<li><font color = black size = 4><strong>多模态支持：</strong> 一些 LLM 已经扩展到支持多模态数据，包括文本、图像和声音。使得它们可以理解和生成不同媒体类型的内容，实现更多样化的应用</font></li>
+<li><font color = black size = 4><strong>伦理和风险问题：</strong> 尽管 LLM 具有出色的能力，但它们也引发了伦理和风险问题，包括生成有害内容、隐私问题、认知偏差等。因此，研究和应用 LLM 需要谨慎。</font></li>
+<li><font color = black size = 4><strong>高计算资源需求：</strong> LLM 参数规模庞大，需要大量的计算资源进行训练和推理。通常需要使用高性能的 GPU 或 TPU 集群来实现。</font></li>
+<li><font color = black size = 4><strong>幻觉：</strong> LLM 根据 Prompt 杜撰生成虚假、错误信息的表现。例如，当我们要求 LLM 生成一篇学术论文及其参考文献列表时，其往往会捏造众多看似“一本正经”实则完全不存在的论文和研究。幻觉问题是 LLM 的固有缺陷，也是目前 LLM 研究及应用的巨大挑战。尤其是在医学、金融学等非常强调精准、正确的领域，幻觉的存在可能造成非常严重的后果。目前也有很多研究提供了削弱幻觉的一些方法，如 Prompt 里进行限制、通过 RAG（检索增强生成）来指导生成等，但都还只能一定程度减弱幻觉而无法彻底根除。</font></li>
+</ol>
+<p><font color = black size = 4>大语言模型是一种具有强大语言处理能力的技术，已经在多个领域展示了潜力。它们为自然语言理解和生成任务提供了强大的工具，同时也引发了对其伦理和风险问题的关注。这些特点使 LLM 成为了当今计算机科学和人工智能领域的重要研究和应用方向。</font></p>
+<h3 id="LLM的涌现能力"><a href="#LLM的涌现能力" class="headerlink" title="LLM的涌现能力"></a><font color = black size = 4>LLM的涌现能力</font></h3><p><font color = black size = 4>区分大语言模型（LLM）与以前的预训练语言模型（PLM）最显著的特征之一是它们的 <code>涌现能力</code>。涌现能力是一种令人惊讶的能力，它在小型模型中不明显，但在大型模型中特别突出。类似物理学中的相变现象，涌现能力就像是模型性能随着规模增大而迅速提升，超过了随机水平，也就是我们常说的 <strong>量变引起质变</strong>。</font></p>
+<p><font color = black size = 4>涌现能力可以与某些复杂任务有关，但我们更关注的是其通用能力。接下来，我们简要介绍三个 LLM 典型的涌现能力：</font></p>
+<ol>
+<li><font color = black size = 4><strong>上下文学习（In-context Learning）：</strong> 上下文学习能力是由 GPT-3 首次引入的。这种能力允许语言模型在提供自然语言指令或多个任务示例的情况下，通过理解上下文并生成相应输出的方式来执行任务，而无需额外的训练或参数更新。</font></li>
+<li><font color = black size = 4><strong>指令遵循（Instruction Following）</strong>：通过使用自然语言描述的多任务数据进行微调，也就是所谓的 <code>指令微调</code>。LLM 被证明在使用指令形式化描述的未见过的任务上表现良好。这意味着 LLM 能够根据任务指令执行任务，而无需事先见过具体示例，展示了其强大的泛化能力。</font></li>
+<li><font color = black size = 4><strong>逐步推理（Step by Step Reasoning）</strong>：小型语言模型通常难以解决涉及多个推理步骤的复杂任务，例如数学问题。然而，LLM 通过采用 <code>思维链（CoT, Chain of Thought）</code> 推理策略，利用包含中间推理步骤的提示机制来解决这些任务，从而得出最终答案。据推测，这种能力可能是通过对代码的训练获得的。</font></li>
+</ol>
+<p><font color = black size = 4>在 2021 年，斯坦福大学等多所高校的研究人员提出了基座模型（foundation model）的概念，清晰了预训练模型的作用。这是一种全新的 AI 技术范式，借助于海量无标注数据的训练，获得可以适用于大量下游任务的大模型（单模态或者多模态）。这样，<strong>多个应用可以只依赖于一个或少数几个大模型进行统一建设</strong>。</font></p>
+<p><font color = black size = 4>大语言模型是这个新模式的典型例子，使用统一的大模型可以极大地提高研发效率。相比于每次开发单个模型的方式，这是一项本质上的进步。大型模型不仅可以缩短每个具体应用的开发周期，减少所需人力投入，也可以基于大模型的推理、常识和写作能力，获得更好的应用效果。因此，大模型可以成为 AI 应用开发的大一统基座模型，这是一个一举多得、全新的范式，值得大力推广。</font></p>
+<p><font color = black size = 4>LLM 已经在许多领域产生了深远的影响。在<strong>自然语言处理</strong>领域，它可以帮助计算机更好地理解和生成文本，包括写文章、回答问题、翻译语言等。在<strong>信息检索</strong>领域，它可以改进搜索引擎，让我们更轻松地找到所需的信息。在<strong>计算机视觉</strong>领域，研究人员还在努力让计算机理解图像和文字，以改善多媒体交互。</font></p>
+<p><font color = black size = 4>最重要的是，LLM 的出现让人们重新思考了 <strong>通用人工智能（AGI）</strong> 的可能性。AGI 是一种像人类一样思考和学习的人工智能。LLM 被认为是 AGI 的一种早期形式，这引发了对未来人工智能发展的许多思考和计划。总之，LLM 是一种令人兴奋的技术，它让计算机更好地理解和使用语言，正在改变着我们与技术互动的方式，同时也引发了对未来人工智能的无限探索。</font></p>
+<p><font color = black size = 4>【<strong>参考内容</strong>】：</font></p>
+<p><font color = black size = 4><a target="_blank" rel="noopener" href="https://github.com/datawhalechina/llm-universe/">llm-universe：大型语言模型 LLM 介绍</a></font></p>
+<p><font color = black size = 4><a target="_blank" rel="noopener" href="https://datawhalechina.github.io/happy-llm">Happy-LLM：第四章 大语言模型</a></font></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn">PhoenixPeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn/posts/dbc3748e.html">https://amadeuspjq.cn/posts/dbc3748e.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://amadeuspjq.cn" target="_blank">哈基鹏的博客🐦</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">大语言模型</a></div><div class="post-share"><div class="social-share" data-image="/img/cover2.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/ebd59856.html" title="哈基鹏的大模型之旅（二）"><img class="cover" src="/img/cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">哈基鹏的大模型之旅（二）</div></div><div class="info-2"><div class="info-item-1">Transformer的架构和基本原理介绍，并介绍如何搭建一个Transformer。</div></div></div></a><a class="pagination-related" href="/posts/ee293f0.html" title="哈基鹏的butterfly魔改记录"><img class="cover" src="/img/cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">哈基鹏的butterfly魔改记录</div></div><div class="info-2"><div class="info-item-1">记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/ebd59856.html" title="哈基鹏的大模型之旅（二）"><img class="cover" src="/img/cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">哈基鹏的大模型之旅（二）</div></div><div class="info-2"><div class="info-item-1">Transformer的架构和基本原理介绍，并介绍如何搭建一个Transformer。</div></div></div></a><a class="pagination-related" href="/posts/a6cb3b04.html" title="哈基鹏的大模型之旅（三）"><img class="cover" src="/img/cover4.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-30</div><div class="info-item-2">哈基鹏的大模型之旅（三）</div></div><div class="info-2"><div class="info-item-1">简要介绍RAG的定义以及工作流、RAG开发框架LangChain和大模型开发流程。</div></div></div></a><a class="pagination-related" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）"><img class="cover" src="/img/cover6.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-03</div><div class="info-item-2">哈基鹏的大模型之旅（五）</div></div><div class="info-2"><div class="info-item-1">大模型压测原理以及实战。</div></div></div></a><a class="pagination-related" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）"><img class="cover" src="/img/cover7.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-10</div><div class="info-item-2">哈基鹏的大模型之旅（六）</div></div><div class="info-2"><div class="info-item-1">智能体专题。</div></div></div></a><a class="pagination-related" href="/posts/11e62261.html" title="哈基鹏的大模型之旅（四）"><img class="cover" src="/img/cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-31</div><div class="info-item-2">哈基鹏的大模型之旅（四）</div></div><div class="info-2"><div class="info-item-1">大模型微调专题。</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">PhoenixPeng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/phioenx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到哈基鹏的小站</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%88LLM%EF%BC%89%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">大语言模型（LLM）简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84LLM%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">常见的LLM模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenAI%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">OpenAI系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Claude%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">Claude系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gemini%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">Gemini系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LLaMA%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">LLaMA系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DeepSeek%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.5.</span> <span class="toc-text">DeepSeek系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Qwen%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.6.</span> <span class="toc-text">Qwen系列模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GLM%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.7.</span> <span class="toc-text">GLM系列模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LLM%E7%9A%84%E7%89%B9%E7%82%B9%E4%B8%8E%E8%83%BD%E5%8A%9B"><span class="toc-number">1.2.</span> <span class="toc-text">LLM的特点与能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LLM%E7%9A%84%E6%B6%8C%E7%8E%B0%E8%83%BD%E5%8A%9B"><span class="toc-number">1.2.1.</span> <span class="toc-text">LLM的涌现能力</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img src="/img/cover10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的HTML之路"/></a><div class="content"><a class="title" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路">哈基鹏的HTML之路</a><time datetime="2025-12-10T03:11:15.000Z" title="发表于 2025-12-10 11:11:15">2025-12-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）"><img src="/img/cover9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（二）"/></a><div class="content"><a class="title" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）">哈基鹏的智能体实战（二）</a><time datetime="2025-11-24T02:20:13.000Z" title="发表于 2025-11-24 10:20:13">2025-11-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）"><img src="/img/cover8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（一）"/></a><div class="content"><a class="title" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）">哈基鹏的智能体实战（一）</a><time datetime="2025-11-12T08:53:47.000Z" title="发表于 2025-11-12 16:53:47">2025-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）"><img src="/img/cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（六）"/></a><div class="content"><a class="title" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）">哈基鹏的大模型之旅（六）</a><time datetime="2025-11-10T02:38:38.000Z" title="发表于 2025-11-10 10:38:38">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）"><img src="/img/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（五）"/></a><div class="content"><a class="title" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）">哈基鹏的大模型之旅（五）</a><time datetime="2025-11-03T10:48:52.000Z" title="发表于 2025-11-03 18:48:52">2025-11-03</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By PhoenixPeng</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script defer data-pjax src="/js/readPercent.js"></script><script src="/js/fish.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/butterfly主题魔改/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 哈基鹏の魔改教程 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/LLM/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🎮 哈基鹏の大模型之路 (6)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/智能体实战/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🐱‍👓 哈基鹏の智能体开发 (2)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/HTML/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">👩‍💻 哈基鹏の网页学习 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><a class="magnet_link_more"  href="https://amadeuspjq.cn/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_categories_card_injector_config(){
+    // 检查容器是否存在
+    var parent_div_git = document.getElementById('recent-posts');
+    // 如果容器不存在，则动态创建
+    if (!parent_div_git) {
+      console.warn('butterfly_categories_card: 挂载容器不存在，正在动态创建...');
+      // 创建新容器（默认插入到页面主体顶部）
+      parent_div_git = document.createElement('div');
+      parent_div_git.id = 'recent-posts'; // 赋予配置的ID
+      document.querySelector('#page').prepend(parent_div_git); // 插入到 #content-inner 内
+    }
+    var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 950px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 800px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(/img/cag1.jpg);"> <a class="categoryBar-list-link" href="/categories/HTML/">HTML</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr">LLM</span></li><li class="categoryBar-list-item" style="background:url(/img/cag2.jpg);"> <a class="categoryBar-list-link" href="/categories/LLM/">LLM</a><span class="categoryBar-list-count">6</span><span class="categoryBar-list-descr">butterfly主题魔改</span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/butterfly主题魔改/">butterfly主题魔改</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/智能体实战/">智能体实战</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr"></span></li></ul></div></div>';
+    console.log('已挂载 butterfly_categories_card');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+  }
+  // 路径匹配逻辑（使用 startsWith）
+  if (location.pathname.startsWith('/categories/') || '/categories/' === 'all') {
+    butterfly_categories_card_injector_config();
+  }
+  </script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/6ae37fcf.html" alt=""><img width="48" height="48" src="/img/cover10.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-12-10</span><a class="blog-slider__title" href="posts/6ae37fcf.html" alt="">哈基鹏的HTML之路</a><div class="blog-slider__text">在设计智能体工作流的时候，有时候不得不把模型结果输出为pdf格式，这种过程通常需要先把模型转换为HTML进行过渡，由此不得不学习一下HTML的相关知识，因此本文章的内容主要是为了学习HTML的相关知识，以更好的设计网页样式。</div><a class="blog-slider__button" href="posts/6ae37fcf.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/8390d872.html" alt=""><img width="48" height="48" src="/img/cover9.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-24</span><a class="blog-slider__title" href="posts/8390d872.html" alt="">哈基鹏的智能体实战（二）</a><div class="blog-slider__text">本文章主要是记录n8n每个节点的用法</div><a class="blog-slider__button" href="posts/8390d872.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/7e78e726.html" alt=""><img width="48" height="48" src="/img/cover6.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-03</span><a class="blog-slider__title" href="posts/7e78e726.html" alt="">哈基鹏的大模型之旅（五）</a><div class="blog-slider__text">大模型压测原理以及实战。</div><a class="blog-slider__button" href="posts/7e78e726.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/ee293f0.html" alt=""><img width="48" height="48" src="/img/cover1.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-28</span><a class="blog-slider__title" href="posts/ee293f0.html" alt="">哈基鹏的butterfly魔改记录</a><div class="blog-slider__text">记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！</div><a class="blog-slider__button" href="posts/ee293f0.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/a6cb3b04.html" alt=""><img width="48" height="48" src="/img/cover4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-30</span><a class="blog-slider__title" href="posts/a6cb3b04.html" alt="">哈基鹏的大模型之旅（三）</a><div class="blog-slider__text">简要介绍RAG的定义以及工作流、RAG开发框架LangChain和大模型开发流程。</div><a class="blog-slider__button" href="posts/a6cb3b04.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"left",mobileDisplay:false,models:[{"path":"/live2d-models/umaru/model.json","position":[30,20],"scale":0.15,"stageStyle":{"width":250,"height":250},"mobilePosition":[10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"ALL"},{"path":"/live2d-models/hailunna_4/hailunna_4.model3.json","position":[-50,0],"scale":0.08,"stageStyle":{"width":350,"height":350},"mobilePosition":[-10,23],"mobileScale":0.08,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE"}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:3600,message:["你好呀，我是哈基鹏~","欢迎来到我的小站~"]}}});</script><!-- hexo injector body_end end --></body></html>

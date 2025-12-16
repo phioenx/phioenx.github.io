@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>哈基鹏的智能体实战（二） | 哈基鹏的博客🐦</title><meta name="author" content="PhoenixPeng"><meta name="copyright" content="PhoenixPeng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文章主要是记录n8n每个节点的用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈基鹏的智能体实战（二）">
+<meta property="og:url" content="https://amadeuspjq.cn/posts/8390d872.html">
+<meta property="og:site_name" content="哈基鹏的博客🐦">
+<meta property="og:description" content="本文章主要是记录n8n每个节点的用法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://amadeuspjq.cn/img/cover9.jpg">
+<meta property="article:published_time" content="2025-11-24T02:20:13.000Z">
+<meta property="article:modified_time" content="2025-12-08T08:51:47.212Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://amadeuspjq.cn/img/cover9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "哈基鹏的智能体实战（二）",
+  "url": "https://amadeuspjq.cn/posts/8390d872.html",
+  "image": "https://amadeuspjq.cn/img/cover9.jpg",
+  "datePublished": "2025-11-24T02:20:13.000Z",
+  "dateModified": "2025-12-08T08:51:47.212Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "PhoenixPeng",
+      "url": "https://amadeuspjq.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://amadeuspjq.cn/posts/8390d872.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '哈基鹏的智能体实战（二）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/modify.css"><link rel="stylesheet" href=" /css/custom.css"><link rel="stylesheet" href=" /css/categorybar.css"><link rel="stylesheet" href=" /css/readPercent.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="/css/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(https://amadeuspjq.cn/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/cover9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">哈基鹏的博客🐦</span></a><a class="nav-page-title" href="/"><span class="site-name">哈基鹏的智能体实战（二）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">哈基鹏的智能体实战（二）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-24T02:20:13.000Z" title="发表于 2025-11-24 10:20:13">2025-11-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-08T08:51:47.212Z" title="更新于 2025-12-08 16:51:47">2025-12-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%99%BA%E8%83%BD%E4%BD%93%E5%AE%9E%E6%88%98/">智能体实战</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">954</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="top-img gist" style="background-image: url(/img/cover9.jpg)"></div><article class="container post-content" id="article-container"><h1 id="n8n基础功能节点"><a href="#n8n基础功能节点" class="headerlink" title="n8n基础功能节点"></a>n8n基础功能节点</h1><h2 id="Aggregate"><a href="#Aggregate" class="headerlink" title="Aggregate"></a>Aggregate</h2><h3 id="节点介绍"><a href="#节点介绍" class="headerlink" title="节点介绍"></a><font color = black size = 4>节点介绍</font></h3><p><font color = black size = 4>Aggregate节点用于将多个输入项（items）或其部分字段聚合为单个输出项、合并与重组。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_demo_aggregate_concept_gif.gif"></p>
+<p><font color = black size = 4>常见应用场景包括：</font></p>
+<ul>
+<li><font color = black size = 4>合并多条数据为一条汇总数据</font></li>
+<li><font color = black size = 4>按字段分组统计</font></li>
+<li><font color = black size = 4>处理批量数据输出</font></li>
+</ul>
+<h3 id="主要参数与配置"><a href="#主要参数与配置" class="headerlink" title="主要参数与配置"></a><font color = black size = 4>主要参数与配置</font></h3><p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251124103427587.png"></p>
+<p><font color = black size = 4><strong>模式：Individual Fields</strong></font></p>
+<p><font color = black size = 4>通过 <code>Input Field Name</code> 指导要聚合的输入字段名，你可以选择多个字段，并把它们合成一个字段。例如把订单编号单独取出来列成一列：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_aggregate_mode_Individual_Fields.png"></p>
+<p><font color = black size = 4><strong>模式：ALL Item Data（Into a Single List）</strong></font></p>
+<p><font color = black size = 4>该模式是把输入项集合在一个新的变数底下</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251124104501592.png"></p>
+<p><font color = black size = 4><code>Put Output in Field</code>：指定输出字段名</font></p>
+<p><font color = black size = 4><code>Include</code>：选择包含全部字段、指定字段或排除字段</font></p>
+<p><font color = black size = 4>例如把五笔订单集合成一个订单：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_aggregate_mode_All_Item_Data_Into_a_Single_List.png"></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_aggregate_mode_All_Item_Data_Into_a_Single_List_AllFields.png"></p>
+<p><font color = black size = 4>通常我们要把多份资料都喂给大模型，然而一份份投喂消耗大量资源、这是我们会需要把资料整合在一起，再丢给大模型进行分析：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_demo_aggregate_concept.jpg"></p>
+<h2 id="Split-Out"><a href="#Split-Out" class="headerlink" title="Split Out"></a>Split Out</h2><h3 id="节点介绍-1"><a href="#节点介绍-1" class="headerlink" title="节点介绍"></a><font color = black size = 4>节点介绍</font></h3><p><font color = black size = 4>Split Out 用法就是和Aggregate相反，把一个输入项里面的所有字段拆成多个独立的数据项（items），每个item将作为后续节点的输入进行处理。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_demo_split_out_concept.gif"></p>
+<h3 id="主要参数与配置-1"><a href="#主要参数与配置-1" class="headerlink" title="主要参数与配置"></a><font color = black size = 4>主要参数与配置</font></h3><p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251124110208506.png"></p>
+<p><font color = black size = 4><code>Fields To Split Out</code> 选择要进行分割的数据项</font></p>
+<p><font color = black size = 4><code>Destination Field Name</code> 可以重新设定输出的字段名称</font></p>
+<p><font color = black size = 4>例如原本的项目名称是body.data，用这个参数就可以改写为test</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_demo_split_out_field_name.png"></p>
+<p><font color = black size = 4>例如：Webhook接受资料时，其中的data里面是[“a”，”b”，”c”，”d”，”e”]。如果我们要分别对a，b，c，d，e做处理，就用Split Out。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/n8n_demo_split_out.png"></p>
+<h2 id="Webhook"><a href="#Webhook" class="headerlink" title="Webhook"></a>Webhook</h2><h3 id="节点介绍-2"><a href="#节点介绍-2" class="headerlink" title="节点介绍"></a><font color = black size = 4>节点介绍</font></h3><p><font color = black size = 4>Webhook是一个触发器节点，它本质上是一种通过访问Web URL来触发n8n工作流的方式。双击Webhook节点，你会看到一个URL地址。每当访问这个URL时，就会触发这个工作流。</font></p>
+<h3 id="主要参数与配置-2"><a href="#主要参数与配置-2" class="headerlink" title="主要参数与配置"></a><font color = black size = 4>主要参数与配置</font></h3><p><font color = black size = 4>选择 <code>Test URL</code> 测试URL 或 <code>Production URL</code> 生产URL来切换n8n 显示的 URL</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251125104133853.png"></p>
+<ul>
+<li><font color = black size = 4><strong>Test URL：</strong> 当你选择Listen for Test Event 监听测试事件 或 Execute workflow 执行工作流时，n8n注册一个测试网络钩子。当你调用网络钩子URL时，n8n在工作流中显示数据。</font></li>
+<li><font color = black size = 4><strong>Produciton URL：</strong> 当你激活工作流时，n8n注册一个Production网络钩子。使用Production URL时，n8n不会在工作流中显示数据。您仍然可以查看生产执行的工作流数据：在工作流中选择Executions 执行 选项卡，然后选择你要查看的工作流执行</font></li>
+</ul>
+<p><font color = black size = 4>HTTP Method HTTP 方法</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251125112924118.png"></p>
+<ul>
+<li><font color = black size = 4>DELETE 删除</font></li>
+<li><font color = black size = 4>GET 获取：适合huo’qu</font></li>
+<li><font color = black size = 4>HEAD</font></li>
+<li><font color = black size = 4>PATCH 修补</font></li>
+<li><font color = black size = 4>POST 发送：发送新数据&#x2F;事件。大多数应用程序的webhook都使用POST请求。</font></li>
+<li><font color = black size = 4>PUT 推送</font></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251125113217145.png"></p>
+<p><font color = black size = 4>PATH：默认情况下，此字段包含随机生成的网络钩子 URL 路径，以避免与其他网络钩子节点冲突。你可以手动指定URL路径，包括添加路由参数。</font></p>
+<p><font color = black size = 4>Authentication：你可以为调用网络钩子URL 的任何服务要求身份验证。从这些身份验证方法中选择：</font></p>
+<ul>
+<li><font color = black size = 4>Basic auth 基本认证</font></li>
+<li><font color = black size = 4>Header auth 头部认证</font></li>
+<li><font color = black size = 4>JWT auth JWT 认证</font></li>
+<li><font color = black size = 4>None 无</font></li>
+</ul>
+<p><font color = black size = 4>Respond 响应</font></p>
+<p><font color = black size = 4><strong>Immediately 立即</strong>：Webhook 节点返回响应代码和消息<strong>工作流已启动</strong>。</font></p>
+<p><font color = black size = 4><strong>When Last Node Finishes 当最后一个节点完成时</strong>：Webhook 节点返回响应代码和工作流中执行的最后一个节点的数据输出。</font></p>
+<p><font color = black size = 4><strong>Using ‘Respond to Webhook’ Node 使用”响应到 Webhook”节点</strong>：Webhook 节点按照 <a target="_blank" rel="noopener" href="https://docs.n8ncn.io/integrations/builtin/core-nodes/n8n-nodes-base.respondtowebhook/">Respond to Webhook</a> 节点中定义的方式响应。</font></p>
+<p><font color = black size = 4><strong>Streaming response 流式响应</strong>：在工作流处理时启用向用户的实时数据流传输。需要工作流中具有流式传输支持的节点（例如 <a target="_blank" rel="noopener" href="https://docs.n8ncn.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/">AI 代理</a> 节点）。</font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn">PhoenixPeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn/posts/8390d872.html">https://amadeuspjq.cn/posts/8390d872.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://amadeuspjq.cn" target="_blank">哈基鹏的博客🐦</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/cover9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img class="cover" src="/img/cover10.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">哈基鹏的HTML之路</div></div><div class="info-2"><div class="info-item-1">在设计智能体工作流的时候，有时候不得不把模型结果输出为pdf格式，这种过程通常需要先把模型转换为HTML进行过渡，由此不得不学习一下HTML的相关知识，因此本文章的内容主要是为了学习HTML的相关知识，以更好的设计网页样式。</div></div></div></a><a class="pagination-related" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）"><img class="cover" src="/img/cover8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">哈基鹏的智能体实战（一）</div></div><div class="info-2"><div class="info-item-1">今天开一个新系列，主要是对智能体的开发做一个记录与学习。这期做的是如何使用n8n搭建AI智能代理</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">PhoenixPeng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/phioenx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到哈基鹏的小站</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#n8n%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD%E8%8A%82%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">n8n基础功能节点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Aggregate"><span class="toc-number">1.1.</span> <span class="toc-text">Aggregate</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.1.</span> <span class="toc-text">节点介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.2.</span> <span class="toc-text">主要参数与配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Split-Out"><span class="toc-number">1.2.</span> <span class="toc-text">Split Out</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">节点介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0%E4%B8%8E%E9%85%8D%E7%BD%AE-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">主要参数与配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Webhook"><span class="toc-number">1.3.</span> <span class="toc-text">Webhook</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E4%BB%8B%E7%BB%8D-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">节点介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0%E4%B8%8E%E9%85%8D%E7%BD%AE-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">主要参数与配置</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img src="/img/cover10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的HTML之路"/></a><div class="content"><a class="title" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路">哈基鹏的HTML之路</a><time datetime="2025-12-10T03:11:15.000Z" title="发表于 2025-12-10 11:11:15">2025-12-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）"><img src="/img/cover9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（二）"/></a><div class="content"><a class="title" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）">哈基鹏的智能体实战（二）</a><time datetime="2025-11-24T02:20:13.000Z" title="发表于 2025-11-24 10:20:13">2025-11-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）"><img src="/img/cover8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（一）"/></a><div class="content"><a class="title" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）">哈基鹏的智能体实战（一）</a><time datetime="2025-11-12T08:53:47.000Z" title="发表于 2025-11-12 16:53:47">2025-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）"><img src="/img/cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（六）"/></a><div class="content"><a class="title" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）">哈基鹏的大模型之旅（六）</a><time datetime="2025-11-10T02:38:38.000Z" title="发表于 2025-11-10 10:38:38">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）"><img src="/img/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（五）"/></a><div class="content"><a class="title" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）">哈基鹏的大模型之旅（五）</a><time datetime="2025-11-03T10:48:52.000Z" title="发表于 2025-11-03 18:48:52">2025-11-03</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By PhoenixPeng</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script defer data-pjax src="/js/readPercent.js"></script><script src="/js/fish.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/butterfly主题魔改/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 哈基鹏の魔改教程 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/LLM/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🎮 哈基鹏の大模型之路 (6)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/智能体实战/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🐱‍👓 哈基鹏の智能体开发 (2)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/HTML/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">👩‍💻 哈基鹏の网页学习 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><a class="magnet_link_more"  href="https://amadeuspjq.cn/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_categories_card_injector_config(){
+    // 检查容器是否存在
+    var parent_div_git = document.getElementById('recent-posts');
+    // 如果容器不存在，则动态创建
+    if (!parent_div_git) {
+      console.warn('butterfly_categories_card: 挂载容器不存在，正在动态创建...');
+      // 创建新容器（默认插入到页面主体顶部）
+      parent_div_git = document.createElement('div');
+      parent_div_git.id = 'recent-posts'; // 赋予配置的ID
+      document.querySelector('#page').prepend(parent_div_git); // 插入到 #content-inner 内
+    }
+    var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 950px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 800px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(/img/cag1.jpg);"> <a class="categoryBar-list-link" href="/categories/HTML/">HTML</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr">LLM</span></li><li class="categoryBar-list-item" style="background:url(/img/cag2.jpg);"> <a class="categoryBar-list-link" href="/categories/LLM/">LLM</a><span class="categoryBar-list-count">6</span><span class="categoryBar-list-descr">butterfly主题魔改</span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/butterfly主题魔改/">butterfly主题魔改</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/智能体实战/">智能体实战</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr"></span></li></ul></div></div>';
+    console.log('已挂载 butterfly_categories_card');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+  }
+  // 路径匹配逻辑（使用 startsWith）
+  if (location.pathname.startsWith('/categories/') || '/categories/' === 'all') {
+    butterfly_categories_card_injector_config();
+  }
+  </script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/6ae37fcf.html" alt=""><img width="48" height="48" src="/img/cover10.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-12-10</span><a class="blog-slider__title" href="posts/6ae37fcf.html" alt="">哈基鹏的HTML之路</a><div class="blog-slider__text">在设计智能体工作流的时候，有时候不得不把模型结果输出为pdf格式，这种过程通常需要先把模型转换为HTML进行过渡，由此不得不学习一下HTML的相关知识，因此本文章的内容主要是为了学习HTML的相关知识，以更好的设计网页样式。</div><a class="blog-slider__button" href="posts/6ae37fcf.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/8390d872.html" alt=""><img width="48" height="48" src="/img/cover9.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-24</span><a class="blog-slider__title" href="posts/8390d872.html" alt="">哈基鹏的智能体实战（二）</a><div class="blog-slider__text">本文章主要是记录n8n每个节点的用法</div><a class="blog-slider__button" href="posts/8390d872.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/7e78e726.html" alt=""><img width="48" height="48" src="/img/cover6.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-03</span><a class="blog-slider__title" href="posts/7e78e726.html" alt="">哈基鹏的大模型之旅（五）</a><div class="blog-slider__text">大模型压测原理以及实战。</div><a class="blog-slider__button" href="posts/7e78e726.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/ee293f0.html" alt=""><img width="48" height="48" src="/img/cover1.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-28</span><a class="blog-slider__title" href="posts/ee293f0.html" alt="">哈基鹏的butterfly魔改记录</a><div class="blog-slider__text">记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！</div><a class="blog-slider__button" href="posts/ee293f0.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/a6cb3b04.html" alt=""><img width="48" height="48" src="/img/cover4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-30</span><a class="blog-slider__title" href="posts/a6cb3b04.html" alt="">哈基鹏的大模型之旅（三）</a><div class="blog-slider__text">简要介绍RAG的定义以及工作流、RAG开发框架LangChain和大模型开发流程。</div><a class="blog-slider__button" href="posts/a6cb3b04.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"left",mobileDisplay:false,models:[{"path":"/live2d-models/umaru/model.json","position":[30,20],"scale":0.15,"stageStyle":{"width":250,"height":250},"mobilePosition":[10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"ALL"},{"path":"/live2d-models/hailunna_4/hailunna_4.model3.json","position":[-50,0],"scale":0.08,"stageStyle":{"width":350,"height":350},"mobilePosition":[-10,23],"mobileScale":0.08,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE"}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:3600,message:["你好呀，我是哈基鹏~","欢迎来到我的小站~"]}}});</script><!-- hexo injector body_end end --></body></html>

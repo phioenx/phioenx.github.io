@@ -1,0 +1,1646 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>哈基鹏的butterfly魔改记录 | 哈基鹏的博客🐦</title><meta name="author" content="PhoenixPeng"><meta name="copyright" content="PhoenixPeng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈基鹏的butterfly魔改记录">
+<meta property="og:url" content="https://amadeuspjq.cn/posts/ee293f0.html">
+<meta property="og:site_name" content="哈基鹏的博客🐦">
+<meta property="og:description" content="记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://amadeuspjq.cn/img/cover1.jpg">
+<meta property="article:published_time" content="2025-10-28T02:04:09.000Z">
+<meta property="article:modified_time" content="2025-12-11T09:03:02.560Z">
+<meta property="article:author" content="PhoenixPeng">
+<meta property="article:tag" content="Butterfly魔改">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://amadeuspjq.cn/img/cover1.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "哈基鹏的butterfly魔改记录",
+  "url": "https://amadeuspjq.cn/posts/ee293f0.html",
+  "image": "https://amadeuspjq.cn/img/cover1.jpg",
+  "datePublished": "2025-10-28T02:04:09.000Z",
+  "dateModified": "2025-12-11T09:03:02.560Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "PhoenixPeng",
+      "url": "https://amadeuspjq.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://amadeuspjq.cn/posts/ee293f0.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '哈基鹏的butterfly魔改记录',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/modify.css"><link rel="stylesheet" href=" /css/custom.css"><link rel="stylesheet" href=" /css/categorybar.css"><link rel="stylesheet" href=" /css/readPercent.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="/css/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(https://amadeuspjq.cn/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">哈基鹏的博客🐦</span></a><a class="nav-page-title" href="/"><span class="site-name">哈基鹏的butterfly魔改记录</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">哈基鹏的butterfly魔改记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-28T02:04:09.000Z" title="发表于 2025-10-28 10:04:09">2025-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-11T09:03:02.560Z" title="更新于 2025-12-11 17:03:02">2025-12-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/butterfly%E4%B8%BB%E9%A2%98%E9%AD%94%E6%94%B9/">butterfly主题魔改</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="top-img gist" style="background-image: url(/img/top1.jpg)"></div><article class="container post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><font color = black size = 4>本文章基于<strong>Hexo博客</strong>程序的<strong>Butterfly主题</strong>编写，其中魔改&#x2F;美化内容大部分来自于各路大神的博客以及网络。</font></p>
+<blockquote>
+<p><font size = 4>参考：<a target="_blank" rel="noopener" href="https://www.fomal.cc/">Fomalhaut🥝</a></font></p>
+</blockquote>
+<blockquote>
+<p><font size = 4>参考：<a target="_blank" rel="noopener" href="https://www.yooupi.site/">YoouPi の 博客 - yooupi.site</a></font></p>
+</blockquote>
+<hr>
+<h1 id="记录一：代码设置"><a href="#记录一：代码设置" class="headerlink" title="记录一：代码设置"></a>记录一：代码设置</h1><h2 id="代码高亮主题"><a href="#代码高亮主题" class="headerlink" title="代码高亮主题"></a>代码高亮主题</h2><p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028112843078.png"></p>
+<p><font color = black size = 4>修改代码高亮主题➡️配置文件<font color = red><code>_config.butterfly.yml</code></font>中<font color = red><code>code_blocks</code></font>列表下的<font color = red><code>theme</code></font>属性。</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">ligh</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>Butterfly 支持 4 种代码高亮样式：</font></p>
+<p><font color = black size = 4>1️⃣<strong>Light：</strong></font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028102431240.png"></p>
+<p><font color = black size = 4>2️⃣<strong>dacker：</strong></font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028103529294.png"></p>
+<p><font color = black size = 4>3️⃣<strong>pale night：</strong></font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028111643812.png"></p>
+<p><font color = black size = 4>4️⃣<strong>ocean：</strong></font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028110557598.png"></p>
+<p><strong><font color = black size = 4>如果想要修改成mac风格，可以修改<font color = red><code>macStyle</code></font>属性为<font color = red><code>true</code></font></font></strong></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028112046559.png"></p>
+<h2 id="代码复制"><a href="#代码复制" class="headerlink" title="代码复制"></a>代码复制</h2><p><font color = black size = 4>修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中<font color = red><code>code_blocks</code></font>列表下的<font color = red><code>copy</code></font>属性为<font color = red><code>true</code></font>表示可以复制。</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">copy:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="代码框展开-关闭"><a href="#代码框展开-关闭" class="headerlink" title="代码框展开&#x2F;关闭"></a>代码框展开&#x2F;关闭</h2><p><font color = black size = 4>修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中<font color = red><code>code_blocks</code></font>列表下的<font color = red><code>shrink</code></font>属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">shrink:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color = black size = 4><font color = red><code>true</code></font>表示全部代码框不展开，需点击&gt;打开</font></li>
+<li><font color = black size = 4><font color = red><code>false</code></font>表示代码框展开，有&gt;点击按钮</font></li>
+<li><font color = black size = 4><font color = red><code>none</code></font>表示展开代码块且隐藏按钮</font></li>
+</ul>
+<h2 id="代码框换行"><a href="#代码框换行" class="headerlink" title="代码框换行"></a>代码框换行</h2><p><font color = black size = 4>在默认情况下，Hexo 在编译的时候不会实现代码自动换行。如果你不希望在代码块的区域里有横向滚动条的话，那么你可以考虑开启这个功能。修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中<font color = red><code>code_blocks</code></font>列表下的<font color = red><code>word_wrap</code></font>属性为<font color = red><code>true</code></font></font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">word_warp:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="代码高度限制"><a href="#代码高度限制" class="headerlink" title="代码高度限制"></a>代码高度限制</h2><p><font color = black size = 4>可配置代码高度限制，超出的部分会隐藏，并显示展开按钮。修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中<font color = red><code>code_blocks</code></font>列表下的<font color = red><code>height_limit</code></font>属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">height_limit:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color = black size = 4>单位是<font color = red><code>px</code></font>，直接添加数字，如200</font></li>
+<li><font color = black size = 4>实际限制高度为<font color = red><code>height_limit+30px</code></font>,多增加 30 px 限制，目的是避免代码高度只超过<font color = red><code>height_limit</code></font>一点时，出现展开按钮，展开没内容。</font></li>
+<li><font color = black size = 4><font color = red><code>none</code></font>表示展开代码块且隐藏按钮</font></li>
+</ul>
+<hr>
+<h1 id="记录二：首页文章布局"><a href="#记录二：首页文章布局" class="headerlink" title="记录二：首页文章布局"></a>记录二：首页文章布局</h1><p><font color = black size = 4>首页文章布局可修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>index_layout</code></font>属性，其中包含7种设置：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">index_layout:</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color = black size = 4>设置1：封面图在左，信息在右</font></li>
+<li><font color = black size = 4>设置2：封面图在右，信息在左</font></li>
+<li><font color = black size = 4>设置3：封面图与信息左右交替排列</font></li>
+<li><font color = black size = 4>设置4：封面图在上，信息在下</font></li>
+<li><font color = black size = 4>设置5：信息直接显示在封面图上</font></li>
+<li><font color = black size = 4>设置6：瀑布流布局-封面图在上，信息在下</font></li>
+<li><font color = black size = 4>设置7：瀑布流布局-信息直接显示在封面图上</font></li>
+</ul>
+<hr>
+<h1 id="记录三：首页文章摘要显示设置"><a href="#记录三：首页文章摘要显示设置" class="headerlink" title="记录三：首页文章摘要显示设置"></a>记录三：首页文章摘要显示设置</h1><p><font color = black size = 4>修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>index_post_content</code></font>下的子属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">index_post_content:</span></span><br><span class="line">	<span class="attr">method:</span> <span class="number">1</span></span><br><span class="line">	<span class="attr">length:</span> <span class="number">300</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>其中，<font color = red><code>method</code></font>可选择摘要显示方式——1：显示文章描述的description；2：智能显示（存在description则显示，否则显示自动截取的内容）；3： 自动截取内容（默认，从前N个字符截取）；false：不显示文章摘要。当<font color = red><code>method</code></font>为2或3时，<font color = red><code>length</code></font>指定截取长度（单位：字符）。</font></p>
+<hr>
+<h1 id="记录四：文章封面"><a href="#记录四：文章封面" class="headerlink" title="记录四：文章封面"></a>记录四：文章封面</h1><p><font color = black size = 4>首先在文章的markdown文档上，在<font color = red><code>Front-matter</code></font>添加<font color = red><code>cover</code></font>，并填上要显示的图片地址：</font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-------</span><br><span class="line">tile:</span><br><span class="line">date:</span><br><span class="line">tags:</span><br><span class="line">cover: /img/head1.jpg</span><br><span class="line"></span><br><span class="line">-------</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>封面图片位置默认存在<font color = red><code>blog/source/img</code></font>。如果不配置<font color = red><code>cover</code></font>，可以设置显示默认的➡️<font color = red><code>_config.butterfly.yml</code></font>；可修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中的➡️<font color = red><code>_config.butterfly.yml</code></font>属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cover:</span></span><br><span class="line">	<span class="comment"># 是否显示文章封面</span></span><br><span class="line">	<span class="attr">index_enable:</span> <span class="literal">true</span></span><br><span class="line">	<span class="attr">aside_enable:</span> <span class="literal">true</span></span><br><span class="line">	<span class="attr">archives_enable:</span> <span class="literal">true</span></span><br><span class="line">	<span class="comment"># 封面显示的位置</span></span><br><span class="line">	<span class="comment"># 三个值可配置left，right，both</span></span><br><span class="line">	<span class="attr">position:</span> <span class="string">both</span></span><br><span class="line">	<span class="comment"># 当没有设置cover时，默认的封面显示</span></span><br><span class="line">	<span class="attr">default_cover:</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>当配置多张图片时，会随机选择一张作为cover，此时写法应为：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">default_cover:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">/img/default_bg.png</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">/img/default_bg2.png</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">/img/default_bg3.png</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028172636645.png"></p>
+<hr>
+<h1 id="记录五：Live2d看板娘"><a href="#记录五：Live2d看板娘" class="headerlink" title="记录五：Live2d看板娘"></a>记录五：Live2d看板娘</h1><p><font color = black size = 4>1️⃣安装live2d模块：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-helper-live2d</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>2️⃣添加配置：在<font color = red><code>_config.yml</code></font>中添加：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo-helper-live2d</span></span><br><span class="line"><span class="comment">## 看板娘</span></span><br><span class="line"><span class="comment">## https://github.com/EYHN/hexo-helper-live2d</span></span><br><span class="line"><span class="attr">live2d:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span> <span class="comment">#开关插件版看板娘</span></span><br><span class="line">  <span class="attr">pluginRootPath:</span> <span class="string">static/live2dw/</span> <span class="comment"># 自定义插件储存路径（hexo g后public/下）</span></span><br><span class="line">  <span class="attr">pluginJsPath:</span> <span class="string">lib/</span> <span class="comment"># 自定义脚本储存路径（pluginRootPath下子路径）</span></span><br><span class="line">  <span class="attr">pluginModelPath:</span> <span class="string">assets/</span> <span class="comment"># 自定义模型储存路径（pluginRootPath下子路径）</span></span><br><span class="line">  <span class="attr">tagMode:</span> <span class="literal">false</span> <span class="comment"># 标签模式, 是否仅替换 live2d tag标签而非插入到所有页面中</span></span><br><span class="line">  <span class="attr">debug:</span> <span class="literal">false</span> <span class="comment"># 调试, 是否在控制台输出日志</span></span><br><span class="line">  <span class="attr">model:</span></span><br><span class="line">    <span class="attr">use:</span> <span class="string">https://npm.elemecdn.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># use: live2d-widget-model-wanko # npm install live2d-widget-model-wanko</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># use: wanko # 若模型储存在[BlogRoot]/live2d_models下的模型目录名</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># use: ./wanko # 相对于[BlogRoot]的路径（不建议储存在source下，hexo g后会出现两份）</span></span><br><span class="line">  <span class="comment">#看板娘位置、大小</span></span><br><span class="line">  <span class="attr">display:</span></span><br><span class="line">    <span class="attr">position:</span> <span class="string">right</span> </span><br><span class="line">    <span class="attr">width:</span> <span class="number">200</span> </span><br><span class="line">    <span class="attr">height:</span> <span class="number">400</span> </span><br><span class="line">  <span class="attr">mobile:</span></span><br><span class="line">    <span class="attr">show:</span> <span class="literal">false</span> <span class="comment"># 手机是否展示</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028174900433.png"></p>
+<p><font color = black size = 4>3️⃣下载Live2d看板娘模型：</font></p>
+<p><font color = black size = 4>由于上述插件只有眼神跟踪鼠标功能，且项目21年已经停止维护，不支持所有版本的Live2D模型。因此，这里使用的是hexo-oh-my-live2d插件（支持.moc &amp;&amp; .moc3）。首选要卸载插件和卸载模型，在博客根目录下打开终端，输入：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-helper-live2d #卸载看板娘插件</span><br><span class="line">npm uninstall live2d-widget-model-modelname #卸载看板娘模型。记得替换modelname为你下载的看板娘名称</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>之后我们就可以安装hexo-oh-my-live2d插件：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-oh-my-live2d</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>使用本地Live2d的配置：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># _config.yml</span></span><br><span class="line"><span class="attr">OhMyLive2d:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">CDN:</span> <span class="string">https://unpkg.com/oh-my-live2d</span></span><br><span class="line">  <span class="attr">option:</span></span><br><span class="line">    <span class="attr">dockedPosition:</span> <span class="string">&#x27;right&#x27;</span> <span class="comment"># 模型停靠位置 默认值: &#x27;right&#x27; 可选值: &#x27;left&#x27; | &#x27;right&#x27;</span></span><br><span class="line">  <span class="comment"># CDN: https://registry.npmmirror.com/oh-my-live2d/0.13/files/dist/index.min.js</span></span><br><span class="line">  <span class="comment"># option:</span></span><br><span class="line">  <span class="comment">#   # importType: &#x27;cubism2&#x27; #  导入类型, 默认使用全量导入: complete , 可选值: complete, cubism2, cubism5</span></span><br><span class="line">  <span class="comment">#   libraryUrls: # 自定义 Cubism SDK 外部资源地址</span></span><br><span class="line">  <span class="comment">#     complete: https://registry.npmmirror.com/oh-my-live2d/latest/files/lib/complete.js</span></span><br><span class="line">  <span class="comment">#     cubism2: https://registry.npmmirror.com/oh-my-live2d/latest/files/lib/cubism2.js</span></span><br><span class="line">  <span class="comment">#     cubism5: https://registry.npmmirror.com/oh-my-live2d/latest/files/lib/cubism5.js</span></span><br><span class="line">    <span class="comment"># menus:</span></span><br><span class="line">    <span class="comment"># items: |</span></span><br><span class="line">    <span class="comment">#   (defaultItems)=&gt;&#123;</span></span><br><span class="line">    <span class="comment">#    return [</span></span><br><span class="line">    <span class="comment">#      ...defaultItems,</span></span><br><span class="line">    <span class="comment">#      &#123;</span></span><br><span class="line">    <span class="comment">#        id: &#x27;github&#x27;,</span></span><br><span class="line">    <span class="comment">#        icon: &#x27;github-fill&#x27;,</span></span><br><span class="line">    <span class="comment">#        title: &#x27;我的github&#x27;,</span></span><br><span class="line">    <span class="comment">#        onClick: ()=&gt;window.open(&#x27;https://github.com/hacxy&#x27;)</span></span><br><span class="line">    <span class="comment">#      &#125;</span></span><br><span class="line">    <span class="comment">#    ]</span></span><br><span class="line">    <span class="comment">#   &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># items:</span></span><br><span class="line">    <span class="comment">#   - id: &#x27;github&#x27;</span></span><br><span class="line">    <span class="comment">#     icon: &#x27;github-fill&#x27;</span></span><br><span class="line">    <span class="comment">#     title: &#x27;我的github&#x27;</span></span><br><span class="line">    <span class="comment">#     onClick: ()=&gt;window.open(&#x27;https://github.com/hacxy&#x27;)</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">mobileDisplay:</span> <span class="literal">false</span> <span class="comment"># 是否在移动端显示</span></span><br><span class="line">    <span class="attr">models:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">/live2d-models/Miss/Miss.model3.json</span></span><br><span class="line">        <span class="attr">position:</span> [<span class="number">-60</span>, <span class="number">35</span>] <span class="comment"># 模型在舞台中的位置。 默认值: [0,0] [横坐标, 纵坐标]</span></span><br><span class="line">        <span class="attr">scale:</span> <span class="number">0.15</span> <span class="comment"># 模型的缩放比例 默认值: 0.1</span></span><br><span class="line">        <span class="comment"># showHitAreaFrames: false # 是否显示点击区域 默认值: false</span></span><br><span class="line">        <span class="attr">stageStyle:</span></span><br><span class="line">          <span class="attr">width:</span> <span class="number">250</span></span><br><span class="line">          <span class="attr">height:</span> <span class="number">250</span></span><br><span class="line">        <span class="attr">mobilePosition:</span> [<span class="number">-10</span>, <span class="number">23</span>] <span class="comment"># 移动端时模型在舞台中的位置。 默认值: [0,0] [横坐标, 纵坐标]</span></span><br><span class="line">        <span class="attr">mobileScale:</span> <span class="number">0.1</span> <span class="comment"># 移动端时模型的缩放比例 默认值: 0.1</span></span><br><span class="line">        <span class="attr">mobileStageStyle:</span> <span class="comment"># 移动端时舞台的样式</span></span><br><span class="line">          <span class="attr">width:</span> <span class="number">180</span></span><br><span class="line">          <span class="attr">height:</span> <span class="number">166</span></span><br><span class="line">        <span class="attr">motionPreloadStrategy:</span> <span class="string">ALL</span> <span class="comment"># 动作预加载策略 默认值: IDLE 可选值: ALL | IDLE | NONE</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">/live2d-models/hailunna_4/hailunna_4.model3.json</span></span><br><span class="line">        <span class="attr">position:</span> [<span class="number">-50</span>, <span class="number">0</span>] <span class="comment"># 模型在舞台中的位置。 默认值: [0,0] [横坐标, 纵坐标]</span></span><br><span class="line">        <span class="attr">scale:</span> <span class="number">0.08</span> <span class="comment"># 模型的缩放比例 默认值: 0.1</span></span><br><span class="line">        <span class="comment"># showHitAreaFrames: true # 是否显示点击区域 默认值: false</span></span><br><span class="line">        <span class="attr">stageStyle:</span></span><br><span class="line">          <span class="attr">width:</span> <span class="number">350</span></span><br><span class="line">          <span class="attr">height:</span> <span class="number">350</span></span><br><span class="line">        <span class="attr">mobilePosition:</span> [<span class="number">-10</span>, <span class="number">23</span>] <span class="comment"># 移动端时模型在舞台中的位置。 默认值: [0,0] [横坐标, 纵坐标]</span></span><br><span class="line">        <span class="attr">mobileScale:</span> <span class="number">0.08</span> <span class="comment"># 移动端时模型的缩放比例 默认值: 0.1</span></span><br><span class="line">        <span class="attr">mobileStageStyle:</span> <span class="comment"># 移动端时舞台的样式</span></span><br><span class="line">          <span class="attr">width:</span> <span class="number">180</span></span><br><span class="line">          <span class="attr">height:</span> <span class="number">166</span></span><br><span class="line">        <span class="attr">motionPreloadStrategy:</span> <span class="string">IDLE</span> <span class="comment"># 动作预加载策略 默认值: IDLE 可选值: ALL | IDLE | NONE</span></span><br><span class="line">        </span><br><span class="line">    <span class="attr">parentElement:</span> <span class="string">document.body</span> <span class="comment">#为组件提供一个父元素，如果未指定则默认挂载到 body 中</span></span><br><span class="line">    <span class="attr">primaryColor:</span> <span class="string">&#x27;var(--btn-bg)&#x27;</span> <span class="comment"># 主题色 支持变量</span></span><br><span class="line">    <span class="attr">sayHello:</span> <span class="literal">false</span> <span class="comment"># 是否在初始化阶段打印项目信息</span></span><br><span class="line">    <span class="attr">tips:</span></span><br><span class="line">      <span class="attr">style:</span></span><br><span class="line">        <span class="attr">width:</span> <span class="number">230</span></span><br><span class="line">        <span class="attr">height:</span> <span class="number">120</span></span><br><span class="line">        <span class="attr">left:</span> <span class="string">calc(50%</span> <span class="bullet">-</span> <span class="string">20px)</span></span><br><span class="line">        <span class="attr">top:</span> <span class="string">-100px</span></span><br><span class="line">      <span class="attr">mobileStyle:</span></span><br><span class="line">        <span class="attr">width:</span> <span class="number">180</span></span><br><span class="line">        <span class="attr">height:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">left:</span> <span class="string">calc(50%</span> <span class="bullet">-</span> <span class="string">30px)</span></span><br><span class="line">        <span class="attr">top:</span> <span class="string">-100px</span></span><br><span class="line">      <span class="attr">idleTips:</span></span><br><span class="line">        <span class="attr">interval:</span> <span class="number">3600</span></span><br><span class="line">        <span class="attr">message:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">你好呀，我是空城~</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">欢迎来到我的小站~</span></span><br><span class="line">        <span class="comment"># 自定义提示语 需要 引入 axios 库 ,也可以使用其他方法</span></span><br><span class="line">        <span class="comment"># message: |</span></span><br><span class="line">        <span class="comment">#   function()&#123;</span></span><br><span class="line">        <span class="comment">#     return axios.get(&#x27;https://v1.hitokoto.cn?c=i&#x27;)</span></span><br><span class="line">        <span class="comment">#       .then(function (response) &#123;</span></span><br><span class="line">        <span class="comment">#         return response.data.hitokoto ;</span></span><br><span class="line">        <span class="comment">#       &#125;)</span></span><br><span class="line">        <span class="comment">#       .catch(function (error) &#123;</span></span><br><span class="line">        <span class="comment">#         console.error(error);</span></span><br><span class="line">        <span class="comment">#       &#125;);</span></span><br><span class="line">        <span class="comment">#   &#125;</span></span><br><span class="line">        <span class="comment"># wordTheDay: true</span></span><br><span class="line">        <span class="comment"># 自定义  https://v1.hitokoto.cn  数据</span></span><br><span class="line">        <span class="comment"># wordTheDay: |</span></span><br><span class="line">        <span class="comment">#   function(wordTheDayData)&#123;</span></span><br><span class="line">        <span class="comment">#     return `$&#123;wordTheDayData.hitokoto&#125;    by.$&#123;wordTheDayData.from&#125;`;</span></span><br><span class="line">        <span class="comment">#   &#125;</span></span><br><span class="line">  <span class="comment"># then: |</span></span><br><span class="line">  <span class="comment">#   (oml2d)=&gt;&#123;</span></span><br><span class="line">  <span class="comment">#      setTimeout(() =&gt; &#123;</span></span><br><span class="line">  <span class="comment">#     oml2d.tipsMessage(&#x27;hello world&#x27;, 3000, 10);</span></span><br><span class="line">  <span class="comment">#   &#125;, 8000);</span></span><br><span class="line">  <span class="comment">#   &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>这样就能使用自己下载的模型啦，使用的是这个模型库<a target="_blank" rel="noopener" href="https://github.com/kongxiangyiren/hexo-oh-my-live2d">kongxiangyiren&#x2F;hexo-oh-my-live2d</a>。目前有个bug就是点击模型切换是会直接加载失败，原因未知，我本地只有一个live2d模型，后续发现问题了再更新。一旦不小心切换了把网站的所有cookies清除，再重新进网页就能解决。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251028192628981.png"></p>
+<hr>
+<h1 id="记录六：背景一图流"><a href="#记录六：背景一图流" class="headerlink" title="记录六：背景一图流"></a>记录六：背景一图流</h1><p><font color = black size = 4>首先，设置网站背景，修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>background</code></font>下的子属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">background:</span> <span class="string">https://amadeuspjq.cn/img/background.jpg</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>比如，我现在的网站是 <a target="_blank" rel="noopener" href="https://amadeuspjq.cn,那么填写的地址就是网站+你引用在本地图片的目录(/">https://amadeuspjq.cn，那么填写的地址就是网站+你引用在本地图片的目录（</a><font color = red><code>/img/background.jpg</code></font>）。如果你的网站根目录不是’&#x2F;‘,使用本地图片時，需要加上你的根目录。例如：网站是 <font color = red><code>https://yoursite.com/blog</code></font>,引用一張<font color = red><code>img/xx.png</code></font>圖片，則設置 background 為 <font color = red><code>/blog/img/xx.png</code></font></font></p>
+<p><font color = black size = 4>当你设置好了以后，你会发现你的网站背景被页面头部图遮住（我遐蝶的头看不到我要疯掉啦！！！）：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030113721902.png"></p>
+<p><font color = black size = 4>并且页脚这里也是有遮蔽的：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030113906086.png"></p>
+<p><font color = black size = 4>所以，才需要一图流的制作，由于是我独自摸索网上各位大佬的教程，有很多地方不太懂，需要自己独自尝试。网上很多教程都是一步到位直接给你弄好，不细致做的话，有些问题的出现你根本不知道原因。</font></p>
+<p><font color = black size = 4>想要移除首页的顶部图很简单，你只需要关注一个参数➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>index_img</code></font>:</font></p>
+<table>
+<thead>
+<tr>
+<th align="center">配置的值</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">留空</td>
+<td align="center">显示默认的<font color = red><code>top_img</code></font>(如果有)，否则显示默认的颜色</td>
+</tr>
+<tr>
+<td align="center">img链接</td>
+<td align="center">图片的链接，显示所配置的图片</td>
+</tr>
+<tr>
+<td align="center">颜色(HEX 值 - #0000FF；RGB 值 - rgb(0,0,255)；顔色單詞 - orange；漸變色 - linear-gradient( 135deg, #E2B0FF 10%, #9F44D3 100%））</td>
+<td align="center">对应颜色</td>
+</tr>
+<tr>
+<td align="center">transparent</td>
+<td align="center">透明</td>
+</tr>
+<tr>
+<td align="center">false</td>
+<td align="center">不显示 top_img</td>
+</tr>
+</tbody></table>
+<p><font color = black size = 4>因此，你只需设置<font color = red><code>index_img: transparent</code></font>就可以把网站背景图显示出来。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030115754091.png"></p>
+<p><font color = black size = 4>页脚背景图同理，修改➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>footer_img</code></font>:</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">footer_img:</span> <span class="string">transparent</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>注意当设置<font color = red><code>footer_img:true</code></font>表示显示跟top_img 一样。如果直接这两个参数直接false，是直接没有top_img图：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030122651688.png"></p>
+<p><font color = black size = 4>如果你觉得首页顶部图太高了，也可以调节它的高度：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">index_top_img_height:</span> <span class="string">400px</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>这样，你一打开网页就不会被主页首部图占整个屏幕：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030142106130.png"></p>
+<p><font color = black size = 4>如果你不想要这种半透明效果，想要直接全透明，可以修改➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>mask</code></font>列表下的<font color = red><code>header</code></font>:</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># true 表示添加遮罩;header是头部图，footer是页脚图</span></span><br><span class="line"><span class="attr">mask:</span></span><br><span class="line">  <span class="attr">header:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">footer:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030142840516.png"></p>
+<p><font color = black size = 4>后续，可以将首页以外的顶部图移到标题下方显示：</font></p>
+<p><font color = black size = 4>🎻<strong>新建Styl文件</strong></font></p>
+<p><font color = black size = 4>在 <font color = red><code>ROOT\themes\butterfly\source\css\page</code></font>目录，新建 <font color = red><code>topimg.styl</code></font>。</font></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 顶部图</span></span><br><span class="line"><span class="selector-id">#page-header</span>, <span class="selector-id">#page-header</span><span class="selector-pseudo">:before</span></span><br><span class="line">  <span class="attribute">background-color</span>: transparent <span class="meta">!important</span></span><br><span class="line">  <span class="attribute">background-image</span>: unset <span class="meta">!important</span></span><br><span class="line"></span><br><span class="line"><span class="selector-class">.top-img</span></span><br><span class="line">  <span class="attribute">height</span>: <span class="number">12.5rem</span></span><br><span class="line">  <span class="attribute">display</span>: block</span><br><span class="line">  <span class="attribute">margin</span>: -<span class="number">50px</span> -<span class="number">40px</span> <span class="number">50px</span> -<span class="number">40px</span></span><br><span class="line">  <span class="attribute">border-top-left-radius</span>: inherit</span><br><span class="line">  <span class="attribute">border-top-right-radius</span>: inherit</span><br><span class="line">  <span class="attribute">background-position</span>: center center</span><br><span class="line">  -webkit-<span class="attribute">background-size</span>: cover</span><br><span class="line">  -moz-<span class="attribute">background-size</span>: cover</span><br><span class="line">  <span class="attribute">background-size</span>: cover</span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat</span><br><span class="line">  <span class="attribute">transition</span>: all <span class="number">0.3s</span></span><br><span class="line"></span><br><span class="line">  <span class="selector-class">.read-mode</span></span><br><span class="line">    <span class="attribute">display</span>: none</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>)</span><br><span class="line">    margin: -<span class="number">1.8rem</span> -<span class="number">0.7rem</span> <span class="number">1.8rem</span> -<span class="number">0.7rem</span></span><br><span class="line"></span><br><span class="line">  [data-theme=&#x27;dark&#x27;] &amp;</span><br><span class="line">    filter: brightness(<span class="number">0.8</span>)</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>🎹<strong>修改post.pug</strong></font></p>
+<p><font color = black size = 4>在 <font color = red><code>ROOT\themes\butterfly\layout</code></font>目录，新建 <font color = red><code>post.pug</code></font>。</font></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">block content</span><br><span class="line">  #post</span><br><span class="line">    <span class="keyword">if</span> top_img === <span class="literal">false</span></span><br><span class="line">      include includes/header/post-info.<span class="property">pug</span></span><br><span class="line">    .<span class="property">top</span>-img.<span class="title function_">gist</span>(style=<span class="string">`background-image: url(<span class="subst">$&#123;url_for(top_img)&#125;</span>)`</span>)</span><br><span class="line">    article#article-container.<span class="property">post</span>-content!=page.<span class="property">content</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251030152917339.png"></p>
+<hr>
+<h1 id="记录七：修改鼠标样式"><a href="#记录七：修改鼠标样式" class="headerlink" title="记录七：修改鼠标样式"></a>记录七：修改鼠标样式</h1><p><font color = black size = 4>参考链接：<a target="_blank" rel="noopener" href="https://zhongliang924.github.io/2024/12/28/hexo/hexo-mouse/">Hexo 修改鼠标样式 </a></font></p>
+<p><font color = black size = 4>首先可以选中自己喜欢的鼠标指针样式，推荐到<a target="_blank" rel="noopener" href="https://zhutix.com/tag/cursors/page/2">致美化网站</a>进行下载。</font></p>
+<p><font color = black size = 4>之后将 <font color = red><code>.cur</code></font>格式的鼠标指针图片放入到博客根目录下的<font color = red><code>\blogroot\source\mouse</code></font>的路径下。</font></p>
+<p><font color = black size = 4>注意如果你下载到的是<font color = red><code>.ani</code></font>格式的动态鼠标指针图片，那么需要转换成静态鼠标格式<font color = red><code>.cur</code></font>，不然无法加载，转换方法：<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/90895e0f928e7e64ec6b0be9.html">电脑指针ani格式转换成cur格式</a>。另外想要调整鼠标指针样式大小也是前面这个链接下载对应的软件进行调整。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251031143432377.png"></p>
+<p><font color = black size = 4>之后，在本地css目录下创建<font color = red><code>custom.css</code></font>并将以下代码复制粘贴到<font color = red><code>custom.css</code></font>中进行保存：</font></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 全局默认鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">body</span>,</span><br><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/pointer.cur&#x27;</span>),auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停图片时的鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">img</span> &#123; </span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/person.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停图片弹出窗口时的鼠标指针 */</span></span><br><span class="line"><span class="selector-class">.fancybox__slide</span>&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.carousel__slide</span>&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 选择链接标签时的鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span>,<span class="selector-id">#site-name</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/link.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 选择代码框展开和复制按钮时的鼠标指针 */</span></span><br><span class="line"><span class="selector-class">.copy-button</span><span class="selector-pseudo">:hover</span>,<span class="selector-class">.expand</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/unavailiable.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 选中输入框时的鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:hover</span>, <span class="selector-tag">textarea</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/text.cur&#x27;</span>), auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停按钮时的鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">button</span><span class="selector-pseudo">:hover</span>,<span class="selector-class">.scroll-down-effects</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/person.cur&#x27;</span>), auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停页脚链接标签（例如页脚徽标）时的鼠标指针 */</span></span><br><span class="line"><span class="selector-id">#footer-wrap</span> <span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停页码时的鼠标指针 */</span></span><br><span class="line"><span class="selector-id">#pagination</span> <span class="selector-class">.page-number</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停菜单栏时的鼠标指针 */</span></span><br><span class="line"><span class="selector-id">#nav</span> <span class="selector-class">.site-page</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/person.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停滚动条的鼠标指针（只对Chrome有效） */</span></span><br><span class="line">::-webkit-scrollbar:hover&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto<span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停评论按钮的鼠标指针（我使用的是Gitalk/Valine） */</span></span><br><span class="line"><span class="selector-class">.switch-btn</span>,<span class="selector-class">.switch-btn</span><span class="selector-pseudo">:before</span>,<span class="selector-class">.gt-user-inner</span>,<span class="selector-class">.gt-ico</span>,<span class="selector-class">.gt-user-name</span>,<span class="selector-class">.gt-btn</span>,<span class="selector-class">.vbtn</span>,<span class="selector-tag">svg</span>,<span class="selector-class">.at_button</span>&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停非链接文本时的鼠标指针 */</span></span><br><span class="line"><span class="selector-tag">h1</span>,<span class="selector-tag">h2</span>,<span class="selector-tag">h3</span>,<span class="selector-tag">h4</span>,<span class="selector-tag">h5</span>,<span class="selector-tag">h6</span>,<span class="selector-id">#subtitle</span>,<span class="selector-class">.content</span>,<span class="selector-class">.line</span>,<span class="selector-class">.post-content</span> <span class="selector-tag">p</span>,<span class="selector-class">.post-content</span> <span class="selector-tag">li</span>&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;/mouse/text.cur&#x27;</span>), auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 悬停文章日期 */</span></span><br><span class="line"><span class="selector-class">.post-meta-date</span><span class="selector-pseudo">:hover</span>,<span class="selector-class">.post-meta-date-created</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">	<span class="attribute">cursor</span>: <span class="built_in">url</span>(<span class="string">&#x27;./mouse/xxx.cur&#x27;</span>), auto<span class="meta">!important</span>;</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>根据自己的需求，你需要哪些功能设置什么样的鼠标指针样式就对应添加。之后，在主题配置文章<font color = red><code>_config.butterfly.yml</code></font>中找到<font color = red><code>inject</code></font>属性，并在<font color = red><code>head</code></font>处引入该文件：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">inject:</span></span><br><span class="line">  <span class="attr">head:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&lt;link</span> <span class="string">rel=&quot;stylesheet&quot;</span> <span class="string">href=&quot;</span> <span class="string">/css/custom.css&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>然后hexo三连重新部署后就能看到鼠标生效效果。</font></p>
+<hr>
+<h1 id="记录八：文章内容标题前缀图标"><a href="#记录八：文章内容标题前缀图标" class="headerlink" title="记录八：文章内容标题前缀图标"></a>记录八：文章内容标题前缀图标</h1><p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251103095759211.png"></p>
+<p><font color = black size = 4>修改主题配置文件➡️<font color = red><code>_config.butterfly.yml</code></font>中的<font color = red><code>beautify</code></font>下的子属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">beautify:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">field:</span> <span class="string">post</span></span><br><span class="line">  <span class="attr">title_prefix_icon:</span> <span class="string">&#x27;\f520&#x27;</span></span><br><span class="line">  <span class="attr">title_prefix_icon_color:</span> <span class="string">&#x27;#1E90FF&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color = black size = 4><font color = red><code>enable</code></font>：是否启用内容美化</font></li>
+<li><font color = black size = 4><font color = red><code>field</code></font>：应用范围：site（全站）&#x2F; post (仅文章)</font></li>
+<li><font color = black size = 4><font color = red><code>title_prefix_icon</code></font>：标题前缀图标（使用Font Awesome的Unicode值，对照表：<a target="_blank" rel="noopener" href="https://fa.uutool.cn/unicode">Font Awesome 图标库所有版本UNICODE对照表大全 </a>）</font></li>
+<li><font color = black size = 4><font color = red><code>title_prefix_icon_color</code></font>：标题前缀图标颜色</font></li>
+</ul>
+<hr>
+<h1 id="记录九：首页分类磁贴1-0（小冰）"><a href="#记录九：首页分类磁贴1-0（小冰）" class="headerlink" title="记录九：首页分类磁贴1.0（小冰）"></a>记录九：首页分类磁贴1.0（小冰）</h1><p><font color = black size = 4>首先，需要在博客根目录下安装<font color = red><code>hexo-magnet</code></font>插件：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-magnet --save</span><br><span class="line"></span><br><span class="line"># 或者</span><br><span class="line"></span><br><span class="line">cnpm i hexo-magnet --save</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>注意，一定要加<code>--save</code>，不然本地预览的时候可能不会显示！！！</font></p>
+<p><font color = black size = 4>然后，新增网站根目录_config配置项（不是主题的）：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">magnet:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">priority:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">enable_page:</span> <span class="string">/</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">categories</span></span><br><span class="line">  <span class="attr">devide:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">display:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">教程</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の魔改教程</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">📚</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">游戏评测</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の游戏评测</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">🎮</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">生活趣闻</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の生活趣闻</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">🐱‍👓</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">vue</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の编程学习</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">👩‍💻</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">学习</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の读书笔记</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">📒</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">随想</span></span><br><span class="line">      <span class="attr">display_name:</span> <span class="string">小冰の胡思乱想</span></span><br><span class="line">      <span class="attr">icon:</span> <span class="string">💡</span></span><br><span class="line">  <span class="attr">color_setting:</span></span><br><span class="line">    <span class="attr">text_color:</span> <span class="string">black</span></span><br><span class="line">    <span class="attr">text_hover_color:</span> <span class="string">white</span></span><br><span class="line">    <span class="attr">background_color:</span> <span class="string">&quot;#f2f2f2&quot;</span></span><br><span class="line">    <span class="attr">background_hover_color:</span> <span class="string">&quot;#b30070&quot;</span></span><br><span class="line">  <span class="attr">layout:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">id</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">recent-posts</span></span><br><span class="line">    <span class="attr">index:</span> <span class="number">0</span></span><br><span class="line">  <span class="attr">temple_html:</span> <span class="string">&#x27;&lt;div class=&quot;recent-post-item&quot; style=&quot;width:100%;height: auto&quot;&gt;&lt;div id=&quot;catalog_magnet&quot;&gt;$&#123;temple_html_item&#125;&lt;/div&gt;&lt;/div&gt;&#x27;</span></span><br><span class="line">  <span class="attr">plus_style:</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>参数含义：</font></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>备选值</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>enable</td>
+<td>true&#x2F;false</td>
+<td>是否开启插件</td>
+</tr>
+<tr>
+<td>enable_page</td>
+<td>&#x2F;</td>
+<td>所应用的页面地址。如&#x2F;代表主页</td>
+</tr>
+<tr>
+<td>priority</td>
+<td>1</td>
+<td>插件的叠放顺序，数字越大，叠放约靠前。如果你安装了 hexo-githubcalendar，请将<code>hexo-githubcalendar</code>npm 插件更新至<code>@1.2.3</code>版本。然后给 hexo-githubcalendar 添加<code>priority</code>参数。</td>
+</tr>
+<tr>
+<td>type</td>
+<td>categories&#x2F;tags</td>
+<td>选择筛选分类还是标签</td>
+</tr>
+<tr>
+<td>devide</td>
+<td>2</td>
+<td>表示分隔的列数，2 表示分为两列展示</td>
+</tr>
+<tr>
+<td>display.name</td>
+<td></td>
+<td>这里是文章的tags或categories的名称</td>
+</tr>
+<tr>
+<td>display.display_name</td>
+<td></td>
+<td>这里是替换的名称</td>
+</tr>
+<tr>
+<td>display.icon</td>
+<td></td>
+<td>这里是展示的图标</td>
+</tr>
+<tr>
+<td>color_setting.text_color</td>
+<td>back</td>
+<td>文字默认颜色</td>
+</tr>
+<tr>
+<td>color_setting.text_hover_color</td>
+<td>white</td>
+<td>文字鼠标悬浮颜色</td>
+</tr>
+<tr>
+<td>color_setting.background_color</td>
+<td>“#f2f2f2”</td>
+<td>文字背景默认颜色</td>
+</tr>
+<tr>
+<td>color_setting.background_hover_color</td>
+<td>“#b30070”</td>
+<td>文字背景悬浮颜色</td>
+</tr>
+<tr>
+<td>layout.type</td>
+<td>id&amp;class</td>
+<td>墙</td>
+</tr>
+<tr>
+<td>layout.name</td>
+<td>recent-posts</td>
+<td>墙的名字</td>
+</tr>
+<tr>
+<td>layout.class</td>
+<td>1</td>
+<td>在多个class的情况下，确定是哪一个</td>
+</tr>
+<tr>
+<td>temple_html</td>
+<td>html模板字符</td>
+<td>包含挂载容器</td>
+</tr>
+<tr>
+<td>plus_style</td>
+<td>“”</td>
+<td>提供可自定义的style，如加入黑夜模式</td>
+</tr>
+</tbody></table>
+<p><font color = black size = 4>效果预览：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251104153048059.png"></p>
+<hr>
+<h1 id="记录十：hexo-abbrlink（短链）"><a href="#记录十：hexo-abbrlink（短链）" class="headerlink" title="记录十：hexo-abbrlink（短链）"></a>记录十：hexo-abbrlink（短链）</h1><p><font color = black size = 4>Hexo默认的静态URL格式是 :year&#x2F;:month&#x2F;:day&#x2F;:title，即按年、月、日、标题的形式生成固定链接，如果文章的标题使用了中文，经过转码后，URL会变得特别长。生成短链就是这个插件的作用。</font></p>
+<blockquote>
+<p><font size = 4>例如：</font></p>
+<p><font size = 4>hexo原url格式：<a target="_blank" rel="noopener" href="https://www.xxx.com/2024/08/11/Butterfly%E4%B8%BB%E9%A2%98%E9%AD%94%E6%94%B9%E7%AC%94%E8%AE%B0(%E2%85%A1)/">https://www.XXX.com/2024/08/11/Butterfly%E4%B8%BB%E9%A2%98%E9%AD%94%E6%94%B9%E7%AC%94%E8%AE%B0(%E2%85%A1)/</a></font></p>
+<p><font size = 4>优化后：<code>https://www.xxx.com/posts/b40f8ae4.html</code></font></p>
+</blockquote>
+<p><font color = black size = 4>首先，安装插件：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-abbrlink --save</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>修改<font color = red><code>_config.yml</code></font>下的<font color = red><code>permalink</code></font>属性：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:abbrlink.html</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4><font color = red><code>_config.yml</code></font>中支持的两种写法</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:abbrlink/</span> </span><br><span class="line"><span class="comment"># or</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">posts/:abbrlink.html</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>并在<font color = red><code>_config.yml</code></font>配置文件中添加下面的配置信息：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># abbrlink config 哈希url路径</span></span><br><span class="line"><span class="attr">abbrlink:</span></span><br><span class="line">  <span class="attr">alg:</span> <span class="string">crc32</span>      <span class="comment">#support crc16(default) and crc32</span></span><br><span class="line">  <span class="attr">rep:</span> <span class="string">hex</span>        <span class="comment">#support dec(default) and hex</span></span><br><span class="line">  <span class="attr">drafts:</span> <span class="literal">false</span>   <span class="comment">#(true)Process draft,(false)Do not process draft. false(default) </span></span><br><span class="line">  <span class="comment"># Generate categories from directory-tree</span></span><br><span class="line">  <span class="comment"># depth: the max_depth of directory-tree you want to generate, should &gt; 0</span></span><br><span class="line">  <span class="attr">auto_category:</span></span><br><span class="line">     <span class="attr">enable:</span> <span class="literal">true</span>  <span class="comment">#true(default)</span></span><br><span class="line">     <span class="attr">depth:</span>        <span class="comment">#3(default)</span></span><br><span class="line">     <span class="attr">over_write:</span> <span class="literal">false</span> </span><br><span class="line">  <span class="attr">auto_title:</span> <span class="literal">false</span> <span class="comment">#enable auto title, it can auto fill the title by path</span></span><br><span class="line">  <span class="attr">auto_date:</span> <span class="literal">false</span> <span class="comment">#enable auto date, it can auto fill the date by time today</span></span><br><span class="line">  <span class="attr">force:</span> <span class="literal">false</span> <span class="comment">#enable force mode,in this mode, the plugin will ignore the cache, and calc the abbrlink for every post even it already had abbrlink. This only updates abbrlink rather than other front variables.</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>有两种设置：</font></p>
+<ul>
+<li><font color = black size = 4><font color = red><code>alg</code></font>——算法（目前支持crc16和crc32，默认为crc16）</font></li>
+<li><font color = black size = 4><font color = red><code>rep</code></font>——表示（生成的链接可以用十六进制或十进制值表示）</font></li>
+</ul>
+<p><font color = black size = 4>效果预览：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251104152940298.png"></p>
+<hr>
+<h1 id="记录十一：首页文字轮播动画效果"><a href="#记录十一：首页文字轮播动画效果" class="headerlink" title="记录十一：首页文字轮播动画效果"></a>记录十一：首页文字轮播动画效果</h1><p><font color = black size = 4>效果预览：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/image-20251104154614724.png" alt="image-20251104154614724"></p>
+<p><font color = black size = 4>首先安装插件：</font></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-butterfly-swiper --save</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>在<font color = red><code>_config.yml</code></font>配置文件中添加下面的配置信息：</font></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo-butterfly-swiper</span></span><br><span class="line"><span class="comment"># see https://akilar.top/posts/8e1264d1/</span></span><br><span class="line"><span class="attr">swiper:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span> <span class="comment"># 开关</span></span><br><span class="line">  <span class="attr">priority:</span> <span class="number">5</span> <span class="comment">#过滤器优先权</span></span><br><span class="line">  <span class="attr">enable_page:</span> <span class="string">all</span> <span class="comment"># 应用页面</span></span><br><span class="line">  <span class="attr">timemode:</span> <span class="string">date</span> <span class="comment">#date/updated</span></span><br><span class="line">  <span class="attr">layout:</span> <span class="comment"># 挂载容器类型</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">id</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">recent-posts</span></span><br><span class="line">    <span class="attr">index:</span> <span class="number">0</span></span><br><span class="line">  <span class="attr">default_descr:</span> <span class="string">再怎么看我也不知道怎么描述它的啦！</span></span><br><span class="line">  <span class="attr">swiper_css:</span> <span class="string">https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css</span> <span class="comment">#swiper css依赖</span></span><br><span class="line">  <span class="attr">swiper_js:</span> <span class="string">https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js</span> <span class="comment">#swiper js依赖</span></span><br><span class="line">  <span class="attr">custom_css:</span> <span class="string">https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css</span> <span class="comment"># 适配主题样式补丁</span></span><br><span class="line">  <span class="attr">custom_js:</span> <span class="string">https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js</span> <span class="comment"># swiper初始化方法</span></span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>之后，在文章的<font color = red><code>_config.yml</code></font>当中添加<font color = red><code>swiper_index</code></font>配置项即可：</font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 文章标题</span><br><span class="line">date: 创建日期</span><br><span class="line">updated: 更新日期</span><br><span class="line">cover: 文章封面</span><br><span class="line">description: 文章描述</span><br><span class="line"><span class="section">swiper<span class="emphasis">_index: 1 #置顶轮播图顺序，非负整数，数字越大越靠前</span></span></span><br><span class="line"><span class="emphasis"><span class="section">---</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="记录十二：Butterfly-外挂标签用法"><a href="#记录十二：Butterfly-外挂标签用法" class="headerlink" title="记录十二：Butterfly 外挂标签用法"></a>记录十二：Butterfly 外挂标签用法</h1><h2 id="🦀行内文本样式"><a href="#🦀行内文本样式" class="headerlink" title="🦀行内文本样式"></a>🦀行内文本样式</h2><p><font color = black size = 4>1.带 <u>下划线</u> 的文本</font></p>
+<p><font color = black size = 4>2.带 <emp>着重号</emp> 的文本</font></p>
+<p><font color = black size = 4>3. 带 <wavy>波浪线</wavy> 的文本</font></p>
+<p><font color = black size = 4>4.带 <del>删除线</del> 的文本</font></p>
+<p><font color = black size = 4>5.键盘样式的文本 <kbd>command</kbd> + <kbd>D</kbd></font></p>
+<p><font color = black size = 4>6.密码样式的文本：<psw>这里没有验证码</psw></font></p>
+<h2 id="🐟行内文本-Span"><a href="#🐟行内文本-Span" class="headerlink" title="🐟行内文本 Span"></a>🐟行内文本 Span</h2><p><font color = black size = 4><strong>配置参数：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">语法: &#123;% span 样式参数（参数以空格划分），文本内容%&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><font color = black size = 4><code>字体</code>: logo, code</font></li>
+<li><font color = black size = 4><code>颜色</code>: red,yellow,green,cyan,blue,gray</font></li>
+<li><font color = black size = 4><code>大小</code>: small，h4，h3，h2，h1，large，huge，ultra</font></li>
+<li><font color = black size = 4><code>对齐方向</code>: left, center, right</font></li>
+</ol>
+<p><font color = black size = 4><strong>彩色文本：</strong></font></p>
+<p><font color = black size = 4>在一段话中方便插入各种颜色的标签，包括<span class='p red'>红色</span>、<span class='p yellow'>黄色</span>、<span class='p green'>绿色</span>、<span class='p cyan'>青色</span>、<span class='p blue'>蓝色</span>、<span class='p gray'>灰色</span>。</font></p>
+<p><font color = black size = 4><strong>超大号文字：</strong></font></p>
+<p><font color = black size = 4>文档「开始」页面中的标题部分就是超大号文字。</font></p>
+<p><font color = black size = 4><span class='p center logo large'>路飞</span></font></p>
+<p><font color = black size = 4><span class='p center small'>我要成为海贼王的男人！</span></font></p>
+<h2 id="🐬折叠框-folding"><a href="#🐬折叠框-folding" class="headerlink" title="🐬折叠框 folding"></a>🐬折叠框 folding</h2><p><font color = black size = 4><strong>配置参数：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% folding 参数（可选），标题 %&#125;内容(可以是文本也可以是图片)&#123;% endfolding %&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><font color = black size = 4><code>颜色</code>: red,yellow,green,cyan,blue,gray</font></li>
+<li><font color = black size = 4><code>状态</code>: 状态填写open代表默认打开</font></li>
+</ol>
+<p><font color = black size = 4><details class="folding-tag" cyan open><summary> 查看默认打开的折叠框 </summary>
+              <div class='content'>
+              <p>这是一个默认打开的折叠框。</p>
+              </div>
+            </details></font></p>
+<p><font color = black size = 4><details class="folding-tag" ><summary> 查看图片测试 </summary>
+              <div class='content'>
+              <p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/138476502_p0_square1200.jpg"> </p>
+              </div>
+            </details></font></p>
+<h2 id="🐳外部icon（提示块标签）"><a href="#🐳外部icon（提示块标签）" class="headerlink" title="🐳外部icon（提示块标签）"></a>🐳外部icon（提示块标签）</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% note [color] [icon] [style] %&#125;</span><br><span class="line">Any content (support inline tags too.io).</span><br><span class="line">&#123;% endnote %&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">color</td>
+<td align="center">【可选】标识，不同的标识有不同的配色 （ default &#x2F; blue &#x2F; pink &#x2F; red &#x2F; purple &#x2F; orange &#x2F; green ）</td>
+</tr>
+<tr>
+<td align="center">no-icon</td>
+<td align="center">【可选】可配置自定义 icon (只支持 fontawesome 图标, 也可以配置 no-icon )</td>
+</tr>
+<tr>
+<td align="center">style</td>
+<td align="center">【可选】可以覆盖配置中的 style （simple&#x2F;modern&#x2F;flat）</td>
+</tr>
+</tbody></table>
+<p><font color = black size = 4><strong>simple样式预览和代码：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;% note &#x27;fab fa-cc-visa&#x27; simple %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note blue &#x27;fas fa-bullhorn&#x27; simple %&#125;2021年快到了....&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note pink &#x27;fas fa-car-crash&#x27; simple %&#125;小心开车 安全至上&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note red &#x27;fas fa-fan&#x27; simple%&#125;这是三片呢？还是四片？&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note orange &#x27;fas fa-battery-half&#x27; simple %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note purple &#x27;far fa-hand-scissors&#x27; simple %&#125;剪刀石头布&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note green &#x27;fab fa-internet-explorer&#x27; simple %&#125;前端最讨厌的浏览器&#123;% endnote %&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="note icon-padding simple"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note blue icon-padding simple"><i class="note-icon fas fa-bullhorn"></i><p>2021年快到了….</p>
+</div>
+
+<div class="note pink icon-padding simple"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p>
+</div>
+
+<div class="note red icon-padding simple"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p>
+</div>
+
+<div class="note orange icon-padding simple"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note purple icon-padding simple"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p>
+</div>
+
+<div class="note green icon-padding simple"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p>
+</div>
+
+
+
+<p><font color = black size = 4><strong>modern样式预览和代码：</strong></font></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;% note &#x27;fab fa-cc-visa&#x27; modern %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note blue &#x27;fas fa-bullhorn&#x27; modern %&#125;2021年快到了....&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note pink &#x27;fas fa-car-crash&#x27; modern %&#125;小心开车 安全至上&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note red &#x27;fas fa-fan&#x27; modern %&#125;这是三片呢？还是四片？&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note orange &#x27;fas fa-battery-half&#x27; modern %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note purple &#x27;far fa-hand-scissors&#x27; modern %&#125;剪刀石头布&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note green &#x27;fab fa-internet-explorer&#x27; modern %&#125;前端最讨厌的浏览器&#123;% endnote %&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="note icon-padding modern"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note blue icon-padding modern"><i class="note-icon fas fa-bullhorn"></i><p>2021年快到了….</p>
+</div>
+
+<div class="note pink icon-padding modern"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p>
+</div>
+
+<div class="note red icon-padding modern"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p>
+</div>
+
+<div class="note orange icon-padding modern"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note purple icon-padding modern"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p>
+</div>
+
+<div class="note green icon-padding modern"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p>
+</div>
+
+
+
+<p><font color = black size = 4><strong>flat样式预览和代码：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;% note &#x27;fab fa-cc-visa&#x27; flat %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note blue &#x27;fas fa-bullhorn&#x27; flat %&#125;2021年快到了....&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note pink &#x27;fas fa-car-crash&#x27; flat %&#125;小心开车 安全至上&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note red &#x27;fas fa-fan&#x27; flat %&#125;这是三片呢？还是四片？&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note orange &#x27;fas fa-battery-half&#x27; flat %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note purple &#x27;far fa-hand-scissors&#x27; flat %&#125;剪刀石头布&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note green &#x27;fab fa-internet-explorer&#x27; flat %&#125;前端最讨厌的浏览器&#123;% endnote %&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="note icon-padding flat"><i class="note-icon fab fa-cc-visa"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note blue icon-padding flat"><i class="note-icon fas fa-bullhorn"></i><p>2021年快到了….</p>
+</div>
+
+<div class="note pink icon-padding flat"><i class="note-icon fas fa-car-crash"></i><p>小心开车 安全至上</p>
+</div>
+
+<div class="note red icon-padding flat"><i class="note-icon fas fa-fan"></i><p>这是三片呢？还是四片？</p>
+</div>
+
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-battery-half"></i><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note purple icon-padding flat"><i class="note-icon far fa-hand-scissors"></i><p>剪刀石头布</p>
+</div>
+
+<div class="note green icon-padding flat"><i class="note-icon fab fa-internet-explorer"></i><p>前端最讨厌的浏览器</p>
+</div>
+
+
+
+<p><font color = black size = 4><strong>no-icon样式预览和代码：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;% note no-icon %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note blue no-icon %&#125;2021年快到了....&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note pink no-icon %&#125;小心开车 安全至上&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note red no-icon %&#125;这是三片呢？还是四片？&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note orange no-icon %&#125;你是刷 Visa 还是 UnionPay&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note purple no-icon %&#125;剪刀石头布&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% note green no-icon %&#125;前端最讨厌的浏览器&#123;% endnote %&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="note no-icon modern"><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note blue no-icon modern"><p>2021年快到了….</p>
+</div>
+
+<div class="note pink no-icon modern"><p>小心开车 安全至上</p>
+</div>
+
+<div class="note red no-icon modern"><p>这是三片呢？还是四片？</p>
+</div>
+
+<div class="note orange no-icon modern"><p>你是刷 Visa 还是 UnionPay</p>
+</div>
+
+<div class="note purple no-icon modern"><p>剪刀石头布</p>
+</div>
+
+<div class="note green no-icon modern"><p>前端最讨厌的浏览器</p>
+</div>
+
+<h2 id="🦈复选列表-checkbox"><a href="#🦈复选列表-checkbox" class="headerlink" title="🦈复选列表 checkbox"></a>🦈复选列表 checkbox</h2><p><font color = black size = 4><strong>配置参数：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">标签语法: &#123;% checkbox 样式参数（可选），文本（支持简单md）%&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><font color = black size = 4><code>样式</code>: plus, minus, times</font></li>
+<li><font color = black size = 4><code>颜色</code>: red,yellow,green,cyan,blue,gray</font></li>
+<li><font color = black size = 4><code>选中状态</code>: checked</font></li>
+</ol>
+<p><font color = black size = 4><div class='checkbox'><input type="checkbox" />
+            <p>纯文本测试</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p>支持简单的 <a target="_blank" rel="noopener" href="https://guides.github.com/features/mastering-markdown/">markdown</a> 语法</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox red'><input type="checkbox" />
+            <p>支持自定义颜色</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox green checked'><input type="checkbox" checked="checked"/>
+            <p>绿色 + 默认选中</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox yellow checked'><input type="checkbox" checked="checked"/>
+            <p>黄色 + 默认选中</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox cyan checked'><input type="checkbox" checked="checked"/>
+            <p>青色 + 默认选中</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox blue checked'><input type="checkbox" checked="checked"/>
+            <p>蓝色 + 默认选中</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox plus green checked'><input type="checkbox" checked="checked"/>
+            <p>增加</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox minus yellow checked'><input type="checkbox" checked="checked"/>
+            <p>减少</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox times red checked'><input type="checkbox" checked="checked"/>
+            <p>叉</p>
+            </div></font></p>
+<h2 id="🐙单选列表-radio"><a href="#🐙单选列表-radio" class="headerlink" title="🐙单选列表 radio"></a>🐙单选列表 radio</h2><p><font color = black size = 4><strong>配置参数：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% radio 样式参数（可选），文本（支持简单md）%&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><font color = black size = 4><code>颜色</code>: red,yellow,green,cyan,blue,gray</font></li>
+<li><font color = black size = 4><code>选中状态</code>: checked</font></li>
+</ol>
+<p><font color = black size = 4><div class='checkbox'><input type="radio" />
+            <p>纯文本测试</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox checked'><input type="radio" checked="checked"/>
+            <p>支持简单的 <a target="_blank" rel="noopener" href="https://guides.github.com/features/mastering-markdown/">markdown</a> 语法</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox red'><input type="radio" />
+            <p>支持自定义颜色</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox green'><input type="radio" />
+            <p>绿色</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox yellow'><input type="radio" />
+            <p>黄色</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox cyan'><input type="radio" />
+            <p>青色</p>
+            </div></font></p>
+<p><font color = black size = 4><div class='checkbox blue'><input type="radio" />
+            <p>蓝色</p>
+            </div></font></p>
+<h2 id="🦪链接卡片-link"><a href="#🦪链接卡片-link" class="headerlink" title="🦪链接卡片 link"></a>🦪链接卡片 link</h2><p><font color = black size = 4><strong>配置参数：</strong></font></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% link 标题, 链接, 图片链接（可选） %&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="tag link"><a class="link-card" title="糖果屋教程贴" target="_blank" rel="noopener" href="https://akilar.top/posts/615e2dec/"><div class="left"><img src="https://cdn.cbd.int/akilar-candyassets@1.0.36/image/siteicon/favicon.ico"/></div><div class="right"><p class="text">糖果屋教程贴</p><p class="url">https://akilar.top/posts/615e2dec/</p></div></a></div>
+
+
+
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+<p><font color = black size = 4></font></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn">PhoenixPeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn/posts/ee293f0.html">https://amadeuspjq.cn/posts/ee293f0.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://amadeuspjq.cn" target="_blank">哈基鹏的博客🐦</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Butterfly%E9%AD%94%E6%94%B9/">Butterfly魔改</a></div><div class="post-share"><div class="social-share" data-image="/img/cover1.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/dbc3748e.html" title="哈基鹏的大模型之旅（一）"><img class="cover" src="/img/cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">哈基鹏的大模型之旅（一）</div></div><div class="info-2"><div class="info-item-1">大语言模型LLM介绍，包括大语言模型的定义、概述了OpenAI、Claude、Gemini、DeepSeek等系列模型的发展路程。</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">PhoenixPeng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/phioenx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到哈基鹏的小站</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%80%EF%BC%9A%E4%BB%A3%E7%A0%81%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">记录一：代码设置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE%E4%B8%BB%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">代码高亮主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%A4%8D%E5%88%B6"><span class="toc-number">2.2.</span> <span class="toc-text">代码复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%A1%86%E5%B1%95%E5%BC%80-%E5%85%B3%E9%97%AD"><span class="toc-number">2.3.</span> <span class="toc-text">代码框展开&#x2F;关闭</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%A1%86%E6%8D%A2%E8%A1%8C"><span class="toc-number">2.4.</span> <span class="toc-text">代码框换行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%AB%98%E5%BA%A6%E9%99%90%E5%88%B6"><span class="toc-number">2.5.</span> <span class="toc-text">代码高度限制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%BA%8C%EF%BC%9A%E9%A6%96%E9%A1%B5%E6%96%87%E7%AB%A0%E5%B8%83%E5%B1%80"><span class="toc-number">3.</span> <span class="toc-text">记录二：首页文章布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%89%EF%BC%9A%E9%A6%96%E9%A1%B5%E6%96%87%E7%AB%A0%E6%91%98%E8%A6%81%E6%98%BE%E7%A4%BA%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">记录三：首页文章摘要显示设置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%9B%9B%EF%BC%9A%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2"><span class="toc-number">5.</span> <span class="toc-text">记录四：文章封面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%BA%94%EF%BC%9ALive2d%E7%9C%8B%E6%9D%BF%E5%A8%98"><span class="toc-number">6.</span> <span class="toc-text">记录五：Live2d看板娘</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%85%AD%EF%BC%9A%E8%83%8C%E6%99%AF%E4%B8%80%E5%9B%BE%E6%B5%81"><span class="toc-number">7.</span> <span class="toc-text">记录六：背景一图流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B8%83%EF%BC%9A%E4%BF%AE%E6%94%B9%E9%BC%A0%E6%A0%87%E6%A0%B7%E5%BC%8F"><span class="toc-number">8.</span> <span class="toc-text">记录七：修改鼠标样式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%85%AB%EF%BC%9A%E6%96%87%E7%AB%A0%E5%86%85%E5%AE%B9%E6%A0%87%E9%A2%98%E5%89%8D%E7%BC%80%E5%9B%BE%E6%A0%87"><span class="toc-number">9.</span> <span class="toc-text">记录八：文章内容标题前缀图标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E4%B9%9D%EF%BC%9A%E9%A6%96%E9%A1%B5%E5%88%86%E7%B1%BB%E7%A3%81%E8%B4%B41-0%EF%BC%88%E5%B0%8F%E5%86%B0%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">记录九：首页分类磁贴1.0（小冰）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%8D%81%EF%BC%9Ahexo-abbrlink%EF%BC%88%E7%9F%AD%E9%93%BE%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">记录十：hexo-abbrlink（短链）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%8D%81%E4%B8%80%EF%BC%9A%E9%A6%96%E9%A1%B5%E6%96%87%E5%AD%97%E8%BD%AE%E6%92%AD%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C"><span class="toc-number">12.</span> <span class="toc-text">记录十一：首页文字轮播动画效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%8D%81%E4%BA%8C%EF%BC%9AButterfly-%E5%A4%96%E6%8C%82%E6%A0%87%E7%AD%BE%E7%94%A8%E6%B3%95"><span class="toc-number">13.</span> <span class="toc-text">记录十二：Butterfly 外挂标签用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A6%80%E8%A1%8C%E5%86%85%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F"><span class="toc-number">13.1.</span> <span class="toc-text">🦀行内文本样式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%90%9F%E8%A1%8C%E5%86%85%E6%96%87%E6%9C%AC-Span"><span class="toc-number">13.2.</span> <span class="toc-text">🐟行内文本 Span</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%90%AC%E6%8A%98%E5%8F%A0%E6%A1%86-folding"><span class="toc-number">13.3.</span> <span class="toc-text">🐬折叠框 folding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%90%B3%E5%A4%96%E9%83%A8icon%EF%BC%88%E6%8F%90%E7%A4%BA%E5%9D%97%E6%A0%87%E7%AD%BE%EF%BC%89"><span class="toc-number">13.4.</span> <span class="toc-text">🐳外部icon（提示块标签）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A6%88%E5%A4%8D%E9%80%89%E5%88%97%E8%A1%A8-checkbox"><span class="toc-number">13.5.</span> <span class="toc-text">🦈复选列表 checkbox</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%90%99%E5%8D%95%E9%80%89%E5%88%97%E8%A1%A8-radio"><span class="toc-number">13.6.</span> <span class="toc-text">🐙单选列表 radio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A6%AA%E9%93%BE%E6%8E%A5%E5%8D%A1%E7%89%87-link"><span class="toc-number">13.7.</span> <span class="toc-text">🦪链接卡片 link</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img src="/img/cover10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的HTML之路"/></a><div class="content"><a class="title" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路">哈基鹏的HTML之路</a><time datetime="2025-12-10T03:11:15.000Z" title="发表于 2025-12-10 11:11:15">2025-12-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）"><img src="/img/cover9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（二）"/></a><div class="content"><a class="title" href="/posts/8390d872.html" title="哈基鹏的智能体实战（二）">哈基鹏的智能体实战（二）</a><time datetime="2025-11-24T02:20:13.000Z" title="发表于 2025-11-24 10:20:13">2025-11-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）"><img src="/img/cover8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的智能体实战（一）"/></a><div class="content"><a class="title" href="/posts/b38634aa.html" title="哈基鹏的智能体实战（一）">哈基鹏的智能体实战（一）</a><time datetime="2025-11-12T08:53:47.000Z" title="发表于 2025-11-12 16:53:47">2025-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）"><img src="/img/cover7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（六）"/></a><div class="content"><a class="title" href="/posts/1b76acff.html" title="哈基鹏的大模型之旅（六）">哈基鹏的大模型之旅（六）</a><time datetime="2025-11-10T02:38:38.000Z" title="发表于 2025-11-10 10:38:38">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）"><img src="/img/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（五）"/></a><div class="content"><a class="title" href="/posts/7e78e726.html" title="哈基鹏的大模型之旅（五）">哈基鹏的大模型之旅（五）</a><time datetime="2025-11-03T10:48:52.000Z" title="发表于 2025-11-03 18:48:52">2025-11-03</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By PhoenixPeng</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script defer data-pjax src="/js/readPercent.js"></script><script src="/js/fish.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/butterfly主题魔改/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 哈基鹏の魔改教程 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/LLM/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🎮 哈基鹏の大模型之路 (6)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/智能体实战/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🐱‍👓 哈基鹏の智能体开发 (2)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://amadeuspjq.cn/categories/HTML/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">👩‍💻 哈基鹏の网页学习 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><a class="magnet_link_more"  href="https://amadeuspjq.cn/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_categories_card_injector_config(){
+    // 检查容器是否存在
+    var parent_div_git = document.getElementById('recent-posts');
+    // 如果容器不存在，则动态创建
+    if (!parent_div_git) {
+      console.warn('butterfly_categories_card: 挂载容器不存在，正在动态创建...');
+      // 创建新容器（默认插入到页面主体顶部）
+      parent_div_git = document.createElement('div');
+      parent_div_git.id = 'recent-posts'; // 赋予配置的ID
+      document.querySelector('#page').prepend(parent_div_git); // 插入到 #content-inner 内
+    }
+    var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 950px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 800px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(/img/cag1.jpg);"> <a class="categoryBar-list-link" href="/categories/HTML/">HTML</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr">LLM</span></li><li class="categoryBar-list-item" style="background:url(/img/cag2.jpg);"> <a class="categoryBar-list-link" href="/categories/LLM/">LLM</a><span class="categoryBar-list-count">6</span><span class="categoryBar-list-descr">butterfly主题魔改</span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/butterfly主题魔改/">butterfly主题魔改</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" href="/categories/智能体实战/">智能体实战</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr"></span></li></ul></div></div>';
+    console.log('已挂载 butterfly_categories_card');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+  }
+  // 路径匹配逻辑（使用 startsWith）
+  if (location.pathname.startsWith('/categories/') || '/categories/' === 'all') {
+    butterfly_categories_card_injector_config();
+  }
+  </script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/6ae37fcf.html" alt=""><img width="48" height="48" src="/img/cover10.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-12-10</span><a class="blog-slider__title" href="posts/6ae37fcf.html" alt="">哈基鹏的HTML之路</a><div class="blog-slider__text">在设计智能体工作流的时候，有时候不得不把模型结果输出为pdf格式，这种过程通常需要先把模型转换为HTML进行过渡，由此不得不学习一下HTML的相关知识，因此本文章的内容主要是为了学习HTML的相关知识，以更好的设计网页样式。</div><a class="blog-slider__button" href="posts/6ae37fcf.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/8390d872.html" alt=""><img width="48" height="48" src="/img/cover9.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-24</span><a class="blog-slider__title" href="posts/8390d872.html" alt="">哈基鹏的智能体实战（二）</a><div class="blog-slider__text">本文章主要是记录n8n每个节点的用法</div><a class="blog-slider__button" href="posts/8390d872.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/7e78e726.html" alt=""><img width="48" height="48" src="/img/cover6.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-03</span><a class="blog-slider__title" href="posts/7e78e726.html" alt="">哈基鹏的大模型之旅（五）</a><div class="blog-slider__text">大模型压测原理以及实战。</div><a class="blog-slider__button" href="posts/7e78e726.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/ee293f0.html" alt=""><img width="48" height="48" src="/img/cover1.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-28</span><a class="blog-slider__title" href="posts/ee293f0.html" alt="">哈基鹏的butterfly魔改记录</a><div class="blog-slider__text">记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！</div><a class="blog-slider__button" href="posts/ee293f0.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/a6cb3b04.html" alt=""><img width="48" height="48" src="/img/cover4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-30</span><a class="blog-slider__title" href="posts/a6cb3b04.html" alt="">哈基鹏的大模型之旅（三）</a><div class="blog-slider__text">简要介绍RAG的定义以及工作流、RAG开发框架LangChain和大模型开发流程。</div><a class="blog-slider__button" href="posts/a6cb3b04.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"left",mobileDisplay:false,models:[{"path":"/live2d-models/umaru/model.json","position":[30,20],"scale":0.15,"stageStyle":{"width":250,"height":250},"mobilePosition":[10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"ALL"},{"path":"/live2d-models/hailunna_4/hailunna_4.model3.json","position":[-50,0],"scale":0.08,"stageStyle":{"width":350,"height":350},"mobilePosition":[-10,23],"mobileScale":0.08,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE"}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:3600,message:["你好呀，我是哈基鹏~","欢迎来到我的小站~"]}}});</script><!-- hexo injector body_end end --></body></html>
