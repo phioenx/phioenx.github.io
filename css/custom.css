@@ -58,3 +58,15 @@ h1,h2,h3,h4,h5,h6,#subtitle,.content,.line,.post-content p,.post-content li{
 .post-meta-date:hover,.post-meta-date-created:hover{
 	cursor: url('./mouse/xxx.cur'), auto!important;
 }
+
+/* 侧边栏个人信息卡片动态渐变色 */
+#aside-content > .card-widget.card-info {
+  background: linear-gradient(
+    -45deg,
+    #e8d8b9,
+    #eccec5,
+    #a3e9eb,
+    #bdbdf0,
+    #eec1ea
+  );
+}
