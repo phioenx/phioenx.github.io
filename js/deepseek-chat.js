@@ -138,20 +138,29 @@ class DeepSeekChat {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${role}-message`;
 
-    const avatarIcon = role === 'user' ? 'fa-user' : 'fa-robot';
-    const avatarColor = role === 'user' ? '#28a745' : '#4a6cf7';
-
     // 解析Markdown内容
     const parsedContent = this.parseMarkdown(content);
 
-    messageDiv.innerHTML = `
-      <div class="message-avatar" style="background: ${avatarColor};">
-        <i class="fas ${avatarIcon}"></i>
-      </div>
-      <div class="message-content">
-        <div>${parsedContent}</div>
-      </div>
-    `;
+    // 根据角色设置不同的头像和样式
+    if (role === 'user') {
+      // 用户头像使用本地图片，通过CSS设置
+      messageDiv.innerHTML = `
+        <div class="message-avatar"></div>
+        <div class="message-content">
+          <div>${parsedContent}</div>
+        </div>
+      `;
+    } else {
+      // AI头像保持原来的图标样式
+      messageDiv.innerHTML = `
+        <div class="message-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="message-content">
+          <div>${parsedContent}</div>
+        </div>
+      `;
+    }
 
     chatMessages.appendChild(messageDiv);
     this.scrollToBottom(chatMessages);

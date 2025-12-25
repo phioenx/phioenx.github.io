@@ -4242,13 +4242,13 @@ figure.highlight pre .javascript .function {
   bottom: 88px;
   right: 0;
   width: 420px;
-  height: auto;
-  min-height: 300px;
   max-height: 80vh;
+  min-height: 300px;
+  height: auto;
   background: #fff;
-  border-radius: 20px;
-  -webkit-box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  border-radius: 20px 20px 0 0;
+  -webkit-box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
   display: none;
   -webkit-box-orient: vertical;
   -moz-box-orient: vertical;
@@ -4263,18 +4263,9 @@ figure.highlight pre .javascript .function {
   -ms-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(102,126,234,0.1);
-  -webkit-transform: translateY(0);
-  -moz-transform: translateY(0);
-  -o-transform: translateY(0);
-  -ms-transform: translateY(0);
-  transform: translateY(0);
-}
-#deepseek-chat-container .chat-window:before {
-  content: '';
-  display: block;
-  height: 0;
-  visibility: hidden;
-  clear: both;
+  border-bottom: none;
+  top: auto;
+  max-height: calc(100vh - 100px);
 }
 #deepseek-chat-container .chat-window .chat-header {
   background: -webkit-linear-gradient(315deg, #667eea 0%, #764ba2 100%);
@@ -4451,21 +4442,20 @@ figure.highlight pre .javascript .function {
   flex-direction: row-reverse;
 }
 #deepseek-chat-container .chat-window .chat-messages .user-message .message-avatar {
-  background: -webkit-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -moz-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -o-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -ms-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: url("/img/avatar.png") center/cover no-repeat;
   color: #fff;
   margin-right: 0;
   margin-left: 12px;
+  border: 2px solid #fff;
+  -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 #deepseek-chat-container .chat-window .chat-messages .user-message .message-content {
-  background: -webkit-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -moz-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -o-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: -ms-linear-gradient(315deg, #48bb78 0%, #38a169 100%);
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: -webkit-linear-gradient(315deg, #f093fb 0%, #f5576c 100%);
+  background: -moz-linear-gradient(315deg, #f093fb 0%, #f5576c 100%);
+  background: -o-linear-gradient(315deg, #f093fb 0%, #f5576c 100%);
+  background: -ms-linear-gradient(315deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: #fff;
   margin-right: 0;
   border-bottom-right-radius: 4px;
@@ -4489,7 +4479,7 @@ figure.highlight pre .javascript .function {
   min-height: 64px;
   max-height: 140px;
   padding: 14px 18px;
-  border: 2px solid rgba(102,126,234,0.2);
+  border: 2px solid rgba(240,147,251,0.3);
   border-radius: 32px;
   resize: none;
   font-size: 15px;
@@ -4500,14 +4490,18 @@ figure.highlight pre .javascript .function {
   -o-transition: all 0.3s ease;
   -ms-transition: all 0.3s ease;
   transition: all 0.3s ease;
-  background: rgba(102,126,234,0.03);
+  background: -webkit-linear-gradient(315deg, rgba(240,147,251,0.1) 0%, rgba(245,87,108,0.1) 100%);
+  background: -moz-linear-gradient(315deg, rgba(240,147,251,0.1) 0%, rgba(245,87,108,0.1) 100%);
+  background: -o-linear-gradient(315deg, rgba(240,147,251,0.1) 0%, rgba(245,87,108,0.1) 100%);
+  background: -ms-linear-gradient(315deg, rgba(240,147,251,0.1) 0%, rgba(245,87,108,0.1) 100%);
+  background: linear-gradient(135deg, rgba(240,147,251,0.1) 0%, rgba(245,87,108,0.1) 100%);
   font-family: inherit;
 }
 #deepseek-chat-container .chat-window .chat-input-area .chat-input:focus {
-  border-color: #667eea;
+  border-color: #f5576c;
   background: #fff;
-  -webkit-box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
-  box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+  -webkit-box-shadow: 0 0 0 4px rgba(245,87,108,0.2);
+  box-shadow: 0 0 0 4px rgba(245,87,108,0.2);
 }
 #deepseek-chat-container .chat-window .chat-input-area .chat-input::placeholder {
   color: rgba(45,55,72,0.5);
