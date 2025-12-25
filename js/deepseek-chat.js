@@ -141,12 +141,15 @@ class DeepSeekChat {
     const avatarIcon = role === 'user' ? 'fa-user' : 'fa-robot';
     const avatarColor = role === 'user' ? '#28a745' : '#4a6cf7';
 
+    // 解析Markdown内容
+    const parsedContent = this.parseMarkdown(content);
+
     messageDiv.innerHTML = `
       <div class="message-avatar" style="background: ${avatarColor};">
         <i class="fas ${avatarIcon}"></i>
       </div>
       <div class="message-content">
-        <p>${this.escapeHtml(content)}</p>
+        <div>${parsedContent}</div>
       </div>
     `;
 
@@ -154,10 +157,25 @@ class DeepSeekChat {
     this.scrollToBottom(chatMessages);
   }
 
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  parseMarkdown(text) {
+    // 安全地解析Markdown，只允许特定的标签
+    let html = text
+      // 转义HTML标签，防止XSS
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+      // 解析加粗：**内容** → <strong>内容</strong>
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // 解析斜体：*内容* → <em>内容</em>
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // 解析行内代码：`内容` → <code>内容</code>
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      // 解析换行
+      .replace(/\n/g, '<br>');
+
+    return html;
   }
 
   scrollToBottom(element) {
