@@ -5032,8 +5032,9 @@ figure.highlight pre .javascript .function {
 }
 #page-header #site-title {
   margin: 0;
-  color: var(--white);
+  color: #000;
   font-size: 1.85em;
+  text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
 }
 @media screen and (min-width: 768px) {
   #page-header #site-title {
@@ -5138,10 +5139,13 @@ figure.highlight pre .javascript .function {
   box-shadow: 0 5px 6px -5px rgba(133,133,133,0.6);
 }
 #page-header.not-top-img #nav a,
-#page-header.not-top-img #nav span.site-page,
-#page-header.not-top-img #nav .site-name {
+#page-header.not-top-img #nav span.site-page {
   color: var(--font-color);
   text-shadow: none;
+}
+#page-header.not-top-img #nav .site-name {
+  color: #000;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 #page-header.nav-fixed #nav {
   position: fixed;
@@ -5165,7 +5169,8 @@ figure.highlight pre .javascript .function {
   color: #49b1f5;
 }
 #page-header.nav-fixed #nav #blog-info .site-name {
-  text-shadow: none;
+  color: #000;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 #page-header.nav-fixed #nav #blog-info > a:first-child {
   display: none;
@@ -5375,7 +5380,8 @@ figure.highlight pre .javascript .function {
   color: var(--white);
 }
 #nav .site-name {
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+  color: #000;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   font-weight: bold;
 }
 #nav .menus_items {
