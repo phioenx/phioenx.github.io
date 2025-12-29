@@ -4177,6 +4177,7 @@ figure.highlight pre .javascript .function {
   right: 20px;
   z-index: 9999;
 }
+#deepseek-chat-container #chat-btn,
 #deepseek-chat-container .chat-button {
   width: 64px;
   height: 64px;
@@ -4216,6 +4217,7 @@ figure.highlight pre .javascript .function {
   font-size: 26px;
   border: 2px solid rgba(255,255,255,0.3);
 }
+#deepseek-chat-container #chat-btn:hover,
 #deepseek-chat-container .chat-button:hover {
   background: -webkit-linear-gradient(315deg, #5a6fd8 0%, #6a4190 100%);
   background: -moz-linear-gradient(315deg, #5a6fd8 0%, #6a4190 100%);
@@ -4230,6 +4232,7 @@ figure.highlight pre .javascript .function {
   -webkit-box-shadow: 0 6px 25px rgba(102,126,234,0.6);
   box-shadow: 0 6px 25px rgba(102,126,234,0.6);
 }
+#deepseek-chat-container #chat-btn:active,
 #deepseek-chat-container .chat-button:active {
   -webkit-transform: scale(1.05);
   -moz-transform: scale(1.05);
