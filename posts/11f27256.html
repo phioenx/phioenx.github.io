@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>哈基鹏的Linux系统学习之路（一） | 哈基鹏的博客🐦</title><meta name="author" content="PhoenixPeng"><meta name="copyright" content="PhoenixPeng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux用户权限">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>哈基鹏的Linux系统学习之路（一） | 哈基鹏的博客🐦</title><meta name="author" content="PhoenixPeng"><meta name="copyright" content="PhoenixPeng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文深入解析Linux权限管理机制，涵盖权限概念、用户角色、文件属性及操作方法。文章分为前言、权限介绍、用户与角色、文件属性、权限修改及常见问题六大板块。详细说明了权限类型（r&#x2F;w&#x2F;x）、角色优先级、chmod&#x2F;chown指令用法，以及目录权限、umask掩码、粘滞位等重点内容。掌握这些知识，可有效提升Linux系统安全性和灵活性，是管理员必备技能。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="哈基鹏的Linux系统学习之路（一）">
 <meta property="og:url" content="https://amadeuspjq.cn/posts/11f27256.html">
 <meta property="og:site_name" content="哈基鹏的博客🐦">
-<meta property="og:description" content="Linux用户权限">
+<meta property="og:description" content="本文深入解析Linux权限管理机制，涵盖权限概念、用户角色、文件属性及操作方法。文章分为前言、权限介绍、用户与角色、文件属性、权限修改及常见问题六大板块。详细说明了权限类型（r&#x2F;w&#x2F;x）、角色优先级、chmod&#x2F;chown指令用法，以及目录权限、umask掩码、粘滞位等重点内容。掌握这些知识，可有效提升Linux系统安全性和灵活性，是管理员必备技能。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://amadeuspjq.cn/img/cover14.jpg">
 <meta property="article:published_time" content="2026-01-12T05:56:32.000Z">
-<meta property="article:modified_time" content="2026-01-12T06:06:31.430Z">
+<meta property="article:modified_time" content="2026-01-12T08:33:14.974Z">
 <meta property="article:author" content="PhoenixPeng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://amadeuspjq.cn/img/cover14.jpg"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "https://amadeuspjq.cn/posts/11f27256.html",
   "image": "https://amadeuspjq.cn/img/cover14.jpg",
   "datePublished": "2026-01-12T05:56:32.000Z",
-  "dateModified": "2026-01-12T06:06:31.430Z",
+  "dateModified": "2026-01-12T08:33:14.974Z",
   "author": [
     {
       "@type": "Person",
@@ -156,9 +156,151 @@
 }</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
   title: '哈基鹏的Linux系统学习之路（一）',
   isHighlightShrink: false,
-  isToc: false,
+  isToc: true,
   pageType: 'post'
-}</script><link rel="stylesheet" href="/css/modify.css"><link rel="stylesheet" href=" /css/custom.css"><link rel="stylesheet" href=" /css/categorybar.css"><link rel="stylesheet" href=" /css/readPercent.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="/css/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(https://amadeuspjq.cn/img/background1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/cover14.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">哈基鹏的博客🐦</span></a><a class="nav-page-title" href="/"><span class="site-name">哈基鹏的Linux系统学习之路（一）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">哈基鹏的Linux系统学习之路（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-12T05:56:32.000Z" title="发表于 2026-01-12 13:56:32">2026-01-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-12T06:06:31.430Z" title="更新于 2026-01-12 14:06:31">2026-01-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">0</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="top-img gist" style="background-image: url(/img/cover14.jpg)"></div><article class="container post-content" id="article-container"><p><font color = black size = 4></font></p>
+}</script><link rel="stylesheet" href="/css/modify.css"><link rel="stylesheet" href=" /css/custom.css"><link rel="stylesheet" href=" /css/categorybar.css"><link rel="stylesheet" href=" /css/readPercent.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/css/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(https://amadeuspjq.cn/img/background1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/cover14.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">哈基鹏的博客🐦</span></a><a class="nav-page-title" href="/"><span class="site-name">哈基鹏的Linux系统学习之路（一）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">哈基鹏的Linux系统学习之路（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-12T05:56:32.000Z" title="发表于 2026-01-12 13:56:32">2026-01-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-12T08:33:14.974Z" title="更新于 2026-01-12 16:33:14">2026-01-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><div class="top-img gist" style="background-image: url(/img/cover14.jpg)"></div><article class="container post-content" id="article-container"><h1 id="Linux权限管理"><a href="#Linux权限管理" class="headerlink" title="Linux权限管理"></a>Linux权限管理</h1><h2 id="一、用户和身份角色"><a href="#一、用户和身份角色" class="headerlink" title="一、用户和身份角色"></a>一、用户和身份角色</h2><p><font color = black size = 4>在Linux下，我们可以认为有两种<strong>用户</strong>：</font></p>
+<ul>
+<li><font color = black size = 4><strong>root 用户（超级用户）：几乎不受权限约束</strong>，可以任意访问文件或目录。</font></li>
+<li><font color = black size = 4>**普通用户：**Linux使用者，受权限约束。</font></li>
+</ul>
+<blockquote>
+<p><font color = black size = 4>创建用户：<code>adduser [用户名]</code></font></p>
+<p><font color = black size = 4>设置密码：<code>passwd [用户名]</code></font></p>
+<p><font color = black size = 4>切换用户：<code>su [用户名]</code></font></p>
+<p><font color = black size = 4>切换到root用户：<code>su</code></font></p>
+<p><font color = black size = 4>回退到之前用户：<code>ctrl+D</code>或<code>exit</code></font></p>
+<p><font color = black size = 4>以root身份重新登录：<code>su-</code></font></p>
+<p><font color = black size = 4>指令提权：<code>sudo 指令</code>，本质上是以root用户的身份执行命令</font></p>
+</blockquote>
+<p><font color = black size = 4>而“<strong>身份角色</strong>”是针对于具体事物，<strong>由用户所扮演</strong>的。身份角色有如下三种：</font></p>
+<ul>
+<li><font color = black size = 4> 文件拥有者（User，u）</font></li>
+<li><font color = black size = 4> 文件所属组（Group，g）</font></li>
+<li><font color = black size = 4>其他人（Other，o）</font></li>
+</ul>
+<p><font color = black size = 4>对于一个目录或文件而言，身份角色不同，它们所拥有的权限也不尽相同，其权限<strong>由文件属性和身份角色共同决定</strong>。</font></p>
+<h2 id="二、文件属性"><a href="#二、文件属性" class="headerlink" title="二、文件属性"></a>二、文件属性</h2><h3 id="1-文件属性表示"><a href="#1-文件属性表示" class="headerlink" title="1.文件属性表示"></a><font color = black size = 4>1.文件属性表示</font></h3><p><font color = black size = 4>使用 <strong>ls -l</strong> 指令显示文件信息，就可以看到<strong>文件属性</strong>：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_89bc91a869b143b9b3749ef05ae8fa7c.png"></p>
+<p><font color = black size = 4>例如上图中的<strong>code</strong>文件，它的各项属性表示如下：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_31084bf895c84f92904cece925220fa6.png"></p>
+<p><font color = black size = 4>接下来，我们重点探讨一下<strong>文件类型</strong>以及<strong>权限属性。</strong></font></p>
+<p><font color = black size = 4><strong>第1位：文件类型</strong></font></p>
+<ul>
+<li><font color = black size = 4>d：目录</font></li>
+<li><font color = black size = 4>-：普通文件</font></li>
+<li><font color = black size = 4>c：字符设备文件</font></li>
+<li><font color = black size = 4>b：块设备文件</font></li>
+<li><font color = black size = 4>p：管道文件</font></li>
+<li><font color = black size = 4>l：软链接文件</font></li>
+<li><font color = black size = 4>s：套接口文件</font></li>
+</ul>
+<p><font color = black size = 4><strong>第2~10位：文件的权限属性</strong></font></p>
+<p><font color = black size = 4>如上图所示，文件的权限属性针对三种角色可能有所不同，这就说明权限**由文件属性和身份角色共同决定。**权限类型有三种：</font></p>
+<ul>
+<li><font color = black size = 4><strong>r</strong>：可读–可以查看文件内容</font></li>
+<li><font color = black size = 4><strong>w</strong>：可写–可以修改文件内容</font></li>
+<li><font color = black size = 4><strong>x</strong>：可执行–可以运行</font></li>
+</ul>
+<p><font color = black size = 4><strong>当权限属性的相应位置上有r&#x2F;w&#x2F;x时，表示该文件针对的角色具有读&#x2F;写&#x2F;执行该文件的权限，否则不具有相应权限。</strong></font></p>
+<p><font color = black size = 4>以下两点需要注意：</font></p>
+<ul>
+<li><font color = black size = 4><strong>对于root用户，无论其扮演的角色是否具有权限，其都可以进行相应操作。</strong></font></li>
+<li><font color = black size = 4><strong>一个文件可执行的两个必要条件：1. 文件具备可执行权限；2. 文件的类型是可执行程序。</strong></font></li>
+</ul>
+<p><font color = black size = 4>权限类型有<strong>字符表示方法</strong>和<strong>八进制表示方法</strong>两种**：**</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_8ce20ca1771948aeaec7b3fb3e96a519.png" alt="image.png"></p>
+<p><font color = black size = 4>当使用八进制表示方法表示权限属性时，<strong>一种角色的权限属性可以只用一位八进制数字表示</strong>，所以一个三位八进制数字就可以表示全部角色的权限属性（修改权限属性时方便使用）。</font></p>
+<p><font color = black size = 4><strong>注意：针对某个文件来讲，一个扮演多种角色的用户的权限按照角色优先级进行对应。</strong></font></p>
+<blockquote>
+<p><font color = black size = 4>角色优先级：拥有者&gt;所属组&gt;其他人</font></p>
+</blockquote>
+<h2 id="三、修改文件的权限属性和角色"><a href="#三、修改文件的权限属性和角色" class="headerlink" title="三、修改文件的权限属性和角色"></a>三、修改文件的权限属性和角色</h2><h3 id="1-修改权限属性"><a href="#1-修改权限属性" class="headerlink" title="1.修改权限属性"></a><font color = black size = 4>1.修改权限属性</font></h3><p><font color = black size = 4>我们可以使用<code>chmod</code>指令修改一个目录或文件的权限属性。它的语法如下：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 选项 权限 文件名</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4><strong>常用选项</strong>：<strong>-R</strong> 递归地修改目录及子目录的权限</font></p>
+<p><font color = black size = 4>其中，若使用字符表示法表示权限，则其格式是：<strong>(角色)(+&#x2F;-)(r&#x2F;w&#x2F;x)</strong></font></p>
+<p><font color = black size = 4>角色：</font></p>
+<ul>
+<li><font color = black size = 4>u：表示拥有者</font></li>
+<li><font color = black size = 4>g：表示所属组</font></li>
+<li><font color = black size = 4>o：表示其他人</font></li>
+<li><font color = black size = 4>a：表示所有角色</font></li>
+</ul>
+<p><font color = black size = 4><strong>+&#x2F;-</strong></font></p>
+<ul>
+<li><font color = black size = 4>+：表示新增权限</font></li>
+<li><font color = black size = 4>-：表示去除权限</font></li>
+</ul>
+<p><font color = black size = 4>使用示例：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">chmod u+r test.txt</span><br><span class="line"></span><br><span class="line">chmod g+rwx test.txt</span><br><span class="line"></span><br><span class="line">chmod a-x test.txt</span><br><span class="line"></span><br><span class="line">chmod -x test.txt</span><br><span class="line"></span><br><span class="line">chmod u+r,o-w test.txt</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>当然我们也可以使用<strong>八进制表示方法</strong>设置文件权限。使用示例：</font></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 test.txt</span><br><span class="line"></span><br><span class="line">chmod 456 test.txt</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><font color = black size = 4><strong>注意</strong>：<strong>只有文件的拥有者或具有root权限才能修改和设置文件的权限属性</strong>。</font></p>
+</blockquote>
+<h3 id="2-修改文件角色"><a href="#2-修改文件角色" class="headerlink" title="2.修改文件角色"></a><font color = black size = 4><strong>2.修改文件角色</strong></font></h3><p><font color = black size = 4>    除了文件的权限属性，文件角色也可以被修改。</font></p>
+<p><font color = black size = 4><strong>chown指令</strong>修改文件<strong>拥有者</strong>：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown 用户名 文件名</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>使用示例：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chown user test.txt</span><br><span class="line"></span><br><span class="line">chown -R user mydir/...</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4><strong>chgrp指令</strong>修改文件<strong>所属组</strong>：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chgrp 用户名 文件名</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4>使用示例：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chgrp user test.txt</span><br><span class="line"></span><br><span class="line">chgrp -R user mydir/...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><font color = black size = 4><strong>注意</strong>：<strong>只有具有root权限才能修改文件拥有者；只有文件的拥有者或具有root权限才可以修改该文件所属组</strong>。</font></p>
+</blockquote>
+<h2 id="四、关于权限的三个问题"><a href="#四、关于权限的三个问题" class="headerlink" title="四、关于权限的三个问题"></a>四、关于权限的三个问题</h2><h3 id="1-目录的权限"><a href="#1-目录的权限" class="headerlink" title="1. 目录的权限"></a><font color = black size = 4>1. 目录的权限</font></h3><p><font color = black size = 4>对于一个目录而言：</font></p>
+<p><font color = black size = 4>如果没有<strong>读</strong>权限，就无法查看该目录下的文件信息；</font></p>
+<p><font color = black size = 4>如果没有<strong>写</strong>权限，那么就无法创建、删除、修改该目录内部的文件；</font></p>
+<p><font color = black size = 4>如果没有<strong>执行</strong>权限，那么无法进入该目录。</font></p>
+<blockquote>
+<p><font color = black size = 4>**注意：**即使一个目录有读权限，但若没有执行权限，那么仍然无法进入该目录，并且无法在该目录下执行命令和查看该目录下文件的详细信息。</font></p>
+</blockquote>
+<h3 id="2-默认权限与实际权限"><a href="#2-默认权限与实际权限" class="headerlink" title="2. 默认权限与实际权限"></a><font color = black size = 4>2. 默认权限与实际权限</font></h3><p><font color = black size = 4>在Linux下，一个普通文件，它的默认权限是<strong>rw- rw- rw-（666）</strong>；而一个目录的默认权限是<strong>rwx rwx rwx（777）</strong>。</font></p>
+<p><font color = black size = 4>但当我们创建一个普通文件和目录后，可以看到其权限属性<strong>并非是默认值</strong>：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_007ede86d76a4c7ba142e6a3f3887c1a.png"></p>
+<p><font color = black size = 4>相比默认权限，两者的实际权限貌似<strong>缺失了所属组和其他人的读权限</strong>。这是为什么呢？</font></p>
+<p><font color = black size = 4>实际上，存在一种叫做<strong>umask权限掩码</strong>的机制，它控制的是新创建文件和目录时，<strong>哪些权限将被去除</strong>。注意：它并不会直接赋予权限，而是通过限制默认权限来间接设定权限。</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_3e4c906f49a34fa689c762e60d0c6fb3.png"></p>
+<p><font color = black size = 4>可以使用<strong>umask指令</strong>查看umask码：</font></p>
+<p><img src="https://raw.githubusercontent.com/phioenx/blog-img/main/blog-img/vjrzezee6fdsm_f14dd034d17745eb869a974b90e88c0f.png"></p>
+<p><font color = black size = 4>可以看到，当前系统的umask为<strong>022</strong>（最高位的0暂且省略），它其实是一个<strong>三位八进制数字</strong>，与八进制数字表示的权限属性相呼应。</font></p>
+<blockquote>
+<p><font color = black size = 4><strong>掩码规则：文件的实际权限 &#x3D; 默认权限（八进制）- umask</strong></font></p>
+</blockquote>
+<p><font color = black size = 4>所以我们看到的文件和目录的实际权限是：</font></p>
+<blockquote>
+<p><font color = black size = 4><strong>目录：777 - 022 &#x3D; 755 （rwx r-x -r-x）</strong></font></p>
+<p><font color = black size = 4><strong>文件：666 - 022 &#x3D; 644 （rw- r– r–）</strong></font></p>
+</blockquote>
+<p><font color = black size = 4>当然，umask也可支持<strong>修改</strong>，使用示例如下：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umask 002 #将umask修改为002</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4><strong>修改umask，可以达到修改实际权限的效果。</strong></font></p>
+<p><font color = black size = 4>3.删除权限与粘滞位</font></p>
+<p><font color = black size = 4>要<strong>删除</strong>一个文件，看的不是该文件的读&#x2F;写&#x2F;执行权限，而是需要该文件所在目录的<strong>写权限</strong>和<strong>执行权限</strong>，因为执行权限决定了是否可以进入目录；写权限决定了是否可以删除目录下文件。</font></p>
+<p><font color = black size = 4>但这种设定似乎并不合理：假设有一个用户，其无权访问文件A，但可能有权删除文件A。</font></p>
+<p><font color = black size = 4>所以Linux出现了一种机制：<strong>粘滞位</strong>，用于<strong>防止无关人员删除重要文件</strong>。</font></p>
+<blockquote>
+<p><font color = black size = 4>当一个目录被设置为<strong>粘滞位</strong>后，其下的文件或目录只能由以下两者删除：</font></p>
+<p><font color = black size = 4><strong>1. root用户</strong></font></p>
+<p><font color = black size = 4><strong>2. 当前文件或目录的所有者</strong></font></p>
+<p><font color = black size = 4><strong>也就是说，除了root用户之外，该目录下的文件或目录，只有自己的，才能被自己删除。</strong></font></p>
+</blockquote>
+<p><font color = black size = 4>设置粘滞位的指令：</font></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +t 目录名</span><br></pre></td></tr></table></figure>
+
+<p><font color = black size = 4><strong>总结：如果想要共享一个目录，并且确保目录下的文件不被删除，那么就需要设置粘滞位。</strong></font></p>
+<p><font color = black size = 4><strong>有两点需要注意：</strong></font></p>
+<p><font color = black size = 4><strong>1. 根目录下的tmp目录自带粘滞位，可以用做共享目录。</strong></font></p>
+<p><font color = black size = 4><strong>2. 粘滞位只需给目录设置，不需要给普通文件设置。</strong></font></p>
 <p><font color = black size = 4></font></p>
 <p><font color = black size = 4></font></p>
 <p><font color = black size = 4></font></p>
@@ -272,100 +414,7 @@
 <p><font color = black size = 4></font></p>
 <p><font color = black size = 4></font></p>
 <p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-<p><font color = black size = 4></font></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn">PhoenixPeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn/posts/11f27256.html">https://amadeuspjq.cn/posts/11f27256.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://amadeuspjq.cn" target="_blank">哈基鹏的博客🐦</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/cover14.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）"><img class="cover" src="/img/cover13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">哈基鹏的大模型之旅（九）</div></div><div class="info-2"><div class="info-item-1">大模型RAG——18种RAG技术实战对比：从简单RAG到自适应RAG全面解析</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">PhoenixPeng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/phioenx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到哈基鹏的小站</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/11f27256.html" title="哈基鹏的Linux系统学习之路（一）"><img src="/img/cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的Linux系统学习之路（一）"/></a><div class="content"><a class="title" href="/posts/11f27256.html" title="哈基鹏的Linux系统学习之路（一）">哈基鹏的Linux系统学习之路（一）</a><time datetime="2026-01-12T05:56:32.000Z" title="发表于 2026-01-12 13:56:32">2026-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）"><img src="/img/cover13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（九）"/></a><div class="content"><a class="title" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）">哈基鹏的大模型之旅（九）</a><time datetime="2025-12-26T01:39:44.000Z" title="发表于 2025-12-26 09:39:44">2025-12-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3e1df323.html" title="哈基鹏的大模型之旅（八）"><img src="/img/cover12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（八）"/></a><div class="content"><a class="title" href="/posts/3e1df323.html" title="哈基鹏的大模型之旅（八）">哈基鹏的大模型之旅（八）</a><time datetime="2025-12-25T01:38:47.000Z" title="发表于 2025-12-25 09:38:47">2025-12-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c976db60.html" title="哈基鹏的大模型之旅（七）"><img src="/img/cover11.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（七）"/></a><div class="content"><a class="title" href="/posts/c976db60.html" title="哈基鹏的大模型之旅（七）">哈基鹏的大模型之旅（七）</a><time datetime="2025-12-22T01:38:46.000Z" title="发表于 2025-12-22 09:38:46">2025-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img src="/img/cover10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的HTML之路"/></a><div class="content"><a class="title" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路">哈基鹏的HTML之路</a><time datetime="2025-12-10T03:11:15.000Z" title="发表于 2025-12-10 11:11:15">2025-12-10</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By PhoenixPeng</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script defer data-pjax src="/js/readPercent.js"></script><div class="aplayer no-destroy" data-id="9635013358" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn">PhoenixPeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://amadeuspjq.cn/posts/11f27256.html">https://amadeuspjq.cn/posts/11f27256.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://amadeuspjq.cn" target="_blank">哈基鹏的博客🐦</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/cover14.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）"><img class="cover" src="/img/cover13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">哈基鹏的大模型之旅（九）</div></div><div class="info-2"><div class="info-item-1">大模型RAG——18种RAG技术实战对比：从简单RAG到自适应RAG全面解析</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">PhoenixPeng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/phioenx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到哈基鹏的小站</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Linux权限管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%94%A8%E6%88%B7%E5%92%8C%E8%BA%AB%E4%BB%BD%E8%A7%92%E8%89%B2"><span class="toc-number">1.1.</span> <span class="toc-text">一、用户和身份角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">二、文件属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E8%A1%A8%E7%A4%BA"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.文件属性表示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E7%9A%84%E6%9D%83%E9%99%90%E5%B1%9E%E6%80%A7%E5%92%8C%E8%A7%92%E8%89%B2"><span class="toc-number">1.3.</span> <span class="toc-text">三、修改文件的权限属性和角色</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%AE%E6%94%B9%E6%9D%83%E9%99%90%E5%B1%9E%E6%80%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.修改权限属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E8%A7%92%E8%89%B2"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.修改文件角色</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%85%B3%E4%BA%8E%E6%9D%83%E9%99%90%E7%9A%84%E4%B8%89%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">四、关于权限的三个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9D%83%E9%99%90"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 目录的权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90%E4%B8%8E%E5%AE%9E%E9%99%85%E6%9D%83%E9%99%90"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 默认权限与实际权限</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/11f27256.html" title="哈基鹏的Linux系统学习之路（一）"><img src="/img/cover14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的Linux系统学习之路（一）"/></a><div class="content"><a class="title" href="/posts/11f27256.html" title="哈基鹏的Linux系统学习之路（一）">哈基鹏的Linux系统学习之路（一）</a><time datetime="2026-01-12T05:56:32.000Z" title="发表于 2026-01-12 13:56:32">2026-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）"><img src="/img/cover13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（九）"/></a><div class="content"><a class="title" href="/posts/44d0d27c.html" title="哈基鹏的大模型之旅（九）">哈基鹏的大模型之旅（九）</a><time datetime="2025-12-26T01:39:44.000Z" title="发表于 2025-12-26 09:39:44">2025-12-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3e1df323.html" title="哈基鹏的大模型之旅（八）"><img src="/img/cover12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（八）"/></a><div class="content"><a class="title" href="/posts/3e1df323.html" title="哈基鹏的大模型之旅（八）">哈基鹏的大模型之旅（八）</a><time datetime="2025-12-25T01:38:47.000Z" title="发表于 2025-12-25 09:38:47">2025-12-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c976db60.html" title="哈基鹏的大模型之旅（七）"><img src="/img/cover11.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的大模型之旅（七）"/></a><div class="content"><a class="title" href="/posts/c976db60.html" title="哈基鹏的大模型之旅（七）">哈基鹏的大模型之旅（七）</a><time datetime="2025-12-22T01:38:46.000Z" title="发表于 2025-12-22 09:38:46">2025-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路"><img src="/img/cover10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈基鹏的HTML之路"/></a><div class="content"><a class="title" href="/posts/6ae37fcf.html" title="哈基鹏的HTML之路">哈基鹏的HTML之路</a><time datetime="2025-12-10T03:11:15.000Z" title="发表于 2025-12-10 11:11:15">2025-12-10</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By PhoenixPeng</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script defer data-pjax src="/js/readPercent.js"></script><div class="aplayer no-destroy" data-id="9635013358" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
   const destroyAplayer = () => {
     if (window.aplayers) {
       for (let i = 0; i < window.aplayers.length; i++) {
@@ -444,26 +493,6 @@
     parent.insertAdjacentHTML("afterbegin",child)}
      </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
     <style></style><script data-pjax>
-  function butterfly_categories_card_injector_config(){
-    // 检查容器是否存在
-    var parent_div_git = document.getElementById('recent-posts');
-    // 如果容器不存在，则动态创建
-    if (!parent_div_git) {
-      console.warn('butterfly_categories_card: 挂载容器不存在，正在动态创建...');
-      // 创建新容器（默认插入到页面主体顶部）
-      parent_div_git = document.createElement('div');
-      parent_div_git.id = 'recent-posts'; // 赋予配置的ID
-      document.querySelector('#page').prepend(parent_div_git); // 插入到 #content-inner 内
-    }
-    var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 950px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 800px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(/img/cag1.jpg);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/butterfly主题魔改/&quot;);" href="javascript:void(0);">butterfly主题魔改</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr">LLM</span></li><li class="categoryBar-list-item" style="background:url(/img/cag2.jpg);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/智能体实战/&quot;);" href="javascript:void(0);">智能体实战</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr">butterfly主题魔改</span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/LLM/&quot;);" href="javascript:void(0);">LLM</a><span class="categoryBar-list-count">9</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/Linux/&quot;);" href="javascript:void(0);">Linux</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/HTML/&quot;);" href="javascript:void(0);">HTML</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li></ul></div></div>';
-    console.log('已挂载 butterfly_categories_card');
-    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
-  }
-  // 路径匹配逻辑（使用 startsWith）
-  if (location.pathname.startsWith('/categories/') || '/categories/' === 'all') {
-    butterfly_categories_card_injector_config();
-  }
-  </script><script data-pjax>
   function butterfly_swiper_injector_config(){
     var parent_div_git = document.getElementById('recent-posts');
     var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/6ae37fcf.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/img/cover10.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-12-10</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/6ae37fcf.html&quot;);" href="javascript:void(0);" alt="">哈基鹏的HTML之路</a><div class="blog-slider__text">在设计智能体工作流的时候，有时候不得不把模型结果输出为pdf格式，这种过程通常需要先把模型转换为HTML进行过渡，由此不得不学习一下HTML的相关知识，因此本文章的内容主要是为了学习HTML的相关知识，以更好的设计网页样式。</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/6ae37fcf.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/8390d872.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/img/cover9.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-24</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/8390d872.html&quot;);" href="javascript:void(0);" alt="">哈基鹏的智能体实战（二）</a><div class="blog-slider__text">本文章主要是记录n8n每个节点的用法</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/8390d872.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/7e78e726.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/img/cover6.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-03</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/7e78e726.html&quot;);" href="javascript:void(0);" alt="">哈基鹏的大模型之旅（五）</a><div class="blog-slider__text">大模型压测原理以及实战。</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/7e78e726.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/ee293f0.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/img/cover1.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-28</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/ee293f0.html&quot;);" href="javascript:void(0);" alt="">哈基鹏的butterfly魔改记录</a><div class="blog-slider__text">记录一下魔改butterfly所用的配置的定义以及如何修改，加油把自己的网站变的更加美丽！</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/ee293f0.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/a6cb3b04.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/img/cover4.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-30</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/a6cb3b04.html&quot;);" href="javascript:void(0);" alt="">哈基鹏的大模型之旅（三）</a><div class="blog-slider__text">简要介绍RAG的定义以及工作流、RAG开发框架LangChain和大模型开发流程。</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/a6cb3b04.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
@@ -487,4 +516,24 @@
   else if (epage === cpage){
     butterfly_swiper_injector_config();
   }
-  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:false,models:[{"path":"/live2d-models/umaru/model.json","position":[30,20],"scale":0.15,"stageStyle":{"width":250,"height":250},"mobilePosition":[10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"ALL"},{"path":"/live2d-models/hailunna_4/hailunna_4.model3.json","position":[-50,0],"scale":0.08,"stageStyle":{"width":350,"height":350},"mobilePosition":[-10,23],"mobileScale":0.08,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE"}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:3600,message:["你好呀，我是哈基鹏~","欢迎来到我的小站~"]}}});</script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --></body></html>
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script data-pjax>
+  function butterfly_categories_card_injector_config(){
+    // 检查容器是否存在
+    var parent_div_git = document.getElementById('recent-posts');
+    // 如果容器不存在，则动态创建
+    if (!parent_div_git) {
+      console.warn('butterfly_categories_card: 挂载容器不存在，正在动态创建...');
+      // 创建新容器（默认插入到页面主体顶部）
+      parent_div_git = document.createElement('div');
+      parent_div_git.id = 'recent-posts'; // 赋予配置的ID
+      document.querySelector('#page').prepend(parent_div_git); // 插入到 #content-inner 内
+    }
+    var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 950px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 800px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(/img/cag1.jpg);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/butterfly主题魔改/&quot;);" href="javascript:void(0);">butterfly主题魔改</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr">LLM</span></li><li class="categoryBar-list-item" style="background:url(/img/cag2.jpg);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/智能体实战/&quot;);" href="javascript:void(0);">智能体实战</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr">butterfly主题魔改</span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/HTML/&quot;);" href="javascript:void(0);">HTML</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/Linux/&quot;);" href="javascript:void(0);">Linux</a><span class="categoryBar-list-count">1</span><span class="categoryBar-list-descr"></span></li><li class="categoryBar-list-item" style="background:url(undefined);"> <a class="categoryBar-list-link" onclick="pjax.loadUrl(&quot;/categories/LLM/&quot;);" href="javascript:void(0);">LLM</a><span class="categoryBar-list-count">9</span><span class="categoryBar-list-descr"></span></li></ul></div></div>';
+    console.log('已挂载 butterfly_categories_card');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+  }
+  // 路径匹配逻辑（使用 startsWith）
+  if (location.pathname.startsWith('/categories/') || '/categories/' === 'all') {
+    butterfly_categories_card_injector_config();
+  }
+  </script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:false,models:[{"path":"/live2d-models/umaru/model.json","position":[30,20],"scale":0.15,"stageStyle":{"width":250,"height":250},"mobilePosition":[10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"ALL"},{"path":"/live2d-models/hailunna_4/hailunna_4.model3.json","position":[-50,0],"scale":0.08,"stageStyle":{"width":350,"height":350},"mobilePosition":[-10,23],"mobileScale":0.08,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE"}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:3600,message:["你好呀，我是哈基鹏~","欢迎来到我的小站~"]}}});</script><!-- hexo injector body_end end --></body></html>
